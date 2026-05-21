@@ -1,0 +1,17 @@
+@theme {
+  --color-slate-800: rgb(30 41 59);
+  --color-slate-900: rgb(15 23 42);
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Harmonious and Premium Theme Colors */
+  --color-primary: var(--color-blue-600);
+  --color-primary-hover: var(--color-blue-700);
+  --color-secondary: var(--color-gray-500);
+  --color-secondary-hover: var(--color-gray-600);
+  --color-success: var(--color-green-600);
+  --color-success-hover: var(--color-green-700);
+  --color-danger: var(--color-red-600);
+  --color-danger-hover: var(--color-red-700);
+  --color-warning: var(--color-amber-600);
+  --color-warning-hover: var(--color-amber-700);
+}

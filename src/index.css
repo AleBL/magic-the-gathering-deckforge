@@ -1,15 +1,131 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-@import 'bootstrap/dist/css/bootstrap.min.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@import "./style/variables.css";
+@import "./style/layout.css";
+@import "./style/buttons.css";
+@import "./style/forms.css";
+@import "./style/utilities.css";
+
+/* Dark mode via class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+/* Base styles */
 @layer base {
   code {
-    @apply mx-2 rounded bg-gray-200 px-1 py-0.5 dark:bg-gray-700;
+    @apply mx-2 rounded bg-gray-200 px-1 py-0.5;
+  }
+
+  html.dark code {
+    @apply bg-gray-700;
   }
 
   .root {
-    @apply min-h-screen dark:bg-slate-900 dark:text-gray-200;
+    @apply min-h-screen;
+  }
+
+  body {
+    font-family: var(--font-family-sans);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html:not(.dark) body {
+    @apply bg-white text-gray-900;
+  }
+
+  html.dark body {
+    @apply bg-gray-900 text-white;
+  }
+
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+}
+
+/* Utility animations */
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease both;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Scrollbar utilities */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  html:not(.dark) .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 4px;
+  }
+
+  html.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 4px;
+  }
+
+  html:not(.dark) .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #e5e7eb;
+  }
+
+  html.dark .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #1f2937;
+  }
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* SelectLanguage Component Styles */
+@layer components {
+  .div-select-language label,
+  .div-select-language span {
+    @apply dark:text-white;
+  }
+
+  .div-select-language ul {
+    color: white !important;
+    background-color: rgb(30 41 59) !important; /* dark:bg-slate-800 */
+  }
+
+  .div-select-language span {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .language {
+    @apply flex items-center gap-2;
+  }
+
+  .language-icon {
+    @apply h-5 w-5 rounded-full object-cover;
   }
 }
