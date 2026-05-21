@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
@@ -36,7 +35,7 @@ const safeDOM = {
  * https://projects.lukehaas.me/css-loaders
  * https://matejkustec.github.io/SpinThatShit
  */
-function useLoading() {
+function createLoading() {
   const styleContent = `
 .sk-chase {
 
@@ -133,10 +132,9 @@ function useLoading() {
 
 // ----------------------------------------------------------------------
 
-const { appendLoading, removeLoading } = useLoading();
+const { appendLoading, removeLoading } = createLoading();
 domReady().then(appendLoading);
 
 window.onmessage = (ev) => {
-  // eslint-disable-next-line no-unused-expressions
-  ev.data.payload === 'removeLoading' && removeLoading();
+  if (ev.data.payload === 'removeLoading') removeLoading();
 };

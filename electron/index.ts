@@ -2,15 +2,23 @@
 import { join } from 'path';
 
 // Packages
-import { BrowserWindow, app, ipcMain, IpcMainEvent, nativeTheme } from 'electron';
+import { BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
+
+// Fix without GPU: disable hardware acceleration to avoid GPU process crash
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('disable-gpu-compositing');
+
+// Hide some warnings from terminal
+app.commandLine.appendSwitch('log-level', '3');
 
 function createWindow() {
   // Create the browser window.
   const window = new BrowserWindow({
     width: 1600,
     height: 900,
-    minWidth: 765,
-    minHeight: 720,
+    minWidth: 400,
+    minHeight: 500,
     show: true,
     resizable: true,
     fullscreenable: true,
@@ -31,8 +39,6 @@ function createWindow() {
   } else {
     window?.loadFile(indexHtml);
   }
-
-  nativeTheme.themeSource = 'dark';
 }
 
 // This method will be called when Electron has finished
