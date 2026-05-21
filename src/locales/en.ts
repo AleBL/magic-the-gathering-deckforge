@@ -104,7 +104,6 @@ const en = {
     savedLocationNote:
       "Decks are securely stored locally on this machine using your browser's localStorage. You can also export them as JSON to backup or share.",
 
-    // New translations (validation and labels)
     validationEmptyDeck: 'The deck is empty.',
     validationMinCards: 'The deck must have at least 60 cards (currently has {{count}}).',
     validationMaxCopies: 'Limit of copies exceeded: "{{name}}" has {{count}} copies (maximum allowed is {{max}}).',

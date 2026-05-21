@@ -104,7 +104,6 @@ const es = {
     savedLocationNote:
       'Tus mazos se guardan de forma segura y local en este equipo utilizando el recurso localStorage del navegador. También puedes exportarlos en formato JSON como copia de seguridad o para compartirlos.',
 
-    // New translations (validation and labels)
     validationEmptyDeck: 'El mazo está vacío.',
     validationMinCards: 'El mazo debe tener al menos 60 cartas (actualmente tiene {{count}}).',
     validationMaxCopies: 'Límite de copias excedido: "{{name}}" tiene {{count}} copias (máximo permitido es {{max}}).',

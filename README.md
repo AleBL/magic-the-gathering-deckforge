@@ -1,63 +1,59 @@
 <div align="center">
-<h1>Magic The Gathering Search Cards (Scryfall) </h1>
+<h1>Magic: The Gathering Search</h1>
 
-An application that organizes and manages Magic cards through [Scryfall](https://scryfall.com/). This application was built with **TypeScript**, using **React**, **Electron**, **ViteJS**, and **Electron Builder**.
+Search Magic: The Gathering cards, build and manage decks with [Scryfall](https://scryfall.com/) API integration. Built with **TypeScript**, **React 19**, **Electron**, **Vite 6**, and **Tailwind CSS v4**.
 </div>
 
-## About
+## Features
 
-This application utilizes [ViteJS](https://vitejs.dev) for building and serving your front-end process, it provides Hot Reloads (HMR) to make development fast and easy.
+- **Card search** with advanced filters: colors, types, rarity, and converted mana cost (CMC)
+- **Deck builder** — add, remove, and organize cards in a current working deck
+- **Deck manager** — save, load, edit, import, and export decks as JSON
+- **Format validation** for Standard, Modern, Vintage, Pauper, Commander, and Freeform
+- **Dark mode** toggle with persistence
+- **Internationalization** — English, Spanish, and Portuguese (pt-BR)
+- **Card detail modal** with mana symbols, oracle text, power/toughness, rarity, and set info
+- Runs as a **desktop app** (Electron) or in the **browser** (web dev server)
 
-Building the Electron (main) process is done with [Electron Builder](https://www.electron.build/), which makes this application easily distributable and supports cross-platform compilation.
-
- ### Built With
+## Built With
 
 * [![React][React]][React-url]
 * [![Vite][Vite.js]][Vite-url]
-* [![NodeJS][NodeJS]][Node-url]
 * [![TypeScript][TypeScript]][TypeScript-url]
 * [![Electron][Electron.js]][Electron-url]
 * [![TailwindCSS][TailwindCSS]][TailwindCSS-url]
 * [![ESLint][ESLint]][ESLint-url]
-* [![Bootstrap][Bootstrap]][Bootstrap-url]
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-<!-- https://github.com/Ileriayo/markdown-badges -->
-[React]: https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB
+[React]: https://img.shields.io/badge/react-%2320232a.svg\?style\=for-the-badge\&logo\=react\&logoColor\=%2361DAFB
 [React-url]: https://react.dev/
-[Vite.js]: https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
+[Vite.js]: https://img.shields.io/badge/vite-%23646CFF.svg\?style\=for-the-badge\&logo\=vite\&logoColor\=white
 [Vite-url]: https://vitejs.dev
-[NodeJS]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
-[Node-url]: https://nodejs.org/
-[TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
+[TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg\?style\=for-the-badge\&logo\=typescript\&logoColor\=white
 [TypeScript-url]: https://www.typescriptlang.org/
-[Electron.js]: https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white
+[Electron.js]: https://img.shields.io/badge/Electron-191970\?style\=for-the-badge\&logo\=Electron\&logoColor\=white
 [Electron-url]: https://www.electronjs.org/
-[TailwindCSS]: https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white
+[TailwindCSS]: https://img.shields.io/badge/tailwindcss-%2338B2AC.svg\?style\=for-the-badge\&logo\=tailwind-css\&logoColor\=white
 [TailwindCSS-url]: https://tailwindcss.com/
-[ESLint]: https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white
+[ESLint]: https://img.shields.io/badge/ESLint-4B3263\?style\=for-the-badge\&logo\=eslint\&logoColor\=white
 [ESLint-url]: https://eslint.org/
-[Bootstrap]: https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com/
 
-## Getting started
+## Getting Started
 
-Packages needed in linux:
+### Linux dependencies (Electron)
 
 ```bash
-sudo apt-get install -yq --no-install-recommends libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 libnss3 libgbm-dev
-```
+sudo apt-get install -yq --no-install-recommends libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 libnss3 libgbm-dev
 
 ***Installed versions:***
 
 ```bash
-node -v # 20.9.0
-yarn -v # 1.22.22
-npm  -v # 10.1.0
-``` 
+node -v # 24.15.0
+yarn -v # 1.22.19
+npm  -v # 11.12.1
+```
 
-### Install dependencies ⏬
+### Install dependencies
 
 ```bash
 npm install
@@ -65,61 +61,57 @@ npm install
 yarn install
 ```
 
-### Start developing ⚒️
+### Develop
 
 ```bash
-# starts application with hot reload
+# Electron app with hot reload
 npm run dev
 
-# OR
-
-yarn dev
+# Browser only (no Electron)
+bash dev-web.sh
 ```
 
-### Additional Commands
-#### Build
+### Build
 
 ```bash
-npm run build # builds application, distributable files can be found in "release" folder
-
-# OR
-
-npm run build:win   # uses windows as build target
-npm run build:mac   # uses mac as build target
-npm run build:linux # uses linux as build target
-
-# OR
-
-yarn build:win   # uses windows as build target
-yarn build:mac   # uses mac as build target
-yarn build:linux # uses linux as build target
+npm run build          # default build
+npm run build:win      # Windows target
+npm run build:mac      # macOS target
+npm run build:linux    # Linux target
 ```
 
-Optional configuration options can be found in the [Electron Builder CLI docs](https://www.electron.build/cli.html).
+Distributable files are generated in `dist-vite/` and `dist-electron/`.
+See [Electron Builder CLI docs](https://www.electron.build/cli.html) for additional options.
 
-#### Lint and Prettier
+### Other scripts
+
 ```bash
-npm run lint # run eslint and prettier
-# OR
-yarn lint # run eslint and prettier
+npm run lint           # ESLint + Prettier auto-fix
+npm run type-check     # TypeScript type check only
+npm run deps:update    # interactive major dependency updates (taze)
+npm run clean          # remove build output folders
 ```
 
-#### Taze
-```bash
-npm run deps:update # run taze major -I
-# OR
-yarn deps:update # run taze major -I
+## Project Structure
+
+```
+src/
+├── components/   # UI components (CardGrid, DeckManager, CardSearch, …)
+├── hooks/        # Custom React hooks (useCardSearch, useDeckManager, …)
+├── locales/      # i18n translations (en, es, pt)
+├── services/     # File download utilities
+├── style/        # Modular CSS (variables, layout, buttons, forms, …)
+├── types/        # TypeScript types (Card, Deck, …)
+└── utils/        # Deck validator, mana symbol helpers
+electron/         # Electron main process & preload script
 ```
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are welcome! To contribute:
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Commit using [Conventional Commits](https://www.conventionalcommits.org/) (`git commit -m 'feat: add my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
 5. Open a Pull Request

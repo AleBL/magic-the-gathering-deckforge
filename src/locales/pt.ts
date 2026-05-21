@@ -104,7 +104,6 @@ const pt = {
     savedLocationNote:
       'Os seus decks são salvos de forma segura e local neste computador utilizando o recurso localStorage do navegador. Você também pode exportá-los em formato JSON como cópia de segurança ou para compartilhamento.',
 
-    // Novas traduções (validação e labels)
     validationEmptyDeck: 'O deck está vazio.',
     validationMinCards: 'O deck deve ter no mínimo 60 cartas (atualmente tem {{count}}).',
     validationMaxCopies: 'Limite de cópias excedido: "{{name}}" tem {{count}} cópias (máximo permitido é {{max}}).',
