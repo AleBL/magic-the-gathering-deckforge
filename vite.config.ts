@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { UserConfig, ConfigEnv } from 'vite';
 import { rmSync } from 'node:fs';
 import { join } from 'path';
@@ -21,6 +22,7 @@ const buildElectron = (isDev: boolean) => ({
 
 const plugins = (isDev: boolean) => [
   react(),
+  tailwindcss(),
   electron([
     {
       // Main-Process entry file of the Electron App.
