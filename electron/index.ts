@@ -2,7 +2,7 @@
 import { join } from 'path';
 
 // Packages
-import { BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
+import { BrowserWindow, app, ipcMain, IpcMainEvent, shell } from 'electron';
 
 // Fix without GPU: disable hardware acceleration to avoid GPU process crash
 app.disableHardwareAcceleration();
@@ -20,7 +20,7 @@ function createWindow() {
     height: 900,
     minWidth: 400,
     minHeight: 500,
-    show: true,
+    show: false, // Start hidden to prevent white flash before React renders
     resizable: true,
     fullscreenable: true,
     webPreferences: {
@@ -28,6 +28,31 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false
     }
+  });
+
+  // Remove default outdated menu bar on Windows/Linux for a premium clean UI
+  window.setMenu(null);
+
+  // Smooth fade-in of the application window once React is fully loaded and ready
+  window.once('ready-to-show', () => {
+    window.show();
+  });
+
+  // Intercept default link navigation to open Scryfall and other external URLs in system browser
+  window.webContents.on('will-navigate', (event, url) => {
+    if (url !== window.webContents.getURL()) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
+
+  // Intercept window opens (e.g. target="_blank") to open in system browser
+  window.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url);
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
   });
 
   const url = process.env.VITE_DEV_SERVER_URL;
