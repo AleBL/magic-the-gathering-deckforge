@@ -15,6 +15,7 @@ app.commandLine.appendSwitch('log-level', '3');
 function createWindow() {
   // Create the browser window.
   const window = new BrowserWindow({
+    title: 'MTG Deck Forge',
     width: 1600,
     height: 900,
     minWidth: 400,
