@@ -1,7 +1,7 @@
 const es = {
   translations: {
     // Header
-    appTitle: 'Magic: The Gathering Search',
+    appTitle: 'MTG Deck Forge',
     searchTab: 'Buscar Cartas',
     decksTab: 'Mis Mazos',
     selectLanguage: 'Idioma',

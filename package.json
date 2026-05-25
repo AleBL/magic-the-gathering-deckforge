@@ -1,22 +1,24 @@
 {
-  "name": "vite-reactts-electron-starter",
+  "name": "magic-the-gathering-deckforge",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist-electron/index.js",
   "author": {
     "name": "Alessandro Barros"
   },
-  "description": "Search Magic: The Gathering cards, build and manage decks with Scryfall API integration.",
+  "description": "Premium Magic: The Gathering card search, deck builder, active analytics, and playtest simulator.",
   "keywords": [
     "vite",
     "react",
     "electron",
-    "typescript"
+    "typescript",
+    "mtg",
+    "deckforge"
   ],
   "repository": {
-    "url": "https://github.com/lTimeless/vite-reactts-electron-starter"
+    "url": "https://github.com/AleBL/magic-the-gathering-deckforge"
   },
-  "productName": "vite-reactts-electron-starter",
+  "productName": "MTG Deck Forge",
   "scripts": {
     "dev": "vite",
     "dev:web": "vite --config vite.config.web.ts",
