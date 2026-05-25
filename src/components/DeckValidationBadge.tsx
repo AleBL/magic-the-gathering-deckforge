@@ -13,11 +13,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
   if (variant === 'compact') {
     return (
       <span
-        className={`status-badge text-[10px] ${
-          validation.isValid
-            ? 'status-badge-success'
-            : 'status-badge-danger'
-        }`}
+        className={`status-badge text-[10px] ${validation.isValid ? 'status-badge-success' : 'status-badge-danger'}`}
       >
         {validation.isValid ? t('valid') : t('invalid')}
       </span>
@@ -25,22 +21,14 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
   }
 
   return (
-    <div
-      className={`alert-banner ${
-        validation.isValid
-          ? 'alert-banner-success'
-          : 'alert-banner-danger'
-      }`}
-    >
+    <div className={`alert-banner ${validation.isValid ? 'alert-banner-success' : 'alert-banner-danger'}`}>
       <div className="validation-badge-header">
         <span className="font-bold">
           {t('deckValidation')} ({t(formatKey)})
         </span>
         <span
           className={`status-badge ${
-            validation.isValid
-              ? 'status-badge-success'
-              : 'status-badge-danger animate-pulse'
+            validation.isValid ? 'status-badge-success' : 'status-badge-danger animate-pulse'
           }`}
         >
           {validation.isValid ? t('valid') : t('invalid')}

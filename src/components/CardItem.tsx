@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaCrown } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { CardSize } from '../types';
 import CardDetailModal from './CardDetailModal';
@@ -35,13 +36,14 @@ function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton 
   const imageUrl = useMemo(() => getCardImageUrl(card, size), [card, size]);
 
   return (
-    <div className="card-item-wrapper group">
-      <button
-        type="button"
-        onClick={() => setIsDetailOpen(true)}
-        className="card-image-button"
-        aria-label={card.name}
-      >
+    <div className="card-item-wrapper group relative">
+      {card.isCommander && (
+        <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
+          <FaCrown className="text-amber-200 text-xs shrink-0 animate-pulse" />
+          {t('commanderBadge') || 'Comandante'}
+        </div>
+      )}
+      <button type="button" onClick={() => setIsDetailOpen(true)} className="card-image-button" aria-label={card.name}>
         <img src={imageUrl} alt={card.name} className="card-image-content" loading="lazy" />
       </button>
 
@@ -49,18 +51,12 @@ function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton 
         <p className="card-action-title">{card.name}</p>
         <div className="card-action-buttons">
           {onAddToDeck && (
-            <button
-              onClick={() => onAddToDeck(card)}
-              className="success-button button-small flex-1"
-            >
+            <button onClick={() => onAddToDeck(card)} className="success-button button-small flex-1">
               {t('addToDeck')}
             </button>
           )}
           {showRemoveButton && onRemoveFromDeck && (
-            <button
-              onClick={() => onRemoveFromDeck(card)}
-              className="danger-button button-small flex-1"
-            >
+            <button onClick={() => onRemoveFromDeck(card)} className="danger-button button-small flex-1">
               {t('remove')}
             </button>
           )}

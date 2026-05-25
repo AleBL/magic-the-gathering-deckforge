@@ -33,6 +33,7 @@ export default function useDeckManager(
       try {
         setSavedDecks(JSON.parse(decksJson));
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error('Error parsing saved decks:', e);
       }
     }
@@ -44,7 +45,12 @@ export default function useDeckManager(
     setDeckValidation(validateDeck(currentDeck, activeFormat));
   }, [currentDeck, deckFormat, editingDeckFormat, editingDeckId]);
 
-  const saveDeck = (name: string, format: DeckFormat, cards: Card[]): { success: boolean; errorKey?: string } => {
+  const saveDeck = (
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string
+  ): { success: boolean; errorKey?: string; createdDeck?: Deck } => {
     if (!name.trim()) {
       return { success: false, errorKey: 'deckNamePlaceholder' };
     }
@@ -58,18 +64,25 @@ export default function useDeckManager(
       name: name.trim(),
       cards,
       format,
+      notes,
       createdAt: new Date().toISOString()
     };
 
     persistDecks([...savedDecks, newDeck]);
     setDeckName('');
     setShowSaveDialog(false);
-    return { success: true };
+    return { success: true, createdDeck: newDeck };
   };
 
-  const saveEditedDeck = (id: string, name: string, format: DeckFormat, cards: Card[]): { success: boolean } => {
+  const saveEditedDeck = (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string
+  ): { success: boolean } => {
     const updatedDecks = savedDecks.map((deck) =>
-      deck.id === id ? { ...deck, name: name.trim(), format, cards } : deck
+      deck.id === id ? { ...deck, name: name.trim(), format, cards, notes } : deck
     );
     persistDecks(updatedDecks);
     return { success: true };

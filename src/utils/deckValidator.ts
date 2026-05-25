@@ -1,5 +1,6 @@
 import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
+import i18n from '../plugins/i18n';
 
 export interface ValidationError {
   key: string;
@@ -10,6 +11,28 @@ export interface ValidationResult {
   isValid: boolean;
   errors: ValidationError[];
 }
+
+const checkOracleText = (oracleText: string, key: string): boolean => {
+  const lowerText = oracleText.toLowerCase();
+  const ptVal = (i18n.getResource('pt', 'translations', key) as string) || '';
+  const enVal = (i18n.getResource('en', 'translations', key) as string) || '';
+  const esVal = (i18n.getResource('es', 'translations', key) as string) || '';
+
+  const allPhrases = [ptVal, enVal, esVal].filter(Boolean).flatMap((s) => s.toLowerCase().split(','));
+
+  return allPhrases.some((phrase) => lowerText.includes(phrase.trim()));
+};
+
+const checkTypeLine = (typeLine: string, key: string): boolean => {
+  const lowerText = typeLine.toLowerCase();
+  const ptVal = (i18n.getResource('pt', 'translations', key) as string) || '';
+  const enVal = (i18n.getResource('en', 'translations', key) as string) || '';
+  const esVal = (i18n.getResource('es', 'translations', key) as string) || '';
+
+  const allPhrases = [ptVal, enVal, esVal].filter(Boolean).flatMap((s) => s.toLowerCase().split(','));
+
+  return allPhrases.some((phrase) => lowerText.includes(phrase.trim()));
+};
 
 export function validateDeck(cards: Card[], format: DeckFormat): ValidationResult {
   const errors: ValidationError[] = [];
@@ -87,6 +110,115 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
         });
       }
     });
+
+    // 1. Check if there is at least one designated Commander in the deck
+    const commanders = cards.filter((card) => card.isCommander);
+    if (commanders.length === 0) {
+      errors.push({
+        key: 'validationCommanderNoCommander'
+      });
+    } else {
+      if (commanders.length > 2) {
+        errors.push({
+          key: 'validationCommanderMaxTwo'
+        });
+      } else if (commanders.length === 2) {
+        // Validate Partner / Choose a Background rule
+        const [c1, c2] = commanders;
+        const t1 = (c1.type_line || '').toLowerCase();
+        const t2 = (c2.type_line || '').toLowerCase();
+        const o1 = (c1.oracle_text || '').toLowerCase();
+        const o2 = (c2.oracle_text || '').toLowerCase();
+
+        // Check Partner, Friends Forever, Doctor's Companion, and Choose a Background rules using i18n
+        const isPartner1 = checkOracleText(o1, 'partnerCheckList');
+        const isPartner2 = checkOracleText(o2, 'partnerCheckList');
+
+        const isFriends1 = checkOracleText(o1, 'friendsCheckList');
+        const isFriends2 = checkOracleText(o2, 'friendsCheckList');
+
+        const isDoctor1 = checkOracleText(o1, 'doctorCheckList');
+        const isDoctor2 = checkOracleText(o2, 'doctorCheckList');
+
+        // Check Choose a Background + Background
+        const isBackgroundCreature1 =
+          checkTypeLine(t1, 'creature') && checkOracleText(o1, 'backgroundCreatureCheckList');
+        const isBackground1 = checkTypeLine(t1, 'backgroundCheckList');
+        const isBackgroundCreature2 =
+          checkTypeLine(t2, 'creature') && checkOracleText(o2, 'backgroundCreatureCheckList');
+        const isBackground2 = checkTypeLine(t2, 'backgroundCheckList');
+
+        const isValidPartnership =
+          (isPartner1 && isPartner2) ||
+          (isFriends1 && isFriends2) ||
+          (isDoctor1 && isDoctor2) ||
+          (isBackgroundCreature1 && isBackground2) ||
+          (isBackgroundCreature2 && isBackground1);
+
+        if (!isValidPartnership) {
+          errors.push({
+            key: 'validationCommanderInvalidPartnership'
+          });
+        }
+      }
+      // 2. Validate designated commander(s)
+      commanders.forEach((commander) => {
+        const typeLine = (commander.type_line || '').toLowerCase();
+        const oracleText = (commander.oracle_text || '').toLowerCase();
+
+        const isLegendary = checkTypeLine(typeLine, 'legendaryCheckList');
+        const isCreature = checkTypeLine(typeLine, 'creature');
+        const isPlaneswalker = checkTypeLine(typeLine, 'planeswalker');
+        const canBeCommander = checkOracleText(oracleText, 'canBeCommanderCheckList');
+
+        const isValidCmd = (isLegendary && isCreature) || (isLegendary && isPlaneswalker && canBeCommander);
+
+        if (!isValidCmd) {
+          errors.push({
+            key: 'validationCommanderInvalidCommander',
+            params: { name: commander.name }
+          });
+        }
+      });
+
+      // 3. Validate color identity of all other cards against the combined identity of commanders
+      const commanderColors = new Set<string>();
+      commanders.forEach((commander) => {
+        if (commander.color_identity) {
+          commander.color_identity.forEach((color) => commanderColors.add(color));
+        }
+      });
+
+      const invalidCards: { name: string; colors: string[] }[] = [];
+      cards.forEach((card) => {
+        if (card.isCommander) return;
+
+        if (card.color_identity) {
+          const hasInvalidColor = card.color_identity.some((color) => !commanderColors.has(color));
+          if (hasInvalidColor) {
+            invalidCards.push({ name: card.name, colors: card.color_identity });
+          }
+        }
+      });
+
+      if (invalidCards.length > 0) {
+        const invalidList =
+          invalidCards
+            .slice(0, 3)
+            .map((card) => `${card.name} (${card.colors.join('')})`)
+            .join(', ') + (invalidCards.length > 3 ? '...' : '');
+
+        const cmdColorsString = Array.from(commanderColors).join('') || 'C'; // Colorless
+
+        errors.push({
+          key: 'validationCommanderColorIdentity',
+          params: {
+            list: invalidList,
+            cmdColors: cmdColorsString
+          }
+        });
+      }
+    }
   }
 
   // Pauper Format Rules
@@ -100,6 +232,48 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
         params: { list }
       });
     }
+  }
+
+  // Format Banned & Restricted lists validation from Scryfall API legalities
+  const bannedMatches: string[] = [];
+  const restrictedMatches: string[] = [];
+
+  cards.forEach((card) => {
+    const cardName = card.name;
+
+    // Check if card is banned in the selected format
+    if (card.legalities) {
+      const status = card.legalities[format as keyof typeof card.legalities];
+      if (status === 'banned') {
+        bannedMatches.push(cardName);
+      }
+    }
+
+    // Check Vintage Restricted (limit 1)
+    if (format === 'vintage' && card.legalities?.vintage === 'restricted') {
+      const count = cardCounts[cardName] || 0;
+      if (count > 1) {
+        restrictedMatches.push(cardName);
+      }
+    }
+  });
+
+  if (bannedMatches.length > 0) {
+    const uniqueBanned = Array.from(new Set(bannedMatches));
+    const list = uniqueBanned.slice(0, 5).join(', ') + (uniqueBanned.length > 5 ? '...' : '');
+    errors.push({
+      key: 'validationBanlist',
+      params: { format, list }
+    });
+  }
+
+  if (restrictedMatches.length > 0) {
+    const uniqueRestricted = Array.from(new Set(restrictedMatches));
+    const list = uniqueRestricted.slice(0, 5).join(', ') + (uniqueRestricted.length > 5 ? '...' : '');
+    errors.push({
+      key: 'validationRestrictedList',
+      params: { list }
+    });
   }
 
   return {

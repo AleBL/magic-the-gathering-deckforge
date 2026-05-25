@@ -33,16 +33,11 @@ function DeckSaveDialog({
   return (
     <div className="modal-overlay">
       <div className="modal-container modal-container-small">
-        <h3 className="modal-title">
-          {t('saveDeck')}
-        </h3>
+        <h3 className="modal-title">{t('saveDeck')}</h3>
 
         <div className="space-y-4 mb-5">
           <div>
-            <label
-              htmlFor="deck-name-input"
-              className="form-label"
-            >
+            <label htmlFor="deck-name-input" className="form-label">
               {t('deckNamePlaceholder')}
             </label>
             <input
@@ -77,19 +72,11 @@ function DeckSaveDialog({
         </div>
 
         <div className="modal-actions">
-          <button
-            type="button"
-            onClick={onSave}
-            className="success-button flex-1"
-          >
+          <button type="button" onClick={onSave} className="success-button flex-1">
             <FaCheck className="text-sm" />
             {t('save')}
           </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="secondary-button flex-1"
-          >
+          <button type="button" onClick={onCancel} className="secondary-button flex-1">
             <FaTimes className="text-sm" />
             {t('cancel')}
           </button>

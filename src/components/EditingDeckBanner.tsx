@@ -20,16 +20,10 @@ function EditingDeckBanner({ deckName, deckFormat, cardCount, onGoToDecks, onCan
         </span>
       </div>
       <div className="flex gap-2">
-        <button
-          onClick={onGoToDecks}
-          className="banner-button-secondary"
-        >
+        <button onClick={onGoToDecks} className="banner-button-secondary">
           {t('decksTab')}
         </button>
-        <button
-          onClick={onCancelEdit}
-          className="banner-button-danger"
-        >
+        <button onClick={onCancelEdit} className="banner-button-danger">
           {t('cancel')}
         </button>
       </div>

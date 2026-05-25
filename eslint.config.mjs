@@ -9,15 +9,7 @@ import globals from 'globals';
 export default tseslint.config(
   // Ignored paths
   {
-    ignores: [
-      'node_modules/**',
-      'dist/**',
-      'dist-electron/**',
-      'dist-vite/**',
-      'src/dist/**',
-      'main/**',
-      'src/out/**'
-    ]
+    ignores: ['node_modules/**', 'dist/**', 'dist-electron/**', 'dist-vite/**', 'src/dist/**', 'main/**', 'src/out/**']
   },
 
   // Base JS recommended
@@ -82,10 +74,7 @@ export default tseslint.config(
           unnamedComponents: 'function-expression'
         }
       ],
-      'react/jsx-filename-extension': [
-        'error',
-        { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
-      ],
+      'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
 
       // React Hooks
       'react-hooks/rules-of-hooks': 'error',

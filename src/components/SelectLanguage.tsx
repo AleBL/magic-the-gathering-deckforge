@@ -54,22 +54,20 @@ function SelectLanguage() {
   return (
     <div className="dropdown-container" ref={dropdownRef}>
       <div className="flex flex-col items-start gap-1">
-        <label className="form-label ml-1">
-          {t('selectLanguage')}
-        </label>
-        
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="dropdown-trigger"
-        >
+        <label className="form-label ml-1">{t('selectLanguage')}</label>
+
+        <button type="button" onClick={() => setIsOpen(!isOpen)} className="dropdown-trigger">
           <div className="flex items-center gap-2">
-            <img src={selectedLang.iconPath} alt={selectedLang.value} className="h-5 w-5 rounded-full object-cover shadow-sm" />
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
-              {selectedLang.value}
-            </span>
+            <img
+              src={selectedLang.iconPath}
+              alt={selectedLang.value}
+              className="h-5 w-5 rounded-full object-cover shadow-sm"
+            />
+            <span className="text-sm font-medium text-gray-900 dark:text-white">{selectedLang.value}</span>
           </div>
-          <FaChevronDown className={`text-gray-500 dark:text-gray-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <FaChevronDown
+            className={`text-gray-500 dark:text-gray-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          />
         </button>
       </div>
 

@@ -21,7 +21,7 @@ export function useCardSearch(language: string) {
 
   const isLoadingMoreRef = useRef(false);
   const isInitialMount = useRef(true);
-  const activeEmittersRef = useRef<MagicEmitter<any>[]>([]);
+  const activeEmittersRef = useRef<MagicEmitter<Scry.Card>[]>([]);
   const latestSearchIdRef = useRef<number>(0);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSearchedQueryRef = useRef(searchQuery);
@@ -172,7 +172,7 @@ export function useCardSearch(language: string) {
         setCards(results);
         setHasMore(more);
         setCurrentPage(2);
-      } catch (e) {
+      } catch {
         if (searchId !== latestSearchIdRef.current) return;
         setError('error');
       } finally {
@@ -202,6 +202,7 @@ export function useCardSearch(language: string) {
       }
     } catch (e) {
       if (searchId !== latestSearchIdRef.current) return;
+      // eslint-disable-next-line no-console
       console.error('Load more failed:', e);
       setHasMore(false);
     } finally {
@@ -215,6 +216,7 @@ export function useCardSearch(language: string) {
   // Initial search on mount
   useEffect(() => {
     loadFirstPage(buildQuery(''));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Debounced search on query/filters change
