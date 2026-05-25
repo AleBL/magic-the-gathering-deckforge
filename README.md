@@ -6,14 +6,16 @@ Search Magic: The Gathering cards, build and manage decks with [Scryfall](https:
 
 ## Features
 
-- **Card search** with advanced filters: colors, types, rarity, and converted mana cost (CMC)
-- **Deck builder** — add, remove, and organize cards in a current working deck
-- **Deck manager** — save, load, edit, import, and export decks as JSON
-- **Format validation** for Standard, Modern, Vintage, Pauper, Commander, and Freeform
-- **Dark mode** toggle with persistence
-- **Internationalization** — English, Spanish, and Portuguese (pt-BR)
-- **Card detail modal** with mana symbols, oracle text, power/toughness, rarity, and set info
-- Runs as a **desktop app** (Electron) or in the **browser** (web dev server)
+- **Card Search** — Advanced filtering by name, colors, types, rarity, and converted mana cost (CMC) using debounced Scryfall search.
+- **Deck Builder** — Add, remove, edit, and organize cards in a dedicated workspace deck.
+- **Deck Manager** — Save, load, edit, import, and export decks locally via `localStorage` or JSON files (MTG Arena and `.DEC` file exports included).
+- **Double-Faced / Transforming Cards** — Flip cards dynamically in the card details modal to see their reverse side with interactive visual rotations and re-calculated attributes (image, P/T, text).
+- **Dynamic Scryfall API Legality Check** — Real-time validation for Standard, Modern, Vintage, Pauper, and Commander querying the Scryfall API directly, with custom Vintage restricted 1-copy limit checks.
+- **Interactive Playtest Simulator** — Realistic playground playmat workspace supporting card drawing, life total tracker, graveyard rescue, and drag-less battlefield positioning (Combat Zone, Support Zone, Spells, and Resource Lands).
+- **Active Deck Statistics & Mana Curve** — High-fidelity visual breakdown of your deck's mana curve chart, average CMC (excluding lands), color distribution, and card types division.
+- **Fully Localized Commander Checks** — 100% internationalized validation rules (Commander validation, "Partner", "Friends Forever", "Doctor's Companion", and "Choose a Background") in English, Spanish, and Portuguese.
+- **Dark Mode** — Modern premium dark-mode toggle with automatic local storage persistence.
+- **Cross-Platform** — Runs as a native desktop shell (Electron) or in a fast browser sandbox.
 
 ## Built With
 
