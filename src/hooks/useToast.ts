@@ -17,6 +17,18 @@ export default function useToast() {
 
   const showToast = useCallback((text: string) => {
     setMessage(text);
+
+    // Trigger native desktop OS notification
+    if (window.Notification && Notification.permission !== 'denied') {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          new Notification('MTG Deck Forge', {
+            body: text,
+            silent: false
+          });
+        }
+      });
+    }
   }, []);
 
   const dismissToast = useCallback(() => {

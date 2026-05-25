@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat } from '../types/Deck';
 import { CardSize } from '../types';
-import { groupCards } from '../utils/deckGrouping';
+import { groupCards, getCardImageUrl } from '../utils/deckGrouping';
 import { validateDeck } from '../utils/deckValidator';
 import DeckValidationBadge from './DeckValidationBadge';
 import PlaytestSimulator from './PlaytestSimulator';
@@ -72,6 +72,27 @@ function DeckPreview({
   const [activeZone, setActiveZone] = useState<Zone>('main');
 
   const activeCards = useMemo(() => (selectedDeck ? selectedDeck.cards : currentDeck), [selectedDeck, currentDeck]);
+
+  // Preload card images into browser cache to avoid flickers on hover enter
+  useEffect(() => {
+    if (!activeCards || activeCards.length === 0) return;
+    const preloadImages = () => {
+      const uniqueUrls = new Set<string>();
+      activeCards.forEach((c) => {
+        const url = getCardImageUrl(c);
+        if (url) uniqueUrls.add(url);
+      });
+      uniqueUrls.forEach((url) => {
+        const img = new Image();
+        img.src = url;
+      });
+    };
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(preloadImages);
+    } else {
+      setTimeout(preloadImages, 100);
+    }
+  }, [activeCards]);
 
   const isCommanderFormat = useMemo(() => {
     const fmt = selectedDeck ? selectedDeck.format : activeFormat;

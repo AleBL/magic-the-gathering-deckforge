@@ -111,6 +111,7 @@ function DeckActionBar({
             {t('downloadDec')}
           </button>
           <button
+            id="playtest-btn"
             type="button"
             onClick={onPlaytest}
             className="success-button text-xs py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 hover:border-indigo-700 font-semibold animate-pulse"

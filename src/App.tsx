@@ -47,7 +47,7 @@ function App() {
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => {},
+    onConfirm: () => { },
     variant: 'info'
   });
 
@@ -72,6 +72,67 @@ function App() {
 
   useEffect(() => {
     fetchSymbols();
+  }, []);
+
+  // Global Desktop Keyboard Shortcuts for Power Users
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const safeNavigator: Navigator & { userAgentData?: { platform?: string }; } = navigator;
+      const isMac = safeNavigator.userAgentData?.platform === 'macOS' || /Mac/i.test(navigator.userAgent);
+      const modifier = isMac ? event.metaKey : event.ctrlKey;
+
+      // Ctrl + F / Cmd + F: Focus and select the Search Card bar
+      if (modifier && event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        setActiveTab('search');
+        setTimeout(() => {
+          const searchInput = document.getElementById('search-input') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+          }
+        }, 50);
+      }
+
+      // Ctrl + S / Cmd + S: Save Current Deck
+      if (modifier && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        setActiveTab('deck');
+        setTimeout(() => {
+          const saveBtn = document.getElementById('save-deck-btn') as HTMLButtonElement;
+          if (saveBtn && !saveBtn.disabled) {
+            saveBtn.click();
+          }
+        }, 50);
+      }
+
+      // Ctrl + P / Cmd + P: Launch Interactive Playtest Simulator
+      if (modifier && event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        setActiveTab('deck');
+        setTimeout(() => {
+          const playtestBtn = document.getElementById('playtest-btn') as HTMLButtonElement;
+          if (playtestBtn && !playtestBtn.disabled) {
+            playtestBtn.click();
+          }
+        }, 50);
+      }
+
+      // Ctrl + Shift + N: Clear Current Deck
+      if (modifier && event.shiftKey && event.key.toLowerCase() === 'n') {
+        event.preventDefault();
+        setActiveTab('deck');
+        setTimeout(() => {
+          const clearBtn = document.getElementById('clear-deck-btn') as HTMLButtonElement;
+          if (clearBtn && !clearBtn.disabled) {
+            clearBtn.click();
+          }
+        }, 50);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleAddToDeck = (card: Card) => {
