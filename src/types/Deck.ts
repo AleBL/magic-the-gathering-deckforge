@@ -7,5 +7,6 @@ export interface Deck {
   name: string;
   cards: Card[];
   format: DeckFormat;
+  notes?: string;
   createdAt: string;
 }

@@ -12,6 +12,7 @@ export interface Card {
   power?: string;
   toughness?: string;
   rarity: string;
+  set?: string;
   set_name: string;
   image_uris?: {
     small: string;
@@ -20,13 +21,32 @@ export interface Card {
     png: string;
     gatherer?: string;
   };
+  prices?: {
+    usd?: string | null;
+    usd_foil?: string | null;
+    eur?: string | null;
+    eur_foil?: string | null;
+    tix?: string | null;
+  };
+  legalities?: {
+    standard: string;
+    modern: string;
+    legacy: string;
+    commander: string;
+    pauper: string;
+    vintage: string;
+    pioneer: string;
+  };
   card_faces?: Array<{
     name: string;
+    printed_name?: string;
     type_line: string;
+    printed_type_line?: string;
     oracle_text?: string;
     printed_text?: string;
-    printed_type_line?: string;
     mana_cost?: string;
+    power?: string;
+    toughness?: string;
     image_uris?: {
       small: string;
       normal: string;
@@ -34,4 +54,8 @@ export interface Card {
       png: string;
     };
   }>;
+  colors?: string[];
+  color_identity?: string[];
+  isCommander?: boolean;
+  zone?: 'main' | 'sideboard' | 'maybeboard';
 }
