@@ -11,17 +11,20 @@ import { DeckFormat } from './types/Deck';
 import { fetchSymbols } from './utils/symbolHelper';
 import useDarkMode from './hooks/useDarkMode';
 import useToast from './hooks/useToast';
+import CustomDialog from './components/CustomDialog';
 
 interface EditingDeckState {
   deckId: string | null;
   deckName: string;
   deckFormat: DeckFormat;
+  deckNotes?: string;
 }
 
 const INITIAL_EDITING_STATE: EditingDeckState = {
   deckId: null,
   deckName: '',
-  deckFormat: 'freeform'
+  deckFormat: 'freeform',
+  deckNotes: ''
 };
 
 function App() {
@@ -31,6 +34,41 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useDarkMode();
   const [editingDeck, setEditingDeck] = useState<EditingDeckState>(INITIAL_EDITING_STATE);
   const { toastMessage, showToast } = useToast();
+
+  const [dialogState, setDialogState] = useState<{
+    isOpen: boolean;
+    type: 'alert' | 'confirm';
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    variant: 'danger' | 'warning' | 'info' | 'success';
+  }>({
+    isOpen: false,
+    type: 'alert',
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    variant: 'info'
+  });
+
+  const showConfirmDialog = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    variant: 'danger' | 'warning' | 'info' | 'success' = 'warning'
+  ) => {
+    setDialogState({
+      isOpen: true,
+      type: 'confirm',
+      title,
+      message,
+      onConfirm: () => {
+        onConfirm();
+        setDialogState((prev) => ({ ...prev, isOpen: false }));
+      },
+      variant
+    });
+  };
 
   useEffect(() => {
     fetchSymbols();
@@ -53,18 +91,64 @@ function App() {
     });
   };
 
-  const handleClearDeck = () => {
-    // TODO(security): Replace window.confirm with in-app confirmation dialog
-    if (window.confirm(t('confirmClear'))) {
-      setCurrentDeck([]);
-      setEditingDeck(INITIAL_EDITING_STATE);
-    }
+  const handleToggleCommander = (cardToToggle: Card) => {
+    setCurrentDeck((prev) => {
+      const index = prev.findIndex((card) => card.id === cardToToggle.id);
+      if (index === -1) return prev;
+
+      const isCurrentlyCommander = !!prev[index].isCommander;
+
+      if (isCurrentlyCommander) {
+        return prev.map((card, idx) => (idx === index ? { ...card, isCommander: false } : card));
+      } else {
+        const currentCommanders = prev.filter((card) => card.isCommander);
+        if (currentCommanders.length >= 2) {
+          const commanderToKeep = currentCommanders[currentCommanders.length - 1];
+          return prev.map((card, idx) => {
+            if (idx === index) {
+              return { ...card, isCommander: true };
+            }
+            if (card.id === commanderToKeep.id) {
+              return { ...card, isCommander: true };
+            }
+            return { ...card, isCommander: false };
+          });
+        } else {
+          return prev.map((card, idx) => (idx === index ? { ...card, isCommander: true } : card));
+        }
+      }
+    });
   };
 
-  const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[]) => {
-    setEditingDeck({ deckId: id, deckName: name, deckFormat: format });
+  const handleClearDeck = () => {
+    showConfirmDialog(
+      t('confirmClearTitle'),
+      t('confirmClear'),
+      () => {
+        setCurrentDeck([]);
+        setEditingDeck(INITIAL_EDITING_STATE);
+      },
+      'danger'
+    );
+  };
+
+  const handleUpdateNotes = (notes: string) => {
+    setEditingDeck((prev) => ({ ...prev, deckNotes: notes }));
+  };
+
+  const handleUpdateCardZone = (cardId: string, zone: 'main' | 'sideboard' | 'maybeboard') => {
+    setCurrentDeck((prev) => {
+      const index = prev.findIndex((c) => c.id === cardId);
+      if (index === -1) return prev;
+      const newDeck = [...prev];
+      newDeck[index] = { ...newDeck[index], zone };
+      return newDeck;
+    });
+  };
+
+  const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
+    setEditingDeck({ deckId: id, deckName: name, deckFormat: format, deckNotes: notes || '' });
     setCurrentDeck(cards);
-    setActiveTab('search');
   };
 
   const handleCancelEdit = () => {
@@ -84,11 +168,9 @@ function App() {
             onCancelEdit={handleCancelEdit}
           />
         )}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3">
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-            <h1 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 hidden md:block">
-              {t('appTitle')}
-            </h1>
+        <div className="header-toolbar">
+          <div className="nav-menu">
+            <h1 className="header-title">{t('appTitle')}</h1>
             <nav className="tab-group">
               <button
                 onClick={() => setActiveTab('search')}
@@ -101,15 +183,11 @@ function App() {
                 className={`tab-button ${activeTab === 'deck' ? 'tab-button-active' : ''}`}
               >
                 {t('decksTab')}
-                {currentDeck.length > 0 && (
-                  <span className="count-badge">
-                    {currentDeck.length}
-                  </span>
-                )}
+                {currentDeck.length > 0 && <span className="count-badge">{currentDeck.length}</span>}
               </button>
             </nav>
           </div>
-          <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-300 dark:border-gray-700">
+          <div className="header-actions">
             <SwitchDarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             <SelectLanguage />
           </div>
@@ -122,18 +200,34 @@ function App() {
         ) : (
           <DeckManager
             currentDeck={currentDeck}
+            onAddToDeck={handleAddToDeck}
             onRemoveFromDeck={handleRemoveFromDeck}
+            onToggleCommander={handleToggleCommander}
             onClearDeck={handleClearDeck}
             editingDeckId={editingDeck.deckId}
             editingDeckName={editingDeck.deckName}
             editingDeckFormat={editingDeck.deckFormat}
+            editingDeckNotes={editingDeck.deckNotes}
+            onUpdateNotes={handleUpdateNotes}
+            onUpdateCardZone={handleUpdateCardZone}
             onLoadDeckToEdit={handleLoadDeckToEdit}
             onCancelEdit={handleCancelEdit}
+            showToast={showToast}
           />
         )}
       </main>
 
       {toastMessage && <Toast message={toastMessage} />}
+
+      <CustomDialog
+        isOpen={dialogState.isOpen}
+        type={dialogState.type}
+        title={dialogState.title}
+        message={dialogState.message}
+        onConfirm={dialogState.onConfirm}
+        onCancel={() => setDialogState((prev) => ({ ...prev, isOpen: false }))}
+        variant={dialogState.variant}
+      />
     </div>
   );
 }

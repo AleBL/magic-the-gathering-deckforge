@@ -57,10 +57,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
 
   return (
     <div className="filters-panel">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="filters-trigger"
-      >
+      <button onClick={() => setIsExpanded(!isExpanded)} className="filters-trigger">
         <span className="font-semibold">{t('advancedFilters')}</span>
         <span className="text-xl">{isExpanded ? '−' : '+'}</span>
       </button>
@@ -68,9 +65,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
       {isExpanded && (
         <div className="filters-content">
           <div>
-            <span className="filters-section-title">
-              {t('colors')}
-            </span>
+            <span className="filters-section-title">{t('colors')}</span>
             <div className="flex gap-2 flex-wrap">
               {colors.map((color) => (
                 <button
@@ -89,9 +84,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
           </div>
 
           <div>
-            <span className="filters-section-title">
-              {t('types')}
-            </span>
+            <span className="filters-section-title">{t('types')}</span>
             <div className="flex gap-2 flex-wrap">
               {types.map((type) => (
                 <button
@@ -108,10 +101,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
           </div>
 
           <div>
-            <label
-              htmlFor="filter-rarity"
-              className="form-label mb-2"
-            >
+            <label htmlFor="filter-rarity" className="form-label mb-2">
               {t('rarity')}
             </label>
             <select
@@ -129,10 +119,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
           </div>
 
           <div>
-            <label
-              htmlFor="filter-cmc"
-              className="form-label mb-2"
-            >
+            <label htmlFor="filter-cmc" className="form-label mb-2">
               {t('cmc')}
             </label>
             <input
@@ -145,10 +132,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
             />
           </div>
 
-          <button
-            onClick={clearFilters}
-            className="danger-button w-full"
-          >
+          <button onClick={clearFilters} className="danger-button w-full">
             {t('clearFilters')}
           </button>
         </div>

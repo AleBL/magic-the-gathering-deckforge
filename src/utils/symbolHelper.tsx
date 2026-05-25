@@ -36,6 +36,7 @@ export async function fetchSymbols() {
       listeners.forEach((l) => l());
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching Scryfall symbology:', e);
   } finally {
     isFetching = false;
@@ -46,7 +47,6 @@ export function getSymbolUrl(symbol: string): string {
   if (symbolMap[symbol]) {
     return symbolMap[symbol];
   }
-  // Fallback para os símbolos padrão do Scryfall (ex: {W/U} -> WU, {T} -> T, {4} -> 4)
   const clean = symbol.replace(/[{}]/g, '').replace(/\//g, '');
   return `https://svgs.scryfall.io/card-symbols/${clean}.svg`;
 }

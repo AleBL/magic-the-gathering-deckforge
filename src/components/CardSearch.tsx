@@ -60,10 +60,7 @@ function CardSearch({ onAddToDeck }: CardSearchProps) {
             placeholder={t('searchPlaceholder')}
             className="form-input flex-1"
           />
-          <button
-            onClick={() => loadFirstPage(buildQuery(searchQuery))}
-            className="primary-button px-6"
-          >
+          <button onClick={() => loadFirstPage(buildQuery(searchQuery))} className="primary-button px-6">
             {t('searchButton')}
           </button>
         </div>
@@ -79,11 +76,7 @@ function CardSearch({ onAddToDeck }: CardSearchProps) {
         {isLoadingInitial && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
             {Array.from({ length: 21 }).map((_, i) => (
-              <div
-                key={i}
-                className="placeholder-pulse"
-                style={{ aspectRatio: '2.5/3.5' }}
-              />
+              <div key={i} className="placeholder-pulse" style={{ aspectRatio: '2.5/3.5' }} />
             ))}
           </div>
         )}
@@ -96,9 +89,7 @@ function CardSearch({ onAddToDeck }: CardSearchProps) {
 
         {!isLoadingInitial && !error && cards.length === 0 && (
           <div className="center-container">
-            <div className="empty-state-text">
-              {t('noResults')}
-            </div>
+            <div className="empty-state-text">{t('noResults')}</div>
           </div>
         )}
 
@@ -108,9 +99,7 @@ function CardSearch({ onAddToDeck }: CardSearchProps) {
 
         {!isLoadingInitial && hasMore && (
           <div ref={sentinelRef} className="h-8 flex items-center justify-center mt-4">
-            {isLoadingMore && (
-              <div className="loading-spinner" />
-            )}
+            {isLoadingMore && <div className="loading-spinner" />}
           </div>
         )}
       </div>

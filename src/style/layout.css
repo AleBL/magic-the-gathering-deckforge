@@ -104,11 +104,11 @@
 
 /* Specialized deck lists and grids in desktop columns */
 .deck-list-section {
-  @apply lg:col-span-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300 h-fit;
+  @apply lg:col-span-1 order-2 lg:order-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300 h-fit;
 }
 
 .deck-preview-section {
-  @apply lg:col-span-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300;
+  @apply lg:col-span-2 order-1 lg:order-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300;
 }
 
 .deck-list-item {
@@ -172,4 +172,191 @@
 .manager-subheader {
   @apply flex flex-col sm:flex-row sm:items-center gap-4 justify-between pt-2 border-t border-gray-300 dark:border-gray-700;
 }
+
+/* Card holographic and premium hover effects */
+.card-item-wrapper {
+  perspective: 1000px;
+}
+
+.card-image-button {
+  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: translate(-100%, -100%) rotate(45deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.card-image-button:hover {
+  transform: translateY(-8px) rotateX(4deg) rotateY(-4deg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.card-image-button:hover::after {
+  transform: translate(100%, 100%) rotate(45deg);
+}
+
+/* Glassmorphism custom dialog overlay */
+.modal-overlay {
+  background-color: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-container-small {
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  @apply bg-white/95 dark:bg-gray-800/95;
+}
+
+/* Premium Dialog Buttons */
+.warning-button {
+  @apply bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors;
+}
+
+/* Mana Curve & Stats styles */
+.deck-stats-container {
+  @apply mt-6 p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-md transition-colors duration-300;
+}
+
+.mana-bar-group {
+  @apply flex flex-col items-center relative;
+}
+
+.mana-bar-column {
+  @apply w-8 bg-gradient-to-t from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 rounded-t transition-all duration-500 ease-out origin-bottom hover:from-blue-400 hover:to-indigo-400;
+}
+
+.mana-bar-tooltip {
+  @apply absolute bottom-full mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-md z-20;
+}
+
+.color-progress-bar {
+  @apply h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
+}
+
+.color-progress-fill {
+  @apply h-full rounded-full transition-all duration-500 ease-out;
+}
+
+/* Premium Compact Deck List View Styles */
+.deck-list-compact {
+  @apply flex flex-col gap-1.5 mt-2;
+}
+
+.deck-list-row {
+  @apply flex items-center justify-between p-2.5 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-white dark:bg-gray-800 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all duration-200 cursor-pointer shadow-sm select-none;
+}
+
+.deck-list-row:hover {
+  transform: translateX(2px);
+  @apply border-blue-400/50 dark:border-blue-500/30 shadow-md;
+}
+
+.deck-list-row-active {
+  @apply border-blue-500 dark:border-blue-400 bg-blue-50/30 dark:bg-blue-950/20 shadow-md;
+}
+
+.quantity-badge {
+  @apply font-mono bg-blue-600/10 text-blue-600 dark:bg-blue-400/10 dark:text-blue-400 border border-blue-600/20 dark:border-blue-400/20 px-2 py-0.5 rounded text-xs font-bold mr-2.5 inline-block shrink-0 shadow-sm;
+}
+
+.deck-list-details {
+  @apply border-l-2 border-blue-500 dark:border-blue-400 bg-slate-50 dark:bg-slate-900/40 rounded-r-lg p-4 mt-1 mb-2.5 space-y-3 transition-all duration-300 shadow-inner;
+}
+
+/* Floating Card Preview Tooltip */
+.floating-card-preview {
+  @apply fixed pointer-events-none z-[9999] rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border border-white/20 dark:border-white/10 bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md transition-all duration-150 ease-out;
+  width: 260px;
+  height: auto;
+  aspect-ratio: 5/7;
+}
+
+.floating-card-loader {
+  @apply absolute inset-0 flex flex-col items-center justify-center text-white bg-slate-900/80;
+}
+
+.floating-card-image {
+  @apply w-full h-full object-contain;
+  animation: fadeIn 0.3s ease both;
+}
+
+/* Custom Refactored Layouts to minimize TSX Tailwind clutter */
+
+.header-toolbar {
+  @apply flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3;
+}
+
+.nav-menu {
+  @apply flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto;
+}
+
+.header-title {
+  @apply text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 hidden md:block;
+}
+
+.header-actions {
+  @apply flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-300 dark:border-gray-700;
+}
+
+.manager-toolbar {
+  @apply flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-gray-50/50 dark:bg-gray-800/20 p-3 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300;
+}
+
+.toolbar-group {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.toolbar-group-responsive {
+  @apply flex flex-wrap items-center gap-2 w-full sm:w-auto;
+}
+
+.toolbar-actions {
+  @apply flex items-center gap-2 border-t sm:border-t-0 border-gray-200 dark:border-gray-700 pt-2 sm:pt-0;
+}
+
+.manager-subheader-toolbar {
+  @apply flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-3 transition-colors duration-300;
+}
+
+.subheader-group {
+  @apply flex flex-wrap gap-4 items-center w-full md:w-auto;
+}
+
+.subheader-item {
+  @apply flex items-center gap-2;
+}
+
+.subheader-actions {
+  @apply flex flex-wrap items-center gap-3 w-full md:w-auto md:justify-end;
+}
+
+.modal-header-container {
+  @apply flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
+}
+
+.modal-footer-container {
+  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
+}
+
+
+
 
