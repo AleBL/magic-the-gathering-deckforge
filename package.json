@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "^8.59.4",
     "autoprefixer": "^10.5.0",
     "concurrently": "^9.2.1",
-    "electron": "^36.3.1",
+    "electron": "^42.2.0",
     "electron-builder": "^26.8.1",
     "esbuild": "*",
     "eslint": "^9.28.0",
