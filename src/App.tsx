@@ -136,6 +136,34 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Listen for native Electron Menu events
+  useEffect(() => {
+    const safeWindow = window as unknown as {
+      ipcRenderer?: {
+        on: (channel: string, listener: () => void) => void;
+        off: (channel: string, listener: () => void) => void;
+      };
+    };
+
+    const ipc = safeWindow.ipcRenderer;
+    if (typeof window !== 'undefined' && ipc) {
+      const handleClear = () => {
+        setActiveTab('deck');
+        setTimeout(() => {
+          const clearBtn = document.getElementById('clear-deck-btn') as HTMLButtonElement;
+          if (clearBtn && !clearBtn.disabled) {
+            clearBtn.click();
+          }
+        }, 50);
+      };
+
+      ipc.on('menu-clear-deck', handleClear);
+      return () => {
+        ipc.off('menu-clear-deck', handleClear);
+      };
+    }
+  }, []);
+
   const handleAddToDeck = (card: Card) => {
     setCurrentDeck((prev) => [...prev, card]);
     showToast(`${card.name}: ${t('cardAdded')}`);
@@ -236,7 +264,7 @@ function App() {
               <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
                 <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse"></div>
                 <img
-                  src="./logo.svg"
+                  src="./PW.svg"
                   alt="MTG Deck Forge Logo"
                   className="relative w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(59,130,246,0.6)]"
                 />
