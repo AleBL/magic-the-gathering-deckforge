@@ -104,9 +104,6 @@
       "createStartMenuShortcut": true,
       "shortcutName": "MTG Deck Forge",
       "license": "LICENSE.md",
-      "installerIcon": "resources/icon.png",
-      "uninstallerIcon": "resources/icon.png",
-      "installerHeaderIcon": "resources/icon.png",
       "runAfterFinish": true
     },
     "mac": {
