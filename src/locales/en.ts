@@ -181,7 +181,7 @@ const en = {
     importing: 'Importing cards...',
     importError: 'Error importing some cards. Please check the names.',
 
-    // Premium features translations
+    // features translations
     validationBanlist: 'Banned cards found: the following cards are banned in {{format}}: {{list}}.',
     validationRestrictedList:
       'Restricted cards exceeded: the following cards are restricted to 1 copy in Vintage: {{list}}.',

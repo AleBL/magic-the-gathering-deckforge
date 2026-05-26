@@ -182,7 +182,7 @@ const es = {
     importing: 'Importando cartas...',
     importError: 'Error al importar algunas cartas. Verifique los nombres.',
 
-    // Premium features translations
+    // features translations
     validationBanlist: 'Cartas prohibidas encontradas: las siguientes cartas están prohibidas en {{format}}: {{list}}.',
     validationRestrictedList:
       'Límite de cartas restringidas excedido: las siguientes cartas están restringidas a 1 copia en Vintage: {{list}}.',

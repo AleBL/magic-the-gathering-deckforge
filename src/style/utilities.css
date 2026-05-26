@@ -14,7 +14,7 @@
 }
 
 .count-badge {
-  @apply absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center;
+  @apply absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-white dark:border-slate-800;
 }
 
 /* Alerts and Banners */

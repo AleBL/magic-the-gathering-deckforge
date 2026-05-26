@@ -181,7 +181,7 @@ const pt = {
     importing: 'Importando cartas...',
     importError: 'Erro ao importar algumas cartas. Verifique os nomes.',
 
-    // Premium features translations
+    // features translations
     validationBanlist: 'Cartas banidas encontradas: as seguintes cartas estão banidas em {{format}}: {{list}}.',
     validationRestrictedList:
       'Limite de cartas restritas excedido: as seguintes cartas são restritas a 1 cópia no Vintage: {{list}}.',

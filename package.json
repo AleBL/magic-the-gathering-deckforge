@@ -6,7 +6,7 @@
   "author": {
     "name": "Alessandro Barros"
   },
-  "description": "Premium Magic: The Gathering card search, deck builder, active analytics, and playtest simulator.",
+  "description": "Magic: The Gathering card search, deck builder, active analytics, and playtest simulator.",
   "keywords": [
     "vite",
     "react",

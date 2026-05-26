@@ -5,7 +5,9 @@
 }
 
 .header-container {
-  @apply bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 transition-colors duration-300;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  @apply sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 border-b border-gray-200 dark:border-slate-800/80 transition-colors duration-300;
 }
 
 .main-content {
@@ -173,7 +175,7 @@
   @apply flex flex-col sm:flex-row sm:items-center gap-4 justify-between pt-2 border-t border-gray-300 dark:border-gray-700;
 }
 
-/* Card holographic and premium hover effects */
+/* Card holographic and hover effects */
 .card-item-wrapper {
   perspective: 1000px;
 }
@@ -191,14 +193,12 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.15) 40%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.15) 60%,
-    rgba(255, 255, 255, 0) 70%
-  );
+  background: linear-gradient(45deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.15) 40%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.15) 60%,
+      rgba(255, 255, 255, 0) 70%);
   transform: translate(-100%, -100%) rotate(45deg);
   transition: transform 0.6s ease;
   pointer-events: none;
@@ -226,7 +226,7 @@
   @apply bg-white/95 dark:bg-gray-800/95;
 }
 
-/* Premium Dialog Buttons */
+/* Dialog Buttons */
 .warning-button {
   @apply bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors;
 }
@@ -256,7 +256,7 @@
   @apply h-full rounded-full transition-all duration-500 ease-out;
 }
 
-/* Premium Compact Deck List View Styles */
+/* Compact Deck List View Styles */
 .deck-list-compact {
   @apply flex flex-col gap-1.5 mt-2;
 }
@@ -282,9 +282,9 @@
   @apply border-l-2 border-blue-500 dark:border-blue-400 bg-slate-50 dark:bg-slate-900/40 rounded-r-lg p-4 mt-1 mb-2.5 space-y-3 transition-all duration-300 shadow-inner;
 }
 
-/* Floating Card Preview Tooltip */
 .floating-card-preview {
-  @apply fixed pointer-events-none z-[9999] rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border border-white/20 dark:border-white/10 bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md transition-all duration-150 ease-out;
+  @apply fixed pointer-events-none z-[9999] rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md transition-all duration-150 ease-out;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
   width: 260px;
   height: auto;
   aspect-ratio: 5/7;
@@ -302,15 +302,15 @@
 /* Custom Refactored Layouts to minimize TSX Tailwind clutter */
 
 .header-toolbar {
-  @apply flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3;
+  @apply flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-3.5 max-w-[1920px] mx-auto w-full;
 }
 
 .nav-menu {
-  @apply flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto;
+  @apply flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto;
 }
 
 .header-title {
-  @apply text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 hidden md:block;
+  @apply text-xl font-black tracking-widest transition-colors duration-300 hidden md:block select-none;
 }
 
 .header-actions {
@@ -356,7 +356,3 @@
 .modal-footer-container {
   @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
 }
-
-
-
-

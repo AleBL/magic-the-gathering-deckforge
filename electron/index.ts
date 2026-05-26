@@ -30,7 +30,7 @@ function createWindow() {
     }
   });
 
-  // Remove default outdated menu bar on Windows/Linux for a premium clean UI
+  // Remove default outdated menu bar on Windows/Linux for a clean UI
   window.setMenu(null);
 
   // Smooth fade-in of the application window once React is fully loaded and ready
