@@ -120,11 +120,28 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
 
     const totalManaColorSymbols = Object.values(manaColorSymbolCounts).reduce((a, b) => a + b, 0);
 
-    const targetLandCount = currentDeck.length >= 80 ? 38 : 24;
+    // Target total land count for the deck size
+    const targetTotalLands = currentDeck.length >= 80 ? 38 : 24;
+
+    // Count existing non-basic lands (don't replace them, only add basics)
+    const basicLandNamesList = [
+      'Plains', 'Island', 'Swamp', 'Mountain', 'Forest', 'Wastes',
+      'Planície', 'Ilha', 'Pântano', 'Montanha', 'Floresta', 'Deserto'
+    ];
+    const existingNonBasicLandCount = currentDeck.filter((card) => {
+      const typeLine = card.type_line?.toLowerCase() || '';
+      const isLand = typeLine.includes('land');
+      const isBasic = typeLine.includes('basic land') || basicLandNamesList.includes(card.name);
+      return isLand && !isBasic;
+    }).length;
+
+    // How many basic lands we actually need to add
+    const neededBasicLands = Math.max(0, targetTotalLands - existingNonBasicLandCount);
+
     const suggestedBasicLandCounts: Record<string, number> = { Plains: 0, Island: 0, Swamp: 0, Mountain: 0, Forest: 0 };
 
-    if (totalManaColorSymbols > 0) {
-      let remainingLandsToAllocate = targetLandCount;
+    if (neededBasicLands > 0 && totalManaColorSymbols > 0) {
+      let remainingLandsToAllocate = neededBasicLands;
       const sortedColorSymbolEntries = Object.entries(manaColorSymbolCounts).sort((a, b) => b[1] - a[1]);
       const colorToBasicLandNameMap: Record<string, string> = {
         W: 'Plains',
@@ -139,16 +156,18 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
         if (allocationIndex === sortedColorSymbolEntries.length - 1) {
           suggestedBasicLandCounts[basicLandName] = remainingLandsToAllocate;
         } else {
-          const allocationShare = Math.round((symbolCount / totalManaColorSymbols) * targetLandCount);
+          const allocationShare = Math.round((symbolCount / totalManaColorSymbols) * neededBasicLands);
           const allocatedLands = Math.min(allocationShare, remainingLandsToAllocate);
           suggestedBasicLandCounts[basicLandName] = allocatedLands;
           remainingLandsToAllocate -= allocatedLands;
         }
       });
-    } else {
+    } else if (neededBasicLands > 0) {
       // Fallback wastes allocation for completely colorless spells
-      suggestedBasicLandCounts['Wastes'] = targetLandCount;
+      suggestedBasicLandCounts['Wastes'] = neededBasicLands;
     }
+
+    const targetLandCount = neededBasicLands;
 
     // 7. Budget Price Estimator Calculations
     let totalUsdPrice = 0;
@@ -174,6 +193,8 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
       cardTypeCounts,
       totalCards: currentDeck.length,
       suggestedBasicLandCounts,
+      neededBasicLands: targetLandCount,
+      targetTotalLands: currentDeck.length >= 80 ? 38 : 24,
       totalUsdPrice,
       totalEurPrice,
       mostExpensiveCards
@@ -296,8 +317,17 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             {t(
               'manaBaseExplanation',
               'Analyze colors in your spells and auto-add basic lands to reach a solid {{target}} lands ratio.'
-            ).replace('{{target}}', String(currentDeck.length >= 80 ? 38 : 24))}
+            ).replace('{{target}}', String(deckStatistics.targetTotalLands))}
           </p>
+          {deckStatistics.neededBasicLands > 0 ? (
+            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
+              {t('willAddLands', '{{count}} basic lands will be added').replace('{{count}}', String(deckStatistics.neededBasicLands))}
+            </p>
+          ) : (
+            <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">
+              {t('landsAlreadySufficient', 'Land count looks good — non-basic lands already cover the target.')}
+            </p>
+          )}
 
           <div className="flex flex-wrap gap-2 pt-1">
             {Object.entries(deckStatistics.suggestedBasicLandCounts).map(([landName, count]) => {

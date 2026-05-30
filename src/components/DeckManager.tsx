@@ -394,7 +394,14 @@ function DeckManager({
     });
 
     const newDeckCards = [...nonBasicLands, ...newBasicLands];
-    onLoadDeckToEdit(editingDeckId || '', editingDeckName || '', activeFormat, newDeckCards);
+    // Preserve the current editing state — never use '' as deckId if we're genuinely editing
+    onLoadDeckToEdit(
+      editingDeckId ?? '',
+      editingDeckName || '',
+      activeFormat,
+      newDeckCards,
+      editingDeckNotes
+    );
     showToast(t('deckSaved'));
   };
 
