@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import SwitchDarkMode from './components/SwitchDarkMode';
-import SelectLanguage from './components/SelectLanguage';
+import ProfileMenu from './components/ProfileMenu';
 import CardSearch from './components/CardSearch';
 import DeckManager from './components/DeckManager';
 import EditingDeckBanner from './components/EditingDeckBanner';
@@ -293,8 +292,7 @@ function App() {
             </nav>
           </div>
           <div className="header-actions">
-            <SwitchDarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-            <SelectLanguage />
+            <ProfileMenu isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           </div>
         </div>
       </header>
