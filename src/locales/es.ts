@@ -299,7 +299,47 @@ const es = {
     backline: 'Zona de Soporte',
     spells: 'Hechizos',
     resourceLands: 'Tierras y Recursos',
-    emptyZone: 'No hay cartas colocadas en esta zona'
+    emptyZone: 'No hay cartas colocadas en esta zona',
+
+    // Menú de Perfil
+    profileMenu: 'Perfil y Configuración',
+    aboutApp: 'Acerca de',
+    help: 'Ayuda',
+    keyboardShortcuts: 'Atajos de Teclado',
+    version: 'Versión',
+    appDescription: 'Una app de escritorio premium para jugadores de Magic: The Gathering. Busca cartas, crea mazos, analiza estadísticas y simula partidas.',
+    gitHub: 'Ver en GitHub',
+    theme: 'Tema',
+    darkMode: 'Modo Oscuro',
+    lightMode: 'Modo Claro',
+    language: 'Idioma',
+    shortcutSearch: 'Enfocar barra de búsqueda',
+    shortcutSave: 'Guardar mazo actual',
+    shortcutPlaytest: 'Iniciar playtest',
+    shortcutClear: 'Limpiar mazo actual',
+
+    // Impresión de Proxies
+    printProxies: 'Imprimir Proxies',
+    printProxiesTitle: 'Imprimir / Guardar como PDF',
+    printProxiesDesc: 'Imprime las cartas de tu mazo como proxies. Usa la opción "Guardar como PDF" de tu navegador para crear un archivo PDF.',
+    printAll: 'Imprimir',
+    printSpacing: 'Espaciado entre Cartas',
+    spacingNone: 'Ninguno',
+    spacingSmall: 'Pequeño',
+    spacingLarge: 'Grande',
+    cuttingGuide: 'Guía de Corte',
+    cuttingGuideNone: 'Ninguno',
+    cuttingGuideLine: 'Línea Sólida',
+    cuttingGuideDotted: 'Línea Punteada',
+    cardsPerRow: 'Cartas por Fila',
+    selectZoneToPrint: 'Zona a Imprimir',
+    printZoneAll: 'Todas las Cartas',
+    printZoneMain: 'Solo Mazo Principal',
+    printZoneSide: 'Solo Sideboard',
+
+    // Mensajes de corrección de base de maná
+    willAddLands: 'Se agregarán {{count}} tierras básicas',
+    landsAlreadySufficient: 'La cantidad de tierras está bien — las tierras no básicas ya cubren el objetivo.'
   }
 };
 

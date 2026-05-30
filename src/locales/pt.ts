@@ -299,7 +299,47 @@ const pt = {
     backline: 'Zona de Suporte',
     spells: 'Mágicas',
     resourceLands: 'Terrenos & Recursos',
-    emptyZone: 'Nenhuma carta posicionada nesta zona'
+    emptyZone: 'Nenhuma carta posicionada nesta zona',
+
+    // Menu de Perfil
+    profileMenu: 'Perfil & Configurações',
+    aboutApp: 'Sobre',
+    help: 'Ajuda',
+    keyboardShortcuts: 'Atalhos de Teclado',
+    version: 'Versão',
+    appDescription: 'Um app desktop premium para jogadores de Magic: The Gathering. Busque cartas, construa decks, analise estatísticas e faça simulações de playtest.',
+    gitHub: 'Ver no GitHub',
+    theme: 'Tema',
+    darkMode: 'Modo Escuro',
+    lightMode: 'Modo Claro',
+    language: 'Idioma',
+    shortcutSearch: 'Focar barra de busca',
+    shortcutSave: 'Salvar deck atual',
+    shortcutPlaytest: 'Iniciar playtest',
+    shortcutClear: 'Limpar deck atual',
+
+    // Impressão de Proxies
+    printProxies: 'Imprimir Proxies',
+    printProxiesTitle: 'Imprimir / Salvar como PDF',
+    printProxiesDesc: 'Imprima as cartas do seu deck como proxies. Use a opção "Salvar como PDF" do seu navegador para criar um arquivo PDF.',
+    printAll: 'Imprimir',
+    printSpacing: 'Espaçamento entre Cartas',
+    spacingNone: 'Nenhum',
+    spacingSmall: 'Pequeno',
+    spacingLarge: 'Grande',
+    cuttingGuide: 'Guia de Corte',
+    cuttingGuideNone: 'Nenhum',
+    cuttingGuideLine: 'Linha Sólida',
+    cuttingGuideDotted: 'Linha Pontilhada',
+    cardsPerRow: 'Cartas por Linha',
+    selectZoneToPrint: 'Zona para Imprimir',
+    printZoneAll: 'Todas as Cartas',
+    printZoneMain: 'Apenas Deck Principal',
+    printZoneSide: 'Apenas Sideboard',
+
+    // Mensagens de correção de base de mana
+    willAddLands: '{{count}} terrenos básicos serão adicionados',
+    landsAlreadySufficient: 'A quantidade de terrenos está boa — os terrenos não-básicos já cobrem o alvo.'
   }
 };
 

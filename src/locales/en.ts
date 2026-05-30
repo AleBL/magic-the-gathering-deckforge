@@ -297,7 +297,47 @@ const en = {
     backline: 'Support Zone',
     spells: 'Spells',
     resourceLands: 'Lands & Resources',
-    emptyZone: 'No cards positioned in this zone'
+    emptyZone: 'No cards positioned in this zone',
+
+    // Profile Menu
+    profileMenu: 'Profile & Settings',
+    aboutApp: 'About',
+    help: 'Help',
+    keyboardShortcuts: 'Keyboard Shortcuts',
+    version: 'Version',
+    appDescription: 'A premium desktop app for Magic: The Gathering players. Search cards, build decks, analyze stats, and playtest simulations.',
+    gitHub: 'View on GitHub',
+    theme: 'Theme',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    language: 'Language',
+    shortcutSearch: 'Focus search bar',
+    shortcutSave: 'Save current deck',
+    shortcutPlaytest: 'Launch playtest',
+    shortcutClear: 'Clear current deck',
+
+    // Print Proxies
+    printProxies: 'Print Proxies',
+    printProxiesTitle: 'Print / Save as PDF',
+    printProxiesDesc: 'Print your deck cards as proxies. Use your browser\'s "Save as PDF" option to create a PDF file.',
+    printAll: 'Print',
+    printSpacing: 'Card Spacing',
+    spacingNone: 'None',
+    spacingSmall: 'Small',
+    spacingLarge: 'Large',
+    cuttingGuide: 'Cutting Guide',
+    cuttingGuideNone: 'None',
+    cuttingGuideLine: 'Solid Line',
+    cuttingGuideDotted: 'Dotted Line',
+    cardsPerRow: 'Cards per Row',
+    selectZoneToPrint: 'Zone to Print',
+    printZoneAll: 'All Cards',
+    printZoneMain: 'Main Deck only',
+    printZoneSide: 'Sideboard only',
+
+    // Mana base fix messages
+    willAddLands: '{{count}} basic lands will be added',
+    landsAlreadySufficient: 'Land count looks good — non-basic lands already cover the target.'
   }
 };
 
