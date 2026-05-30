@@ -13,6 +13,7 @@ import useDarkMode from './hooks/useDarkMode';
 import useToast from './hooks/useToast';
 import CustomDialog from './components/CustomDialog';
 import { FaSearch, FaLayerGroup } from 'react-icons/fa';
+import pwLogo from './assets/PW.svg';
 
 interface EditingDeckState {
   deckId: string | null;
@@ -48,7 +49,7 @@ function App() {
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => {},
+    onConfirm: () => { },
     variant: 'info'
   });
 
@@ -264,7 +265,7 @@ function App() {
               <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
                 <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse"></div>
                 <img
-                  src="./PW.svg"
+                  src={pwLogo}
                   alt="MTG Deck Forge Logo"
                   className="relative w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(59,130,246,0.6)]"
                 />
