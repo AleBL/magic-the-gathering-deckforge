@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCopy, FaDownload, FaDiceD20, FaEdit, FaTimes } from 'react-icons/fa';
+import { FaCopy, FaDownload, FaDiceD20, FaEdit, FaTimes, FaPrint } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { Deck } from '../../types/Deck';
 
@@ -8,6 +8,7 @@ interface DeckActionBarProps {
   selectedDeck?: Deck | null;
   showToast: (text: string) => void;
   onPlaytest: () => void;
+  onPrintProxies?: () => void;
   /** Mostrado apenas quando há deck selecionado */
   onLoadDeckToEdit?: () => void;
   onDeselectDeck?: () => void;
@@ -18,6 +19,7 @@ function DeckActionBar({
   selectedDeck,
   showToast,
   onPlaytest,
+  onPrintProxies,
   onLoadDeckToEdit,
   onDeselectDeck
 }: DeckActionBarProps) {
@@ -110,6 +112,17 @@ function DeckActionBar({
             <FaDownload className="text-[10px] shrink-0" />
             {t('downloadDec')}
           </button>
+          {onPrintProxies && (
+            <button
+              type="button"
+              onClick={onPrintProxies}
+              className="secondary-button text-xs py-1.5 px-3"
+              title={t('printProxies')}
+            >
+              <FaPrint className="text-[10px] shrink-0" />
+              {t('printProxies')}
+            </button>
+          )}
           <button
             id="playtest-btn"
             type="button"

@@ -16,6 +16,7 @@ import DeckNotesEditor from './deck/DeckNotesEditor';
 import DeckCardList from './deck/DeckCardList';
 import DeckStackView from './deck/DeckStackView';
 import CardSizeSelector from './CardSizeSelector';
+import DeckProxyPrint from './DeckProxyPrint';
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -68,6 +69,7 @@ function DeckPreview({
   const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isPlaytestOpen, setIsPlaytestOpen] = useState(false);
+  const [isProxyPrintOpen, setIsProxyPrintOpen] = useState(false);
   const [activeNoteTab, setActiveNoteTab] = useState<NoteTab>('cards');
   const [activeZone, setActiveZone] = useState<Zone>('main');
 
@@ -230,6 +232,7 @@ function DeckPreview({
               selectedDeck={selectedDeck}
               showToast={showToast}
               onPlaytest={() => setIsPlaytestOpen(true)}
+              onPrintProxies={() => setIsProxyPrintOpen(true)}
               onLoadDeckToEdit={() =>
                 onLoadDeckToEdit(
                   selectedDeck.id,
@@ -270,6 +273,13 @@ function DeckPreview({
           deckCards={activeCards}
           deckFormat={selectedDeck.format || 'freeform'}
         />
+
+        <DeckProxyPrint
+          isOpen={isProxyPrintOpen}
+          onClose={() => setIsProxyPrintOpen(false)}
+          cards={activeCards}
+          deckName={selectedDeck.name}
+        />
       </div>
     );
   }
@@ -297,7 +307,12 @@ function DeckPreview({
         {currentDeck.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center">
             <DeckViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-            <DeckActionBar cards={activeCards} showToast={showToast} onPlaytest={() => setIsPlaytestOpen(true)} />
+            <DeckActionBar
+              cards={activeCards}
+              showToast={showToast}
+              onPlaytest={() => setIsPlaytestOpen(true)}
+              onPrintProxies={() => setIsProxyPrintOpen(true)}
+            />
           </div>
         )}
       </div>
@@ -325,6 +340,12 @@ function DeckPreview({
         onClose={() => setIsPlaytestOpen(false)}
         deckCards={activeCards}
         deckFormat={activeFormat}
+      />
+
+      <DeckProxyPrint
+        isOpen={isProxyPrintOpen}
+        onClose={() => setIsProxyPrintOpen(false)}
+        cards={activeCards}
       />
     </div>
   );
