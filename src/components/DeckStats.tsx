@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
-import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle } from 'react-icons/fa';
+import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle, FaExclamationTriangle } from 'react-icons/fa';
 
 interface DeckStatsProps {
   currentDeck: Card[];
@@ -138,6 +138,17 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
     // How many basic lands we actually need to add
     const neededBasicLands = Math.max(0, targetTotalLands - existingNonBasicLandCount);
 
+    // Calculate limit warnings
+    const nonBasicCardsList = currentDeck.filter((card) => {
+      const typeLine = card.type_line?.toLowerCase() || '';
+      const isBasic = typeLine.includes('basic land') || basicLandNamesList.includes(card.name);
+      return !isBasic;
+    });
+    const totalNonBasicCards = nonBasicCardsList.length;
+    const finalDeckSize = totalNonBasicCards + neededBasicLands;
+    const targetDeckLimit = currentDeck.length >= 80 ? 100 : 60;
+    const removeCount = Math.max(0, finalDeckSize - targetDeckLimit);
+
     const suggestedBasicLandCounts: Record<string, number> = { Plains: 0, Island: 0, Swamp: 0, Mountain: 0, Forest: 0 };
 
     if (neededBasicLands > 0 && totalManaColorSymbols > 0) {
@@ -195,6 +206,10 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
       suggestedBasicLandCounts,
       neededBasicLands: targetLandCount,
       targetTotalLands: currentDeck.length >= 80 ? 38 : 24,
+      totalNonBasicCards,
+      finalDeckSize,
+      targetDeckLimit,
+      removeCount,
       totalUsdPrice,
       totalEurPrice,
       mostExpensiveCards
@@ -229,11 +244,13 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             {Object.entries(deckStatistics.convertedManaCostCounts).map(([convertedManaCost, count]) => {
               const heightPct = `${(count / deckStatistics.maximumConvertedManaCostCount) * 100}%`;
               return (
-                <div key={convertedManaCost} className="mana-bar-group group flex-1">
+                <div key={convertedManaCost} className="mana-bar-group group flex-1 h-full flex flex-col justify-end">
                   <div className="mana-bar-tooltip">
                     {count} {t('cards')}
                   </div>
-                  <div className="mana-bar-column" style={{ height: heightPct }} />
+                  <div className="h-24 w-full flex items-end justify-center">
+                    <div className="mana-bar-column" style={{ height: heightPct }} />
+                  </div>
                   <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mt-2 block text-center">
                     {convertedManaCost}
                   </span>
@@ -327,6 +344,21 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">
               {t('landsAlreadySufficient', 'Land count looks good — non-basic lands already cover the target.')}
             </p>
+          )}
+
+          {deckStatistics.removeCount > 0 && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
+              <FaExclamationTriangle className="text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-[11px] text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
+                {t(
+                  'manaBaseWarning',
+                  'Warning: Adding these lands will make the deck have {{finalSize}} cards (limit {{limit}}). You may need to remove {{removeCount}} non-land spells to optimize your deck size.'
+                )
+                  .replace('{{finalSize}}', String(deckStatistics.finalDeckSize))
+                  .replace('{{limit}}', String(deckStatistics.targetDeckLimit))
+                  .replace('{{removeCount}}', String(deckStatistics.removeCount))}
+              </p>
+            </div>
           )}
 
           <div className="flex flex-wrap gap-2 pt-1">

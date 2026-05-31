@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle } from 'react-icons/fa';
+import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat } from '../types/Deck';
 import { CardSize } from '../types';
@@ -17,6 +17,7 @@ import DeckCardList from './deck/DeckCardList';
 import DeckStackView from './deck/DeckStackView';
 import CardSizeSelector from './CardSizeSelector';
 import DeckProxyPrint from './DeckProxyPrint';
+import DeckStats from './DeckStats';
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -37,10 +38,11 @@ interface DeckPreviewProps {
   showToast: (text: string) => void;
   onCardSizeChange?: (size: CardSize) => void;
   onSaveNotesDirectly?: (deckId: string, notes: string) => void;
+  onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
 }
 
 type ViewMode = 'list' | 'grid' | 'stack';
-type NoteTab = 'cards' | 'notes';
+type NoteTab = 'cards' | 'notes' | 'stats';
 type Zone = 'main' | 'sideboard' | 'maybeboard';
 
 function DeckPreview({
@@ -61,7 +63,8 @@ function DeckPreview({
   sortBy,
   showToast,
   onCardSizeChange,
-  onSaveNotesDirectly
+  onSaveNotesDirectly,
+  onApplySuggestedLands
 }: DeckPreviewProps) {
   const { t } = useTranslation();
 
@@ -149,6 +152,13 @@ function DeckPreview({
         className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'notes' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
       >
         <FaPencilAlt className="text-[11px]" /> {t('strategyGuide')}
+      </button>
+      <button
+        type="button"
+        onClick={() => setActiveNoteTab('stats')}
+        className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'stats' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
+      >
+        <FaChartBar className="text-[11px]" /> {t('deckStats')}
       </button>
     </div>
   );
@@ -259,6 +269,8 @@ function DeckPreview({
             isEditable={true}
             onSave={(notes) => onSaveNotesDirectly?.(selectedDeck.id, notes)}
           />
+        ) : activeNoteTab === 'stats' ? (
+          <DeckStats currentDeck={activeCards} />
         ) : (
           renderCards(false)
         )}
@@ -321,6 +333,8 @@ function DeckPreview({
 
       {activeNoteTab === 'notes' ? (
         <DeckNotesEditor initialNotes={editingDeckNotes} isEditable={true} onSave={onUpdateNotes} />
+      ) : activeNoteTab === 'stats' ? (
+        <DeckStats currentDeck={activeCards} onApplySuggestedLands={onApplySuggestedLands} />
       ) : (
         <>
           {currentDeck.length === 0 ? (

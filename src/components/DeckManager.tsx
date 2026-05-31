@@ -576,7 +576,10 @@ function DeckManager({
             selectedDeckId={selectedDeck?.id ?? null}
             editingDeckId={editingDeckId}
             onSelectDeck={setSelectedDeck}
-            onEditDeck={onLoadDeckToEdit}
+            onEditDeck={(id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
+              setSelectedDeck(null);
+              onLoadDeckToEdit(id, name, format, cards, notes);
+            }}
             onExportDeck={exportDeck}
             onDeleteDeck={handleDeleteDeck}
           />
@@ -599,19 +602,9 @@ function DeckManager({
             showToast={showToast}
             onCardSizeChange={setCardSize}
             onSaveNotesDirectly={handleSaveDeckNotesDirectly}
+            onApplySuggestedLands={handleApplySuggestedLands}
           />
         </div>
-
-        {/* Deck statistics */}
-        {currentDeck.length > 0 && (
-          <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-800 pt-4">
-            <h3 className="text-gray-900 dark:text-white text-lg font-bold transition-colors duration-300 px-4 mb-2 flex items-center gap-2">
-              <FaChartBar className="text-blue-500 shrink-0" />
-              <span>{t('deckStats')}</span>
-            </h3>
-            <DeckStats currentDeck={currentDeck} onApplySuggestedLands={handleApplySuggestedLands} />
-          </div>
-        )}
       </div>
 
       {showSaveDialog && (
