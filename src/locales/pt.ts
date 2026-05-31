@@ -336,10 +336,14 @@ const pt = {
     printZoneAll: 'Todas as Cartas',
     printZoneMain: 'Apenas Deck Principal',
     printZoneSide: 'Apenas Sideboard',
-
+    paperSize: 'Tamanho da Folha',
+    paperSizeA4: 'A4',
+    paperSizeLetter: 'Carta (US Letter)',
+ 
     // Mensagens de correção de base de mana
     willAddLands: '{{count}} terrenos básicos serão adicionados',
-    landsAlreadySufficient: 'A quantidade de terrenos está boa — os terrenos não-básicos já cobrem o alvo.'
+    landsAlreadySufficient: 'A quantidade de terrenos está boa — os terrenos não-básicos já cobrem o alvo.',
+    manaBaseWarning: 'Aviso: Adicionar estes terrenos fará o deck ter {{finalSize}} cartas (limite de {{limit}}). Recomendamos remover {{removeCount}} mágicas para otimizar o deck.'
   }
 };
 

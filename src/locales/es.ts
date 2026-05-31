@@ -336,10 +336,14 @@ const es = {
     printZoneAll: 'Todas las Cartas',
     printZoneMain: 'Solo Mazo Principal',
     printZoneSide: 'Solo Sideboard',
+    paperSize: 'Tamaño de Hoja',
+    paperSizeA4: 'A4',
+    paperSizeLetter: 'Carta (US Letter)',
 
     // Mensajes de corrección de base de maná
     willAddLands: 'Se agregarán {{count}} tierras básicas',
-    landsAlreadySufficient: 'La cantidad de tierras está bien — las tierras no básicas ya cubren el objetivo.'
+    landsAlreadySufficient: 'La cantidad de tierras está bien — las tierras no básicas ya cubren el objetivo.',
+    manaBaseWarning: 'Aviso: Agregar estas tierras hará que el mazo tenga {{finalSize}} cartas (límite de {{limit}}). Recomendamos quitar {{removeCount}} hechizos para optimizar su mazo.'
   }
 };
 

@@ -334,10 +334,14 @@ const en = {
     printZoneAll: 'All Cards',
     printZoneMain: 'Main Deck only',
     printZoneSide: 'Sideboard only',
-
+    paperSize: 'Paper Size',
+    paperSizeA4: 'A4',
+    paperSizeLetter: 'US Letter',
+ 
     // Mana base fix messages
     willAddLands: '{{count}} basic lands will be added',
-    landsAlreadySufficient: 'Land count looks good — non-basic lands already cover the target.'
+    landsAlreadySufficient: 'Land count looks good — non-basic lands already cover the target.',
+    manaBaseWarning: 'Warning: Adding these lands will make the deck have {{finalSize}} cards (limit {{limit}}). We suggest removing {{removeCount}} non-land cards to keep the deck optimized.'
   }
 };
 
