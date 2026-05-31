@@ -21,6 +21,12 @@ const SPACING_MAP: Record<SpacingOption, string> = {
   large: '14px'
 };
 
+const PRINT_SPACING_MAP: Record<SpacingOption, string> = {
+  none: '0mm',
+  small: '2.5mm',
+  large: '6mm'
+};
+
 const CARDS_PER_ROW_OPTIONS = [2, 3, 4] as const;
 
 function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProps) {
@@ -29,6 +35,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
   const [cuttingGuide, setCuttingGuide] = useState<CuttingGuide>('dotted');
   const [cardsPerRow, setCardsPerRow] = useState<number>(3);
   const [zoneFilter, setZoneFilter] = useState<ZoneFilter>('all');
+  const [pageSize, setPageSize] = useState<'a4' | 'letter'>('a4');
   const printAreaRef = useRef<HTMLDivElement>(null);
 
   const filteredCards = useMemo(() => {
@@ -38,6 +45,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
   }, [cards, zoneFilter]);
 
   const gapValue = SPACING_MAP[spacing];
+  const printGapValue = PRINT_SPACING_MAP[spacing];
 
   const borderStyle = useMemo(() => {
     if (cuttingGuide === 'none') return 'none';
@@ -52,7 +60,11 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
     style.textContent = `
       @media print {
         body > * { display: none !important; }
-        #proxy-print-root { display: flex !important; }
+        #proxy-print-root { display: block !important; }
+        @page {
+          size: ${pageSize};
+          margin: 10mm;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -100,6 +112,19 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                 <option value="all">{t('printZoneAll')}</option>
                 <option value="main">{t('printZoneMain')}</option>
                 <option value="sideboard">{t('printZoneSide')}</option>
+              </select>
+            </div>
+
+            {/* Paper Size selector */}
+            <div className="proxy-setting-group">
+              <label className="proxy-setting-label">{t('paperSize')}</label>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(e.target.value as 'a4' | 'letter')}
+                className="proxy-select"
+              >
+                <option value="a4">{t('paperSizeA4')}</option>
+                <option value="letter">{t('paperSizeLetter')}</option>
               </select>
             </div>
 
@@ -242,14 +267,17 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
           boxSizing: 'border-box'
         }}
       >
-        <p style={{ fontSize: '10px', color: '#999', marginBottom: '4mm' }}>
+        <p style={{ fontSize: '10px', color: '#999', marginBottom: '4mm', fontFamily: 'system-ui, sans-serif' }}>
           {deckName || 'MTG Deck Forge'} — Proxy Print
         </p>
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${cardsPerRow}, 1fr)`,
-            gap: gapValue
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: printGapValue,
+            justifyContent: 'flex-start',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
           {filteredCards.map((card, index) => {
@@ -258,9 +286,11 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
               <div
                 key={`print-${card.id}-${index}`}
                 style={{
-                  aspectRatio: '5/7',
+                  width: '63mm',
+                  height: '88mm',
+                  boxSizing: 'border-box',
                   border: borderStyle,
-                  borderRadius: cuttingGuide !== 'none' ? '4px' : '0',
+                  borderRadius: cuttingGuide !== 'none' ? '1.5mm' : '0',
                   overflow: 'hidden',
                   breakInside: 'avoid',
                   background: '#1a1a1a',
@@ -276,7 +306,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 ) : (
-                  <span style={{ fontSize: '8px', color: '#aaa', textAlign: 'center', padding: '4px' }}>
+                  <span style={{ fontSize: '8px', color: '#aaa', textAlign: 'center', padding: '4px', fontFamily: 'system-ui, sans-serif' }}>
                     {card.name}
                   </span>
                 )}
