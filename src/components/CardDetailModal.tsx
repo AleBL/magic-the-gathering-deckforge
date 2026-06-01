@@ -5,6 +5,7 @@ import { FaCrown, FaShieldAlt, FaSync, FaPalette } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { parseTextWithSymbols } from '../utils/symbolHelper';
 import { CardPrintsModal } from './CardPrintsModal';
+import { useCardRelatedTokensForCard } from '../hooks/useCardRelatedTokens';
 
 interface CardDetailModalProps {
   card: Card;
@@ -19,6 +20,8 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
   const [card, setCard] = useState<Card>(initialCard);
   const [currentImageUrl, setCurrentImageUrl] = useState<string>(imageUrl);
   const [isPrintsModalOpen, setIsPrintsModalOpen] = useState(false);
+
+  const { tokens: relatedTokens } = useCardRelatedTokensForCard(card);
 
   const hasMultipleFaces = !!card.card_faces && card.card_faces.length > 1;
   const [showBackFace, setShowBackFace] = useState(false);
@@ -202,6 +205,43 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
                             {label}
                           </span>
                         </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {relatedTokens.length > 0 && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-3 text-left">
+                <h3 className="font-bold mb-2 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest flex items-center gap-1.5 select-none">
+                  <FaPalette className="text-pink-500 text-xs shrink-0" />
+                  <span>{t('cardTokensSection', 'Tokens Created by this Card')}</span>
+                </h3>
+                <div className="flex flex-wrap gap-3 pt-1">
+                  {relatedTokens.map((token) => {
+                    const tokenImg = token.image_uris?.normal || token.card_faces?.[0]?.image_uris?.normal || '';
+                    return (
+                      <div
+                        key={token.id}
+                        className="group relative flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-xl p-2 bg-gray-50 dark:bg-gray-800/20 hover:scale-102 hover:border-pink-500/30 transition-all duration-300 shadow-sm"
+                      >
+                        <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-750 bg-slate-950 flex items-center justify-center">
+                          {tokenImg ? (
+                            <img
+                              src={tokenImg}
+                              alt={token.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="text-[8px] text-gray-500 font-bold p-1 text-center leading-tight">
+                              {token.name}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[9px] font-bold text-gray-700 dark:text-gray-300 mt-1.5 truncate max-w-[80px]">
+                          {token.printed_name || token.name}
+                        </span>
                       </div>
                     );
                   })}

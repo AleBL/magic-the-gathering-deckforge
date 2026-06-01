@@ -1,6 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
+import {
+  FaFileAlt,
+  FaLayerGroup,
+  FaPencilAlt,
+  FaBolt,
+  FaExclamationTriangle,
+  FaChartBar,
+  FaPalette
+} from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat } from '../types/Deck';
 import { CardSize } from '../types';
@@ -18,6 +26,7 @@ import DeckStackView from './deck/DeckStackView';
 import CardSizeSelector from './CardSizeSelector';
 import DeckProxyPrint from './DeckProxyPrint';
 import DeckStats from './DeckStats';
+import DeckTokensTab from './deck/DeckTokensTab';
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -43,7 +52,7 @@ interface DeckPreviewProps {
 }
 
 type ViewMode = 'list' | 'grid' | 'stack';
-type NoteTab = 'cards' | 'notes' | 'stats';
+type NoteTab = 'cards' | 'notes' | 'stats' | 'tokens';
 type Zone = 'main' | 'sideboard' | 'maybeboard';
 
 function DeckPreview({
@@ -162,6 +171,13 @@ function DeckPreview({
       >
         <FaChartBar className="text-[11px]" /> {t('deckStats')}
       </button>
+      <button
+        type="button"
+        onClick={() => setActiveNoteTab('tokens')}
+        className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'tokens' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
+      >
+        <FaPalette className="text-[11px]" /> {t('tokensTab')}
+      </button>
     </div>
   );
 
@@ -275,6 +291,8 @@ function DeckPreview({
           />
         ) : activeNoteTab === 'stats' ? (
           <DeckStats currentDeck={activeCards} />
+        ) : activeNoteTab === 'tokens' ? (
+          <DeckTokensTab cards={activeCards} />
         ) : (
           renderCards(false)
         )}
@@ -339,6 +357,8 @@ function DeckPreview({
         <DeckNotesEditor initialNotes={editingDeckNotes} isEditable={true} onSave={onUpdateNotes} />
       ) : activeNoteTab === 'stats' ? (
         <DeckStats currentDeck={activeCards} onApplySuggestedLands={onApplySuggestedLands} />
+      ) : activeNoteTab === 'tokens' ? (
+        <DeckTokensTab cards={activeCards} />
       ) : (
         <>
           {currentDeck.length === 0 ? (
@@ -360,11 +380,7 @@ function DeckPreview({
         deckFormat={activeFormat}
       />
 
-      <DeckProxyPrint
-        isOpen={isProxyPrintOpen}
-        onClose={() => setIsProxyPrintOpen(false)}
-        cards={activeCards}
-      />
+      <DeckProxyPrint isOpen={isProxyPrintOpen} onClose={() => setIsProxyPrintOpen(false)} cards={activeCards} />
     </div>
   );
 }
