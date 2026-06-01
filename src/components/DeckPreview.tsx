@@ -39,6 +39,7 @@ interface DeckPreviewProps {
   onCardSizeChange?: (size: CardSize) => void;
   onSaveNotesDirectly?: (deckId: string, notes: string) => void;
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
+  onUpdateCard?: (updatedCard: Card) => void;
 }
 
 type ViewMode = 'list' | 'grid' | 'stack';
@@ -64,7 +65,8 @@ function DeckPreview({
   showToast,
   onCardSizeChange,
   onSaveNotesDirectly,
-  onApplySuggestedLands
+  onApplySuggestedLands,
+  onUpdateCard
 }: DeckPreviewProps) {
   const { t } = useTranslation();
 
@@ -206,6 +208,7 @@ function DeckPreview({
           onHoverEnter={handleHoverEnter}
           onHoverMove={handleHoverMove}
           onHoverLeave={handleHoverLeave}
+          onUpdateCard={onUpdateCard}
         />
       )}
     </>

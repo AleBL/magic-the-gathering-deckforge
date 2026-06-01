@@ -236,6 +236,12 @@ function App() {
     });
   };
 
+  const handleUpdateCard = (updatedCard: Card) => {
+    setCurrentDeck((prev) =>
+      prev.map((c) => (c.id === updatedCard.id ? updatedCard : c))
+    );
+  };
+
   const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
     setEditingDeck({ deckId: id, deckName: name, deckFormat: format, deckNotes: notes || '' });
     setCurrentDeck(cards);
@@ -316,6 +322,7 @@ function App() {
             onLoadDeckToEdit={handleLoadDeckToEdit}
             onCancelEdit={handleCancelEdit}
             showToast={showToast}
+            onUpdateCard={handleUpdateCard}
           />
         )}
       </main>

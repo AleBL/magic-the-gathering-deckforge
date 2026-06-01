@@ -16,6 +16,8 @@ interface CardItemProps {
 }
 
 function getCardImageUrl(card: Card, size: CardSize): string {
+  if (card.selectedPrintImageUri) return card.selectedPrintImageUri;
+
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
   if (!imageUris) return '';
 

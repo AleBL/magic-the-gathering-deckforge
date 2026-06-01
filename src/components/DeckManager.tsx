@@ -40,6 +40,7 @@ interface DeckManagerProps {
   onLoadDeckToEdit: (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => void;
   onCancelEdit: () => void;
   showToast: (text: string) => void;
+  onUpdateCard?: (updatedCard: Card) => void;
 }
 
 function DeckManager({
@@ -56,7 +57,8 @@ function DeckManager({
   onUpdateCardZone,
   onLoadDeckToEdit,
   onCancelEdit,
-  showToast
+  showToast,
+  onUpdateCard
 }: DeckManagerProps) {
   const { t, i18n } = useTranslation();
   const [cardSize, setCardSize] = useState<CardSize>('small');
@@ -604,6 +606,7 @@ function DeckManager({
             onCardSizeChange={setCardSize}
             onSaveNotesDirectly={handleSaveDeckNotesDirectly}
             onApplySuggestedLands={handleApplySuggestedLands}
+            onUpdateCard={onUpdateCard}
           />
         </div>
 

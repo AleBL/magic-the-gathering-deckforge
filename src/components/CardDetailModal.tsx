@@ -1,19 +1,24 @@
 import { ReactNode, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaShieldAlt, FaSync } from 'react-icons/fa';
+import { FaCrown, FaShieldAlt, FaSync, FaPalette } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { parseTextWithSymbols } from '../utils/symbolHelper';
+import { CardPrintsModal } from './CardPrintsModal';
 
 interface CardDetailModalProps {
   card: Card;
   imageUrl: string;
   onAddToDeck?: (card: Card) => void;
   onClose: () => void;
+  onSelectPrint?: (updatedCard: Card) => void;
 }
 
-function CardDetailModal({ card, imageUrl, onAddToDeck, onClose }: CardDetailModalProps) {
+function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, onSelectPrint }: CardDetailModalProps) {
   const { t } = useTranslation();
+  const [card, setCard] = useState<Card>(initialCard);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string>(imageUrl);
+  const [isPrintsModalOpen, setIsPrintsModalOpen] = useState(false);
 
   const hasMultipleFaces = !!card.card_faces && card.card_faces.length > 1;
   const [showBackFace, setShowBackFace] = useState(false);
@@ -23,10 +28,18 @@ function CardDetailModal({ card, imageUrl, onAddToDeck, onClose }: CardDetailMod
   const displayImageUrl = useMemo(() => {
     if (hasMultipleFaces) {
       const face = card.card_faces?.[showBackFace ? 1 : 0];
-      return face?.image_uris?.normal || face?.image_uris?.large || imageUrl;
+      return face?.image_uris?.normal || face?.image_uris?.large || currentImageUrl;
     }
-    return imageUrl;
-  }, [card, showBackFace, hasMultipleFaces, imageUrl]);
+    return currentImageUrl;
+  }, [card, showBackFace, hasMultipleFaces, currentImageUrl]);
+
+  const handleSelectPrint = (updatedCard: Card) => {
+    setCard(updatedCard);
+    if (updatedCard.selectedPrintImageUri) {
+      setCurrentImageUrl(updatedCard.selectedPrintImageUri);
+    }
+    onSelectPrint?.(updatedCard);
+  };
 
   return createPortal(
     <div
@@ -207,12 +220,27 @@ function CardDetailModal({ card, imageUrl, onAddToDeck, onClose }: CardDetailMod
                   {t('addToDeck')}
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setIsPrintsModalOpen(true)}
+                className="secondary-button flex items-center gap-1.5"
+              >
+                <FaPalette className="text-pink-500 animate-pulse" />
+                {t('otherVersions')}
+              </button>
               <button onClick={onClose} className="secondary-button">
                 {t('close')}
               </button>
             </div>
           </div>
         </div>
+        {/* Alternate prints selection modal */}
+        <CardPrintsModal
+          cardName={card.name}
+          isOpen={isPrintsModalOpen}
+          onClose={() => setIsPrintsModalOpen(false)}
+          onSelectPrint={handleSelectPrint}
+        />
       </div>
     </div>,
     document.body

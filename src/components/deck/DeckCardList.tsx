@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaPlus, FaMinus, FaTrash, FaBan, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCrown, FaPlus, FaMinus, FaTrash, FaBan, FaExclamationTriangle, FaPalette } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
@@ -24,6 +24,7 @@ interface DeckCardListProps {
   onHoverEnter: (card: Card, e: React.MouseEvent) => void;
   onHoverMove: (e: React.MouseEvent) => void;
   onHoverLeave: () => void;
+  onUpdateCard?: (updatedCard: Card) => void;
 }
 
 const TRANSLATABLE_TITLES = [
@@ -56,7 +57,8 @@ function DeckCardList({
   onToggleCommander,
   onHoverEnter,
   onHoverMove,
-  onHoverLeave
+  onHoverLeave,
+  onUpdateCard
 }: DeckCardListProps) {
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
@@ -222,6 +224,17 @@ function DeckCardList({
                                 </select>
                               )}
 
+                              {onUpdateCard && (
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedModalCard(card)}
+                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-pink-50 dark:bg-pink-950/60 border border-pink-300 dark:border-pink-900/60 text-pink-600 dark:text-pink-400 hover:bg-pink-500 hover:text-white transition-all font-bold shadow-sm"
+                                  title={t('changeArt')}
+                                >
+                                  <FaPalette className="text-[9px]" />
+                                </button>
+                              )}
+
                               <button
                                 type="button"
                                 onClick={() => onAddToDeck(card)}
@@ -271,6 +284,7 @@ function DeckCardList({
           imageUrl={getCardImageUrl(selectedModalCard)}
           onAddToDeck={isRemovable ? onAddToDeck : undefined}
           onClose={() => setSelectedModalCard(null)}
+          onSelectPrint={onUpdateCard}
         />
       )}
     </div>
