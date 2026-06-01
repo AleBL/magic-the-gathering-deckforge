@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
-import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle, FaExclamationTriangle, FaTint } from 'react-icons/fa';
 
 interface DeckStatsProps {
   currentDeck: Card[];
@@ -180,7 +180,42 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
 
     const targetLandCount = neededBasicLands;
 
-    // 7. Budget Price Estimator Calculations
+    // 7. Land Color Counter for Mana Pip Analysis
+    const landColorCounts = { W: 0, U: 0, B: 0, R: 0, G: 0 };
+    currentDeck.forEach((card) => {
+      const isLand = card.type_line?.toLowerCase().includes('land');
+      if (!isLand) return;
+
+      const typeLine = card.type_line?.toLowerCase() || '';
+      const name = card.name.toLowerCase();
+      const oracleText = card.oracle_text?.toLowerCase() || '';
+
+      // Check basic lands first
+      if (name.includes('plains') || name.includes('planície')) landColorCounts.W += 1;
+      else if (name.includes('island') || name.includes('ilha')) landColorCounts.U += 1;
+      else if (name.includes('swamp') || name.includes('pântano')) landColorCounts.B += 1;
+      else if (name.includes('mountain') || name.includes('montanha')) landColorCounts.R += 1;
+      else if (name.includes('forest') || name.includes('floresta')) landColorCounts.G += 1;
+      else {
+        // Non-basic lands: check color_identity first
+        if (card.color_identity && card.color_identity.length > 0) {
+          card.color_identity.forEach((color) => {
+            if (color in landColorCounts) {
+              landColorCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] += 1;
+            }
+          });
+        } else {
+          // Fallback to searching oracle text
+          if (oracleText.includes('{t}: add {w}')) landColorCounts.W += 1;
+          if (oracleText.includes('{t}: add {u}')) landColorCounts.U += 1;
+          if (oracleText.includes('{t}: add {b}')) landColorCounts.B += 1;
+          if (oracleText.includes('{t}: add {r}')) landColorCounts.R += 1;
+          if (oracleText.includes('{t}: add {g}')) landColorCounts.G += 1;
+        }
+      }
+    });
+
+    // 8. Budget Price Estimator Calculations
     let totalUsdPrice = 0;
     let totalEurPrice = 0;
     currentDeck.forEach((card) => {
@@ -212,7 +247,9 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
       removeCount,
       totalUsdPrice,
       totalEurPrice,
-      mostExpensiveCards
+      mostExpensiveCards,
+      manaColorSymbolCounts,
+      landColorCounts
     };
   }, [currentDeck]);
 
@@ -322,8 +359,8 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
         </div>
       </div>
 
-      {/* additions: Mana Base Suggester & Budget Estimator */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
+      {/* additions: Mana Base Suggester, Mana Pips & Budget Estimator */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
         {/* Land suggester card */}
         <div className="space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-500/5 dark:bg-blue-950/10 transition-colors duration-300">
           <h4 className="font-bold text-sm text-blue-700 dark:text-blue-400 uppercase tracking-wider flex items-center gap-2">
@@ -387,6 +424,59 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
               {t('applySuggestedLands')}
             </button>
           )}
+        </div>
+
+        {/* Mana Pip Analysis Card */}
+        <div className="space-y-4 p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-500/5 dark:bg-amber-950/10 transition-colors duration-300">
+          <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+            <FaTint className="text-amber-500 animate-pulse" />
+            {t('manaPipAnalysis')}
+          </h4>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {t('manaPipAnalysisDesc', 'Compare colored pips in spells with land sources to optimize your colors.')}
+          </p>
+
+          <div className="space-y-3 pt-1">
+            {['W', 'U', 'B', 'R', 'G'].map((color) => {
+              const pipsCount = deckStatistics.manaColorSymbolCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
+              const landsCount = deckStatistics.landColorCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
+
+              if (pipsCount === 0 && landsCount === 0) return null;
+
+              const meta = colorLabels[color];
+              const total = Math.max(pipsCount + landsCount, 1);
+              const pipsPct = Math.round((pipsCount / total) * 100);
+              const landsPct = Math.round((landsCount / total) * 100);
+
+              return (
+                <div key={color} className="space-y-1">
+                  <div className="flex justify-between items-center text-xs font-semibold">
+                    <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                      <span className={`w-2.5 h-2.5 rounded-full inline-block ${meta.fill}`} />
+                      {meta.name}
+                    </span>
+                    <span className="text-[10px] text-gray-500 flex gap-2">
+                      <span>{t('pipsNeeded')}: <span className="font-bold text-gray-700 dark:text-gray-300">{pipsCount}</span></span>
+                      <span>{t('landsAvailable')}: <span className="font-bold text-gray-700 dark:text-gray-300">{landsCount}</span></span>
+                    </span>
+                  </div>
+                  {/* Visual Comparison Bar */}
+                  <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex shadow-inner">
+                    <div
+                      className={`h-full opacity-90 transition-all duration-500 ${meta.fill}`}
+                      style={{ width: `${pipsPct}%` }}
+                      title={`${t('pipsNeeded')}: ${pipsCount}`}
+                    />
+                    <div
+                      className="h-full bg-emerald-500 opacity-60 transition-all duration-500"
+                      style={{ width: `${landsPct}%` }}
+                      title={`${t('landsAvailable')}: ${landsCount}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Budget Estimator card */}
