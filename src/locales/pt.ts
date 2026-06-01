@@ -343,7 +343,42 @@ const pt = {
     // Mensagens de correção de base de mana
     willAddLands: '{{count}} terrenos básicos serão adicionados',
     landsAlreadySufficient: 'A quantidade de terrenos está boa — os terrenos não-básicos já cobrem o alvo.',
-    manaBaseWarning: 'Aviso: Adicionar estes terrenos fará o deck ter {{finalSize}} cartas (limite de {{limit}}). Recomendamos remover {{removeCount}} mágicas para otimizar o deck.'
+    manaBaseWarning: 'Aviso: Adicionar estes terrenos fará o deck ter {{finalSize}} cartas (limite de {{limit}}). Recomendamos remover {{removeCount}} mágicas para otimizar o deck.',
+
+    // Novas chaves de tradução
+    relatedTokens: 'Fichas Relacionadas',
+    tokensTab: 'Fichas',
+    summonToken: 'Conjurar Ficha',
+    otherVersions: 'Outras Versões',
+    selectArt: 'Selecionar Arte',
+    changeArt: 'Trocar Arte',
+    selectPrint: 'Selecionar Versão',
+    manaPips: 'Símbolos de Mana',
+    manaPipAnalysis: 'Análise de Símbolos de Mana',
+    paperSizeA5: 'A5',
+    paperSizeLegal: 'Ofício (US Legal)',
+    landscape: 'Paisagem',
+    portrait: 'Retrato',
+    orientation: 'Orientação',
+    viewCardDetails: 'Ver Detalhes da Carta',
+    cardTokensSection: 'Fichas Criadas por esta Carta',
+    tokensCreated: 'Fichas Criadas',
+    noTokensFound: 'Nenhuma ficha encontrada para esta carta.',
+    generatedBy: 'Gerado por',
+    suggestRemoveCardsWarning: 'Aviso: O deck possui cartas demais. Para mantê-lo otimizado, considere remover algumas cartas.',
+    soldierToken: 'Soldado 1/1 (Branco)',
+    zombieToken: 'Zumbi 2/2 (Preto)',
+    goblinToken: 'Goblin 1/1 Ímpeto (Vermelho)',
+    thopterToken: 'Ornipotóptero 1/1 Voar (Incolor)',
+    saprolingToken: 'Saprófita 1/1 (Verde)',
+    birdToken: 'Ave 1/1 Voar (Azul)',
+    beastToken: 'Besta 3/3 (Verde)',
+    treasureToken: 'Tesouro (Artefato)',
+    tokenPool: 'Banco de Fichas',
+    create: 'Criar',
+    pipsNeeded: 'Símbolos Necessários',
+    landsAvailable: 'Terrenos Disponíveis',
+    estimatedPages: 'Páginas estimadas:'
   }
 };
 

@@ -339,11 +339,46 @@ const es = {
     paperSize: 'Tamaño de Hoja',
     paperSizeA4: 'A4',
     paperSizeLetter: 'Carta (US Letter)',
-
-    // Mensajes de corrección de base de maná
+ 
+    // Mensagens de corrección de base de maná
     willAddLands: 'Se agregarán {{count}} tierras básicas',
     landsAlreadySufficient: 'La cantidad de tierras está bien — las tierras no básicas ya cubren el objetivo.',
-    manaBaseWarning: 'Aviso: Agregar estas tierras hará que el mazo tenga {{finalSize}} cartas (límite de {{limit}}). Recomendamos quitar {{removeCount}} hechizos para optimizar su mazo.'
+    manaBaseWarning: 'Aviso: Agregar estas tierras hará que el mazo tenga {{finalSize}} cartas (límite de {{limit}}). Recomendamos quitar {{removeCount}} hechizos para optimizar su mazo.',
+
+    // Nuevas claves de traducción
+    relatedTokens: 'Fichas Relacionadas',
+    tokensTab: 'Fichas',
+    summonToken: 'Invocar Ficha',
+    otherVersions: 'Otras Versiones',
+    selectArt: 'Seleccionar Arte',
+    changeArt: 'Cambiar Arte',
+    selectPrint: 'Seleccionar Versión',
+    manaPips: 'Símbolos de Maná',
+    manaPipAnalysis: 'Análisis de Símbolos de Maná',
+    paperSizeA5: 'A5',
+    paperSizeLegal: 'Oficio (US Legal)',
+    landscape: 'Paisaje',
+    portrait: 'Retrato',
+    orientation: 'Orientación',
+    viewCardDetails: 'Ver Detalles de Carta',
+    cardTokensSection: 'Fichas Creadas por esta Carta',
+    tokensCreated: 'Fichas Creadas',
+    noTokensFound: 'No se encontraron fichas para esta carta.',
+    generatedBy: 'Generado por',
+    suggestRemoveCardsWarning: 'Aviso: El mazo tiene demasiadas cartas. Para mantenerlo optimizado, considere quitar algunas cartas.',
+    soldierToken: 'Soldado 1/1 (Blanco)',
+    zombieToken: 'Zombi 2/2 (Negro)',
+    goblinToken: 'Goblin 1/1 Prisa (Rojo)',
+    thopterToken: 'Tóptero 1/1 Volar (Incoloro)',
+    saprolingToken: 'Saprolín 1/1 (Verde)',
+    birdToken: 'Ave 1/1 Volar (Azul)',
+    beastToken: 'Bestia 3/3 (Verde)',
+    treasureToken: 'Tesoro (Artefacto)',
+    tokenPool: 'Banco de Fichas',
+    create: 'Crear',
+    pipsNeeded: 'Símbolos Necesarios',
+    landsAvailable: 'Tierras Disponibles',
+    estimatedPages: 'Páginas estimadas:'
   }
 };
 
