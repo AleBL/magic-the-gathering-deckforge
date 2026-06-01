@@ -26,7 +26,7 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
 
   const handleSelectPrint = (printCard: Card) => {
     const imageUrl = getCardFaceImageUrl(printCard);
-    
+
     // Pass the printCard with selectedPrintId and selectedPrintImageUri set
     const updatedCard: Card = {
       ...printCard,
@@ -101,16 +101,8 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
                       <h4 className="text-[11px] font-bold text-slate-200 truncate leading-tight group-hover:text-pink-400 transition-colors">
                         {printCard.set_name} ({printCard.set?.toUpperCase()})
                       </h4>
-                      {collNumber && (
-                        <p className="text-[9px] text-slate-500">
-                          #{collNumber}
-                        </p>
-                      )}
-                      {artist && (
-                        <p className="text-[9px] text-slate-400 truncate italic">
-                          Art: {artist}
-                        </p>
-                      )}
+                      {collNumber && <p className="text-[9px] text-slate-500">#{collNumber}</p>}
+                      {artist && <p className="text-[9px] text-slate-400 truncate italic">Art: {artist}</p>}
                     </div>
 
                     <button

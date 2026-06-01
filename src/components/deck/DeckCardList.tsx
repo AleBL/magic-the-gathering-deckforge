@@ -144,8 +144,14 @@ function DeckCardList({
               )}
               <div className="deck-list-compact">
                 {uniqueCards.map(({ count, card }) => {
-                  const isBanned = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
-                  const isRestricted = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
+                  const isBanned =
+                    activeFormat &&
+                    activeFormat !== 'freeform' &&
+                    card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
+                  const isRestricted =
+                    activeFormat &&
+                    activeFormat !== 'freeform' &&
+                    card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
 
                   return (
                     <div key={card.id} className="animate-fadeIn">
@@ -163,8 +169,14 @@ function DeckCardList({
                         onMouseLeave={onHoverLeave}
                       >
                         <div className="flex items-center min-w-0 pr-2">
-                          <span className={`quantity-badge ${isBanned ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100' : ''}`}>{count}x</span>
-                          <span className={`font-semibold truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${isBanned ? 'text-red-600 dark:text-red-400 font-extrabold' : 'text-gray-800 dark:text-gray-200'}`}>
+                          <span
+                            className={`quantity-badge ${isBanned ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100' : ''}`}
+                          >
+                            {count}x
+                          </span>
+                          <span
+                            className={`font-semibold truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${isBanned ? 'text-red-600 dark:text-red-400 font-extrabold' : 'text-gray-800 dark:text-gray-200'}`}
+                          >
                             {card.printed_name || card.name}
                           </span>
                           {card.isCommander && (

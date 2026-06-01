@@ -92,8 +92,14 @@ function DeckStackView({
   const renderPlaymatCard = (item: { name: string; count: number; card: Card }) => {
     const { count, card } = item;
     const imageUrl = getCardImageUrl(card);
-    const isBanned = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
-    const isRestricted = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
+    const isBanned =
+      activeFormat &&
+      activeFormat !== 'freeform' &&
+      card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
+    const isRestricted =
+      activeFormat &&
+      activeFormat !== 'freeform' &&
+      card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
 
     return (
       <div
@@ -170,14 +176,16 @@ function DeckStackView({
               src={imageUrl}
               alt={card.name}
               className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${
-                isBanned
-                  ? 'opacity-50 grayscale-[40%] brightness-[75%]'
-                  : ''
+                isBanned ? 'opacity-50 grayscale-[40%] brightness-[75%]' : ''
               }`}
             />
           ) : (
-            <div className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-950/20' : 'bg-slate-850'}`}>
-              <span className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-400' : 'text-white'}`}>
+            <div
+              className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-950/20' : 'bg-slate-850'}`}
+            >
+              <span
+                className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-400' : 'text-white'}`}
+              >
                 {card.printed_name || card.name}
               </span>
               <span className="text-[9px] text-yellow-500 font-mono font-bold">{card.mana_cost}</span>

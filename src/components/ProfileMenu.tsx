@@ -143,17 +143,17 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
               </div>
 
               {/* Language */}
-              <button
-                type="button"
-                className="profile-menu-item"
-                onClick={() => setActiveSection('language')}
-              >
+              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('language')}>
                 <div className="flex items-center gap-2">
                   <FaGlobeAmericas className="text-blue-500 text-sm shrink-0" />
                   <span>{t('language')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <img src={currentLang.iconPath} alt={currentLang.label} className="w-4 h-4 rounded-full object-cover" />
+                  <img
+                    src={currentLang.iconPath}
+                    alt={currentLang.label}
+                    className="w-4 h-4 rounded-full object-cover"
+                  />
                   <span className="text-xs text-gray-500 dark:text-gray-400">{currentLang.label}</span>
                   <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
                 </div>
@@ -162,11 +162,7 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
               <div className="profile-menu-divider" />
 
               {/* About */}
-              <button
-                type="button"
-                className="profile-menu-item"
-                onClick={() => setActiveSection('about')}
-              >
+              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('about')}>
                 <div className="flex items-center gap-2">
                   <FaInfoCircle className="text-purple-500 text-sm shrink-0" />
                   <span>{t('aboutApp')}</span>
@@ -175,11 +171,7 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
               </button>
 
               {/* Help */}
-              <button
-                type="button"
-                className="profile-menu-item"
-                onClick={() => setActiveSection('help')}
-              >
+              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('help')}>
                 <div className="flex items-center gap-2">
                   <FaKeyboard className="text-green-500 text-sm shrink-0" />
                   <span>{t('help')}</span>
@@ -211,7 +203,14 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   <FaChevronDown className="rotate-90 text-xs" />
                   <span className="text-sm font-bold text-gray-900 dark:text-white">{t('language')}</span>
                 </button>
-                <button type="button" onClick={() => { setIsOpen(false); setActiveSection('main'); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setActiveSection('main');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded"
+                >
                   <FaTimes className="text-xs" />
                 </button>
               </div>
@@ -227,9 +226,7 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                     <img src={lang.iconPath} alt={lang.label} className="w-5 h-5 rounded-full object-cover shadow-sm" />
                     <span className="font-medium text-gray-800 dark:text-gray-200">{lang.label}</span>
                   </div>
-                  {currentLang.key === lang.key && (
-                    <FaCheck className="text-blue-500 text-xs" />
-                  )}
+                  {currentLang.key === lang.key && <FaCheck className="text-blue-500 text-xs" />}
                 </button>
               ))}
             </>
@@ -243,7 +240,14 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   <FaChevronDown className="rotate-90 text-xs" />
                   <span className="text-sm font-bold text-gray-900 dark:text-white">{t('aboutApp')}</span>
                 </button>
-                <button type="button" onClick={() => { setIsOpen(false); setActiveSection('main'); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setActiveSection('main');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded"
+                >
                   <FaTimes className="text-xs" />
                 </button>
               </div>
@@ -255,7 +259,9 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   </div>
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white text-sm">MTG Deck Forge</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('version')} {APP_VERSION} · MIT</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {t('version')} {APP_VERSION} · MIT
+                    </p>
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{t('appDescription')}</p>
@@ -281,7 +287,14 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   <FaChevronDown className="rotate-90 text-xs" />
                   <span className="text-sm font-bold text-gray-900 dark:text-white">{t('keyboardShortcuts')}</span>
                 </button>
-                <button type="button" onClick={() => { setIsOpen(false); setActiveSection('main'); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setActiveSection('main');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded"
+                >
                   <FaTimes className="text-xs" />
                 </button>
               </div>

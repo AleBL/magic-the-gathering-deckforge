@@ -307,7 +307,8 @@ const pt = {
     help: 'Ajuda',
     keyboardShortcuts: 'Atalhos de Teclado',
     version: 'Versão',
-    appDescription: 'Um app desktop premium para jogadores de Magic: The Gathering. Busque cartas, construa decks, analise estatísticas e faça simulações de playtest.',
+    appDescription:
+      'Um app desktop premium para jogadores de Magic: The Gathering. Busque cartas, construa decks, analise estatísticas e faça simulações de playtest.',
     gitHub: 'Ver no GitHub',
     theme: 'Tema',
     darkMode: 'Modo Escuro',
@@ -321,7 +322,8 @@ const pt = {
     // Impressão de Proxies
     printProxies: 'Imprimir Proxies',
     printProxiesTitle: 'Imprimir / Salvar como PDF',
-    printProxiesDesc: 'Imprima as cartas do seu deck como proxies. Use a opção "Salvar como PDF" do seu navegador para criar um arquivo PDF.',
+    printProxiesDesc:
+      'Imprima as cartas do seu deck como proxies. Use a opção "Salvar como PDF" do seu navegador para criar um arquivo PDF.',
     printAll: 'Imprimir',
     printSpacing: 'Espaçamento entre Cartas',
     spacingNone: 'Nenhum',
@@ -339,11 +341,12 @@ const pt = {
     paperSize: 'Tamanho da Folha',
     paperSizeA4: 'A4',
     paperSizeLetter: 'Carta (US Letter)',
- 
+
     // Mensagens de correção de base de mana
     willAddLands: '{{count}} terrenos básicos serão adicionados',
     landsAlreadySufficient: 'A quantidade de terrenos está boa — os terrenos não-básicos já cobrem o alvo.',
-    manaBaseWarning: 'Aviso: Adicionar estes terrenos fará o deck ter {{finalSize}} cartas (limite de {{limit}}). Recomendamos remover {{removeCount}} mágicas para otimizar o deck.',
+    manaBaseWarning:
+      'Aviso: Adicionar estes terrenos fará o deck ter {{finalSize}} cartas (limite de {{limit}}). Recomendamos remover {{removeCount}} mágicas para otimizar o deck.',
 
     // Novas chaves de tradução
     relatedTokens: 'Fichas Relacionadas',
@@ -365,7 +368,8 @@ const pt = {
     tokensCreated: 'Fichas Criadas',
     noTokensFound: 'Nenhuma ficha encontrada para esta carta.',
     generatedBy: 'Gerado por',
-    suggestRemoveCardsWarning: 'Aviso: O deck possui cartas demais. Para mantê-lo otimizado, considere remover algumas cartas.',
+    suggestRemoveCardsWarning:
+      'Aviso: O deck possui cartas demais. Para mantê-lo otimizado, considere remover algumas cartas.',
     soldierToken: 'Soldado 1/1 (Branco)',
     zombieToken: 'Zumbi 2/2 (Preto)',
     goblinToken: 'Goblin 1/1 Ímpeto (Vermelho)',

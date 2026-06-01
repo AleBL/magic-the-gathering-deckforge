@@ -1,7 +1,15 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
-import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle, FaExclamationTriangle, FaTint } from 'react-icons/fa';
+import {
+  FaChartBar,
+  FaPalette,
+  FaFileInvoice,
+  FaCoins,
+  FaInfoCircle,
+  FaExclamationTriangle,
+  FaTint
+} from 'react-icons/fa';
 
 interface DeckStatsProps {
   currentDeck: Card[];
@@ -125,8 +133,18 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
 
     // Count existing non-basic lands (don't replace them, only add basics)
     const basicLandNamesList = [
-      'Plains', 'Island', 'Swamp', 'Mountain', 'Forest', 'Wastes',
-      'Planície', 'Ilha', 'Pântano', 'Montanha', 'Floresta', 'Deserto'
+      'Plains',
+      'Island',
+      'Swamp',
+      'Mountain',
+      'Forest',
+      'Wastes',
+      'Planície',
+      'Ilha',
+      'Pântano',
+      'Montanha',
+      'Floresta',
+      'Deserto'
     ];
     const existingNonBasicLandCount = currentDeck.filter((card) => {
       const typeLine = card.type_line?.toLowerCase() || '';
@@ -375,7 +393,10 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
           </p>
           {deckStatistics.neededBasicLands > 0 ? (
             <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
-              {t('willAddLands', '{{count}} basic lands will be added').replace('{{count}}', String(deckStatistics.neededBasicLands))}
+              {t('willAddLands', '{{count}} basic lands will be added').replace(
+                '{{count}}',
+                String(deckStatistics.neededBasicLands)
+              )}
             </p>
           ) : (
             <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">
@@ -456,8 +477,14 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
                       {meta.name}
                     </span>
                     <span className="text-[10px] text-gray-500 flex gap-2">
-                      <span>{t('pipsNeeded')}: <span className="font-bold text-gray-700 dark:text-gray-300">{pipsCount}</span></span>
-                      <span>{t('landsAvailable')}: <span className="font-bold text-gray-700 dark:text-gray-300">{landsCount}</span></span>
+                      <span>
+                        {t('pipsNeeded')}:{' '}
+                        <span className="font-bold text-gray-700 dark:text-gray-300">{pipsCount}</span>
+                      </span>
+                      <span>
+                        {t('landsAvailable')}:{' '}
+                        <span className="font-bold text-gray-700 dark:text-gray-300">{landsCount}</span>
+                      </span>
                     </span>
                   </div>
                   {/* Visual Comparison Bar */}

@@ -55,7 +55,7 @@ const getCardsPerPage = (size: PageSizeOption, orient: OrientationOption, spacin
   const usableH = paperH - margins;
 
   const spacingMm = spacingOpt === 'none' ? 0 : spacingOpt === 'small' ? 2.5 : 6;
-  
+
   const cols = Math.floor((usableW + spacingMm) / (63 + spacingMm));
   const rows = Math.floor((usableH + spacingMm) / (88 + spacingMm));
 
@@ -214,10 +214,12 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     onClick={() => setSpacing(s)}
                     className={`proxy-option-btn ${spacing === s ? 'proxy-option-btn-active' : ''}`}
                   >
-                    {t(`spacing${s.charAt(0).toUpperCase() + s.slice(1)}` as
-                      | 'spacingNone'
-                      | 'spacingSmall'
-                      | 'spacingLarge')}
+                    {t(
+                      `spacing${s.charAt(0).toUpperCase() + s.slice(1)}` as
+                        | 'spacingNone'
+                        | 'spacingSmall'
+                        | 'spacingLarge'
+                    )}
                   </button>
                 ))}
               </div>
@@ -234,13 +236,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     onClick={() => setCuttingGuide(g)}
                     className={`proxy-option-btn ${cuttingGuide === g ? 'proxy-option-btn-active' : ''}`}
                   >
-                    {t(
-                      g === 'none'
-                        ? 'cuttingGuideNone'
-                        : g === 'solid'
-                          ? 'cuttingGuideLine'
-                          : 'cuttingGuideDotted'
-                    )}
+                    {t(g === 'none' ? 'cuttingGuideNone' : g === 'solid' ? 'cuttingGuideLine' : 'cuttingGuideDotted')}
                   </button>
                 ))}
               </div>
@@ -269,12 +265,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     }}
                   >
                     {imgUrl ? (
-                      <img
-                        src={imgUrl}
-                        alt={card.name}
-                        className="proxy-card-image"
-                        loading="lazy"
-                      />
+                      <img src={imgUrl} alt={card.name} className="proxy-card-image" loading="lazy" />
                     ) : (
                       <div className="proxy-card-placeholder">
                         <span className="text-xs text-gray-400 text-center px-2">{card.name}</span>
@@ -289,20 +280,13 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
           {/* Footer */}
           <div className="modal-footer-container">
             <span className="text-xs text-gray-500 dark:text-gray-400 flex-1 text-left">
-              {filteredCards.length} {t('cards')} &bull; {t('estimatedPages')} <span className="font-bold text-gray-700 dark:text-gray-300">{estimatedPages}</span>
+              {filteredCards.length} {t('cards')} &bull; {t('estimatedPages')}{' '}
+              <span className="font-bold text-gray-700 dark:text-gray-300">{estimatedPages}</span>
             </span>
-            <button
-              type="button"
-              onClick={onClose}
-              className="secondary-button text-xs py-2 px-4"
-            >
+            <button type="button" onClick={onClose} className="secondary-button text-xs py-2 px-4">
               {t('cancel')}
             </button>
-            <button
-              type="button"
-              onClick={handlePrint}
-              className="primary-button text-xs py-2 px-4"
-            >
+            <button type="button" onClick={handlePrint} className="primary-button text-xs py-2 px-4">
               <FaPrint className="text-xs shrink-0" />
               {t('printAll')}
             </button>
@@ -364,7 +348,15 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 ) : (
-                  <span style={{ fontSize: '8px', color: '#aaa', textAlign: 'center', padding: '4px', fontFamily: 'system-ui, sans-serif' }}>
+                  <span
+                    style={{
+                      fontSize: '8px',
+                      color: '#aaa',
+                      textAlign: 'center',
+                      padding: '4px',
+                      fontFamily: 'system-ui, sans-serif'
+                    }}
+                  >
                     {card.name}
                   </span>
                 )}

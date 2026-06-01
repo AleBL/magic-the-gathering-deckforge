@@ -33,7 +33,14 @@ function getCardImageUrl(card: Card, size: CardSize): string {
   return imageUris[sizeToUriKey[size]] || '';
 }
 
-function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton = false, activeFormat }: CardItemProps) {
+function CardItem({
+  card,
+  size,
+  onAddToDeck,
+  onRemoveFromDeck,
+  showRemoveButton = false,
+  activeFormat
+}: CardItemProps) {
   const { t } = useTranslation();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
@@ -72,7 +79,12 @@ function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton 
         </div>
       )}
 
-      <button type="button" onClick={() => setIsDetailOpen(true)} className="card-image-button animate-fadeIn" aria-label={card.name}>
+      <button
+        type="button"
+        onClick={() => setIsDetailOpen(true)}
+        className="card-image-button animate-fadeIn"
+        aria-label={card.name}
+      >
         <img
           src={imageUrl}
           alt={card.name}

@@ -48,7 +48,7 @@ function App() {
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => { },
+    onConfirm: () => {},
     variant: 'info'
   });
 
@@ -237,9 +237,7 @@ function App() {
   };
 
   const handleUpdateCard = (updatedCard: Card) => {
-    setCurrentDeck((prev) =>
-      prev.map((c) => (c.id === updatedCard.id ? updatedCard : c))
-    );
+    setCurrentDeck((prev) => prev.map((c) => (c.id === updatedCard.id ? updatedCard : c)));
   };
 
   const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {

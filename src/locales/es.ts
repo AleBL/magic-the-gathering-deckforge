@@ -307,7 +307,8 @@ const es = {
     help: 'Ayuda',
     keyboardShortcuts: 'Atajos de Teclado',
     version: 'Versión',
-    appDescription: 'Una app de escritorio premium para jugadores de Magic: The Gathering. Busca cartas, crea mazos, analiza estadísticas y simula partidas.',
+    appDescription:
+      'Una app de escritorio premium para jugadores de Magic: The Gathering. Busca cartas, crea mazos, analiza estadísticas y simula partidas.',
     gitHub: 'Ver en GitHub',
     theme: 'Tema',
     darkMode: 'Modo Oscuro',
@@ -321,7 +322,8 @@ const es = {
     // Impresión de Proxies
     printProxies: 'Imprimir Proxies',
     printProxiesTitle: 'Imprimir / Guardar como PDF',
-    printProxiesDesc: 'Imprime las cartas de tu mazo como proxies. Usa la opción "Guardar como PDF" de tu navegador para crear un archivo PDF.',
+    printProxiesDesc:
+      'Imprime las cartas de tu mazo como proxies. Usa la opción "Guardar como PDF" de tu navegador para crear un archivo PDF.',
     printAll: 'Imprimir',
     printSpacing: 'Espaciado entre Cartas',
     spacingNone: 'Ninguno',
@@ -339,11 +341,12 @@ const es = {
     paperSize: 'Tamaño de Hoja',
     paperSizeA4: 'A4',
     paperSizeLetter: 'Carta (US Letter)',
- 
+
     // Mensagens de corrección de base de maná
     willAddLands: 'Se agregarán {{count}} tierras básicas',
     landsAlreadySufficient: 'La cantidad de tierras está bien — las tierras no básicas ya cubren el objetivo.',
-    manaBaseWarning: 'Aviso: Agregar estas tierras hará que el mazo tenga {{finalSize}} cartas (límite de {{limit}}). Recomendamos quitar {{removeCount}} hechizos para optimizar su mazo.',
+    manaBaseWarning:
+      'Aviso: Agregar estas tierras hará que el mazo tenga {{finalSize}} cartas (límite de {{limit}}). Recomendamos quitar {{removeCount}} hechizos para optimizar su mazo.',
 
     // Nuevas claves de traducción
     relatedTokens: 'Fichas Relacionadas',
@@ -365,7 +368,8 @@ const es = {
     tokensCreated: 'Fichas Creadas',
     noTokensFound: 'No se encontraron fichas para esta carta.',
     generatedBy: 'Generado por',
-    suggestRemoveCardsWarning: 'Aviso: El mazo tiene demasiadas cartas. Para mantenerlo optimizado, considere quitar algunas cartas.',
+    suggestRemoveCardsWarning:
+      'Aviso: El mazo tiene demasiadas cartas. Para mantenerlo optimizado, considere quitar algunas cartas.',
     soldierToken: 'Soldado 1/1 (Blanco)',
     zombieToken: 'Zombi 2/2 (Negro)',
     goblinToken: 'Goblin 1/1 Prisa (Rojo)',

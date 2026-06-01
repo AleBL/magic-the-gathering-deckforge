@@ -398,13 +398,7 @@ function DeckManager({
 
     const newDeckCards = [...nonBasicLands, ...newBasicLands];
     // Preserve the current editing state — never use '' as deckId if we're genuinely editing
-    onLoadDeckToEdit(
-      editingDeckId ?? '',
-      editingDeckName || '',
-      activeFormat,
-      newDeckCards,
-      editingDeckNotes
-    );
+    onLoadDeckToEdit(editingDeckId ?? '', editingDeckName || '', activeFormat, newDeckCards, editingDeckNotes);
     showToast(t('deckSaved'));
   };
 

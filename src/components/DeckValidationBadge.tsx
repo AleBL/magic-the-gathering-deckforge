@@ -26,8 +26,10 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
   const hasErrors = validation.errors.length > 0;
 
   return (
-    <div className={`alert-banner ${validation.isValid ? 'alert-banner-success' : 'alert-banner-danger'} overflow-hidden transition-all duration-300`}>
-      <div 
+    <div
+      className={`alert-banner ${validation.isValid ? 'alert-banner-success' : 'alert-banner-danger'} overflow-hidden transition-all duration-300`}
+    >
+      <div
         onClick={() => hasErrors && setIsExpanded(!isExpanded)}
         className={`validation-badge-header select-none flex justify-between items-center ${hasErrors ? 'cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 p-1 rounded transition-colors' : ''}`}
       >
@@ -54,9 +56,11 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
           )}
         </div>
       </div>
-      
+
       {hasErrors ? (
-        <div className={`transition-all duration-300 ${isExpanded ? 'max-h-[500px] mt-3 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+        <div
+          className={`transition-all duration-300 ${isExpanded ? 'max-h-[500px] mt-3 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}
+        >
           <ul className="space-y-1 text-xs border-t border-red-200 dark:border-red-950 pt-2.5 list-disc pl-4">
             {validation.errors.map((err: ValidationError, i: number) => (
               <li key={i} className="text-red-700 dark:text-red-400 font-medium">
@@ -66,9 +70,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
           </ul>
         </div>
       ) : (
-        <p className="text-xs text-green-700 dark:text-green-400 mt-2 font-medium">
-          {t('validationFormatSuccess')}
-        </p>
+        <p className="text-xs text-green-700 dark:text-green-400 mt-2 font-medium">{t('validationFormatSuccess')}</p>
       )}
     </div>
   );

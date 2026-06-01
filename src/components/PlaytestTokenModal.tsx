@@ -148,12 +148,14 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
       color_identity: preset.colors,
       power: preset.power,
       toughness: preset.toughness,
-      image_uris: preset.imageUrl ? {
-        small: preset.imageUrl,
-        normal: preset.imageUrl,
-        large: preset.imageUrl,
-        png: preset.imageUrl
-      } : undefined
+      image_uris: preset.imageUrl
+        ? {
+            small: preset.imageUrl,
+            normal: preset.imageUrl,
+            large: preset.imageUrl,
+            png: preset.imageUrl
+          }
+        : undefined
     };
 
     onSelectToken(tokenCard);
@@ -221,7 +223,8 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
                     {t(preset.localeKey)}
                   </h4>
                   <p className="text-[9px] text-slate-500 truncate mt-0.5">
-                    {preset.power && preset.toughness ? `${preset.power}/${preset.toughness}` : ''} {preset.oracle_text || preset.name}
+                    {preset.power && preset.toughness ? `${preset.power}/${preset.toughness}` : ''}{' '}
+                    {preset.oracle_text || preset.name}
                   </p>
                 </div>
 

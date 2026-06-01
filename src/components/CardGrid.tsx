@@ -19,7 +19,14 @@ const GRID_CLASSES: Record<CardSize, string> = {
   xlarge: 'card-grid-xlarge'
 };
 
-function CardGrid({ cards, size, onAddToDeck, onRemoveFromDeck, showRemoveButton = false, activeFormat }: CardGridProps) {
+function CardGrid({
+  cards,
+  size,
+  onAddToDeck,
+  onRemoveFromDeck,
+  showRemoveButton = false,
+  activeFormat
+}: CardGridProps) {
   return (
     <div className={GRID_CLASSES[size]}>
       {cards.map((card) => (
