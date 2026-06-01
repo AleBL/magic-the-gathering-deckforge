@@ -58,4 +58,6 @@ export interface Card {
   color_identity?: string[];
   isCommander?: boolean;
   zone?: 'main' | 'sideboard' | 'maybeboard';
+  selectedPrintId?: string;
+  selectedPrintImageUri?: string;
 }

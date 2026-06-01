@@ -29,13 +29,47 @@ const PRINT_SPACING_MAP: Record<SpacingOption, string> = {
 
 const CARDS_PER_ROW_OPTIONS = [2, 3, 4] as const;
 
+type PageSizeOption = 'a4' | 'a5' | 'letter' | 'legal';
+type OrientationOption = 'portrait' | 'landscape';
+
+const CSS_PAGE_SIZE_MAP: Record<PageSizeOption, string> = {
+  a4: 'A4',
+  a5: 'A5',
+  letter: 'letter',
+  legal: 'legal'
+};
+
+const getCardsPerPage = (size: PageSizeOption, orient: OrientationOption, spacingOpt: SpacingOption) => {
+  const paperDims = {
+    a4: { w: 210, h: 297 },
+    a5: { w: 148, h: 210 },
+    letter: { w: 216, h: 279 },
+    legal: { w: 216, h: 356 }
+  };
+  const dims = paperDims[size];
+  const paperW = orient === 'portrait' ? dims.w : dims.h;
+  const paperH = orient === 'portrait' ? dims.h : dims.w;
+
+  const margins = 20; // 10mm margins on both sides
+  const usableW = paperW - margins;
+  const usableH = paperH - margins;
+
+  const spacingMm = spacingOpt === 'none' ? 0 : spacingOpt === 'small' ? 2.5 : 6;
+  
+  const cols = Math.floor((usableW + spacingMm) / (63 + spacingMm));
+  const rows = Math.floor((usableH + spacingMm) / (88 + spacingMm));
+
+  return Math.max(1, cols * rows);
+};
+
 function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProps) {
   const { t } = useTranslation();
   const [spacing, setSpacing] = useState<SpacingOption>('small');
   const [cuttingGuide, setCuttingGuide] = useState<CuttingGuide>('dotted');
   const [cardsPerRow, setCardsPerRow] = useState<number>(3);
   const [zoneFilter, setZoneFilter] = useState<ZoneFilter>('all');
-  const [pageSize, setPageSize] = useState<'a4' | 'letter'>('a4');
+  const [pageSize, setPageSize] = useState<PageSizeOption>('a4');
+  const [orientation, setOrientation] = useState<OrientationOption>('portrait');
   const printAreaRef = useRef<HTMLDivElement>(null);
 
   const filteredCards = useMemo(() => {
@@ -43,6 +77,14 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
     if (zoneFilter === 'main') return cards.filter((c) => !c.zone || c.zone === 'main');
     return cards.filter((c) => c.zone === 'sideboard');
   }, [cards, zoneFilter]);
+
+  const cardsPerPage = useMemo(() => {
+    return getCardsPerPage(pageSize, orientation, spacing);
+  }, [pageSize, orientation, spacing]);
+
+  const estimatedPages = useMemo(() => {
+    return Math.ceil(filteredCards.length / cardsPerPage);
+  }, [filteredCards.length, cardsPerPage]);
 
   const gapValue = SPACING_MAP[spacing];
   const printGapValue = PRINT_SPACING_MAP[spacing];
@@ -57,12 +99,13 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
     // Inject print-specific styles and trigger native print dialog
     const style = document.createElement('style');
     style.id = 'proxy-print-override';
+    const cssSize = `${CSS_PAGE_SIZE_MAP[pageSize]} ${orientation}`;
     style.textContent = `
       @media print {
         body > * { display: none !important; }
         #proxy-print-root { display: block !important; }
         @page {
-          size: ${pageSize};
+          size: ${cssSize};
           margin: 10mm;
         }
       }
@@ -98,7 +141,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
           </div>
 
           {/* Settings bar */}
-          <div className="proxy-settings-bar">
+          <div className="proxy-settings-bar flex-wrap">
             <FaCog className="text-gray-400 text-sm shrink-0" />
 
             {/* Zone filter */}
@@ -120,11 +163,26 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
               <label className="proxy-setting-label">{t('paperSize')}</label>
               <select
                 value={pageSize}
-                onChange={(e) => setPageSize(e.target.value as 'a4' | 'letter')}
+                onChange={(e) => setPageSize(e.target.value as PageSizeOption)}
                 className="proxy-select"
               >
                 <option value="a4">{t('paperSizeA4')}</option>
+                <option value="a5">{t('paperSizeA5', 'A5')}</option>
                 <option value="letter">{t('paperSizeLetter')}</option>
+                <option value="legal">{t('paperSizeLegal', 'US Legal')}</option>
+              </select>
+            </div>
+
+            {/* Orientation selector */}
+            <div className="proxy-setting-group">
+              <label className="proxy-setting-label">{t('orientation', 'Orientation')}</label>
+              <select
+                value={orientation}
+                onChange={(e) => setOrientation(e.target.value as OrientationOption)}
+                className="proxy-select"
+              >
+                <option value="portrait">{t('portrait', 'Portrait')}</option>
+                <option value="landscape">{t('landscape', 'Landscape')}</option>
               </select>
             </div>
 
@@ -200,7 +258,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
               }}
             >
               {filteredCards.map((card, index) => {
-                const imgUrl = getCardImageUrl(card);
+                const imgUrl = card.selectedPrintImageUri || getCardImageUrl(card);
                 return (
                   <div
                     key={`${card.id}-${index}`}
@@ -230,8 +288,8 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
 
           {/* Footer */}
           <div className="modal-footer-container">
-            <span className="text-xs text-gray-500 dark:text-gray-400 flex-1">
-              {filteredCards.length} {t('cards')}
+            <span className="text-xs text-gray-500 dark:text-gray-400 flex-1 text-left">
+              {filteredCards.length} {t('cards')} &bull; {t('estimatedPages')} <span className="font-bold text-gray-700 dark:text-gray-300">{estimatedPages}</span>
             </span>
             <button
               type="button"
@@ -281,7 +339,7 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
           }}
         >
           {filteredCards.map((card, index) => {
-            const imgUrl = getCardImageUrl(card);
+            const imgUrl = card.selectedPrintImageUri || getCardImageUrl(card);
             return (
               <div
                 key={`print-${card.id}-${index}`}
