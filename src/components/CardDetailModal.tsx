@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaCrown, FaShieldAlt, FaSync, FaPalette } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { parseTextWithSymbols } from '../utils/symbolHelper';
-import { CardPrintsModal } from './CardPrintsModal';
+import { useCardPrints } from '../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../hooks/useCardRelatedTokens';
 
 interface CardDetailModalProps {
@@ -19,7 +19,15 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
   const { t } = useTranslation();
   const [card, setCard] = useState<Card>(initialCard);
   const [currentImageUrl, setCurrentImageUrl] = useState<string>(imageUrl);
-  const [isPrintsModalOpen, setIsPrintsModalOpen] = useState(false);
+  const { prints } = useCardPrints(card.name);
+  const [hoveredImageUrl, setHoveredImageUrl] = useState<string | null>(null);
+
+  const getCardFaceImageUrl = (printCard: Card): string => {
+    if (printCard.selectedPrintImageUri) return printCard.selectedPrintImageUri;
+    const imageUris = printCard.image_uris ?? printCard.card_faces?.[0]?.image_uris;
+    if (!imageUris) return '';
+    return imageUris.normal || imageUris.large || '';
+  };
 
   const { tokens: relatedTokens } = useCardRelatedTokensForCard(card);
 
@@ -29,18 +37,23 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
   const currentFace = hasMultipleFaces ? card.card_faces?.[showBackFace ? 1 : 0] : null;
 
   const displayImageUrl = useMemo(() => {
+    if (hoveredImageUrl) return hoveredImageUrl;
     if (hasMultipleFaces) {
       const face = card.card_faces?.[showBackFace ? 1 : 0];
       return face?.image_uris?.normal || face?.image_uris?.large || currentImageUrl;
     }
     return currentImageUrl;
-  }, [card, showBackFace, hasMultipleFaces, currentImageUrl]);
+  }, [card, showBackFace, hasMultipleFaces, currentImageUrl, hoveredImageUrl]);
 
-  const handleSelectPrint = (updatedCard: Card) => {
+  const handleSelectPrint = (printCard: Card) => {
+    const imageUrl = getCardFaceImageUrl(printCard);
+    const updatedCard: Card = {
+      ...printCard,
+      selectedPrintId: printCard.id,
+      selectedPrintImageUri: imageUrl
+    };
     setCard(updatedCard);
-    if (updatedCard.selectedPrintImageUri) {
-      setCurrentImageUrl(updatedCard.selectedPrintImageUri);
-    }
+    setCurrentImageUrl(imageUrl);
     onSelectPrint?.(updatedCard);
   };
 
@@ -65,22 +78,65 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
         aria-labelledby="modal-card-title"
       >
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="card-detail-image-wrapper flex flex-col items-center gap-3">
-            <img
-              src={displayImageUrl}
-              alt={currentFace ? currentFace.name : card.name}
-              className="card-detail-image animate-fadeIn"
-            />
-            {hasMultipleFaces && (
-              <button
-                type="button"
-                onClick={() => setShowBackFace((prev) => !prev)}
-                className="secondary-button text-xs py-1.5 px-4 flex items-center gap-1.5 shadow-md w-full justify-center"
-              >
-                <FaSync className={`transition-transform duration-500 ${showBackFace ? 'rotate-180' : ''}`} />
-                {t('flipAction')}
-              </button>
+          <div className="flex flex-col md:flex-row gap-4 items-center md:items-start shrink-0 animate-fadeIn">
+            {/* Prints editions vertical sidebar */}
+            {prints.length > 1 && (
+              <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-y-auto max-w-full max-h-16 md:max-h-[350px] pr-1.5 pb-2 md:pb-0 scrollbar-thin select-none py-1 shrink-0">
+                {prints.map((printCard) => {
+                  const isSelected = (card.selectedPrintId || card.id) === printCard.id;
+                  let rarityColor = 'border-gray-250 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 text-gray-700 dark:text-gray-300';
+                  const rarity = printCard.rarity?.toLowerCase();
+                  if (rarity === 'mythic') {
+                    rarityColor = 'border-orange-500/50 bg-orange-500/10 text-orange-600 dark:text-orange-400 font-extrabold shadow-[0_0_8px_rgba(249,115,22,0.1)]';
+                  } else if (rarity === 'rare') {
+                    rarityColor = 'border-amber-400/60 bg-amber-400/10 text-amber-600 dark:text-amber-400 font-bold';
+                  } else if (rarity === 'uncommon') {
+                    rarityColor = 'border-slate-400/50 bg-slate-400/10 text-slate-600 dark:text-slate-350';
+                  }
+
+                  return (
+                    <button
+                      type="button"
+                      key={printCard.id}
+                      onMouseEnter={() => setHoveredImageUrl(getCardFaceImageUrl(printCard))}
+                      onMouseLeave={() => setHoveredImageUrl(null)}
+                      onClick={() => handleSelectPrint(printCard)}
+                      title={`${printCard.set_name} (#${printCard.collector_number || ''})`}
+                      className={`group relative w-12 h-12 shrink-0 rounded-xl flex flex-col items-center justify-center border transition-all duration-300 ${
+                        isSelected
+                          ? 'border-blue-500 bg-blue-500/15 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/30 scale-105 font-black shadow-md'
+                          : `${rarityColor} hover:border-blue-400/80 hover:scale-105 hover:bg-blue-500/5`
+                      }`}
+                    >
+                      <span className="text-[10px] uppercase font-black tracking-tight leading-none">
+                        {printCard.set}
+                      </span>
+                      <span className="text-[7px] text-gray-400 dark:text-gray-500 group-hover:text-blue-500/70 font-semibold select-none mt-0.5 leading-none">
+                        #{printCard.collector_number || ''}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             )}
+
+            <div className="card-detail-image-wrapper flex flex-col items-center gap-3 shrink-0">
+              <img
+                src={displayImageUrl}
+                alt={currentFace ? currentFace.name : card.name}
+                className="card-detail-image animate-fadeIn"
+              />
+              {hasMultipleFaces && (
+                <button
+                  type="button"
+                  onClick={() => setShowBackFace((prev) => !prev)}
+                  className="secondary-button text-xs py-1.5 px-4 flex items-center gap-1.5 shadow-md w-full justify-center"
+                >
+                  <FaSync className={`transition-transform duration-500 ${showBackFace ? 'rotate-180' : ''}`} />
+                  {t('flipAction')}
+                </button>
+              )}
+            </div>
           </div>
           <div className="card-detail-info">
             <div className="flex flex-wrap items-center gap-2">
@@ -260,27 +316,12 @@ function CardDetailModal({ card: initialCard, imageUrl, onAddToDeck, onClose, on
                   {t('addToDeck')}
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => setIsPrintsModalOpen(true)}
-                className="secondary-button flex items-center gap-1.5"
-              >
-                <FaPalette className="text-pink-500 animate-pulse" />
-                {t('otherVersions')}
-              </button>
               <button onClick={onClose} className="secondary-button">
                 {t('close')}
               </button>
             </div>
           </div>
         </div>
-        {/* Alternate prints selection modal */}
-        <CardPrintsModal
-          cardName={card.name}
-          isOpen={isPrintsModalOpen}
-          onClose={() => setIsPrintsModalOpen(false)}
-          onSelectPrint={handleSelectPrint}
-        />
       </div>
     </div>,
     document.body

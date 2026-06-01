@@ -17,6 +17,7 @@ import {
 import { Card } from '../types/Card';
 import CardDetailModal from './CardDetailModal';
 import { PlaytestTokenModal } from './PlaytestTokenModal';
+import { useCardRelatedTokens } from '../hooks/useCardRelatedTokens';
 
 interface PlaytestSimulatorProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
   const [isGraveyardOpen, setIsGraveyardOpen] = useState(false);
   const [selectedDetailCard, setSelectedDetailCard] = useState<Card | null>(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
+  const { relatedTokens } = useCardRelatedTokens(deckCards);
 
   const handleSummonToken = (tokenCard: Card) => {
     setBattlefield((previousBattlefield) => [
@@ -720,11 +722,11 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
         </div>
       </div>
 
-      {/* Token Summoner Modal */}
       <PlaytestTokenModal
         isOpen={isTokenModalOpen}
         onClose={() => setIsTokenModalOpen(false)}
         onSelectToken={handleSummonToken}
+        deckRelatedTokens={relatedTokens}
       />
 
       {/* Card Detail Modal */}

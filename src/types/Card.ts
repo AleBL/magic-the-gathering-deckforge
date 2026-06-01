@@ -60,4 +60,6 @@ export interface Card {
   zone?: 'main' | 'sideboard' | 'maybeboard';
   selectedPrintId?: string;
   selectedPrintImageUri?: string;
+  collector_number?: string;
+  artist?: string;
 }

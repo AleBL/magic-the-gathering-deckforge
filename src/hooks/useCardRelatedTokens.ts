@@ -19,22 +19,31 @@ export function useCardRelatedTokensForCard(card: Card | null) {
       return;
     }
 
-    // Scryfall's all_parts holds related card objects
-    const allParts = (card as any).all_parts || [];
-    const tokenParts = allParts.filter(
-      (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
-    );
-
-    if (tokenParts.length === 0) {
-      setTokens([]);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     const fetchTokens = async () => {
       try {
+        let allParts = (card as any).all_parts;
+        if (!allParts) {
+          try {
+            const fullCard = await Scry.Cards.byId(card.id);
+            allParts = (fullCard as any).all_parts || [];
+          } catch (e) {
+            console.error(`Failed to fetch full card ${card.id} for related tokens:`, e);
+            allParts = [];
+          }
+        }
+
+        const tokenParts = allParts.filter(
+          (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
+        );
+
+        if (tokenParts.length === 0) {
+          setTokens([]);
+          return;
+        }
+
         const fetched: Card[] = [];
 
         // Fetch each token by ID in parallel
@@ -73,26 +82,7 @@ export function useCardRelatedTokens(cards: Card[]) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Filter non-land cards that have token parts
-    const nonLandCards = cards.filter((c) => !c.type_line?.toLowerCase().includes('land'));
-    const tokenPartsMap = new Map<string, { id: string; generatorName: string }>();
-
-    nonLandCards.forEach((c) => {
-      const allParts = (c as any).all_parts || [];
-      const tokens = allParts.filter(
-        (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
-      );
-
-      tokens.forEach((t: any) => {
-        if (!tokenPartsMap.has(t.id)) {
-          tokenPartsMap.set(t.id, { id: t.id, generatorName: c.printed_name || c.name });
-        }
-      });
-    });
-
-    const tokenPartsList = Array.from(tokenPartsMap.values());
-
-    if (tokenPartsList.length === 0) {
+    if (!cards || cards.length === 0) {
       setRelatedTokens([]);
       return;
     }
@@ -102,8 +92,44 @@ export function useCardRelatedTokens(cards: Card[]) {
 
     const fetchAllDeckTokens = async () => {
       try {
-        const fetchedList: RelatedToken[] = [];
+        // Filter non-land cards
+        const nonLandCards = cards.filter((c) => !c.type_line?.toLowerCase().includes('land'));
+        const tokenPartsMap = new Map<string, { id: string; generatorName: string }>();
 
+        // Fetch full card details for cards lacking all_parts
+        await Promise.all(
+          nonLandCards.map(async (c) => {
+            let allParts = (c as any).all_parts;
+            if (!allParts) {
+              try {
+                const fullCard = await Scry.Cards.byId(c.id);
+                allParts = (fullCard as any).all_parts || [];
+              } catch (err) {
+                allParts = [];
+              }
+            }
+
+            const tokens = allParts.filter(
+              (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
+            );
+            
+            tokens.forEach((t: any) => {
+              if (!tokenPartsMap.has(t.id)) {
+                tokenPartsMap.set(t.id, { id: t.id, generatorName: c.printed_name || c.name });
+              }
+            });
+          })
+        );
+
+        const tokenPartsList = Array.from(tokenPartsMap.values());
+
+        if (tokenPartsList.length === 0) {
+          setRelatedTokens([]);
+          return;
+        }
+
+        const fetchedList: RelatedToken[] = [];
+        
         await Promise.all(
           tokenPartsList.map(async (part) => {
             try {

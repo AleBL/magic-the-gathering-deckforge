@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { FaTimes, FaPlus } from 'react-icons/fa';
 import { Card } from '../types/Card';
+import { RelatedToken } from '../hooks/useCardRelatedTokens';
 
 interface PlaytestTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectToken: (tokenCard: Card) => void;
+  deckRelatedTokens?: RelatedToken[];
 }
 
 export interface TokenPreset {
@@ -22,7 +24,7 @@ export interface TokenPreset {
   imageUrl?: string;
 }
 
-export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestTokenModalProps) {
+export function PlaytestTokenModal({ isOpen, onClose, onSelectToken, deckRelatedTokens = [] }: PlaytestTokenModalProps) {
   const { t } = useTranslation();
 
   if (!isOpen) return null;
@@ -129,6 +131,17 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
       set_name: 'Tokens',
       localeKey: 'treasureToken',
       imageUrl: 'https://cards.scryfall.io/normal/front/c/c/ccb10a30-e380-482d-88b9-ebcba6e8a7ea.jpg' // Treasure token
+    },
+    {
+      id: 'token-food',
+      name: 'Food',
+      type_line: 'Token Artifact — Food',
+      colors: [],
+      oracle_text: '{2}, {T}, Sacrifice: You gain 3 life.',
+      rarity: 'common',
+      set_name: 'Tokens',
+      localeKey: 'foodToken',
+      imageUrl: 'https://cards.scryfall.io/normal/front/b/6/b66e0766-3d23-455b-80a5-fdb242fbcfb8.jpg' // Food token
     }
   ];
 
@@ -138,7 +151,7 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
       id: `token-${preset.id}-${Math.random().toString(36).substring(2, 9)}`,
       oracle_id: `token-oracle-${preset.id}`,
       name: preset.name,
-      printed_name: t(preset.localeKey),
+      printed_name: t(preset.localeKey, preset.name),
       type_line: preset.type_line,
       printed_type_line: preset.type_line,
       oracle_text: preset.oracle_text,
@@ -172,8 +185,8 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn text-left">
+      <div className="bg-slate-900 border border-slate-800 text-white rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/40">
           <h3 className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
@@ -190,54 +203,124 @@ export function PlaytestTokenModal({ isOpen, onClose, onSelectToken }: PlaytestT
         </div>
 
         {/* Presets Grid */}
-        <div className="p-6 overflow-y-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {tokenPresets.map((preset) => {
-            const colorClass = getColorClass(preset.colors);
-            return (
-              <div
-                key={preset.id}
-                onClick={() => handleCreateToken(preset)}
-                className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
-              >
-                {/* Visual miniature representation */}
-                <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative">
-                  {preset.imageUrl ? (
-                    <img
-                      src={preset.imageUrl}
-                      alt={preset.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="text-[10px] text-slate-500 font-bold">{preset.name}</span>
-                  )}
-                  {preset.power && preset.toughness && (
-                    <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
-                      {preset.power}/{preset.toughness}
+        <div className="p-6 overflow-y-auto space-y-6 max-h-[70vh]">
+          {/* Deck Specific Tokens */}
+          {deckRelatedTokens.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
+                <span>{t('deckRelatedTokens', 'Deck Related Tokens')}</span>
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {deckRelatedTokens.map(({ tokenCard, generatorCardName }) => {
+                  const imgUrl = tokenCard.image_uris?.normal || tokenCard.card_faces?.[0]?.image_uris?.normal || '';
+                  const colorClass = getColorClass(tokenCard.colors || []);
+                  
+                  return (
+                    <div
+                      key={tokenCard.id}
+                      onClick={() => onSelectToken(tokenCard)}
+                      className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
+                    >
+                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative">
+                        {imgUrl ? (
+                          <img
+                            src={imgUrl}
+                            alt={tokenCard.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className="text-[9px] text-slate-500 font-bold p-1 leading-tight">{tokenCard.name}</span>
+                        )}
+                        {tokenCard.power && tokenCard.toughness && (
+                          <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
+                            {tokenCard.power}/{tokenCard.toughness}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="w-full min-w-0">
+                        <h4 className="text-xs font-bold text-slate-200 truncate leading-tight group-hover:text-indigo-400 transition-colors">
+                          {tokenCard.printed_name || tokenCard.name}
+                        </h4>
+                        <p className="text-[8px] text-slate-500 truncate mt-1">
+                          {t('generatedBy', 'Created by')}: <span className="font-extrabold text-indigo-400">{generatorCardName}</span>
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
+                      >
+                        <FaPlus className="text-[8px]" />
+                        {t('create')}
+                      </button>
                     </div>
-                  )}
-                </div>
-
-                <div className="w-full">
-                  <h4 className="text-xs font-bold text-slate-200 truncate leading-tight group-hover:text-indigo-400 transition-colors">
-                    {t(preset.localeKey)}
-                  </h4>
-                  <p className="text-[9px] text-slate-500 truncate mt-0.5">
-                    {preset.power && preset.toughness ? `${preset.power}/${preset.toughness}` : ''}{' '}
-                    {preset.oracle_text || preset.name}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  className="mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
-                >
-                  <FaPlus className="text-[8px]" />
-                  {t('create')}
-                </button>
+                  );
+                })}
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          {/* Standard Token Presets */}
+          <div className="space-y-3">
+            {deckRelatedTokens.length > 0 && (
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                <span>{t('standardTokens', 'Standard Tokens')}</span>
+              </h4>
+            )}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {tokenPresets.map((preset) => {
+                const colorClass = getColorClass(preset.colors);
+                return (
+                  <div
+                    key={preset.id}
+                    onClick={() => handleCreateToken(preset)}
+                    className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
+                  >
+                    {/* Visual miniature representation */}
+                    <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative">
+                      {preset.imageUrl ? (
+                        <img
+                          src={preset.imageUrl}
+                          alt={preset.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="text-[10px] text-slate-500 font-bold">{preset.name}</span>
+                      )}
+                      {preset.power && preset.toughness && (
+                        <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
+                          {preset.power}/{preset.toughness}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-full">
+                      <h4 className="text-xs font-bold text-slate-200 truncate leading-tight group-hover:text-indigo-400 transition-colors">
+                        {t(preset.localeKey, preset.name)}
+                      </h4>
+                      <p className="text-[9px] text-slate-500 truncate mt-0.5">
+                        {preset.power && preset.toughness ? `${preset.power}/${preset.toughness}` : ''}{' '}
+                        {preset.oracle_text || preset.name}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
+                    >
+                      <FaPlus className="text-[8px]" />
+                      {t('create')}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
