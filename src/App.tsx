@@ -299,7 +299,7 @@ function App() {
 
       <main className="main-content">
         {activeTab === 'search' ? (
-          <CardSearch onAddToDeck={handleAddToDeck} />
+          <CardSearch onAddToDeck={handleAddToDeck} activeFormat={editingDeck.deckFormat} />
         ) : (
           <DeckManager
             currentDeck={currentDeck}

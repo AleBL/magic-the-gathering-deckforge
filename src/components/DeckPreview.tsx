@@ -184,6 +184,7 @@ function DeckPreview({
           groups={groupedCards}
           cardSize={cardSize}
           isRemovable={isRemovable}
+          activeFormat={selectedDeck ? selectedDeck.format : activeFormat}
           onHoverEnter={handleHoverEnter}
           onHoverMove={handleHoverMove}
           onHoverLeave={handleHoverLeave}

@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFistRaised, FaMagic, FaBolt, FaTint } from 'react-icons/fa';
+import { FaFistRaised, FaMagic, FaBolt, FaTint, FaBan, FaExclamationTriangle } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
+import { DeckFormat } from '../../types/Deck';
 import { GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
 import CardDetailModal from '../CardDetailModal';
 
@@ -15,6 +16,7 @@ interface DeckStackViewProps {
   onHoverLeave: () => void;
   onRemoveFromDeck: (card: Card) => void;
   onAddToDeck: (card: Card) => void;
+  activeFormat?: DeckFormat;
 }
 
 const CARD_DIMENSIONS: Record<CardSize, { width: string; height: string }> = {
@@ -32,7 +34,8 @@ function DeckStackView({
   onHoverMove,
   onHoverLeave,
   onRemoveFromDeck,
-  onAddToDeck
+  onAddToDeck,
+  activeFormat
 }: DeckStackViewProps) {
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
@@ -89,6 +92,8 @@ function DeckStackView({
   const renderPlaymatCard = (item: { name: string; count: number; card: Card }) => {
     const { count, card } = item;
     const imageUrl = getCardImageUrl(card);
+    const isBanned = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
+    const isRestricted = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
 
     return (
       <div
@@ -104,7 +109,13 @@ function DeckStackView({
         {/* Shadow card layer 1 behind the main card (physically offset stack style) */}
         {count > 1 && (
           <div
-            className="absolute bg-slate-950 border border-slate-800/80 rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-1.5 group-hover:translate-y-1.5"
+            className={`absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-1.5 group-hover:translate-y-1.5 ${
+              isBanned
+                ? 'bg-red-950/60 border border-red-900/60'
+                : isRestricted
+                  ? 'bg-amber-950/60 border border-amber-900/60'
+                  : 'bg-slate-950 border border-slate-800/80'
+            }`}
             style={{
               top: '4px',
               left: '4px',
@@ -118,7 +129,13 @@ function DeckStackView({
         {/* Shadow card layer 2 behind the main card (offset stack style) */}
         {count > 2 && (
           <div
-            className="absolute bg-slate-950 border border-slate-800/80 rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-2.5 group-hover:translate-y-2.5"
+            className={`absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-2.5 group-hover:translate-y-2.5 ${
+              isBanned
+                ? 'bg-red-950/40 border border-red-900/40'
+                : isRestricted
+                  ? 'bg-amber-950/40 border border-amber-900/40'
+                  : 'bg-slate-950 border border-slate-800/80'
+            }`}
             style={{
               top: '8px',
               left: '8px',
@@ -131,7 +148,13 @@ function DeckStackView({
 
         {/* Main Card */}
         <div
-          className="absolute inset-y-0 left-0 rounded-lg overflow-hidden border border-slate-700/40 dark:border-slate-800/50 bg-slate-900 shadow-md transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl hover:border-blue-500/80"
+          className={`absolute inset-y-0 left-0 rounded-lg overflow-hidden border bg-slate-900 shadow-md transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl ${
+            isBanned
+              ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
+              : isRestricted
+                ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
+                : 'border-slate-700/40 dark:border-slate-800/50 hover:border-blue-500/80'
+          }`}
           style={{
             width: `calc(${dim.width} - ${count > 1 ? '10px' : '0px'})`,
             height: `calc(${dim.height} - ${count > 1 ? '10px' : '0px'})`,
@@ -146,11 +169,15 @@ function DeckStackView({
             <img
               src={imageUrl}
               alt={card.name}
-              className="w-full h-full object-cover pointer-events-none select-none"
+              className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${
+                isBanned
+                  ? 'opacity-50 grayscale-[40%] brightness-[75%]'
+                  : ''
+              }`}
             />
           ) : (
-            <div className="p-2.5 text-left h-full flex flex-col justify-between bg-slate-850">
-              <span className="text-[10px] font-extrabold block leading-tight text-white truncate-2-lines">
+            <div className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-950/20' : 'bg-slate-850'}`}>
+              <span className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-400' : 'text-white'}`}>
                 {card.printed_name || card.name}
               </span>
               <span className="text-[9px] text-yellow-500 font-mono font-bold">{card.mana_cost}</span>
@@ -162,6 +189,21 @@ function DeckStackView({
             <span className="absolute bottom-1.5 right-1.5 bg-blue-600 border border-blue-400 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none">
               {count}x
             </span>
+          )}
+
+          {/* Banned / Restricted Badge */}
+          {isBanned && (
+            <div className="absolute top-1.5 left-1.5 z-10 bg-rose-600/90 dark:bg-rose-700/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg border border-rose-500 flex items-center gap-0.5 select-none pointer-events-none animate-pulse">
+              <FaBan className="text-white text-[8px] shrink-0" />
+              <span>{t('banned').toUpperCase()}</span>
+            </div>
+          )}
+
+          {isRestricted && (
+            <div className="absolute top-1.5 left-1.5 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg border border-amber-400 flex items-center gap-0.5 select-none pointer-events-none">
+              <FaExclamationTriangle className="text-white text-[8px] shrink-0" />
+              <span>{t('restricted').toUpperCase()}</span>
+            </div>
           )}
 
           {/* Fast circular Remove button on hover */}

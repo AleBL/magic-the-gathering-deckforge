@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaPlus, FaMinus, FaTrash } from 'react-icons/fa';
+import { FaCrown, FaPlus, FaMinus, FaTrash, FaBan, FaExclamationTriangle } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
@@ -142,24 +142,45 @@ function DeckCardList({
               )}
               <div className="deck-list-compact">
                 {uniqueCards.map(({ count, card }) => {
+                  const isBanned = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
+                  const isRestricted = activeFormat && activeFormat !== 'freeform' && card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
+
                   return (
                     <div key={card.id} className="animate-fadeIn">
                       <div
-                        className="deck-list-row group"
+                        className={`deck-list-row group transition-all duration-200 ${
+                          isBanned
+                            ? 'border-red-300 dark:border-red-900/60 bg-red-500/5 dark:bg-red-950/10 hover:bg-red-500/10'
+                            : isRestricted
+                              ? 'border-amber-300 dark:border-amber-900/60 bg-amber-500/5 dark:bg-amber-950/10 hover:bg-amber-500/10'
+                              : ''
+                        }`}
                         onClick={() => setSelectedModalCard(card)}
                         onMouseEnter={(e) => onHoverEnter(card, e)}
                         onMouseMove={onHoverMove}
                         onMouseLeave={onHoverLeave}
                       >
                         <div className="flex items-center min-w-0 pr-2">
-                          <span className="quantity-badge">{count}x</span>
-                          <span className="font-semibold truncate text-sm text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                          <span className={`quantity-badge ${isBanned ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100' : ''}`}>{count}x</span>
+                          <span className={`font-semibold truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${isBanned ? 'text-red-600 dark:text-red-400 font-extrabold' : 'text-gray-800 dark:text-gray-200'}`}>
                             {card.printed_name || card.name}
                           </span>
                           {card.isCommander && (
                             <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm animate-pulse">
                               <FaCrown className="text-amber-500 dark:text-amber-400 shrink-0 text-[10px]" />
                               {t('commanderBadge')}
+                            </span>
+                          )}
+                          {isBanned && (
+                            <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-900/50 shrink-0 shadow-sm animate-pulse">
+                              <FaBan className="text-red-500 dark:text-red-400 text-[9px] shrink-0" />
+                              {t('banned').toUpperCase()}
+                            </span>
+                          )}
+                          {isRestricted && (
+                            <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm">
+                              <FaExclamationTriangle className="text-amber-500 dark:text-amber-400 text-[9px] shrink-0" />
+                              {t('restricted').toUpperCase()}
                             </span>
                           )}
                         </div>

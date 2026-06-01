@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCrown } from 'react-icons/fa';
+import { FaCrown, FaBan, FaExclamationTriangle } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { CardSize } from '../types';
+import { DeckFormat } from '../types/Deck';
 import CardDetailModal from './CardDetailModal';
 
 interface CardItemProps {
@@ -11,6 +12,7 @@ interface CardItemProps {
   onAddToDeck?: (card: Card) => void;
   onRemoveFromDeck?: (card: Card) => void;
   showRemoveButton?: boolean;
+  activeFormat?: DeckFormat;
 }
 
 function getCardImageUrl(card: Card, size: CardSize): string {
@@ -29,26 +31,65 @@ function getCardImageUrl(card: Card, size: CardSize): string {
   return imageUris[sizeToUriKey[size]] || '';
 }
 
-function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton = false }: CardItemProps) {
+function CardItem({ card, size, onAddToDeck, onRemoveFromDeck, showRemoveButton = false, activeFormat }: CardItemProps) {
   const { t } = useTranslation();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const imageUrl = useMemo(() => getCardImageUrl(card, size), [card, size]);
 
+  const isBanned = useMemo(() => {
+    if (!activeFormat || activeFormat === 'freeform') return false;
+    return card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
+  }, [card, activeFormat]);
+
+  const isRestricted = useMemo(() => {
+    if (!activeFormat || activeFormat === 'freeform') return false;
+    return card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
+  }, [card, activeFormat]);
+
   return (
-    <div className="card-item-wrapper group relative">
+    <div className={`card-item-wrapper group relative ${isBanned ? 'border-red-500/50' : ''}`}>
       {card.isCommander && (
         <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
           <FaCrown className="text-amber-200 text-xs shrink-0 animate-pulse" />
           {t('commanderBadge') || 'Comandante'}
         </div>
       )}
-      <button type="button" onClick={() => setIsDetailOpen(true)} className="card-image-button" aria-label={card.name}>
-        <img src={imageUrl} alt={card.name} className="card-image-content" loading="lazy" />
+
+      {isBanned && (
+        <div className="absolute top-2 right-2 z-10 bg-rose-600/90 dark:bg-rose-700/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-rose-500 flex items-center gap-1 select-none">
+          <FaBan className="text-white text-[9px] shrink-0 animate-spin-slow" />
+          {t('banned') || 'Banida'}
+        </div>
+      )}
+
+      {isRestricted && (
+        <div className="absolute top-2 right-2 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 select-none">
+          <FaExclamationTriangle className="text-white text-[9px] shrink-0" />
+          {t('restricted') || 'Restrita'}
+        </div>
+      )}
+
+      <button type="button" onClick={() => setIsDetailOpen(true)} className="card-image-button animate-fadeIn" aria-label={card.name}>
+        <img
+          src={imageUrl}
+          alt={card.name}
+          className={`card-image-content transition-all duration-300 ${
+            isBanned
+              ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-lg'
+              : isRestricted
+                ? 'border-2 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-lg'
+                : ''
+          }`}
+          loading="lazy"
+        />
       </button>
 
-      <div className="card-action-overlay">
-        <p className="card-action-title">{card.name}</p>
+      <div className={`card-action-overlay ${isBanned ? 'bg-red-950/80' : ''}`}>
+        <p className="card-action-title flex items-center justify-center gap-1">
+          {isBanned && <FaBan className="text-red-400 text-xs inline shrink-0" />}
+          {card.name}
+        </p>
         <div className="card-action-buttons">
           {onAddToDeck && (
             <button onClick={() => onAddToDeck(card)} className="success-button button-small flex-1">

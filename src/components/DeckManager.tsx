@@ -104,6 +104,7 @@ function DeckManager({
   } = useDeckManager(currentDeck, editingDeckId, editingDeckFormat, onCancelEdit);
 
   const activeFormat = editingDeckId ? editingDeckFormat : deckFormat;
+  const activeStatsDeck = selectedDeck ? selectedDeck.cards : currentDeck;
 
   const showAlert = (title: string, message: string, variant: 'danger' | 'warning' | 'info' | 'success' = 'info') => {
     setDialogState({
@@ -605,6 +606,20 @@ function DeckManager({
             onApplySuggestedLands={handleApplySuggestedLands}
           />
         </div>
+
+        {/* Deck statistics dashboard */}
+        {activeStatsDeck.length > 0 && (
+          <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+            <h3 className="text-gray-900 dark:text-white text-lg font-bold transition-colors duration-300 px-4 mb-2 flex items-center gap-2">
+              <FaChartBar className="text-blue-500 shrink-0" />
+              <span>{t('deckStats')}</span>
+            </h3>
+            <DeckStats
+              currentDeck={activeStatsDeck}
+              onApplySuggestedLands={selectedDeck ? undefined : handleApplySuggestedLands}
+            />
+          </div>
+        )}
       </div>
 
       {showSaveDialog && (
