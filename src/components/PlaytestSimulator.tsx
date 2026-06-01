@@ -11,9 +11,12 @@ import {
   FaSkull,
   FaSync,
   FaPlus,
-  FaMinus
+  FaMinus,
+  FaInfoCircle
 } from 'react-icons/fa';
 import { Card } from '../types/Card';
+import CardDetailModal from './CardDetailModal';
+import { PlaytestTokenModal } from './PlaytestTokenModal';
 
 interface PlaytestSimulatorProps {
   isOpen: boolean;
@@ -39,6 +42,20 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
   const [isMulliganPhase, setIsMulliganPhase] = useState(false);
   const [selectedToBottom, setSelectedToBottom] = useState<Set<string>>(new Set()); // Stores playtestId values
   const [isGraveyardOpen, setIsGraveyardOpen] = useState(false);
+  const [selectedDetailCard, setSelectedDetailCard] = useState<Card | null>(null);
+  const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
+
+  const handleSummonToken = (tokenCard: Card) => {
+    setBattlefield((previousBattlefield) => [
+      ...previousBattlefield,
+      {
+        playtestId: tokenCard.id,
+        card: tokenCard,
+        isTapped: false
+      }
+    ]);
+    setIsTokenModalOpen(false);
+  };
 
   // Maps standard Cards to wrapper PlaytestCards
   const mapToPlaytestCards = (cards: Card[]): PlaytestCard[] => {
@@ -499,6 +516,17 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
+                              setSelectedDetailCard(card);
+                            }}
+                            title={t('viewCardDetails')}
+                            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[9px]"
+                          >
+                            <FaInfoCircle />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
                               handleToggleTapCard(playtestId);
                             }}
                             title={t('tapUntap')}
@@ -600,19 +628,32 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                           )}
                         </div>
 
-                        {/* Hand Discard Button (on hover, outside mulligan phase) */}
+                        {/* Hand Info and Discard Buttons (on hover, outside mulligan phase) */}
                         {!isMulliganPhase && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDiscardFromHand(playtestId);
-                            }}
-                            title={t('discardCard')}
-                            className="absolute -top-2.5 -right-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-red-400 hover:border-red-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px]"
-                          >
-                            <FaSkull />
-                          </button>
+                          <>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDetailCard(card);
+                              }}
+                              title={t('viewCardDetails')}
+                              className="absolute -top-2.5 -left-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px]"
+                            >
+                              <FaInfoCircle />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDiscardFromHand(playtestId);
+                              }}
+                              title={t('discardCard')}
+                              className="absolute -top-2.5 -right-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-red-400 hover:border-red-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px]"
+                            >
+                              <FaSkull />
+                            </button>
+                          </>
                         )}
                       </div>
                     );
@@ -644,6 +685,16 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                 <FaSync className="text-[10px]" />
                 {t('untapAll')}
               </button>
+
+              <button
+                type="button"
+                onClick={() => setIsTokenModalOpen(true)}
+                disabled={isMulliganPhase}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+              >
+                <FaPlus className="text-[10px]" />
+                {t('summonToken')}
+              </button>
             </div>
 
             <div className="flex items-center gap-2">
@@ -668,6 +719,22 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
           </div>
         </div>
       </div>
+
+      {/* Token Summoner Modal */}
+      <PlaytestTokenModal
+        isOpen={isTokenModalOpen}
+        onClose={() => setIsTokenModalOpen(false)}
+        onSelectToken={handleSummonToken}
+      />
+
+      {/* Card Detail Modal */}
+      {selectedDetailCard && (
+        <CardDetailModal
+          card={selectedDetailCard}
+          imageUrl={getCardImageUrl(selectedDetailCard)}
+          onClose={() => setSelectedDetailCard(null)}
+        />
+      )}
     </div>
   );
 }
