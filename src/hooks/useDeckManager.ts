@@ -107,6 +107,13 @@ export default function useDeckManager(
     downloadAsJson(savedDecks, `all-decks-${Date.now()}.json`);
   };
 
+  const saveTokensToDeck = (deckId: string, tokens: { tokenCard: any; generatorCardName: string }[]) => {
+    const updatedDecks = savedDecks.map((deck) =>
+      deck.id === deckId ? { ...deck, relatedTokens: tokens } : deck
+    );
+    persistDecks(updatedDecks);
+  };
+
   const importDeckFile = async (file: File): Promise<{ success: boolean; errorKey?: string }> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -148,6 +155,7 @@ export default function useDeckManager(
     deleteDeck,
     exportDeck,
     exportAllDecks,
-    importDeckFile
+    importDeckFile,
+    saveTokensToDeck
   };
 }

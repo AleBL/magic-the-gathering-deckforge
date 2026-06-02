@@ -62,4 +62,5 @@ export interface Card {
   selectedPrintImageUri?: string;
   collector_number?: string;
   artist?: string;
+  lang?: string;
 }

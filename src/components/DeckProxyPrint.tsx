@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaPrint, FaTimes, FaCog } from 'react-icons/fa';
+import { FaPrint, FaTimes, FaCog, FaInfoCircle, FaFileAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { getCardImageUrl } from '../utils/deckGrouping';
 
@@ -239,6 +239,33 @@ function DeckProxyPrint({ isOpen, onClose, cards, deckName }: DeckProxyPrintProp
                     {t(g === 'none' ? 'cuttingGuideNone' : g === 'solid' ? 'cuttingGuideLine' : 'cuttingGuideDotted')}
                   </button>
                 ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Info Banner for Real Size Printing */}
+          <div className="mx-6 my-3 p-3.5 bg-blue-500/10 dark:bg-blue-500/5 border border-blue-500/20 dark:border-blue-500/15 rounded-xl text-left space-y-1.5 animate-fadeIn">
+            <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
+              <FaInfoCircle className="text-blue-500 text-xs shrink-0" />
+              {t('realSizeGuaranteed', 'Proxy - Tamanho Real Oficial')}
+            </h4>
+            <div className="text-[11px] text-gray-700 dark:text-gray-300 leading-relaxed font-medium flex items-start gap-1.5">
+              <span>{t('realSizeDescription', 'As cartas são impressas nas dimensões oficiais de')} <strong className="text-gray-900 dark:text-white font-extrabold">63mm x 88mm</strong> {t('realSizeDescriptionSleeves', '(tamanho padrão ideal para protetores/sleeves).')}</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] text-gray-600 dark:text-gray-400 pt-2 border-t border-blue-500/10">
+              <div className="flex items-start gap-1.5">
+                <FaFileAlt className="text-gray-400 dark:text-gray-500 text-xs shrink-0 mt-0.5" />
+                <span>
+                  <strong className="text-gray-800 dark:text-gray-250">{t('pageYield', 'Rendimento por Página')}:</strong>{' '}
+                  {t('cardsPerPageText', 'Cabem exatamente')} <span className="font-extrabold text-blue-600 dark:text-blue-400 text-xs">{cardsPerPage}</span> {t('cardsPerPageTextSuffix', 'cartas tamanho real por folha')} (<span className="uppercase font-bold">{pageSize}</span> · {orientation === 'portrait' ? t('portrait') : t('landscape')}).
+                </span>
+              </div>
+              <div className="flex items-start gap-1.5">
+                <FaExclamationTriangle className="text-red-500 dark:text-red-400 text-xs shrink-0 mt-0.5" />
+                <span>
+                  <strong className="text-red-500 dark:text-red-400">{t('importantInstructions', 'Importante')}:</strong>{' '}
+                  {t('printInstructionsText', 'Na tela de impressão do seu navegador, configure a')} <strong className="text-gray-800 dark:text-gray-250 underline font-bold">{t('scaleOption', 'Escala em 100%')}</strong> {t('printInstructionsTextSuffix', 'ou "Tamanho Real" (NÃO use "Ajustar à página").')}
+                </span>
               </div>
             </div>
           </div>

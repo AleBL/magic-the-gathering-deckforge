@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
 
-export function useCardPrints(cardName: string | undefined) {
+export function useCardPrints(cardName: string | undefined, oracleId?: string) {
   const [prints, setPrints] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
-    if (!cardName) {
+    if (!cardName && !oracleId) {
       setPrints([]);
       return;
     }
@@ -16,7 +18,15 @@ export function useCardPrints(cardName: string | undefined) {
     setIsLoading(true);
     setError(null);
 
-    const query = `!"${cardName}" unique:prints`;
+    const targetLang = i18n.language || 'en';
+    const cleanLang = targetLang.split('-')[0].toLowerCase();
+
+    // Construct a language query that tries to fetch the target language OR English for each print
+    const langCondition = cleanLang !== 'en' ? `(lang:${cleanLang} OR lang:en)` : 'lang:en';
+    const query = oracleId
+      ? `oracle_id:${oracleId} unique:prints ${langCondition}`
+      : `!"${cardName}" unique:prints ${langCondition}`;
+
     const results: Card[] = [];
     const emitter = Scry.Cards.search(query);
 
@@ -38,8 +48,26 @@ export function useCardPrints(cardName: string | undefined) {
     });
 
     emitter.on('done', () => {
+      // Group prints by set & collector number, prioritizing the target language print
+      const uniqueMap = new Map<string, Card>();
+      results.forEach((c) => {
+        const key = `${c.set}_${c.collector_number || ''}`;
+        const existing = uniqueMap.get(key);
+        if (!existing) {
+          uniqueMap.set(key, c);
+        } else {
+          const existingIsEnglish = existing.lang === 'en' || !existing.lang;
+          const newIsPreferred = c.lang === cleanLang;
+          if (existingIsEnglish && newIsPreferred) {
+            uniqueMap.set(key, c);
+          }
+        }
+      });
+
+      const uniqueResults = Array.from(uniqueMap.values());
+
       // Sort: place versions with images first
-      const sorted = results.sort((a, b) => {
+      const sorted = uniqueResults.sort((a, b) => {
         const aImg = a.image_uris?.normal || a.card_faces?.[0]?.image_uris?.normal;
         const bImg = b.image_uris?.normal || b.card_faces?.[0]?.image_uris?.normal;
         if (aImg && !bImg) return -1;
@@ -69,7 +97,8 @@ export function useCardPrints(cardName: string | undefined) {
         // Suppress emitter cancellation errors
       }
     };
-  }, [cardName]);
+  }, [cardName, oracleId, i18n.language]);
 
   return { prints, isLoading, error };
 }
+

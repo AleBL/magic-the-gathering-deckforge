@@ -10,9 +10,10 @@ import {
   FaPalette
 } from 'react-icons/fa';
 import { Card } from '../types/Card';
-import { Deck, DeckFormat } from '../types/Deck';
+import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
 import { groupCards, getCardImageUrl } from '../utils/deckGrouping';
+import { RelatedToken } from '../hooks/useCardRelatedTokens';
 import { validateDeck } from '../utils/deckValidator';
 import DeckValidationBadge from './DeckValidationBadge';
 import PlaytestSimulator from './PlaytestSimulator';
@@ -27,6 +28,7 @@ import CardSizeSelector from './CardSizeSelector';
 import DeckProxyPrint from './DeckProxyPrint';
 import DeckStats from './DeckStats';
 import DeckTokensTab from './deck/DeckTokensTab';
+import CardDetailModal from './CardDetailModal';
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -49,6 +51,7 @@ interface DeckPreviewProps {
   onSaveNotesDirectly?: (deckId: string, notes: string) => void;
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
   onUpdateCard?: (updatedCard: Card) => void;
+  onSaveTokens?: (deckId: string, tokens: DeckRelatedToken[]) => void;
 }
 
 type ViewMode = 'list' | 'grid' | 'stack';
@@ -75,7 +78,8 @@ function DeckPreview({
   onCardSizeChange,
   onSaveNotesDirectly,
   onApplySuggestedLands,
-  onUpdateCard
+  onUpdateCard,
+  onSaveTokens
 }: DeckPreviewProps) {
   const { t } = useTranslation();
 
@@ -86,6 +90,7 @@ function DeckPreview({
   const [isProxyPrintOpen, setIsProxyPrintOpen] = useState(false);
   const [activeNoteTab, setActiveNoteTab] = useState<NoteTab>('cards');
   const [activeZone, setActiveZone] = useState<Zone>('main');
+  const [selectedTokenForView, setSelectedTokenForView] = useState<Card | null>(null);
 
   const activeCards = useMemo(() => (selectedDeck ? selectedDeck.cards : currentDeck), [selectedDeck, currentDeck]);
 
@@ -292,7 +297,16 @@ function DeckPreview({
         ) : activeNoteTab === 'stats' ? (
           <DeckStats currentDeck={activeCards} />
         ) : activeNoteTab === 'tokens' ? (
-          <DeckTokensTab cards={activeCards} />
+          <DeckTokensTab
+            cards={activeCards}
+            cachedTokens={selectedDeck?.relatedTokens}
+            onTokensLoaded={(tokens: RelatedToken[]) => {
+              if (selectedDeck && onSaveTokens) {
+                onSaveTokens(selectedDeck.id, tokens);
+              }
+            }}
+            onTokenClick={setSelectedTokenForView}
+          />
         ) : (
           renderCards(false)
         )}
@@ -314,6 +328,19 @@ function DeckPreview({
           cards={activeCards}
           deckName={selectedDeck.name}
         />
+
+        {/* Token lightbox */}
+        {selectedTokenForView && (
+          <CardDetailModal
+            card={selectedTokenForView}
+            imageUrl={
+              selectedTokenForView.image_uris?.normal ||
+              selectedTokenForView.card_faces?.[0]?.image_uris?.normal ||
+              ''
+            }
+            onClose={() => setSelectedTokenForView(null)}
+          />
+        )}
       </div>
     );
   }
@@ -358,7 +385,16 @@ function DeckPreview({
       ) : activeNoteTab === 'stats' ? (
         <DeckStats currentDeck={activeCards} onApplySuggestedLands={onApplySuggestedLands} />
       ) : activeNoteTab === 'tokens' ? (
-        <DeckTokensTab cards={activeCards} />
+        <DeckTokensTab
+          cards={activeCards}
+          onTokensLoaded={(tokens: RelatedToken[]) => {
+            // For edit mode, we save to the deck being edited
+            if (editingDeckId && onSaveTokens) {
+              onSaveTokens(editingDeckId, tokens);
+            }
+          }}
+          onTokenClick={setSelectedTokenForView}
+        />
       ) : (
         <>
           {currentDeck.length === 0 ? (
@@ -381,6 +417,19 @@ function DeckPreview({
       />
 
       <DeckProxyPrint isOpen={isProxyPrintOpen} onClose={() => setIsProxyPrintOpen(false)} cards={activeCards} />
+
+      {/* Token lightbox */}
+      {selectedTokenForView && (
+        <CardDetailModal
+          card={selectedTokenForView}
+          imageUrl={
+            selectedTokenForView.image_uris?.normal ||
+            selectedTokenForView.card_faces?.[0]?.image_uris?.normal ||
+            ''
+          }
+          onClose={() => setSelectedTokenForView(null)}
+        />
+      )}
     </div>
   );
 }
