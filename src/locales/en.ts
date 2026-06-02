@@ -1,5 +1,41 @@
 const en = {
   translations: {
+    electron: {
+      aboutTitle: 'About MTG Deck Forge',
+      aboutDetail:
+        'Version: 0.1.0\n\nA premium desktop application designed for Magic: The Gathering players. Allows you to search for cards, build and manage decks, analyze statistics and mana curves, and run playtest simulations in a secure and lightning-fast local environment.\n\nAuthor: Alessandro Barros\nLicense: MIT',
+      aboutButtonsOk: 'OK',
+      aboutButtonsGitHub: 'Visit GitHub Repository',
+      services: 'Services',
+      hide: 'Hide MTG Deck Forge',
+      hideOthers: 'Hide Others',
+      showAll: 'Show All',
+      quit: 'Quit MTG Deck Forge',
+      file: 'File',
+      clearDeck: 'Clear Current Deck',
+      close: 'Close Window',
+      exit: 'Exit',
+      edit: 'Edit',
+      undo: 'Undo',
+      redo: 'Redo',
+      cut: 'Cut',
+      copy: 'Copy',
+      paste: 'Paste',
+      pasteMatch: 'Paste and Match Style',
+      selectAll: 'Select All',
+      speech: 'Speech',
+      startSpeaking: 'Start Speaking',
+      stopSpeaking: 'Stop Speaking',
+      view: 'View',
+      reload: 'Reload',
+      forceReload: 'Force Reload',
+      toggleDevTools: 'Toggle Developer Tools',
+      resetZoom: 'Actual Size',
+      zoomIn: 'Zoom In',
+      zoomOut: 'Zoom Out',
+      fullscreen: 'Toggle Full Screen',
+      help: 'Help'
+    },
     // Header
     appTitle: 'MTG Deck Forge',
     searchTab: 'Search Cards',
@@ -181,7 +217,7 @@ const en = {
     importing: 'Importing cards...',
     importError: 'Error importing some cards. Please check the names.',
 
-    // Premium features translations
+    // features translations
     validationBanlist: 'Banned cards found: the following cards are banned in {{format}}: {{list}}.',
     validationRestrictedList:
       'Restricted cards exceeded: the following cards are restricted to 1 copy in Vintage: {{list}}.',

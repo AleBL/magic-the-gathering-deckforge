@@ -14,6 +14,21 @@ function SelectLanguage() {
     }
   }, [i18n.language, language]);
 
+  // Sincronizar o idioma do React com o menu nativo do Electron
+  useEffect(() => {
+    if (i18n.language) {
+      const cleanLang = i18n.language.split('-')[0];
+      const safeWindow = window as unknown as {
+        ipcRenderer?: {
+          send: (channel: string, data: string) => void;
+        };
+      };
+      if (safeWindow.ipcRenderer) {
+        safeWindow.ipcRenderer.send('change-language', cleanLang);
+      }
+    }
+  }, [i18n.language]);
+
   // Fechar o dropdown ao clicar fora
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

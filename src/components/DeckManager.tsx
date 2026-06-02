@@ -450,6 +450,7 @@ function DeckManager({
               </div>
             ) : (
               <button
+                id="save-deck-btn"
                 type="button"
                 onClick={() => {
                   setDeckName('');
@@ -464,6 +465,7 @@ function DeckManager({
             )}
 
             <button
+              id="clear-deck-btn"
               type="button"
               onClick={onClearDeck}
               disabled={currentDeck.length === 0}

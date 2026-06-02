@@ -6,7 +6,7 @@
   "author": {
     "name": "Alessandro Barros"
   },
-  "description": "Premium Magic: The Gathering card search, deck builder, active analytics, and playtest simulator.",
+  "description": "Magic: The Gathering card search, deck builder, active analytics, and playtest simulator.",
   "keywords": [
     "vite",
     "react",
@@ -22,14 +22,14 @@
   "scripts": {
     "dev": "vite",
     "dev:web": "vite --config vite.config.web.ts",
-    "build": "npm run build:vite && npm run build:electron",
+    "build": "yarn build:vite && yarn build:electron",
     "build:vite": "vite build",
     "build:electron": "tsc -p electron",
-    "dist": "npm run build && electron-builder",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux",
-    "pack": "npm run build && electron-builder --dir",
+    "dist": "yarn clean && yarn build && electron-builder",
+    "build:win": "yarn clean && yarn build && electron-builder --win",
+    "build:mac": "yarn clean && yarn build && electron-builder --mac",
+    "build:linux": "yarn clean && yarn build && electron-builder --linux",
+    "pack": "yarn clean && yarn build && electron-builder --dir",
     "clean": "rimraf dist dist-electron dist-vite",
     "type-check": "tsc",
     "lint": "eslint . --fix",
@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "^8.59.4",
     "autoprefixer": "^10.5.0",
     "concurrently": "^9.2.1",
-    "electron": "^36.3.1",
+    "electron": "^42.2.0",
     "electron-builder": "^26.8.1",
     "esbuild": "*",
     "eslint": "^9.28.0",
@@ -75,13 +75,71 @@
     "typescript-eslint": "^8.59.4"
   },
   "build": {
+    "appId": "com.alessandro.mtgdeckforge",
+    "productName": "MTG Deck Forge",
     "asar": true,
+    "directories": {
+      "output": "dist",
+      "buildResources": "resources"
+    },
     "files": [
       "dist-electron",
       "dist-vite"
     ],
-    "directories": {
-      "buildResources": "resources"
+    "win": {
+      "icon": "resources/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "MTG Deck Forge",
+      "license": "LICENSE.md",
+      "runAfterFinish": true
+    },
+    "mac": {
+      "icon": "resources/icon.png",
+      "category": "public.app-category.entertainment",
+      "target": [
+        "dmg"
+      ]
+    },
+    "dmg": {
+      "icon": "resources/icon.png",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "category": "Game",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     }
   }
 }

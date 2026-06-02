@@ -1,5 +1,41 @@
 const es = {
   translations: {
+    electron: {
+      aboutTitle: 'Acerca de MTG Deck Forge',
+      aboutDetail:
+        'Versión: 0.1.0\n\nUna aplicación de escritorio premium diseñada para jugadores de Magic: The Gathering. Le permite buscar cartas, crear y administrar mazos, administrar estadísticas y curvas de maná, y ejecutar simulaciones de playtest en un entorno local ultrarrápido y seguro.\n\nAutor: Alessandro Barros\nLicencia: MIT',
+      aboutButtonsOk: 'OK',
+      aboutButtonsGitHub: 'Visitar Repositorio GitHub',
+      services: 'Servicios',
+      hide: 'Ocultar MTG Deck Forge',
+      hideOthers: 'Ocultar Otros',
+      showAll: 'Mostrar Todo',
+      quit: 'Salir de MTG Deck Forge',
+      file: 'Archivo',
+      clearDeck: 'Limpiar Mazo Actual',
+      close: 'Cerrar Ventana',
+      exit: 'Salir',
+      edit: 'Editar',
+      undo: 'Deshacer',
+      redo: 'Rehacer',
+      cut: 'Cortar',
+      copy: 'Copiar',
+      paste: 'Pegar',
+      pasteMatch: 'Pegar con el Mismo Estilo',
+      selectAll: 'Seleccionar Todo',
+      speech: 'Habla',
+      startSpeaking: 'Empezar a Hablar',
+      stopSpeaking: 'Dejar de Hablar',
+      view: 'Ver',
+      reload: 'Recargar',
+      forceReload: 'Forzar Recarga',
+      toggleDevTools: 'Alternar Herramientas de Desarrollador',
+      resetZoom: 'Restablecer Zoom',
+      zoomIn: 'Acercar',
+      zoomOut: 'Alejar',
+      fullscreen: 'Pantalla Completa',
+      help: 'Ayuda'
+    },
     // Header
     appTitle: 'MTG Deck Forge',
     searchTab: 'Buscar Cartas',
@@ -182,7 +218,7 @@ const es = {
     importing: 'Importando cartas...',
     importError: 'Error al importar algunas cartas. Verifique los nombres.',
 
-    // Premium features translations
+    // features translations
     validationBanlist: 'Cartas prohibidas encontradas: las siguientes cartas están prohibidas en {{format}}: {{list}}.',
     validationRestrictedList:
       'Límite de cartas restringidas excedido: las siguientes cartas están restringidas a 1 copia en Vintage: {{list}}.',

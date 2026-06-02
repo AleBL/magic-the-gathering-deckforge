@@ -14,7 +14,7 @@ Search Magic: The Gathering cards, build and manage decks with [Scryfall](https:
 - **Interactive Playtest Simulator** — Realistic playground playmat workspace supporting card drawing, life total tracker, graveyard rescue, and drag-less battlefield positioning (Combat Zone, Support Zone, Spells, and Resource Lands).
 - **Active Deck Statistics & Mana Curve** — High-fidelity visual breakdown of your deck's mana curve chart, average CMC (excluding lands), color distribution, and card types division.
 - **Fully Localized Commander Checks** — 100% internationalized validation rules (Commander validation, "Partner", "Friends Forever", "Doctor's Companion", and "Choose a Background") in English, Spanish, and Portuguese.
-- **Dark Mode** — Modern premium dark-mode toggle with automatic local storage persistence.
+- **Dark Mode** — Modern dark-mode toggle with automatic local storage persistence.
 - **Cross-Platform** — Runs as a native desktop shell (Electron) or in a fast browser sandbox.
 
 ## Built With

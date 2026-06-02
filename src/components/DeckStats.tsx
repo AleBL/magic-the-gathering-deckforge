@@ -284,7 +284,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
         </div>
       </div>
 
-      {/* Premium additions: Mana Base Suggester & Budget Estimator */}
+      {/* additions: Mana Base Suggester & Budget Estimator */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
         {/* Land suggester card */}
         <div className="space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-500/5 dark:bg-blue-950/10 transition-colors duration-300">

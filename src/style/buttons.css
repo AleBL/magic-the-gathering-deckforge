@@ -27,15 +27,15 @@
 
 /* Navigation Tabs */
 .tab-group {
-  @apply flex gap-2 justify-center w-full sm:w-auto;
+  @apply flex gap-1 p-1 bg-gray-200/50 dark:bg-slate-950/60 backdrop-blur-md rounded-xl border border-gray-300/40 dark:border-slate-800/50 justify-center w-full sm:w-auto;
 }
 
 .tab-button {
-  @apply flex-1 sm:flex-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-sm sm:text-base transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer relative;
+  @apply flex-grow sm:flex-grow-0 px-4 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 bg-transparent text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white cursor-pointer relative flex items-center justify-center gap-2 select-none;
 }
 
 .tab-button-active {
-  @apply bg-blue-600 text-white shadow-lg hover:bg-blue-700;
+  @apply bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-md font-extrabold border border-gray-300/30 dark:border-slate-700/30;
 }
 
 /* Segmented Control / Toggle Buttons */

@@ -1,3 +1,5 @@
+import { contextBridge, ipcRenderer } from 'electron';
+
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
@@ -138,3 +140,30 @@ domReady().then(appendLoading);
 window.onmessage = (ev) => {
   if (ev.data.payload === 'removeLoading') removeLoading();
 };
+
+// Expose ipcRenderer safely to the renderer process
+try {
+  contextBridge.exposeInMainWorld('ipcRenderer', {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    send: (channel: string, data: any) => {
+      ipcRenderer.send(channel, data);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    on: (channel: string, listener: (...args: any[]) => void) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const subscription = (_event: any, ...args: any[]) => listener(...args);
+      ipcRenderer.on(channel, subscription);
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    off: (channel: string, listener: (...args: any[]) => void) => {
+      ipcRenderer.off(channel, listener);
+    }
+  });
+} catch {
+  // Fallback for non-isolated context or custom builds
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).ipcRenderer = ipcRenderer;
+}
