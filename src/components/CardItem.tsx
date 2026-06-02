@@ -15,11 +15,28 @@ interface CardItemProps {
   activeFormat?: DeckFormat;
 }
 
+const BASIC_LAND_FALLBACK_IMAGES: Record<string, string> = {
+  plains: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
+  island: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
+  swamp: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
+  mountain: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
+  forest: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
+  wastes: 'https://cards.scryfall.io/normal/front/0/3/036c84c1-6b45-4424-aa61-5991d7c35fa9.jpg',
+  'planície': 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
+  ilha: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
+  'pântano': 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
+  montanha: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
+  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
+};
+
 function getCardImageUrl(card: Card, size: CardSize): string {
   if (card.selectedPrintImageUri) return card.selectedPrintImageUri;
 
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
-  if (!imageUris) return '';
+  if (!imageUris) {
+    // Fallback for basic lands without image_uris (pre-existing decks)
+    return BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()] || '';
+  }
 
   if (card.image_uris?.gatherer) return card.image_uris.gatherer;
 
@@ -30,7 +47,7 @@ function getCardImageUrl(card: Card, size: CardSize): string {
     xlarge: 'png'
   };
 
-  return imageUris[sizeToUriKey[size]] || '';
+  return imageUris[sizeToUriKey[size]] || BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()] || '';
 }
 
 function CardItem({

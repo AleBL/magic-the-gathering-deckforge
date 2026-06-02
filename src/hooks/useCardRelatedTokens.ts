@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
+import { translateCards } from '../utils/translationHelper';
 
 export interface RelatedToken {
   tokenCard: Card;
@@ -12,6 +14,7 @@ export function useCardRelatedTokensForCard(card: Card | null) {
   const [tokens, setTokens] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (!card) {
@@ -27,16 +30,17 @@ export function useCardRelatedTokensForCard(card: Card | null) {
         let allParts = (card as any).all_parts;
         if (!allParts) {
           try {
-            const fullCard = await Scry.Cards.byId(card.id);
+            // Fetch by English name to ensure we get the English card which has all_parts
+            const fullCard = await Scry.Cards.byName(card.name);
             allParts = (fullCard as any).all_parts || [];
           } catch (e) {
-            console.error(`Failed to fetch full card ${card.id} for related tokens:`, e);
+            console.error(`Failed to fetch full card ${card.name} for related tokens:`, e);
             allParts = [];
           }
         }
 
         const tokenParts = allParts.filter(
-          (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
+          (part: any) => part.id !== card.id && part.name !== card.name
         );
 
         if (tokenParts.length === 0) {
@@ -60,7 +64,10 @@ export function useCardRelatedTokensForCard(card: Card | null) {
           })
         );
 
-        setTokens(fetched);
+        // Translate the fetched tokens to the selected language if available
+        const currentLang = i18n.language || 'en';
+        const translated = await translateCards(fetched, currentLang);
+        setTokens(translated);
       } catch (err: any) {
         console.error('Error fetching related tokens:', err);
         setError(err.message);
@@ -70,7 +77,7 @@ export function useCardRelatedTokensForCard(card: Card | null) {
     };
 
     fetchTokens();
-  }, [card]);
+  }, [card, i18n.language]);
 
   return { tokens, isLoading, error };
 }
@@ -80,6 +87,7 @@ export function useCardRelatedTokens(cards: Card[]) {
   const [relatedTokens, setRelatedTokens] = useState<RelatedToken[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (!cards || cards.length === 0) {
@@ -102,7 +110,8 @@ export function useCardRelatedTokens(cards: Card[]) {
             let allParts = (c as any).all_parts;
             if (!allParts) {
               try {
-                const fullCard = await Scry.Cards.byId(c.id);
+                // Fetch by English name to ensure we get the English card which has all_parts
+                const fullCard = await Scry.Cards.byName(c.name);
                 allParts = (fullCard as any).all_parts || [];
               } catch (err) {
                 allParts = [];
@@ -110,7 +119,7 @@ export function useCardRelatedTokens(cards: Card[]) {
             }
 
             const tokens = allParts.filter(
-              (part: any) => part.component === 'token' || part.type_line?.toLowerCase().includes('token')
+              (part: any) => part.id !== c.id && part.name !== c.name
             );
             
             tokens.forEach((t: any) => {
@@ -146,7 +155,17 @@ export function useCardRelatedTokens(cards: Card[]) {
           })
         );
 
-        setRelatedTokens(fetchedList);
+        // Translate token cards to target language if available
+        const currentLang = i18n.language || 'en';
+        const tokenCards = fetchedList.map((item) => item.tokenCard);
+        const translatedCards = await translateCards(tokenCards, currentLang);
+
+        const translatedList = fetchedList.map((item, index) => ({
+          ...item,
+          tokenCard: translatedCards[index] || item.tokenCard
+        }));
+
+        setRelatedTokens(translatedList);
       } catch (err: any) {
         console.error('Error fetching all deck tokens:', err);
         setError(err.message);
@@ -156,7 +175,7 @@ export function useCardRelatedTokens(cards: Card[]) {
     };
 
     fetchAllDeckTokens();
-  }, [cards]);
+  }, [cards, i18n.language]);
 
   return { relatedTokens, isLoading, error };
 }

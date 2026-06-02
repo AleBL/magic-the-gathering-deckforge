@@ -59,4 +59,3 @@
 .filter-badge-button-active {
   @apply bg-blue-600 text-white shadow-md hover:bg-blue-700;
 }
-

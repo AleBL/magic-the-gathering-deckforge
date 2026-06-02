@@ -102,7 +102,8 @@ function DeckManager({
     deleteDeck,
     exportDeck,
     exportAllDecks,
-    importDeckFile
+    importDeckFile,
+    saveTokensToDeck
   } = useDeckManager(currentDeck, editingDeckId, editingDeckFormat, onCancelEdit);
 
   const activeFormat = editingDeckId ? editingDeckFormat : deckFormat;
@@ -601,6 +602,7 @@ function DeckManager({
             onSaveNotesDirectly={handleSaveDeckNotesDirectly}
             onApplySuggestedLands={handleApplySuggestedLands}
             onUpdateCard={onUpdateCard}
+            onSaveTokens={saveTokensToDeck}
           />
         </div>
 

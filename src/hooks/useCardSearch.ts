@@ -8,6 +8,27 @@ const DEFAULT_QUERY = 'c>=1';
 const MIN_QUERY_LENGTH = 2;
 const DEBOUNCE_MS = 500;
 
+const deduplicateCards = (combined: Card[], targetLang: string): Card[] => {
+  const uniqueMap = new Map<string, Card>();
+  const cleanLang = (targetLang || 'en').split('-')[0].toLowerCase();
+
+  combined.forEach((card) => {
+    const existing = uniqueMap.get(card.oracle_id);
+    if (!existing) {
+      uniqueMap.set(card.oracle_id, card);
+    } else {
+      // Prefer preferred language over English, but keep English if preferred doesn't exist
+      const existingIsEnglish = existing.lang === 'en' || !existing.lang;
+      const newIsPreferred = card.lang === cleanLang;
+      if (existingIsEnglish && newIsPreferred) {
+        uniqueMap.set(card.oracle_id, card);
+      }
+    }
+  });
+
+  return Array.from(uniqueMap.values());
+};
+
 export function useCardSearch(language: string) {
   const [searchQuery, setSearchQuery] = useState('');
   const [cards, setCards] = useState<Card[]>([]);
@@ -62,7 +83,7 @@ export function useCardSearch(language: string) {
       const results: Card[] = [];
       const query = `${baseQuery} lang:${searchLanguage}`;
 
-      return new Promise((resolve, reject) => {
+      const searchPromise = new Promise<{ cards: Card[]; hasMore: boolean }>((resolve, reject) => {
         const emitter = Scry.Cards.search(query, { page });
         activeEmittersRef.current.push(emitter);
 
@@ -113,6 +134,12 @@ export function useCardSearch(language: string) {
           }
         });
       });
+
+      const timeoutPromise = new Promise<{ cards: Card[]; hasMore: boolean }>((_, reject) => {
+        setTimeout(() => reject(new Error('Search request timed out')), 6000);
+      });
+
+      return Promise.race([searchPromise, timeoutPromise]);
     },
     []
   );
@@ -169,7 +196,7 @@ export function useCardSearch(language: string) {
         const { cards: results, hasMore: more } = await fetchPage(query, 1);
         if (searchId !== latestSearchIdRef.current) return;
 
-        setCards(results);
+        setCards(deduplicateCards(results, language));
         setHasMore(more);
         setCurrentPage(2);
       } catch {
@@ -196,7 +223,7 @@ export function useCardSearch(language: string) {
       if (results.length === 0) {
         setHasMore(false);
       } else {
-        setCards((prev) => [...prev, ...results]);
+        setCards((prev) => deduplicateCards([...prev, ...results], language));
         setHasMore(more);
         setCurrentPage((p) => p + 1);
       }
