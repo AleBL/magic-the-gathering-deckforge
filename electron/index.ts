@@ -34,38 +34,38 @@ function setupMenu(window: BrowserWindow) {
   const template: Electron.MenuItemConstructorOptions[] = [
     ...(isMac
       ? [
-        {
-          label: 'MTG Deck Forge',
-          submenu: [
-            {
-              label: translate.aboutTitle,
-              click: async () => {
-                const result = await dialog.showMessageBox(window, {
-                  type: 'info',
-                  title: translate.aboutTitle,
-                  message: 'MTG Deck Forge',
-                  detail: translate.aboutDetail,
-                  icon: image.resize({ width: 64, height: 64 }),
-                  buttons: [translate.aboutButtonsOk, translate.aboutButtonsGitHub],
-                  defaultId: 0,
-                  cancelId: 0
-                });
-                if (result.response === 1) {
-                  shell.openExternal('https://github.com/AleBL/magic-the-gathering-deckforge');
+          {
+            label: 'MTG Deck Forge',
+            submenu: [
+              {
+                label: translate.aboutTitle,
+                click: async () => {
+                  const result = await dialog.showMessageBox(window, {
+                    type: 'info',
+                    title: translate.aboutTitle,
+                    message: 'MTG Deck Forge',
+                    detail: translate.aboutDetail,
+                    icon: image.resize({ width: 64, height: 64 }),
+                    buttons: [translate.aboutButtonsOk, translate.aboutButtonsGitHub],
+                    defaultId: 0,
+                    cancelId: 0
+                  });
+                  if (result.response === 1) {
+                    shell.openExternal('https://github.com/AleBL/magic-the-gathering-deckforge');
+                  }
                 }
-              }
-            },
-            { type: 'separator' },
-            { role: 'services', label: translate.services },
-            { type: 'separator' },
-            { role: 'hide', label: translate.hide },
-            { role: 'hideOthers', label: translate.hideOthers },
-            { role: 'unhide', label: translate.showAll },
-            { type: 'separator' },
-            { role: 'quit', label: translate.quit }
-          ] as Electron.MenuItemConstructorOptions[]
-        } as Electron.MenuItemConstructorOptions
-      ]
+              },
+              { type: 'separator' },
+              { role: 'services', label: translate.services },
+              { type: 'separator' },
+              { role: 'hide', label: translate.hide },
+              { role: 'hideOthers', label: translate.hideOthers },
+              { role: 'unhide', label: translate.showAll },
+              { type: 'separator' },
+              { role: 'quit', label: translate.quit }
+            ] as Electron.MenuItemConstructorOptions[]
+          } as Electron.MenuItemConstructorOptions
+        ]
       : []),
     {
       label: translate.file,
@@ -92,17 +92,17 @@ function setupMenu(window: BrowserWindow) {
         { role: 'paste', label: translate.paste },
         ...(isMac
           ? [
-            { role: 'pasteAndMatchStyle', label: translate.pasteMatch },
-            { role: 'selectAll', label: translate.selectAll },
-            { type: 'separator' },
-            {
-              label: translate.speech,
-              submenu: [
-                { role: 'startSpeaking', label: translate.startSpeaking },
-                { role: 'stopSpeaking', label: translate.stopSpeaking }
-              ]
-            }
-          ]
+              { role: 'pasteAndMatchStyle', label: translate.pasteMatch },
+              { role: 'selectAll', label: translate.selectAll },
+              { type: 'separator' },
+              {
+                label: translate.speech,
+                submenu: [
+                  { role: 'startSpeaking', label: translate.startSpeaking },
+                  { role: 'stopSpeaking', label: translate.stopSpeaking }
+                ]
+              }
+            ]
           : [{ role: 'selectAll', label: translate.selectAll }])
       ] as Electron.MenuItemConstructorOptions[]
     },
@@ -122,31 +122,31 @@ function setupMenu(window: BrowserWindow) {
     },
     ...(!isMac
       ? [
-        {
-          role: 'help' as const,
-          label: translate.help,
-          submenu: [
-            {
-              label: translate.aboutTitle,
-              click: async () => {
-                const result = await dialog.showMessageBox(window, {
-                  type: 'info',
-                  title: translate.aboutTitle,
-                  message: 'MTG Deck Forge',
-                  detail: translate.aboutDetail,
-                  icon: image.resize({ width: 64, height: 64 }),
-                  buttons: [translate.aboutButtonsOk, translate.aboutButtonsGitHub],
-                  defaultId: 0,
-                  cancelId: 0
-                });
-                if (result.response === 1) {
-                  shell.openExternal('https://github.com/AleBL/magic-the-gathering-deckforge');
+          {
+            role: 'help' as const,
+            label: translate.help,
+            submenu: [
+              {
+                label: translate.aboutTitle,
+                click: async () => {
+                  const result = await dialog.showMessageBox(window, {
+                    type: 'info',
+                    title: translate.aboutTitle,
+                    message: 'MTG Deck Forge',
+                    detail: translate.aboutDetail,
+                    icon: image.resize({ width: 64, height: 64 }),
+                    buttons: [translate.aboutButtonsOk, translate.aboutButtonsGitHub],
+                    defaultId: 0,
+                    cancelId: 0
+                  });
+                  if (result.response === 1) {
+                    shell.openExternal('https://github.com/AleBL/magic-the-gathering-deckforge');
+                  }
                 }
               }
-            }
-          ]
-        } as Electron.MenuItemConstructorOptions
-      ]
+            ]
+          } as Electron.MenuItemConstructorOptions
+        ]
       : [])
   ];
 

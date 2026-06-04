@@ -52,11 +52,12 @@ interface DeckPreviewProps {
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
   onUpdateCard?: (updatedCard: Card) => void;
   onSaveTokens?: (deckId: string, tokens: DeckRelatedToken[]) => void;
+  deckRelatedTokens?: DeckRelatedToken[];
 }
 
 type ViewMode = 'list' | 'grid' | 'stack';
 type NoteTab = 'cards' | 'notes' | 'stats' | 'tokens';
-type Zone = 'main' | 'sideboard' | 'maybeboard';
+type Zone = 'main' | 'sideboard' | 'maybeboard' | 'tokens';
 
 function DeckPreview({
   selectedDeck,
@@ -79,7 +80,8 @@ function DeckPreview({
   onSaveNotesDirectly,
   onApplySuggestedLands,
   onUpdateCard,
-  onSaveTokens
+  onSaveTokens,
+  deckRelatedTokens
 }: DeckPreviewProps) {
   const { t } = useTranslation();
 
@@ -125,14 +127,20 @@ function DeckPreview({
     [activeCards, isCommanderFormat]
   );
 
-  const zoneCards = useMemo(
-    () => activeCards.filter((c) => (c.zone || 'main') === activeZone),
-    [activeCards, activeZone]
-  );
+  const activeTokens = useMemo(() => {
+    return deckRelatedTokens || selectedDeck?.relatedTokens || [];
+  }, [deckRelatedTokens, selectedDeck]);
+
+  const zoneCards = useMemo(() => {
+    if (activeZone === 'tokens') {
+      return activeTokens.map((t) => t.tokenCard);
+    }
+    return activeCards.filter((c) => (c.zone || 'main') === activeZone);
+  }, [activeCards, activeZone, activeTokens]);
 
   const deckCards = useMemo(
-    () => (isCommanderFormat ? zoneCards.filter((c) => !c.isCommander) : zoneCards),
-    [zoneCards, isCommanderFormat]
+    () => (isCommanderFormat && activeZone !== 'tokens' ? zoneCards.filter((c) => !c.isCommander) : zoneCards),
+    [zoneCards, isCommanderFormat, activeZone]
   );
 
   const groupedCards = useMemo(() => groupCards(deckCards, groupBy, sortBy), [deckCards, groupBy, sortBy]);
@@ -141,10 +149,55 @@ function DeckPreview({
     () => ({
       main: activeCards.filter((c) => !c.zone || c.zone === 'main').length,
       sideboard: activeCards.filter((c) => c.zone === 'sideboard').length,
-      maybeboard: activeCards.filter((c) => c.zone === 'maybeboard').length
+      maybeboard: activeCards.filter((c) => c.zone === 'maybeboard').length,
+      tokens: activeTokens.length
     }),
-    [activeCards]
+    [activeCards, activeTokens]
   );
+
+  const handleDeleteTokenCard = (tokenCard: Card) => {
+    const updated = activeTokens.filter((t) => t.tokenCard.id !== tokenCard.id);
+    if (selectedDeck && onSaveTokens) {
+      onSaveTokens(selectedDeck.id, updated);
+    } else if (editingDeckId && onSaveTokens) {
+      onSaveTokens(editingDeckId, updated);
+    } else if (onSaveTokens) {
+      onSaveTokens('', updated);
+    }
+  };
+
+  const handleAddTokenCardCopy = (tokenCard: Card) => {
+    const uniqueTokenCard = {
+      ...tokenCard,
+      id: `token-${tokenCard.id.split('-')[1] || tokenCard.id}-${Math.random().toString(36).substring(2, 9)}`
+    };
+    const newToken: RelatedToken = {
+      tokenCard: uniqueTokenCard,
+      generatorCardName: t('manualAddition'),
+      isActive: true
+    };
+    const updated = [...activeTokens, newToken];
+    if (selectedDeck && onSaveTokens) {
+      onSaveTokens(selectedDeck.id, updated);
+    } else if (editingDeckId && onSaveTokens) {
+      onSaveTokens(editingDeckId, updated);
+    } else if (onSaveTokens) {
+      onSaveTokens('', updated);
+    }
+  };
+
+  const handleUpdateTokenCard = (updatedTokenCard: Card) => {
+    const updated = activeTokens.map((t) =>
+      t.tokenCard.id === updatedTokenCard.id ? { ...t, tokenCard: updatedTokenCard } : t
+    );
+    if (selectedDeck && onSaveTokens) {
+      onSaveTokens(selectedDeck.id, updated);
+    } else if (editingDeckId && onSaveTokens) {
+      onSaveTokens(editingDeckId, updated);
+    } else if (onSaveTokens) {
+      onSaveTokens('', updated);
+    }
+  };
 
   const handleHoverEnter = (card: Card, e: React.MouseEvent) => {
     setHoveredCard(card);
@@ -193,6 +246,7 @@ function DeckPreview({
           mainCount={zoneCounts.main}
           sideCount={zoneCounts.sideboard}
           maybeCount={zoneCounts.maybeboard}
+          tokensCount={zoneCounts.tokens}
           activeZone={activeZone}
           onZoneChange={setActiveZone}
         />
@@ -211,8 +265,10 @@ function DeckPreview({
           onHoverEnter={handleHoverEnter}
           onHoverMove={handleHoverMove}
           onHoverLeave={handleHoverLeave}
-          onRemoveFromDeck={onRemoveFromDeck}
-          onAddToDeck={onAddToDeck}
+          onRemoveFromDeck={activeZone === 'tokens' ? handleDeleteTokenCard : onRemoveFromDeck}
+          onAddToDeck={activeZone === 'tokens' ? handleAddTokenCardCopy : onAddToDeck}
+          onUpdateCard={activeZone === 'tokens' ? handleUpdateTokenCard : onUpdateCard}
+          isTokenZone={activeZone === 'tokens'}
         />
       ) : (
         <DeckCardList
@@ -221,15 +277,16 @@ function DeckPreview({
           cardSize={cardSize}
           viewMode={viewMode}
           isRemovable={isRemovable}
+          isTokenZone={activeZone === 'tokens'}
           activeFormat={selectedDeck ? selectedDeck.format : activeFormat}
-          onUpdateCardZone={onUpdateCardZone}
-          onAddToDeck={onAddToDeck}
-          onRemoveFromDeck={onRemoveFromDeck}
+          onUpdateCardZone={activeZone === 'tokens' ? undefined : onUpdateCardZone}
+          onAddToDeck={activeZone === 'tokens' ? handleAddTokenCardCopy : onAddToDeck}
+          onRemoveFromDeck={activeZone === 'tokens' ? handleDeleteTokenCard : onRemoveFromDeck}
           onToggleCommander={onToggleCommander}
           onHoverEnter={handleHoverEnter}
           onHoverMove={handleHoverMove}
           onHoverLeave={handleHoverLeave}
-          onUpdateCard={onUpdateCard}
+          onUpdateCard={activeZone === 'tokens' ? handleUpdateTokenCard : onUpdateCard}
         />
       )}
     </>
@@ -299,7 +356,7 @@ function DeckPreview({
         ) : activeNoteTab === 'tokens' ? (
           <DeckTokensTab
             cards={activeCards}
-            cachedTokens={selectedDeck?.relatedTokens}
+            cachedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
             onTokensLoaded={(tokens: RelatedToken[]) => {
               if (selectedDeck && onSaveTokens) {
                 onSaveTokens(selectedDeck.id, tokens);
@@ -320,6 +377,7 @@ function DeckPreview({
           onClose={() => setIsPlaytestOpen(false)}
           deckCards={activeCards}
           deckFormat={selectedDeck.format || 'freeform'}
+          deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
         />
 
         <DeckProxyPrint
@@ -334,11 +392,13 @@ function DeckPreview({
           <CardDetailModal
             card={selectedTokenForView}
             imageUrl={
-              selectedTokenForView.image_uris?.normal ||
-              selectedTokenForView.card_faces?.[0]?.image_uris?.normal ||
-              ''
+              selectedTokenForView.image_uris?.normal || selectedTokenForView.card_faces?.[0]?.image_uris?.normal || ''
             }
             onClose={() => setSelectedTokenForView(null)}
+            isDeckCard={true}
+            isToken={true}
+            deckCards={activeTokens.map((t) => t.tokenCard)}
+            isEditMode={false}
           />
         )}
       </div>
@@ -387,6 +447,7 @@ function DeckPreview({
       ) : activeNoteTab === 'tokens' ? (
         <DeckTokensTab
           cards={activeCards}
+          cachedTokens={deckRelatedTokens}
           onTokensLoaded={(tokens: RelatedToken[]) => {
             // For edit mode, we save to the deck being edited
             if (editingDeckId && onSaveTokens) {
@@ -414,6 +475,7 @@ function DeckPreview({
         onClose={() => setIsPlaytestOpen(false)}
         deckCards={activeCards}
         deckFormat={activeFormat}
+        deckRelatedTokens={deckRelatedTokens}
       />
 
       <DeckProxyPrint isOpen={isProxyPrintOpen} onClose={() => setIsProxyPrintOpen(false)} cards={activeCards} />
@@ -423,11 +485,16 @@ function DeckPreview({
         <CardDetailModal
           card={selectedTokenForView}
           imageUrl={
-            selectedTokenForView.image_uris?.normal ||
-            selectedTokenForView.card_faces?.[0]?.image_uris?.normal ||
-            ''
+            selectedTokenForView.image_uris?.normal || selectedTokenForView.card_faces?.[0]?.image_uris?.normal || ''
           }
           onClose={() => setSelectedTokenForView(null)}
+          isDeckCard={true}
+          isToken={true}
+          deckCards={activeTokens.map((t) => t.tokenCard)}
+          onSelectPrint={handleUpdateTokenCard}
+          onRemoveFromDeck={handleDeleteTokenCard}
+          onAddToDeck={handleAddTokenCardCopy}
+          isEditMode={true}
         />
       )}
     </div>

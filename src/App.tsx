@@ -6,13 +6,15 @@ import DeckManager from './components/DeckManager';
 import EditingDeckBanner from './components/EditingDeckBanner';
 import Toast from './components/Toast';
 import { Card } from './types/Card';
-import { DeckFormat } from './types/Deck';
+import { DeckFormat, DeckRelatedToken } from './types/Deck';
 import { fetchSymbols } from './utils/symbolHelper';
 import useDarkMode from './hooks/useDarkMode';
 import useToast from './hooks/useToast';
 import CustomDialog from './components/CustomDialog';
 import { FaSearch, FaLayerGroup } from 'react-icons/fa';
 import pwLogo from './assets/PW.svg';
+import * as Scry from 'scryfall-sdk';
+import { translateCards } from './utils/translationHelper';
 
 interface EditingDeckState {
   deckId: string | null;
@@ -29,9 +31,10 @@ const INITIAL_EDITING_STATE: EditingDeckState = {
 };
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
   const [currentDeck, setCurrentDeck] = useState<Card[]>([]);
+  const [currentDeckRelatedTokens, setCurrentDeckRelatedTokens] = useState<DeckRelatedToken[]>([]);
   const [isDarkMode, setIsDarkMode] = useDarkMode();
   const [editingDeck, setEditingDeck] = useState<EditingDeckState>(INITIAL_EDITING_STATE);
   const { toastMessage, showToast } = useToast();
@@ -164,21 +167,96 @@ function App() {
     }
   }, []);
 
-  const handleAddToDeck = (card: Card) => {
+  const handleAddToDeck = async (card: Card) => {
     setCurrentDeck((prev) => [...prev, card]);
     showToast(`${card.name}: ${t('cardAdded')}`);
+
+    try {
+      let allParts = (card as any).all_parts;
+      if (!allParts) {
+        const tokenKeywords = [
+          'token',
+          'create',
+          'ficha',
+          'criar',
+          'crea',
+          'crie',
+          'investig',
+          'incub',
+          'fabric',
+          'acumul',
+          'enrolar',
+          'amass'
+        ];
+        const text = (card.oracle_text || (card as any).printed_text || '').toLowerCase();
+        const hasTokenText = tokenKeywords.some((word) => text.includes(word));
+
+        if (hasTokenText) {
+          const fullCard = await Scry.Cards.byName(card.name);
+          allParts = (fullCard as any).all_parts || [];
+        }
+      }
+
+      if (allParts && allParts.length > 0) {
+        const tokenParts = allParts.filter((part: any) => part.id !== card.id && part.name !== card.name);
+
+        if (tokenParts.length > 0) {
+          const newTokens: DeckRelatedToken[] = [];
+          await Promise.all(
+            tokenParts.map(async (part: any) => {
+              try {
+                const fetchedCard = await Scry.Cards.byId(part.id);
+                if (fetchedCard) {
+                  const currentLang = i18n.language || 'en';
+                  const translated = await translateCards([fetchedCard as unknown as Card], currentLang);
+                  const finalCard = translated[0] || fetchedCard;
+
+                  newTokens.push({
+                    tokenCard: finalCard,
+                    generatorCardName: card.printed_name || card.name,
+                    isActive: true
+                  });
+                }
+              } catch (err) {
+                console.error('Error fetching token by ID on addition:', err);
+              }
+            })
+          );
+
+          if (newTokens.length > 0) {
+            setCurrentDeckRelatedTokens((prev) => {
+              const existingIds = new Set(prev.map((t) => t.tokenCard.id));
+              const filteredNew = newTokens.filter((t) => !existingIds.has(t.tokenCard.id));
+              return [...prev, ...filteredNew];
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching related tokens on card addition:', e);
+    }
   };
 
   const handleRemoveFromDeck = (cardToRemove: Card) => {
+    let remains = false;
     setCurrentDeck((prev) => {
       const index = prev.findIndex((c) => c.id === cardToRemove.id);
       if (index > -1) {
         const newDeck = [...prev];
         newDeck.splice(index, 1);
+        remains = newDeck.some((c) => c.name === cardToRemove.name);
         return newDeck;
       }
       return prev;
     });
+
+    if (!remains) {
+      setCurrentDeckRelatedTokens((prevTokens) => {
+        const cardName = cardToRemove.name;
+        const printedName = cardToRemove.printed_name || cardToRemove.name;
+        return prevTokens.filter((t) => t.generatorCardName !== cardName && t.generatorCardName !== printedName);
+      });
+    }
   };
 
   const handleToggleCommander = (cardToToggle: Card) => {
@@ -216,6 +294,7 @@ function App() {
       t('confirmClear'),
       () => {
         setCurrentDeck([]);
+        setCurrentDeckRelatedTokens([]);
         setEditingDeck(INITIAL_EDITING_STATE);
       },
       'danger'
@@ -240,14 +319,23 @@ function App() {
     setCurrentDeck((prev) => prev.map((c) => (c.id === updatedCard.id ? updatedCard : c)));
   };
 
-  const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
+  const handleLoadDeckToEdit = (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
+  ) => {
     setEditingDeck({ deckId: id, deckName: name, deckFormat: format, deckNotes: notes || '' });
     setCurrentDeck(cards);
+    setCurrentDeckRelatedTokens(relatedTokens || []);
   };
 
   const handleCancelEdit = () => {
     setEditingDeck(INITIAL_EDITING_STATE);
     setCurrentDeck([]);
+    setCurrentDeckRelatedTokens([]);
   };
 
   return (
@@ -307,6 +395,8 @@ function App() {
         ) : (
           <DeckManager
             currentDeck={currentDeck}
+            deckRelatedTokens={currentDeckRelatedTokens}
+            onUpdateTokens={setCurrentDeckRelatedTokens}
             onAddToDeck={handleAddToDeck}
             onRemoveFromDeck={handleRemoveFromDeck}
             onToggleCommander={handleToggleCommander}

@@ -67,7 +67,18 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
   // Map the original cards to their translated counterpart or fallback to the original
   return cards.map((card) => {
     if (card.oracle_id && translatedMap.has(card.oracle_id)) {
-      return translatedMap.get(card.oracle_id)!;
+      const translated = translatedMap.get(card.oracle_id)!;
+      const hasImage = translated.image_uris?.normal || translated.card_faces?.[0]?.image_uris?.normal;
+      const originalHasImage = card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal;
+
+      if (!hasImage && originalHasImage) {
+        return {
+          ...translated,
+          image_uris: card.image_uris,
+          card_faces: card.card_faces
+        };
+      }
+      return translated;
     }
     return card;
   });

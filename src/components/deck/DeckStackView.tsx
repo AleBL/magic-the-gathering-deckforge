@@ -17,6 +17,8 @@ interface DeckStackViewProps {
   onRemoveFromDeck: (card: Card) => void;
   onAddToDeck: (card: Card) => void;
   activeFormat?: DeckFormat;
+  onUpdateCard?: (updatedCard: Card) => void;
+  isTokenZone?: boolean;
 }
 
 const CARD_DIMENSIONS: Record<CardSize, { width: string; height: string }> = {
@@ -35,7 +37,9 @@ function DeckStackView({
   onHoverLeave,
   onRemoveFromDeck,
   onAddToDeck,
-  activeFormat
+  activeFormat,
+  onUpdateCard,
+  isTokenZone = false
 }: DeckStackViewProps) {
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
@@ -321,6 +325,12 @@ function DeckStackView({
           imageUrl={getCardImageUrl(selectedModalCard)}
           onAddToDeck={isRemovable ? onAddToDeck : undefined}
           onClose={() => setSelectedModalCard(null)}
+          onSelectPrint={onUpdateCard}
+          isToken={isTokenZone}
+          isDeckCard={true}
+          deckCards={allCards}
+          onRemoveFromDeck={onRemoveFromDeck}
+          isEditMode={isRemovable}
         />
       )}
     </div>

@@ -13,6 +13,11 @@ interface CardItemProps {
   onRemoveFromDeck?: (card: Card) => void;
   showRemoveButton?: boolean;
   activeFormat?: DeckFormat;
+  isDeckCard?: boolean;
+  deckCards?: Card[];
+  onSelectPrint?: (updatedCard: Card) => void;
+  isToken?: boolean;
+  isEditMode?: boolean;
 }
 
 const BASIC_LAND_FALLBACK_IMAGES: Record<string, string> = {
@@ -22,11 +27,11 @@ const BASIC_LAND_FALLBACK_IMAGES: Record<string, string> = {
   mountain: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
   forest: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
   wastes: 'https://cards.scryfall.io/normal/front/0/3/036c84c1-6b45-4424-aa61-5991d7c35fa9.jpg',
-  'planície': 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
+  planície: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
   ilha: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
-  'pântano': 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
+  pântano: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
   montanha: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
-  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
+  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg'
 };
 
 function getCardImageUrl(card: Card, size: CardSize): string {
@@ -56,7 +61,12 @@ function CardItem({
   onAddToDeck,
   onRemoveFromDeck,
   showRemoveButton = false,
-  activeFormat
+  activeFormat,
+  isDeckCard = false,
+  deckCards = [],
+  onSelectPrint,
+  isToken = false,
+  isEditMode = false
 }: CardItemProps) {
   const { t } = useTranslation();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -141,6 +151,12 @@ function CardItem({
           imageUrl={imageUrl}
           onAddToDeck={onAddToDeck}
           onClose={() => setIsDetailOpen(false)}
+          onSelectPrint={onSelectPrint}
+          isToken={isToken}
+          isDeckCard={isDeckCard}
+          deckCards={deckCards}
+          onRemoveFromDeck={onRemoveFromDeck}
+          isEditMode={isEditMode}
         />
       )}
     </div>

@@ -4,11 +4,12 @@ interface DeckZoneTabsProps {
   mainCount: number;
   sideCount: number;
   maybeCount: number;
-  activeZone: 'main' | 'sideboard' | 'maybeboard';
-  onZoneChange: (zone: 'main' | 'sideboard' | 'maybeboard') => void;
+  tokensCount: number;
+  activeZone: 'main' | 'sideboard' | 'maybeboard' | 'tokens';
+  onZoneChange: (zone: 'main' | 'sideboard' | 'maybeboard' | 'tokens') => void;
 }
 
-function DeckZoneTabs({ mainCount, sideCount, maybeCount, activeZone, onZoneChange }: DeckZoneTabsProps) {
+function DeckZoneTabs({ mainCount, sideCount, maybeCount, tokensCount, activeZone, onZoneChange }: DeckZoneTabsProps) {
   const { t } = useTranslation();
 
   const tabClass = (zone: string) =>
@@ -28,6 +29,9 @@ function DeckZoneTabs({ mainCount, sideCount, maybeCount, activeZone, onZoneChan
       </button>
       <button type="button" onClick={() => onZoneChange('maybeboard')} className={tabClass('maybeboard')}>
         {t('maybeboard')} ({maybeCount})
+      </button>
+      <button type="button" onClick={() => onZoneChange('tokens')} className={tabClass('tokens')}>
+        {t('tokensTab')} ({tokensCount})
       </button>
     </div>
   );

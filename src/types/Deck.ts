@@ -5,6 +5,7 @@ export type DeckFormat = 'standard' | 'modern' | 'commander' | 'vintage' | 'paup
 export interface DeckRelatedToken {
   tokenCard: Card;
   generatorCardName: string;
+  isActive?: boolean;
 }
 
 export interface Deck {

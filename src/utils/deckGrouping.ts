@@ -121,11 +121,11 @@ const BASIC_LAND_FALLBACK_IMAGES: Record<string, string> = {
   forest: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
   wastes: 'https://cards.scryfall.io/normal/front/0/3/036c84c1-6b45-4424-aa61-5991d7c35fa9.jpg',
   // Portuguese names
-  'planície': 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
+  planície: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
   ilha: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
-  'pântano': 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
+  pântano: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
   montanha: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
-  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
+  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg'
 };
 
 /** URL of the best available image for the card. */
@@ -134,16 +134,13 @@ export const getCardImageUrl = (card: Card): string => {
   if ((card as any).selectedPrintImageUri) return (card as any).selectedPrintImageUri;
 
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
-  const baseUrl = imageUris
-    ? imageUris.normal || imageUris.large || card.image_uris?.gatherer || ''
-    : '';
+  const baseUrl = imageUris ? imageUris.normal || imageUris.large || card.image_uris?.gatherer || '' : '';
 
   if (baseUrl) return baseUrl;
 
   // Fallback for basic lands that were stored without image_uris (pre-existing decks)
   const isBasicLand =
-    card.type_line?.toLowerCase().includes('basic land') ||
-    !!BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()];
+    card.type_line?.toLowerCase().includes('basic land') || !!BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()];
 
   if (isBasicLand) {
     return BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()] || '';

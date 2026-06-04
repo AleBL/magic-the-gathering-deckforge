@@ -12,9 +12,12 @@ import {
   FaSync,
   FaPlus,
   FaMinus,
-  FaInfoCircle
+  FaInfoCircle,
+  FaFileAlt,
+  FaLayerGroup
 } from 'react-icons/fa';
 import { Card } from '../types/Card';
+import { DeckRelatedToken } from '../types/Deck';
 import CardDetailModal from './CardDetailModal';
 import { PlaytestTokenModal } from './PlaytestTokenModal';
 import { useCardRelatedTokens } from '../hooks/useCardRelatedTokens';
@@ -24,6 +27,7 @@ interface PlaytestSimulatorProps {
   onClose: () => void;
   deckCards: Card[];
   deckFormat?: string;
+  deckRelatedTokens?: DeckRelatedToken[];
 }
 
 interface PlaytestCard {
@@ -32,7 +36,13 @@ interface PlaytestCard {
   isTapped: boolean;
 }
 
-function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestSimulatorProps) {
+interface LogEntry {
+  id: string;
+  text: string;
+  timestamp: string;
+}
+
+function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelatedTokens }: PlaytestSimulatorProps) {
   const { t } = useTranslation();
   const [library, setLibrary] = useState<PlaytestCard[]>([]);
   const [hand, setHand] = useState<PlaytestCard[]>([]);
@@ -45,28 +55,20 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
   const [isGraveyardOpen, setIsGraveyardOpen] = useState(false);
   const [selectedDetailCard, setSelectedDetailCard] = useState<Card | null>(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
-  const { relatedTokens } = useCardRelatedTokens(deckCards);
 
-  const handleSummonToken = (tokenCard: Card) => {
-    setBattlefield((previousBattlefield) => [
-      ...previousBattlefield,
-      {
-        playtestId: tokenCard.id,
-        card: tokenCard,
-        isTapped: false
-      }
-    ]);
-    setIsTokenModalOpen(false);
-  };
+  const shouldFetchTokens = !deckRelatedTokens || deckRelatedTokens.length === 0;
+  const { relatedTokens } = useCardRelatedTokens(shouldFetchTokens ? deckCards : []);
 
-  // Maps standard Cards to wrapper PlaytestCards
-  const mapToPlaytestCards = (cards: Card[]): PlaytestCard[] => {
-    return cards.map((card, index) => ({
-      playtestId: `${card.id}-${index}-${Math.random().toString(36).substring(2, 9)}`,
-      card,
-      isTapped: false
-    }));
-  };
+  const activeDeckTokens =
+    deckRelatedTokens && deckRelatedTokens.length > 0
+      ? deckRelatedTokens.filter((t) => t.isActive !== false)
+      : relatedTokens;
+
+  // Turn, Phase, and Life Log states
+  const [turn, setTurn] = useState(1);
+  const [lifeLog, setLifeLog] = useState<LogEntry[]>([]);
+  const [prevLifeTotal, setPrevLifeTotal] = useState<number | null>(null);
+  const [isLogOpen, setIsLogOpen] = useState(true);
 
   // Fisher-Yates Shuffle algorithm with highly descriptive variables
   const shuffleDeck = (cards: PlaytestCard[]): PlaytestCard[] => {
@@ -84,6 +86,26 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
     return shuffledCards;
   };
 
+  // Maps standard Cards to wrapper PlaytestCards
+  const mapToPlaytestCards = (cards: Card[]): PlaytestCard[] => {
+    return cards.map((card, index) => ({
+      playtestId: `${card.id}-${index}-${Math.random().toString(36).substring(2, 9)}`,
+      card,
+      isTapped: false
+    }));
+  };
+
+  const logAction = useCallback((text: string) => {
+    setLifeLog((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        text,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      }
+    ]);
+  }, []);
+
   const startSimulation = useCallback(() => {
     if (deckCards.length === 0) return;
     const mappedCards = mapToPlaytestCards(deckCards);
@@ -95,12 +117,23 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
     setLibrary(initialLibrary);
     setBattlefield([]);
     setGraveyard([]);
-    setLifeTotal(deckFormat === 'commander' ? 40 : 20);
+    const initialLife = deckFormat === 'commander' ? 40 : 20;
+    setLifeTotal(initialLife);
+    setPrevLifeTotal(initialLife);
     setMulligans(0);
     setIsMulliganPhase(false);
     setSelectedToBottom(new Set());
     setIsGraveyardOpen(false);
-  }, [deckCards, deckFormat]);
+
+    setTurn(1);
+    setLifeLog([
+      {
+        id: 'start',
+        text: t('gameStartedLog'),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      }
+    ]);
+  }, [deckCards, deckFormat, t]);
 
   // Start simulation when modal opens
   useEffect(() => {
@@ -109,7 +142,13 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
     }
   }, [isOpen, startSimulation]);
 
-  if (!isOpen) return null;
+  // Life total change log listener
+  useEffect(() => {
+    if (prevLifeTotal !== null && prevLifeTotal !== lifeTotal) {
+      logAction(t('lifeChangedLog', { from: prevLifeTotal, to: lifeTotal }));
+    }
+    setPrevLifeTotal(lifeTotal);
+  }, [lifeTotal, prevLifeTotal, logAction, t]);
 
   const handleMulligan = () => {
     const nextMulligans = mulligans + 1;
@@ -128,6 +167,8 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
     setIsMulliganPhase(true);
     setSelectedToBottom(new Set());
     setIsGraveyardOpen(false);
+
+    logAction(t('mulliganLog', { cards: 7 }));
   };
 
   const handleToggleCardSelection = (playtestId: string) => {
@@ -166,89 +207,220 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
     setLibrary((previousLibrary) => [...previousLibrary, ...cardsToBottom]);
     setIsMulliganPhase(false);
     setSelectedToBottom(new Set());
-  };
 
-  const handleDrawCard = () => {
-    if (library.length === 0 || isMulliganPhase) return;
-
-    const nextCard = library[0];
-    setLibrary((previousLibrary) => previousLibrary.slice(1));
-    setHand((previousHand) => [...previousHand, nextCard]);
+    logAction(t('keptHandLog') + ` (London Mulligan para ${7 - mulligans} cartas)`);
   };
 
   const handleKeepHand = () => {
     setIsMulliganPhase(false);
     setSelectedToBottom(new Set());
+    logAction(t('keptHandLog') + ` (${7 - mulligans} cartas)`);
   };
+
+  const handleDrawCard = useCallback(() => {
+    setLibrary((previousLibrary) => {
+      if (previousLibrary.length === 0) return previousLibrary;
+      const nextCard = previousLibrary[0];
+      setHand((previousHand) => [...previousHand, nextCard]);
+      const cardName = nextCard.card.printed_name || nextCard.card.name;
+      logAction(t('drewCardLog', { name: cardName }));
+      return previousLibrary.slice(1);
+    });
+  }, [logAction, t]);
+
+  const handleShuffleLibrary = useCallback(() => {
+    setLibrary((prevLibrary) => {
+      if (prevLibrary.length === 0) return prevLibrary;
+      const shuffled = shuffleDeck(prevLibrary);
+      logAction(t('shuffleLibraryLog'));
+      return shuffled;
+    });
+  }, [logAction, t]);
 
   // Move card from hand to battlefield
-  const handlePlayCard = (playtestId: string) => {
-    if (isMulliganPhase) return;
-
-    const targetCard = hand.find((item) => item.playtestId === playtestId);
-    if (!targetCard) return;
-
-    setHand((previousHand) => previousHand.filter((item) => item.playtestId !== playtestId));
-    setBattlefield((previousBattlefield) => [...previousBattlefield, { ...targetCard, isTapped: false }]);
-  };
+  const handlePlayCard = useCallback(
+    (playtestId: string) => {
+      setHand((previousHand) => {
+        const targetCard = previousHand.find((item) => item.playtestId === playtestId);
+        if (!targetCard) return previousHand;
+        setBattlefield((previousBattlefield) => [...previousBattlefield, { ...targetCard, isTapped: false }]);
+        const cardName = targetCard.card.printed_name || targetCard.card.name;
+        logAction(t('playedCardLog', { name: cardName }));
+        return previousHand.filter((item) => item.playtestId !== playtestId);
+      });
+    },
+    [logAction, t]
+  );
 
   // Toggle Tap / Untap card on battlefield
-  const handleToggleTapCard = (playtestId: string) => {
-    setBattlefield((previousBattlefield) =>
-      previousBattlefield.map((item) => (item.playtestId === playtestId ? { ...item, isTapped: !item.isTapped } : item))
-    );
-  };
+  const handleToggleTapCard = useCallback(
+    (playtestId: string) => {
+      setBattlefield((previousBattlefield) => {
+        const targetCard = previousBattlefield.find((item) => item.playtestId === playtestId);
+        if (!targetCard) return previousBattlefield;
+        const isTapped = !targetCard.isTapped;
+        const cardName = targetCard.card.printed_name || targetCard.card.name;
+        logAction(isTapped ? t('tappedCardLog', { name: cardName }) : t('untappedCardLog', { name: cardName }));
+        return previousBattlefield.map((item) => (item.playtestId === playtestId ? { ...item, isTapped } : item));
+      });
+    },
+    [logAction, t]
+  );
 
   // Move card from battlefield to graveyard
-  const handleSendToGraveyard = (playtestId: string) => {
-    const targetCard = battlefield.find((item) => item.playtestId === playtestId);
-    if (!targetCard) return;
-
-    setBattlefield((previousBattlefield) => previousBattlefield.filter((item) => item.playtestId !== playtestId));
-    setGraveyard((previousGraveyard) => [targetCard, ...previousGraveyard]);
-  };
+  const handleSendToGraveyard = useCallback(
+    (playtestId: string) => {
+      setBattlefield((previousBattlefield) => {
+        const targetCard = previousBattlefield.find((item) => item.playtestId === playtestId);
+        if (!targetCard) return previousBattlefield;
+        setGraveyard((previousGraveyard) => [targetCard, ...previousGraveyard]);
+        const cardName = targetCard.card.printed_name || targetCard.card.name;
+        logAction(t('graveyardCardLog', { name: cardName }));
+        return previousBattlefield.filter((item) => item.playtestId !== playtestId);
+      });
+    },
+    [logAction, t]
+  );
 
   // Discard card from hand directly to graveyard
-  const handleDiscardFromHand = (playtestId: string) => {
-    if (isMulliganPhase) return;
-
-    const targetCard = hand.find((item) => item.playtestId === playtestId);
-    if (!targetCard) return;
-
-    setHand((previousHand) => previousHand.filter((item) => item.playtestId !== playtestId));
-    setGraveyard((previousGraveyard) => [targetCard, ...previousGraveyard]);
-  };
+  const handleDiscardFromHand = useCallback(
+    (playtestId: string) => {
+      setHand((previousHand) => {
+        const targetCard = previousHand.find((item) => item.playtestId === playtestId);
+        if (!targetCard) return previousHand;
+        setGraveyard((previousGraveyard) => [targetCard, ...previousGraveyard]);
+        const cardName = targetCard.card.printed_name || targetCard.card.name;
+        logAction(t('discardedCardLog', { name: cardName }));
+        return previousHand.filter((item) => item.playtestId !== playtestId);
+      });
+    },
+    [logAction, t]
+  );
 
   // Return card to hand from either battlefield or graveyard
-  const handleReturnToHand = (playtestId: string, fromZone: 'battlefield' | 'graveyard') => {
-    if (fromZone === 'battlefield') {
-      const targetCard = battlefield.find((item) => item.playtestId === playtestId);
-      if (!targetCard) return;
-
-      setBattlefield((previousBattlefield) => previousBattlefield.filter((item) => item.playtestId !== playtestId));
-      setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
-    } else {
-      const targetCard = graveyard.find((item) => item.playtestId === playtestId);
-      if (!targetCard) return;
-
-      setGraveyard((previousGraveyard) => previousGraveyard.filter((item) => item.playtestId !== playtestId));
-      setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
-    }
-  };
+  const handleReturnToHand = useCallback(
+    (playtestId: string, fromZone: 'battlefield' | 'graveyard') => {
+      if (fromZone === 'battlefield') {
+        setBattlefield((previousBattlefield) => {
+          const targetCard = previousBattlefield.find((item) => item.playtestId === playtestId);
+          if (!targetCard) return previousBattlefield;
+          setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
+          const cardName = targetCard.card.printed_name || targetCard.card.name;
+          logAction(t('returnedHandLog', { name: cardName }));
+          return previousBattlefield.filter((item) => item.playtestId !== playtestId);
+        });
+      } else {
+        setGraveyard((previousGraveyard) => {
+          const targetCard = previousGraveyard.find((item) => item.playtestId === playtestId);
+          if (!targetCard) return previousGraveyard;
+          setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
+          const cardName = targetCard.card.printed_name || targetCard.card.name;
+          logAction(t('returnedHandLog', { name: cardName }));
+          return previousGraveyard.filter((item) => item.playtestId !== playtestId);
+        });
+      }
+    },
+    [logAction, t]
+  );
 
   // Untap all permanents on the battlefield
-  const handleUntapAll = () => {
-    setBattlefield((previousBattlefield) => previousBattlefield.map((item) => ({ ...item, isTapped: false })));
-  };
+  const handleUntapAll = useCallback(() => {
+    setBattlefield((previousBattlefield) => {
+      if (previousBattlefield.length === 0) return previousBattlefield;
+      logAction(t('untappedAllLog'));
+      return previousBattlefield.map((item) => ({ ...item, isTapped: false }));
+    });
+  }, [logAction, t]);
+
+  const handleSummonToken = useCallback(
+    (tokenCard: Card) => {
+      setBattlefield((previousBattlefield) => [
+        ...previousBattlefield,
+        {
+          playtestId: tokenCard.id,
+          card: tokenCard,
+          isTapped: false
+        }
+      ]);
+      setIsTokenModalOpen(false);
+      const tokenName = tokenCard.printed_name || tokenCard.name;
+      logAction(t('createdTokenLog', { name: tokenName }));
+    },
+    [logAction, t]
+  );
+
+  const handleNextTurn = useCallback(() => {
+    setTurn((prevTurn) => {
+      const nextTurn = prevTurn + 1;
+
+      // Untap all
+      setBattlefield((prevBattlefield) => prevBattlefield.map((item) => ({ ...item, isTapped: false })));
+
+      // Draw card
+      setLibrary((prevLibrary) => {
+        let drawnCardName = '';
+        if (prevLibrary.length > 0) {
+          const nextCard = prevLibrary[0];
+          drawnCardName = nextCard.card.printed_name || nextCard.card.name;
+          setHand((prevHand) => [...prevHand, nextCard]);
+        }
+
+        // Logs
+        logAction(t('turnStartedLog', { turn: nextTurn }));
+        logAction(t('untappedAllLog'));
+        if (drawnCardName) {
+          logAction(t('drewCardLog', { name: drawnCardName }));
+        }
+
+        return prevLibrary.slice(1);
+      });
+
+      return nextTurn;
+    });
+  }, [logAction, t]);
+
+  // Keyboard Shortcuts Listener
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      if (key === 'd') {
+        e.preventDefault();
+        handleDrawCard();
+      } else if (key === 's') {
+        e.preventDefault();
+        handleShuffleLibrary();
+      } else if (key === 't') {
+        e.preventDefault();
+        handleNextTurn();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, handleDrawCard, handleShuffleLibrary, handleNextTurn]);
 
   const getCardImageUrl = (card: Card): string => {
+    // Prioritize the selected print art chosen in the deck editor
+    if (card.selectedPrintImageUri) return card.selectedPrintImageUri;
     const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
     if (!imageUris) return '';
-    if (card.image_uris?.gatherer) return card.image_uris.gatherer;
+    const isToken = card.type_line?.toLowerCase().includes('token') || card.id?.startsWith('token-');
+    if (!isToken && card.image_uris?.gatherer) return card.image_uris.gatherer;
     return imageUris.normal || imageUris.large || '';
   };
 
   const remainingToSelect = mulligans - selectedToBottom.size;
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
@@ -282,6 +454,15 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                 <FaPlus className="text-[8px]" />
               </button>
             </div>
+
+            {/* Turn Counter */}
+            {!isMulliganPhase && (
+              <div className="flex items-center bg-slate-800/70 border border-slate-700/50 rounded-xl px-3 py-1 shadow-inner gap-2">
+                <span className="text-[10px] text-indigo-400 font-extrabold uppercase tracking-wider">
+                  {t('turnLabel', { turn })}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
@@ -306,10 +487,25 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
               )}
             </div>
 
+            {/* Toggle Log button */}
+            <button
+              type="button"
+              onClick={() => setIsLogOpen((prev) => !prev)}
+              title={t('toggleLogPanel')}
+              className={`p-1.5 rounded-lg border transition-all text-xs flex items-center gap-1.5 cursor-pointer ${
+                isLogOpen
+                  ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-400'
+                  : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <FaFileAlt className="text-xs shrink-0" />
+              <span className="hidden md:inline font-bold">{t('playtestLog')}</span>
+            </button>
+
             <button
               type="button"
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all focus:outline-none"
+              className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all focus:outline-none cursor-pointer"
             >
               <FaTimes />
             </button>
@@ -335,7 +531,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                 <button
                   type="button"
                   onClick={handleConfirmMulligan}
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1"
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
                 >
                   <FaCheck />
                   {t('confirmMulligan')}
@@ -344,7 +540,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
               <button
                 type="button"
                 onClick={handleKeepHand}
-                className="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+                className="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer"
               >
                 {t('keepHand')}
               </button>
@@ -352,140 +548,211 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
           </div>
         )}
 
-        {/* Main Simulator Workspace */}
-        <div className="flex-1 p-6 overflow-y-auto bg-slate-950/20 flex flex-col gap-6 min-h-[480px]">
-          {/* Deck pile + Battlefield Area */}
-          <div className="flex flex-col lg:flex-row gap-6 items-stretch">
-            {/* Shuffled library pile & Graveyard */}
-            <div className="flex flex-row lg:flex-col gap-4 items-center justify-center p-4 border border-slate-800/40 rounded-xl bg-slate-900/30 w-full lg:w-48 shrink-0">
-              {/* Library pile card back */}
-              <div className="flex flex-col items-center">
+        {/* Split Sandbox and Log Panels */}
+        <div className="flex-1 flex flex-row overflow-hidden min-h-[480px]">
+          {/* Main Simulator Workspace */}
+          <div className="flex-1 p-6 overflow-y-auto bg-slate-950/20 flex flex-col gap-6">
+            {/* Deck pile + Battlefield Area */}
+            <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+              {/* Shuffled library pile & Graveyard */}
+              <div className="flex flex-row lg:flex-col gap-4 items-center justify-center p-4 border border-slate-800/40 rounded-xl bg-slate-900/30 w-full lg:w-48 shrink-0">
+                {/* Library Pile */}
                 <div
                   onClick={handleDrawCard}
-                  className={`relative w-28 h-40 rounded-lg bg-gradient-to-br from-indigo-950 to-slate-900 border-2 border-indigo-500/40 shadow-2xl flex items-center justify-center cursor-pointer select-none group transition-all duration-300 hover:border-indigo-400 ${isMulliganPhase || library.length === 0 ? 'opacity-40 pointer-events-none' : 'hover:scale-105'}`}
+                  className={`group relative w-24 h-34 sm:w-28 sm:h-40 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 border-indigo-500/30 hover:border-indigo-500 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-slate-700 pointer-events-none' : ''}`}
                 >
-                  {/* Visual Card Back */}
-                  <div className="absolute inset-1.5 border border-indigo-500/10 rounded-md flex flex-col items-center justify-center gap-1">
-                    <div className="w-12 h-12 rounded-full border border-indigo-400/20 flex items-center justify-center bg-indigo-950/30 group-hover:scale-110 transition-transform">
-                      <span className="text-[10px] font-bold text-indigo-400 group-hover:text-indigo-300">MTG</span>
-                    </div>
-                    <span className="text-[9px] uppercase tracking-wider text-slate-500 font-extrabold">
-                      {library.length} {t('cards')}
-                    </span>
-                  </div>
+                  {library.length > 0 ? (
+                    <>
+                      {/* Card sleeve back simulation */}
+                      <div className="absolute inset-1.5 rounded-[10px] bg-slate-950 border border-slate-800/60 flex items-center justify-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 to-transparent" />
+                        <div className="w-10 h-10 rounded-full border border-indigo-500/20 flex items-center justify-center text-indigo-500/40">
+                          <FaLayerGroup className="text-indigo-500/60 text-lg" />
+                        </div>
+                      </div>
+                      <span className="absolute bottom-3 text-[10px] uppercase font-black tracking-widest text-indigo-400 group-hover:text-indigo-300">
+                        {t('draw').toUpperCase()}
+                      </span>
+                      <div className="absolute -top-2 -right-2 bg-indigo-600 text-white font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow shadow-indigo-500/40">
+                        {library.length}
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-[10px] font-black uppercase text-slate-500">{t('empty').toUpperCase()}</span>
+                  )}
                 </div>
-                <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-2.5">
-                  {t('library')}
-                </span>
-              </div>
 
-              {/* Graveyard pile face-up card */}
-              <div className="flex flex-col items-center relative">
+                {/* Graveyard Pile */}
                 <div
-                  onClick={() => graveyard.length > 0 && setIsGraveyardOpen(!isGraveyardOpen)}
-                  className={`relative w-28 h-40 rounded-lg border-2 shadow-2xl flex items-center justify-center cursor-pointer select-none group transition-all duration-300 ${graveyard.length === 0 ? 'border-dashed border-slate-800 opacity-40 pointer-events-none' : 'border-red-500/40 hover:border-red-400 hover:scale-105'}`}
+                  onClick={() => graveyard.length > 0 && setIsGraveyardOpen(true)}
+                  className={`group relative w-24 h-34 sm:w-28 sm:h-40 rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${graveyard.length > 0 ? 'border-slate-700 hover:border-red-500/60 hover:shadow-red-500/5 bg-slate-950 hover:-translate-y-1 cursor-pointer' : 'border-dashed border-slate-800 bg-slate-950/20 pointer-events-none'}`}
                 >
                   {graveyard.length > 0 ? (
                     <>
                       <img
                         src={getCardImageUrl(graveyard[0].card)}
-                        alt="Graveyard top"
-                        className="w-full h-full object-cover rounded-md pointer-events-none"
+                        alt="Graveyard Top"
+                        className="w-full h-full object-cover rounded-2xl opacity-40 group-hover:opacity-30 group-hover:scale-98 transition-all"
+                        loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 flex flex-col items-center justify-center gap-1 transition-all rounded-md">
-                        <FaSkull className="text-red-500 text-xl drop-shadow" />
-                        <span className="text-[10px] font-extrabold text-white uppercase tracking-wider">
-                          {graveyard.length} {t('cards')}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
+                        <FaSkull className="text-red-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
+                        <span className="text-[8px] uppercase font-black tracking-widest text-slate-350">
+                          {t('graveyard').toUpperCase()}
                         </span>
+                      </div>
+                      <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
+                        {graveyard.length}
                       </div>
                     </>
                   ) : (
-                    <div className="flex flex-col items-center justify-center gap-1 text-slate-600">
-                      <FaSkull className="text-lg" />
-                      <span className="text-[9px] uppercase tracking-wider font-extrabold">{t('empty')}</span>
-                    </div>
+                    <>
+                      <FaSkull className="text-slate-800 text-lg mb-1" />
+                      <span className="text-[8px] uppercase font-black tracking-widest text-slate-650">
+                        {t('graveyard').toUpperCase()}
+                      </span>
+                    </>
                   )}
                 </div>
-                <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-2.5">
-                  {t('graveyard')}
-                </span>
+              </div>
 
-                {/* Graveyard browser dropdown */}
-                {isGraveyardOpen && graveyard.length > 0 && (
-                  <div className="absolute top-full lg:top-auto lg:bottom-full left-1/2 -translate-x-1/2 lg:-translate-y-2 mt-2 lg:mt-0 lg:mb-2 w-64 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto p-2 scrollbar-thin">
-                    <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-800 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                      <span>
-                        {t('graveyard')} ({graveyard.length})
-                      </span>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsGraveyardOpen(false);
-                        }}
-                        className="text-slate-500 hover:text-slate-300"
-                      >
-                        <FaTimes />
-                      </button>
-                    </div>
-                    <div className="flex flex-col gap-1 text-left">
-                      {graveyard.map((playtestCard) => (
+              {/* Battlefield zone */}
+              <div className="flex-1 border border-slate-800/60 rounded-2xl p-4 bg-slate-900/10 min-h-[300px] flex flex-col">
+                <div className="text-xs uppercase font-extrabold tracking-widest text-slate-500 mb-3 flex items-center justify-between select-none">
+                  <div>{t('battlefield')}</div>
+                </div>
+
+                {battlefield.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 pointer-events-none max-w-sm mx-auto">
+                    <p className="text-sm text-slate-500 font-semibold italic">{t('emptyBattlefieldMessage')}</p>
+                    <p className="text-xs text-slate-600 mt-1">{t('playCardsHint')}</p>
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex flex-wrap gap-4 items-center justify-center p-2 relative z-10">
+                    {battlefield.map((playtestCard) => {
+                      const { playtestId, card, isTapped } = playtestCard;
+                      const imageUrl = getCardImageUrl(card);
+
+                      return (
                         <div
-                          key={playtestCard.playtestId}
-                          className="flex items-center justify-between p-1.5 hover:bg-slate-800/60 rounded-lg transition-colors gap-2"
+                          key={playtestId}
+                          className="group relative transition-all duration-300 flex items-center justify-center"
                         >
-                          <span className="text-[10px] text-slate-200 truncate font-semibold block flex-1">
-                            {playtestCard.card.printed_name || playtestCard.card.name}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleReturnToHand(playtestCard.playtestId, 'graveyard');
-                            }}
-                            className="text-[8px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500 hover:text-white px-2 py-0.5 rounded transition-all font-bold shrink-0 uppercase tracking-wider"
-                          >
-                            {t('retrieve')}
-                          </button>
+                          <div className="relative w-24 h-34 sm:w-28 sm:h-40 flex items-center justify-center">
+                            <div
+                              onClick={() => handleToggleTapCard(playtestId)}
+                              className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition-all duration-300 ${isTapped ? 'border-amber-500/80 ring-2 ring-amber-500/30 rotate-90 scale-90' : 'border-slate-800 hover:scale-105 hover:border-indigo-500'}`}
+                            >
+                              {imageUrl ? (
+                                <img
+                                  src={imageUrl}
+                                  alt={card.name}
+                                  className="w-full h-full object-cover pointer-events-none"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="w-full h-full p-2 flex flex-col justify-between text-left">
+                                  <span className="text-[9px] font-bold text-slate-200 leading-tight line-clamp-3">
+                                    {card.printed_name || card.name}
+                                  </span>
+                                  <span className="text-[7px] text-slate-400 capitalize">{t(card.rarity)}</span>
+                                </div>
+                              )}
+
+                              {isTapped && (
+                                <div className="absolute top-1.5 right-1.5 bg-amber-500 text-slate-950 text-[6px] font-extrabold px-1 rounded shadow uppercase tracking-wider animate-pulse">
+                                  {t('tapped').toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-2 py-1 shadow-2xl backdrop-blur-sm no-active-scale">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDetailCard(card);
+                              }}
+                              title={t('viewCardDetails')}
+                              className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[9px] cursor-pointer"
+                            >
+                              <FaInfoCircle />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleTapCard(playtestId);
+                              }}
+                              title={t('tapUntap')}
+                              className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[9px] cursor-pointer"
+                            >
+                              <FaSync />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleReturnToHand(playtestId, 'battlefield');
+                              }}
+                              title={t('returnToHand')}
+                              className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[9px] cursor-pointer"
+                            >
+                              <FaInbox />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSendToGraveyard(playtestId);
+                              }}
+                              title={t('sendToGraveyard')}
+                              className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[9px] cursor-pointer"
+                            >
+                              <FaSkull />
+                            </button>
+                          </div>
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Sandbox battlefield mat ("Campo de Batalha") */}
-            <div className="flex-1 border-2 border-dashed border-slate-800/80 rounded-2xl p-4 min-h-[360px] bg-slate-950/45 flex flex-wrap gap-4 items-center justify-center relative overflow-hidden">
-              {/* Sandbox playmat battlefield */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
-                <FaDiceD20 className="text-[260px] text-slate-400" />
-              </div>
-              <div className="absolute top-3 left-3 text-[10px] uppercase font-bold tracking-widest text-slate-600/60 pointer-events-none select-none">
-                {t('battlefield')}
+            {/* Shuffled hand cards grid */}
+            <div className="border border-slate-800/60 rounded-2xl p-4 bg-slate-900/10">
+              <div className="flex items-center justify-between mb-3 text-xs uppercase font-extrabold tracking-widest text-slate-500 select-none">
+                <span>
+                  {t('hand')} ({hand.length})
+                </span>
+                {!isMulliganPhase && hand.length > 0 && (
+                  <span className="text-[10px] text-slate-600 normal-case font-normal">{t('clickCardHint')}</span>
+                )}
               </div>
 
-              {battlefield.length === 0 ? (
-                <div className="text-center p-6 pointer-events-none max-w-sm">
-                  <p className="text-sm text-slate-500 font-semibold italic">{t('emptyBattlefieldMessage')}</p>
-                  <p className="text-xs text-slate-600 mt-1">{t('playCardsHint')}</p>
-                </div>
-              ) : (
-                <div className="w-full h-full flex flex-wrap gap-4 items-center justify-center p-2 relative z-10">
-                  {battlefield.map((playtestCard) => {
-                    const { playtestId, card, isTapped } = playtestCard;
-                    const imageUrl = getCardImageUrl(card);
+              <div className="flex flex-wrap gap-4 items-center justify-center min-h-[170px] p-2 bg-slate-950/15 rounded-xl border border-slate-900/30">
+                {hand.length === 0 ? (
+                  <p className="text-xs text-slate-600 italic py-4">{t('handEmpty')}</p>
+                ) : (
+                  <div className="flex flex-wrap gap-4 items-center justify-center">
+                    {hand.map((playtestCard) => {
+                      const { playtestId, card } = playtestCard;
+                      const isSelected = selectedToBottom.has(playtestId);
+                      const imageUrl = getCardImageUrl(card);
 
-                    return (
-                      <div
-                        key={playtestId}
-                        className="group relative transition-all duration-300 flex items-center justify-center"
-                      >
-                        {/* stable outer container to prevent layout reflow, visual inner card rotates */}
-                        <div className="relative w-24 h-34 sm:w-28 sm:h-40 flex items-center justify-center">
+                      return (
+                        <div key={playtestId} className="group relative">
                           <div
-                            onClick={() => handleToggleTapCard(playtestId)}
-                            className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition-all duration-300 ${isTapped ? 'border-amber-500/80 ring-2 ring-amber-500/30 rotate-90 scale-90' : 'border-slate-800 hover:scale-105 hover:border-indigo-500'}`}
+                            onClick={() => {
+                              if (isMulliganPhase) {
+                                handleToggleCardSelection(playtestId);
+                              } else {
+                                handlePlayCard(playtestId);
+                              }
+                            }}
+                            className={`relative w-24 h-34 sm:w-28 sm:h-40 rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-800'}`}
                           >
                             {imageUrl ? (
                               <img
@@ -503,222 +770,162 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
                               </div>
                             )}
 
-                            {/* Tapped badge overlay */}
-                            {isTapped && (
-                              <div className="absolute top-1.5 right-1.5 bg-amber-500 text-slate-950 text-[6px] font-extrabold px-1 rounded shadow uppercase tracking-wider animate-pulse">
-                                {t('tapped').toUpperCase()}
+                            {isMulliganPhase && (
+                              <div
+                                className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500/20' : 'bg-black/10 hover:bg-black/0'}`}
+                              >
+                                <div
+                                  className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-amber-500 border-amber-600 text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                                >
+                                  {isSelected ? '✓' : ''}
+                                </div>
                               </div>
                             )}
                           </div>
-                        </div>
 
-                        {/* Floating quick control actions on card hover */}
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-2 py-1 shadow-2xl backdrop-blur-sm">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedDetailCard(card);
-                            }}
-                            title={t('viewCardDetails')}
-                            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[9px]"
-                          >
-                            <FaInfoCircle />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleToggleTapCard(playtestId);
-                            }}
-                            title={t('tapUntap')}
-                            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[9px]"
-                          >
-                            <FaSync />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleReturnToHand(playtestId, 'battlefield');
-                            }}
-                            title={t('returnToHand')}
-                            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[9px]"
-                          >
-                            <FaInbox />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSendToGraveyard(playtestId);
-                            }}
-                            title={t('sendToGraveyard')}
-                            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[9px]"
-                          >
-                            <FaSkull />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Shuffled hand cards grid */}
-          <div className="border border-slate-800/60 rounded-2xl p-4 bg-slate-900/10">
-            <div className="flex items-center justify-between mb-3 text-xs uppercase font-extrabold tracking-widest text-slate-500">
-              <span>
-                {t('hand')} ({hand.length})
-              </span>
-              {!isMulliganPhase && hand.length > 0 && (
-                <span className="text-[10px] text-slate-600 normal-case font-normal">{t('clickCardHint')}</span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-4 items-center justify-center min-h-[170px] p-2 bg-slate-950/15 rounded-xl border border-slate-900/30">
-              {hand.length === 0 ? (
-                <p className="text-xs text-slate-600 italic py-4">{t('handEmpty')}</p>
-              ) : (
-                <div className="flex flex-wrap gap-4 items-center justify-center">
-                  {hand.map((playtestCard) => {
-                    const { playtestId, card } = playtestCard;
-                    const isSelected = selectedToBottom.has(playtestId);
-                    const imageUrl = getCardImageUrl(card);
-
-                    return (
-                      <div key={playtestId} className="group relative">
-                        <div
-                          onClick={() => {
-                            if (isMulliganPhase) {
-                              handleToggleCardSelection(playtestId);
-                            } else {
-                              handlePlayCard(playtestId);
-                            }
-                          }}
-                          className={`relative w-24 h-34 sm:w-28 sm:h-40 rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-800'}`}
-                        >
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={card.name}
-                              className="w-full h-full object-cover pointer-events-none"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="w-full h-full p-2 flex flex-col justify-between text-left">
-                              <span className="text-[9px] font-bold text-slate-200 leading-tight line-clamp-3">
-                                {card.printed_name || card.name}
-                              </span>
-                              <span className="text-[7px] text-slate-400 capitalize">{t(card.rarity)}</span>
-                            </div>
-                          )}
-
-                          {/* Mulligan Selection overlay indicator */}
-                          {isMulliganPhase && (
-                            <div
-                              className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500/20' : 'bg-black/10 hover:bg-black/0'}`}
-                            >
-                              <div
-                                className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-amber-500 border-amber-600 text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                          {!isMulliganPhase && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedDetailCard(card);
+                                }}
+                                title={t('viewCardDetails')}
+                                className="absolute -top-2.5 -left-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px] cursor-pointer"
                               >
-                                {isSelected ? '✓' : ''}
-                              </div>
-                            </div>
+                                <FaInfoCircle />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDiscardFromHand(playtestId);
+                                }}
+                                title={t('discardCard')}
+                                className="absolute -top-2.5 -right-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-red-400 hover:border-red-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px] cursor-pointer"
+                              >
+                                <FaSkull />
+                              </button>
+                            </>
                           )}
                         </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
 
-                        {/* Hand Info and Discard Buttons (on hover, outside mulligan phase) */}
-                        {!isMulliganPhase && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedDetailCard(card);
-                              }}
-                              title={t('viewCardDetails')}
-                              className="absolute -top-2.5 -left-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px]"
-                            >
-                              <FaInfoCircle />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDiscardFromHand(playtestId);
-                              }}
-                              title={t('discardCard')}
-                              className="absolute -top-2.5 -right-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-red-400 hover:border-red-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px]"
-                            >
-                              <FaSkull />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/60 pt-4">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleNextTurn}
+                  disabled={isMulliganPhase}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                  title={`${t('nextTurn')} (T)`}
+                >
+                  <FaArrowRight className="text-[10px]" />
+                  {t('nextTurn')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDrawCard}
+                  disabled={library.length === 0 || isMulliganPhase}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaLayerGroup className="text-[10px]" />
+                  {t('drawCard')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleShuffleLibrary}
+                  disabled={library.length === 0 || isMulliganPhase}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaDiceD20 className="text-[10px]" />
+                  {t('shuffle')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleUntapAll}
+                  disabled={battlefield.length === 0 || isMulliganPhase}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaSync className="text-[10px]" />
+                  {t('untapAll')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsTokenModalOpen(true)}
+                  disabled={isMulliganPhase}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaPlus className="text-[10px]" />
+                  {t('summonToken')}
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleMulligan}
+                  disabled={deckCards.length === 0 || isMulliganPhase}
+                  className="bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaUndo className="text-[10px] rotate-90" />
+                  {t('mulligan')}
+                </button>
+                <button
+                  type="button"
+                  onClick={startSimulation}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaUndo className="text-[10px]" />
+                  {t('resetSimulator')}
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Action buttons footer */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/60 pt-4">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleDrawCard}
-                disabled={library.length === 0 || isMulliganPhase}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
-              >
-                <FaArrowRight className="text-[10px]" />
-                {t('drawCard')}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleUntapAll}
-                disabled={battlefield.length === 0 || isMulliganPhase}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
-              >
-                <FaSync className="text-[10px]" />
-                {t('untapAll')}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsTokenModalOpen(true)}
-                disabled={isMulliganPhase}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
-              >
-                <FaPlus className="text-[10px]" />
-                {t('summonToken')}
-              </button>
+          {/* Right Panel: Game Log Drawer */}
+          {isLogOpen && (
+            <div className="w-72 border-l border-slate-800/80 bg-slate-950/30 flex flex-col h-full shrink-0 animate-slide-in no-active-scale">
+              <div className="p-3 border-b border-slate-850 flex justify-between items-center bg-slate-950/50">
+                <h4 className="font-extrabold text-[10px] uppercase tracking-wider text-slate-400 flex items-center gap-1.5 select-none">
+                  <FaFileAlt className="text-indigo-400 text-xs" />
+                  {t('playtestLog')}
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => setLifeLog([])}
+                  className="text-[9px] text-slate-500 hover:text-red-400 transition-colors uppercase font-bold cursor-pointer"
+                >
+                  {t('clearLog')}
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-3 space-y-2 font-mono text-[10px] select-text">
+                {lifeLog.length === 0 ? (
+                  <p className="text-slate-600 italic text-center py-8 select-none">Sem registros ainda</p>
+                ) : (
+                  [...lifeLog].reverse().map((log) => (
+                    <div
+                      key={log.id}
+                      className="flex items-start gap-1.5 hover:bg-slate-800/20 p-1 rounded transition-colors border-b border-slate-850/30"
+                    >
+                      <span className="text-slate-500 shrink-0 select-none">[{log.timestamp}]</span>
+                      <span className="text-slate-300 break-words leading-tight">{log.text}</span>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleMulligan}
-                disabled={deckCards.length === 0 || isMulliganPhase}
-                className="bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
-              >
-                <FaUndo className="text-[10px] rotate-90" />
-                {t('mulligan')}
-              </button>
-              <button
-                type="button"
-                onClick={startSimulation}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all flex items-center gap-1.5"
-              >
-                <FaUndo className="text-[10px]" />
-                {t('resetSimulator')}
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -726,10 +933,9 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat }: PlaytestS
         isOpen={isTokenModalOpen}
         onClose={() => setIsTokenModalOpen(false)}
         onSelectToken={handleSummonToken}
-        deckRelatedTokens={relatedTokens}
+        deckRelatedTokens={activeDeckTokens}
       />
 
-      {/* Card Detail Modal */}
       {selectedDetailCard && (
         <CardDetailModal
           card={selectedDetailCard}

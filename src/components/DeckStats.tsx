@@ -8,7 +8,9 @@ import {
   FaCoins,
   FaInfoCircle,
   FaExclamationTriangle,
-  FaTint
+  FaTint,
+  FaStar,
+  FaMoneyBill
 } from 'react-icons/fa';
 
 interface DeckStatsProps {
@@ -531,7 +533,8 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
           {deckStatistics.mostExpensiveCards.length > 0 && (
             <div className="space-y-1.5">
               <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">
-                ⭐ {t('topExpensiveCards')}
+                <FaStar className="text-amber-500" />
+                {t('topExpensiveCards')}
               </span>
               <div className="space-y-1 text-xs">
                 {deckStatistics.mostExpensiveCards.map((card) => (

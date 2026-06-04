@@ -10,6 +10,11 @@ interface CardGridProps {
   onRemoveFromDeck?: (card: Card) => void;
   showRemoveButton?: boolean;
   activeFormat?: DeckFormat;
+  isDeckCard?: boolean;
+  deckCards?: Card[];
+  onSelectPrint?: (updatedCard: Card) => void;
+  isToken?: boolean;
+  isEditMode?: boolean;
 }
 
 const GRID_CLASSES: Record<CardSize, string> = {
@@ -25,7 +30,12 @@ function CardGrid({
   onAddToDeck,
   onRemoveFromDeck,
   showRemoveButton = false,
-  activeFormat
+  activeFormat,
+  isDeckCard,
+  deckCards,
+  onSelectPrint,
+  isToken,
+  isEditMode
 }: CardGridProps) {
   return (
     <div className={GRID_CLASSES[size]}>
@@ -38,6 +48,11 @@ function CardGrid({
             onRemoveFromDeck={onRemoveFromDeck}
             showRemoveButton={showRemoveButton}
             activeFormat={activeFormat}
+            isDeckCard={isDeckCard}
+            deckCards={deckCards}
+            onSelectPrint={onSelectPrint}
+            isToken={isToken}
+            isEditMode={isEditMode}
           />
         </div>
       ))}

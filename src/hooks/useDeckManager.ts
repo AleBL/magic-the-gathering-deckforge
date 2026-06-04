@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card } from '../types/Card';
-import { Deck, DeckFormat } from '../types/Deck';
+import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { validateDeck, ValidationResult } from '../utils/deckValidator';
 import { downloadAsJson } from '../services/fileDownload';
 
@@ -49,7 +49,8 @@ export default function useDeckManager(
     name: string,
     format: DeckFormat,
     cards: Card[],
-    notes?: string
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
   ): { success: boolean; errorKey?: string; createdDeck?: Deck } => {
     if (!name.trim()) {
       return { success: false, errorKey: 'deckNamePlaceholder' };
@@ -65,6 +66,7 @@ export default function useDeckManager(
       cards,
       format,
       notes,
+      relatedTokens,
       createdAt: new Date().toISOString()
     };
 
@@ -79,10 +81,13 @@ export default function useDeckManager(
     name: string,
     format: DeckFormat,
     cards: Card[],
-    notes?: string
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
   ): { success: boolean } => {
     const updatedDecks = savedDecks.map((deck) =>
-      deck.id === id ? { ...deck, name: name.trim(), format, cards, notes } : deck
+      deck.id === id
+        ? { ...deck, name: name.trim(), format, cards, notes, relatedTokens: relatedTokens || deck.relatedTokens }
+        : deck
     );
     persistDecks(updatedDecks);
     return { success: true };
@@ -108,9 +113,7 @@ export default function useDeckManager(
   };
 
   const saveTokensToDeck = (deckId: string, tokens: { tokenCard: any; generatorCardName: string }[]) => {
-    const updatedDecks = savedDecks.map((deck) =>
-      deck.id === deckId ? { ...deck, relatedTokens: tokens } : deck
-    );
+    const updatedDecks = savedDecks.map((deck) => (deck.id === deckId ? { ...deck, relatedTokens: tokens } : deck));
     persistDecks(updatedDecks);
   };
 

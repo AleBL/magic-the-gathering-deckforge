@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
 
-export function useCardPrints(cardName: string | undefined, oracleId?: string) {
+export function useCardPrints(cardName: string | undefined, oracleId?: string, isToken?: boolean) {
   const [prints, setPrints] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,9 +23,15 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string) {
 
     // Construct a language query that tries to fetch the target language OR English for each print
     const langCondition = cleanLang !== 'en' ? `(lang:${cleanLang} OR lang:en)` : 'lang:en';
-    const query = oracleId
-      ? `oracle_id:${oracleId} unique:prints ${langCondition}`
-      : `!"${cardName}" unique:prints ${langCondition}`;
+
+    let query = '';
+    if (isToken) {
+      query = `t:token name:"${cardName}" unique:prints ${langCondition}`;
+    } else if (oracleId && !oracleId.startsWith('token-oracle-')) {
+      query = `oracle_id:${oracleId} unique:prints ${langCondition}`;
+    } else {
+      query = `!"${cardName}" unique:prints ${langCondition}`;
+    }
 
     const results: Card[] = [];
     const emitter = Scry.Cards.search(query);
@@ -97,8 +103,7 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string) {
         // Suppress emitter cancellation errors
       }
     };
-  }, [cardName, oracleId, i18n.language]);
+  }, [cardName, oracleId, i18n.language, isToken]);
 
   return { prints, isLoading, error };
 }
-

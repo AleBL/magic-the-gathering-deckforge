@@ -75,7 +75,7 @@
 
   /* ── Subtle active press feedback ── */
   button:not(:disabled):active,
-  [role="button"]:not([aria-disabled="true"]):active {
+  [role="button"]:not([aria-disabled="true"]):not(.modal-overlay):not(.no-active-scale):active {
     transform: scale(0.97);
     transition: transform 80ms ease;
   }

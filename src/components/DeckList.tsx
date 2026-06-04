@@ -9,7 +9,14 @@ interface DeckListProps {
   selectedDeckId: string | null;
   editingDeckId: string | null;
   onSelectDeck: (deck: Deck) => void;
-  onEditDeck: (id: string, name: string, format: DeckFormat, cards: Deck['cards'], notes?: string) => void;
+  onEditDeck: (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Deck['cards'],
+    notes?: string,
+    relatedTokens?: Deck['relatedTokens']
+  ) => void;
   onExportDeck: (deck: Deck) => void;
   onDeleteDeck: (deckId: string) => void;
 }
@@ -85,7 +92,16 @@ function DeckList({
                   <div className="flex gap-1.5 justify-end w-full sm:w-auto shrink-0 border-t sm:border-t-0 border-black/10 dark:border-white/10 pt-2 sm:pt-0">
                     <button
                       type="button"
-                      onClick={() => onEditDeck(deck.id, deck.name, deck.format || 'freeform', deck.cards, deck.notes)}
+                      onClick={() =>
+                        onEditDeck(
+                          deck.id,
+                          deck.name,
+                          deck.format || 'freeform',
+                          deck.cards,
+                          deck.notes,
+                          deck.relatedTokens
+                        )
+                      }
                       className={`button-small flex-1 sm:flex-none justify-center gap-1 items-center py-1.5 px-2.5 rounded-lg font-bold text-xs shadow-sm transition-all ${
                         isSelected
                           ? 'bg-white/20 hover:bg-white/30 text-white border border-white/30'

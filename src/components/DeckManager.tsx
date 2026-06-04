@@ -14,7 +14,7 @@ import {
   FaExclamationTriangle
 } from 'react-icons/fa';
 import { Card } from '../types/Card';
-import { DeckFormat } from '../types/Deck';
+import { DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
 import CardSizeSelector from './CardSizeSelector';
 import DeckList from './DeckList';
@@ -27,6 +27,8 @@ import useDeckManager from '../hooks/useDeckManager';
 
 interface DeckManagerProps {
   currentDeck: Card[];
+  deckRelatedTokens?: DeckRelatedToken[];
+  onUpdateTokens?: (tokens: DeckRelatedToken[]) => void;
   onAddToDeck: (card: Card) => void;
   onRemoveFromDeck: (card: Card) => void;
   onToggleCommander: (card: Card) => void;
@@ -37,7 +39,14 @@ interface DeckManagerProps {
   editingDeckNotes?: string;
   onUpdateNotes?: (notes: string) => void;
   onUpdateCardZone?: (cardId: string, zone: 'main' | 'sideboard' | 'maybeboard') => void;
-  onLoadDeckToEdit: (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => void;
+  onLoadDeckToEdit: (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
+  ) => void;
   onCancelEdit: () => void;
   showToast: (text: string) => void;
   onUpdateCard?: (updatedCard: Card) => void;
@@ -45,6 +54,8 @@ interface DeckManagerProps {
 
 function DeckManager({
   currentDeck,
+  deckRelatedTokens = [],
+  onUpdateTokens,
   onAddToDeck,
   onRemoveFromDeck,
   onToggleCommander,
@@ -82,7 +93,7 @@ function DeckManager({
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => {},
+    onConfirm: () => { },
     variant: 'info'
   });
 
@@ -140,7 +151,7 @@ function DeckManager({
   };
 
   const handleSaveDeck = () => {
-    const result = saveDeck(deckName, deckFormat, currentDeck, editingDeckNotes);
+    const result = saveDeck(deckName, deckFormat, currentDeck, editingDeckNotes, deckRelatedTokens);
     if (result.success && result.createdDeck) {
       showAlert(t('successTitle'), t('deckSaved'), 'success');
       onLoadDeckToEdit(
@@ -148,7 +159,8 @@ function DeckManager({
         result.createdDeck.name,
         result.createdDeck.format,
         result.createdDeck.cards,
-        result.createdDeck.notes
+        result.createdDeck.notes,
+        result.createdDeck.relatedTokens
       );
     } else if (result.errorKey) {
       showAlert(t('errorTitle'), t(result.errorKey), 'danger');
@@ -157,7 +169,14 @@ function DeckManager({
 
   const handleSaveEditedDeck = () => {
     if (!editingDeckId) return;
-    const result = saveEditedDeck(editingDeckId, editingDeckName, editingDeckFormat, currentDeck, editingDeckNotes);
+    const result = saveEditedDeck(
+      editingDeckId,
+      editingDeckName,
+      editingDeckFormat,
+      currentDeck,
+      editingDeckNotes,
+      deckRelatedTokens
+    );
     if (result.success) {
       showAlert(t('successTitle'), t('deckSaved'), 'success');
     }
@@ -574,9 +593,16 @@ function DeckManager({
             selectedDeckId={selectedDeck?.id ?? null}
             editingDeckId={editingDeckId}
             onSelectDeck={setSelectedDeck}
-            onEditDeck={(id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
+            onEditDeck={(
+              id: string,
+              name: string,
+              format: DeckFormat,
+              cards: Card[],
+              notes?: string,
+              relatedTokens?: DeckRelatedToken[]
+            ) => {
               setSelectedDeck(null);
-              onLoadDeckToEdit(id, name, format, cards, notes);
+              onLoadDeckToEdit(id, name, format, cards, notes, relatedTokens);
             }}
             onExportDeck={exportDeck}
             onDeleteDeck={handleDeleteDeck}
@@ -602,23 +628,13 @@ function DeckManager({
             onSaveNotesDirectly={handleSaveDeckNotesDirectly}
             onApplySuggestedLands={handleApplySuggestedLands}
             onUpdateCard={onUpdateCard}
-            onSaveTokens={saveTokensToDeck}
+            onSaveTokens={(deckId, tokens) => {
+              onUpdateTokens?.(tokens);
+              saveTokensToDeck(deckId, tokens);
+            }}
+            deckRelatedTokens={selectedDeck ? selectedDeck.relatedTokens : deckRelatedTokens}
           />
         </div>
-
-        {/* Deck statistics dashboard */}
-        {activeStatsDeck.length > 0 && (
-          <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-800 pt-4">
-            <h3 className="text-gray-900 dark:text-white text-lg font-bold transition-colors duration-300 px-4 mb-2 flex items-center gap-2">
-              <FaChartBar className="text-blue-500 shrink-0" />
-              <span>{t('deckStats')}</span>
-            </h3>
-            <DeckStats
-              currentDeck={activeStatsDeck}
-              onApplySuggestedLands={selectedDeck ? undefined : handleApplySuggestedLands}
-            />
-          </div>
-        )}
       </div>
 
       {showSaveDialog && (
