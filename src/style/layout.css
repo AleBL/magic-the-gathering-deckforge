@@ -106,11 +106,29 @@
 
 /* Specialized deck lists and grids in desktop columns */
 .deck-list-section {
-  @apply lg:col-span-1 order-2 lg:order-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300 h-fit;
+  @apply lg:col-span-1 order-2 lg:order-1 rounded-xl p-4 transition-all duration-300 h-fit;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+html.dark .deck-list-section {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .deck-preview-section {
-  @apply lg:col-span-2 order-1 lg:order-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300;
+  @apply lg:col-span-2 order-1 lg:order-2 rounded-xl p-4 transition-all duration-300;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+html.dark .deck-preview-section {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .deck-list-item {
@@ -122,7 +140,7 @@
 }
 
 .deck-list-item-button {
-  @apply flex-1 min-w-0 pr-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-400 rounded;
+  @apply flex-1 min-w-0 pr-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-400 rounded cursor-pointer;
 }
 
 /* Card layout details */
@@ -151,11 +169,11 @@
 }
 
 .card-detail-image-wrapper {
-  @apply flex-shrink-0 flex justify-center w-full md:w-auto;
+  @apply flex-shrink-0 flex justify-center w-full md:w-[320px] lg:w-[384px];
 }
 
 .card-detail-image {
-  @apply rounded-lg w-full max-w-[280px] md:max-w-xs lg:max-w-sm max-h-[40vh] md:max-h-[500px] lg:max-h-[600px] object-contain shadow-md;
+  @apply rounded-lg w-full max-w-[280px] md:max-w-full max-h-[40vh] md:max-h-[500px] lg:max-h-[600px] object-contain shadow-md;
 }
 
 .card-detail-info {
@@ -309,12 +327,38 @@
   @apply flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto;
 }
 
-.header-title {
-  @apply text-xl font-black tracking-widest transition-colors duration-300 hidden md:block select-none;
-}
+
 
 .header-actions {
   @apply flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-300 dark:border-gray-700;
+}
+
+.app-brand {
+  @apply flex items-center gap-3;
+}
+
+.app-brand-logo-wrapper {
+  @apply relative w-8 h-8 flex items-center justify-center shrink-0;
+}
+
+.app-brand-logo-glow {
+  @apply absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse;
+}
+
+.app-brand-logo-image {
+  @apply relative w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(59,130,246,0.6)];
+}
+
+.app-brand-title {
+  @apply text-xl font-extrabold tracking-widest transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
+}
+
+.tab-button-icon {
+  @apply text-xs shrink-0;
+}
+
+.shortcut-hint {
+  @apply hidden xl:flex items-center text-[11px] text-gray-500 dark:text-gray-400 bg-gray-100/80 dark:bg-slate-800/70 border border-gray-300 dark:border-slate-700 rounded-md px-2 py-1 font-medium;
 }
 
 .manager-toolbar {
@@ -355,4 +399,144 @@
 
 .modal-footer-container {
   @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
+}
+
+/* ─── Profile Menu ─────────────────────────────────────── */
+
+.profile-menu-wrapper {
+  @apply relative flex-shrink-0;
+}
+
+.profile-menu-trigger {
+  @apply flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+.profile-avatar {
+  @apply w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0;
+}
+
+.profile-avatar-lg {
+  @apply w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md flex-shrink-0;
+}
+
+.profile-menu-panel {
+  @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden shadow-2xl border border-gray-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900 z-[200];
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.profile-menu-header {
+  @apply px-4 py-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900;
+}
+
+.profile-menu-divider {
+  @apply h-px bg-gray-100 dark:bg-slate-700/60 mx-0;
+}
+
+.profile-menu-item {
+  @apply w-full flex items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer text-left;
+}
+
+.profile-menu-row {
+  @apply flex items-center justify-between gap-2 px-4 py-3;
+}
+
+.profile-menu-back-header {
+  @apply flex items-center justify-between px-4 py-3.5 bg-gray-50/80 dark:bg-slate-800/60;
+}
+
+.profile-back-btn {
+  @apply flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer;
+}
+
+/* Dark mode toggle pill */
+.profile-toggle {
+  @apply relative inline-flex w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none cursor-pointer flex-shrink-0;
+}
+
+.profile-toggle-on {
+  @apply bg-blue-600;
+}
+
+.profile-toggle-off {
+  @apply bg-gray-200 dark:bg-slate-700;
+}
+
+.profile-toggle-thumb {
+  @apply inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 mt-0.5;
+}
+
+/* ─── Deck Proxy Print Modal ────────────────────────────── */
+
+.proxy-modal-container {
+  @apply bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700;
+}
+
+.proxy-settings-bar {
+  @apply flex flex-wrap items-center gap-4 px-5 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-800/60;
+}
+
+.proxy-setting-group {
+  @apply flex items-center gap-2;
+}
+
+.proxy-setting-label {
+  @apply text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap;
+}
+
+.proxy-select {
+  @apply text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg py-1 px-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer;
+}
+
+.proxy-option-btn {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer;
+}
+
+.proxy-option-btn-active {
+  @apply bg-blue-600 text-white border-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:text-white dark:border-blue-600;
+}
+
+.proxy-preview-scroll {
+  @apply flex-1 overflow-auto p-6 bg-gray-100 dark:bg-gray-950/50;
+}
+
+.proxy-card-grid {
+  display: grid;
+}
+
+.proxy-card-cell {
+  @apply relative overflow-hidden bg-gray-800 shadow-sm;
+  aspect-ratio: 5/7;
+}
+
+.proxy-card-image {
+  @apply w-full h-full object-cover block;
+}
+
+.proxy-card-placeholder {
+  @apply w-full h-full flex items-center justify-center bg-gray-700;
+}
+
+/* ─── Print Media Query ─────────────────────────────────── */
+
+@media print {
+  body > * {
+    display: none !important;
+  }
+
+  #proxy-print-root {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 99999 !important;
+    background: white !important;
+    padding: 8mm !important;
+    box-sizing: border-box !important;
+  }
+
+  @page {
+    margin: 10mm;
+    size: A4;
+  }
 }

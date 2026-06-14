@@ -5,13 +5,16 @@ import CardSizeSelector from './CardSizeSelector';
 import SearchFilters from './SearchFilters';
 import { Card } from '../types/Card';
 import { CardSize } from '../types';
+import { DeckFormat } from '../types/Deck';
 import { useCardSearch } from '../hooks/useCardSearch';
 
 interface CardSearchProps {
   onAddToDeck: (card: Card) => void;
+  onAddTokenToDeck?: (token: Card) => void;
+  activeFormat?: DeckFormat;
 }
 
-function CardSearch({ onAddToDeck }: CardSearchProps) {
+function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchProps) {
   const { i18n, t } = useTranslation();
   const [cardSize, setCardSize] = useState<CardSize>('medium');
 
@@ -95,7 +98,13 @@ function CardSearch({ onAddToDeck }: CardSearchProps) {
         )}
 
         {!isLoadingInitial && !error && cards.length > 0 && (
-          <CardGrid cards={cards} size={cardSize} onAddToDeck={onAddToDeck} />
+          <CardGrid
+            cards={cards}
+            size={cardSize}
+            onAddToDeck={onAddToDeck}
+            onAddTokenToDeck={onAddTokenToDeck}
+            activeFormat={activeFormat}
+          />
         )}
 
         {!isLoadingInitial && hasMore && (

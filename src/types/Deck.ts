@@ -2,6 +2,12 @@ import { Card } from './Card';
 
 export type DeckFormat = 'standard' | 'modern' | 'commander' | 'vintage' | 'pauper' | 'freeform';
 
+export interface DeckRelatedToken {
+  tokenCard: Card;
+  generatorCardName: string;
+  isActive?: boolean;
+}
+
 export interface Deck {
   id: string;
   name: string;
@@ -9,4 +15,5 @@ export interface Deck {
   format: DeckFormat;
   notes?: string;
   createdAt: string;
+  relatedTokens?: DeckRelatedToken[];
 }

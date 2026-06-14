@@ -18,6 +18,7 @@ interface DeckCommandersHeaderProps {
   onAddToDeck: (card: Card) => void;
   onRemoveFromDeck: (card: Card) => void;
   onCardSelect: (card: Card) => void;
+  onUpdateCard?: (updatedCard: Card) => void;
 }
 
 function DeckCommandersHeader({
@@ -31,7 +32,8 @@ function DeckCommandersHeader({
   onToggleCommander,
   onAddToDeck,
   onRemoveFromDeck,
-  onCardSelect
+  onCardSelect,
+  onUpdateCard
 }: DeckCommandersHeaderProps) {
   const { t } = useTranslation();
 
@@ -61,6 +63,10 @@ function DeckCommandersHeader({
           onAddToDeck={isRemovable ? onAddToDeck : undefined}
           onRemoveFromDeck={isRemovable ? onRemoveFromDeck : undefined}
           showRemoveButton={isRemovable}
+          isDeckCard={true}
+          deckCards={commanders}
+          onSelectPrint={onUpdateCard}
+          isEditMode={isRemovable}
         />
       </div>
     );

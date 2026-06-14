@@ -45,14 +45,18 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
                 ? `https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${multiverseId}&type=card`
                 : '';
 
+              const image_uris = card.image_uris || {
+                small: '',
+                normal: '',
+                large: '',
+                png: ''
+              };
               translatedMap.set(card.oracle_id, {
                 ...card,
-                image_uris: card.image_uris
-                  ? {
-                      ...card.image_uris,
-                      gatherer: gathererUrl
-                    }
-                  : undefined
+                image_uris: {
+                  ...image_uris,
+                  gatherer: gathererUrl || image_uris.gatherer
+                }
               });
             }
           });
@@ -67,7 +71,26 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
   // Map the original cards to their translated counterpart or fallback to the original
   return cards.map((card) => {
     if (card.oracle_id && translatedMap.has(card.oracle_id)) {
-      return translatedMap.get(card.oracle_id)!;
+      const translated = translatedMap.get(card.oracle_id)!;
+      const hasImage = translated.image_uris?.normal || translated.card_faces?.[0]?.image_uris?.normal;
+      const originalHasImage = card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal;
+
+      if (!hasImage && originalHasImage) {
+        const gatherer = translated.image_uris?.gatherer;
+        return {
+          ...translated,
+          image_uris: card.image_uris
+            ? {
+                ...card.image_uris,
+                gatherer: gatherer || card.image_uris.gatherer
+              }
+            : gatherer
+              ? { small: '', normal: '', large: '', png: '', gatherer }
+              : undefined,
+          card_faces: card.card_faces
+        };
+      }
+      return translated;
     }
     return card;
   });

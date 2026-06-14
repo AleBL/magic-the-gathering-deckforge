@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import SwitchDarkMode from './components/SwitchDarkMode';
-import SelectLanguage from './components/SelectLanguage';
+import ProfileMenu from './components/ProfileMenu';
 import CardSearch from './components/CardSearch';
 import DeckManager from './components/DeckManager';
 import EditingDeckBanner from './components/EditingDeckBanner';
 import Toast from './components/Toast';
 import { Card } from './types/Card';
-import { DeckFormat } from './types/Deck';
+import { DeckFormat, DeckRelatedToken } from './types/Deck';
 import { fetchSymbols } from './utils/symbolHelper';
 import useDarkMode from './hooks/useDarkMode';
 import useToast from './hooks/useToast';
 import CustomDialog from './components/CustomDialog';
 import { FaSearch, FaLayerGroup } from 'react-icons/fa';
 import pwLogo from './assets/PW.svg';
+import * as Scry from 'scryfall-sdk';
+import { translateCards } from './utils/translationHelper';
 
 interface EditingDeckState {
   deckId: string | null;
@@ -21,6 +22,18 @@ interface EditingDeckState {
   deckFormat: DeckFormat;
   deckNotes?: string;
 }
+
+interface CardPartReference {
+  id: string;
+  name: string;
+}
+
+interface CardWithAllParts extends Card {
+  all_parts?: CardPartReference[];
+  printed_text?: string;
+}
+
+type SupportedDialogVariant = 'danger' | 'warning' | 'info' | 'success';
 
 const INITIAL_EDITING_STATE: EditingDeckState = {
   deckId: null,
@@ -30,9 +43,10 @@ const INITIAL_EDITING_STATE: EditingDeckState = {
 };
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
   const [currentDeck, setCurrentDeck] = useState<Card[]>([]);
+  const [currentDeckRelatedTokens, setCurrentDeckRelatedTokens] = useState<DeckRelatedToken[]>([]);
   const [isDarkMode, setIsDarkMode] = useDarkMode();
   const [editingDeck, setEditingDeck] = useState<EditingDeckState>(INITIAL_EDITING_STATE);
   const { toastMessage, showToast } = useToast();
@@ -43,13 +57,13 @@ function App() {
     title: string;
     message: string;
     onConfirm: () => void;
-    variant: 'danger' | 'warning' | 'info' | 'success';
+    variant: SupportedDialogVariant;
   }>({
     isOpen: false,
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => { },
+    onConfirm: () => {},
     variant: 'info'
   });
 
@@ -57,7 +71,7 @@ function App() {
     title: string,
     message: string,
     onConfirm: () => void,
-    variant: 'danger' | 'warning' | 'info' | 'success' = 'warning'
+    variant: SupportedDialogVariant = 'warning'
   ) => {
     setDialogState({
       isOpen: true,
@@ -72,72 +86,67 @@ function App() {
     });
   };
 
+  const triggerDeckActionButton = useCallback((buttonId: string) => {
+    setActiveTab('deck');
+    setTimeout(() => {
+      const targetButton = document.getElementById(buttonId) as HTMLButtonElement | null;
+      if (targetButton && !targetButton.disabled) {
+        targetButton.click();
+      }
+    }, 50);
+  }, []);
+
+  const focusSearchInputField = useCallback(() => {
+    setActiveTab('search');
+    setTimeout(() => {
+      const searchInputField = document.getElementById('search-input') as HTMLInputElement | null;
+      if (searchInputField) {
+        searchInputField.focus();
+        searchInputField.select();
+      }
+    }, 50);
+  }, []);
+
+  const isModifierKeyPressed = useCallback((event: KeyboardEvent): boolean => {
+    const safeNavigator: Navigator & { userAgentData?: { platform?: string } } = navigator;
+    const isMacOS = safeNavigator.userAgentData?.platform === 'macOS' || /Mac/i.test(navigator.userAgent);
+    return isMacOS ? event.metaKey : event.ctrlKey;
+  }, []);
+
   useEffect(() => {
     fetchSymbols();
   }, []);
 
-  // Global Desktop Keyboard Shortcuts for Power Users
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const safeNavigator: Navigator & { userAgentData?: { platform?: string } } = navigator;
-      const isMac = safeNavigator.userAgentData?.platform === 'macOS' || /Mac/i.test(navigator.userAgent);
-      const modifier = isMac ? event.metaKey : event.ctrlKey;
+      const hasModifierKey = isModifierKeyPressed(event);
+      const pressedKey = event.key.toLowerCase();
 
-      // Ctrl + F / Cmd + F: Focus and select the Search Card bar
-      if (modifier && event.key.toLowerCase() === 'f') {
+      if (hasModifierKey && pressedKey === 'f') {
         event.preventDefault();
-        setActiveTab('search');
-        setTimeout(() => {
-          const searchInput = document.getElementById('search-input') as HTMLInputElement;
-          if (searchInput) {
-            searchInput.focus();
-            searchInput.select();
-          }
-        }, 50);
+        focusSearchInputField();
       }
 
-      // Ctrl + S / Cmd + S: Save Current Deck
-      if (modifier && event.key.toLowerCase() === 's') {
+      if (hasModifierKey && pressedKey === 's') {
         event.preventDefault();
-        setActiveTab('deck');
-        setTimeout(() => {
-          const saveBtn = document.getElementById('save-deck-btn') as HTMLButtonElement;
-          if (saveBtn && !saveBtn.disabled) {
-            saveBtn.click();
-          }
-        }, 50);
+        triggerDeckActionButton('save-deck-btn');
       }
 
-      // Ctrl + P / Cmd + P: Launch Interactive Playtest Simulator
-      if (modifier && event.key.toLowerCase() === 'p') {
+      if (hasModifierKey && pressedKey === 'p') {
         event.preventDefault();
-        setActiveTab('deck');
-        setTimeout(() => {
-          const playtestBtn = document.getElementById('playtest-btn') as HTMLButtonElement;
-          if (playtestBtn && !playtestBtn.disabled) {
-            playtestBtn.click();
-          }
-        }, 50);
+        triggerDeckActionButton('playtest-btn');
       }
 
-      // Ctrl + Shift + N: Clear Current Deck
-      if (modifier && event.shiftKey && event.key.toLowerCase() === 'n') {
+      if (hasModifierKey && event.shiftKey && pressedKey === 'n') {
         event.preventDefault();
-        setActiveTab('deck');
-        setTimeout(() => {
-          const clearBtn = document.getElementById('clear-deck-btn') as HTMLButtonElement;
-          if (clearBtn && !clearBtn.disabled) {
-            clearBtn.click();
-          }
-        }, 50);
+        triggerDeckActionButton('clear-deck-btn');
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [focusSearchInputField, isModifierKeyPressed, triggerDeckActionButton]);
 
-  // Listen for native Electron Menu events
   useEffect(() => {
     const safeWindow = window as unknown as {
       ipcRenderer?: {
@@ -149,13 +158,7 @@ function App() {
     const ipc = safeWindow.ipcRenderer;
     if (typeof window !== 'undefined' && ipc) {
       const handleClear = () => {
-        setActiveTab('deck');
-        setTimeout(() => {
-          const clearBtn = document.getElementById('clear-deck-btn') as HTMLButtonElement;
-          if (clearBtn && !clearBtn.disabled) {
-            clearBtn.click();
-          }
-        }, 50);
+        triggerDeckActionButton('clear-deck-btn');
       };
 
       ipc.on('menu-clear-deck', handleClear);
@@ -163,23 +166,116 @@ function App() {
         ipc.off('menu-clear-deck', handleClear);
       };
     }
-  }, []);
+  }, [triggerDeckActionButton]);
 
-  const handleAddToDeck = (card: Card) => {
+  const handleAddToDeck = async (card: Card) => {
     setCurrentDeck((prev) => [...prev, card]);
     showToast(`${card.name}: ${t('cardAdded')}`);
+
+    try {
+      let allParts = (card as CardWithAllParts).all_parts;
+      if (!allParts) {
+        const tokenKeywords = [
+          'token',
+          'create',
+          'ficha',
+          'criar',
+          'crea',
+          'crie',
+          'investig',
+          'incub',
+          'fabric',
+          'acumul',
+          'enrolar',
+          'amass'
+        ];
+        const text = (card.oracle_text || (card as CardWithAllParts).printed_text || '').toLowerCase();
+        const hasTokenText = tokenKeywords.some((word) => text.includes(word));
+
+        if (hasTokenText) {
+          const fullCard = (await Scry.Cards.byName(card.name)) as CardWithAllParts;
+          allParts = fullCard.all_parts || [];
+        }
+      }
+
+      if (allParts && allParts.length > 0) {
+        const tokenParts = allParts.filter((part) => part.id !== card.id && part.name !== card.name);
+
+        if (tokenParts.length > 0) {
+          const newTokens: DeckRelatedToken[] = [];
+          await Promise.all(
+            tokenParts.map(async (part) => {
+              try {
+                const fetchedCard = await Scry.Cards.byId(part.id);
+                if (fetchedCard) {
+                  const currentLang = i18n.language || 'en';
+                  const translated = await translateCards([fetchedCard as unknown as Card], currentLang);
+                  const finalCard = translated[0] || fetchedCard;
+
+                  newTokens.push({
+                    tokenCard: finalCard,
+                    generatorCardName: card.printed_name || card.name,
+                    isActive: true
+                  });
+                }
+              } catch {
+                // Ignore token fetch failures for isolated parts to avoid blocking deck updates.
+              }
+            })
+          );
+
+          if (newTokens.length > 0) {
+            setCurrentDeckRelatedTokens((prev) => {
+              const existingIds = new Set(prev.map((t) => t.tokenCard.id));
+              const filteredNew = newTokens.filter((t) => !existingIds.has(t.tokenCard.id));
+              return [...prev, ...filteredNew];
+            });
+          }
+        }
+      }
+    } catch {
+      // Ignore related token fetch failures to keep add-to-deck responsive.
+    }
+  };
+
+  const handleAddTokenToDeck = (tokenCard: Card) => {
+    const uniqueTokenCard = {
+      ...tokenCard,
+      id: `token-${tokenCard.id.split('-')[1] || tokenCard.id}-${Math.random().toString(36).substring(2, 9)}`
+    };
+    const newToken: DeckRelatedToken = {
+      tokenCard: uniqueTokenCard,
+      generatorCardName: t('manualAddition'),
+      isActive: true
+    };
+    setCurrentDeckRelatedTokens((prev) => {
+      const existingIds = new Set(prev.map((t) => t.tokenCard.id));
+      if (existingIds.has(uniqueTokenCard.id)) return prev;
+      return [...prev, newToken];
+    });
+    showToast(`${tokenCard.name}: ${t('tokenAdded')}`);
   };
 
   const handleRemoveFromDeck = (cardToRemove: Card) => {
+    let remains = false;
     setCurrentDeck((prev) => {
       const index = prev.findIndex((c) => c.id === cardToRemove.id);
       if (index > -1) {
         const newDeck = [...prev];
         newDeck.splice(index, 1);
+        remains = newDeck.some((c) => c.name === cardToRemove.name);
         return newDeck;
       }
       return prev;
     });
+
+    if (!remains) {
+      setCurrentDeckRelatedTokens((prevTokens) => {
+        const cardName = cardToRemove.name;
+        const printedName = cardToRemove.printed_name || cardToRemove.name;
+        return prevTokens.filter((t) => t.generatorCardName !== cardName && t.generatorCardName !== printedName);
+      });
+    }
   };
 
   const handleToggleCommander = (cardToToggle: Card) => {
@@ -217,6 +313,7 @@ function App() {
       t('confirmClear'),
       () => {
         setCurrentDeck([]);
+        setCurrentDeckRelatedTokens([]);
         setEditingDeck(INITIAL_EDITING_STATE);
       },
       'danger'
@@ -237,14 +334,27 @@ function App() {
     });
   };
 
-  const handleLoadDeckToEdit = (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => {
+  const handleUpdateCard = (updatedCard: Card) => {
+    setCurrentDeck((prev) => prev.map((c) => (c.id === updatedCard.id ? updatedCard : c)));
+  };
+
+  const handleLoadDeckToEdit = (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
+  ) => {
     setEditingDeck({ deckId: id, deckName: name, deckFormat: format, deckNotes: notes || '' });
     setCurrentDeck(cards);
+    setCurrentDeckRelatedTokens(relatedTokens || []);
   };
 
   const handleCancelEdit = () => {
     setEditingDeck(INITIAL_EDITING_STATE);
     setCurrentDeck([]);
+    setCurrentDeckRelatedTokens([]);
   };
 
   return (
@@ -261,50 +371,51 @@ function App() {
         )}
         <div className="header-toolbar">
           <div className="nav-menu">
-            <div className="flex items-center gap-3">
-              <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-                <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse"></div>
-                <img
-                  src={pwLogo}
-                  alt="MTG Deck Forge Logo"
-                  className="relative w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(59,130,246,0.6)]"
-                />
+            <div className="app-brand">
+              <div className="app-brand-logo-wrapper">
+                <div className="app-brand-logo-glow"></div>
+                <img src={pwLogo} alt="MTG Deck Forge Logo" className="app-brand-logo-image" />
               </div>
-              <h1 className="header-title font-extrabold bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent tracking-widest uppercase">
-                {t('appTitle')}
-              </h1>
+              <h1 className="app-brand-title">{t('appTitle')}</h1>
             </div>
             <nav className="tab-group">
               <button
                 onClick={() => setActiveTab('search')}
                 className={`tab-button ${activeTab === 'search' ? 'tab-button-active' : ''}`}
+                aria-label={t('searchTab')}
               >
-                <FaSearch className="text-xs shrink-0" />
+                <FaSearch className="tab-button-icon" />
                 <span>{t('searchTab')}</span>
               </button>
               <button
                 onClick={() => setActiveTab('deck')}
                 className={`tab-button ${activeTab === 'deck' ? 'tab-button-active' : ''}`}
+                aria-label={t('decksTab')}
               >
-                <FaLayerGroup className="text-xs shrink-0" />
+                <FaLayerGroup className="tab-button-icon" />
                 <span>{t('decksTab')}</span>
                 {currentDeck.length > 0 && <span className="count-badge">{currentDeck.length}</span>}
               </button>
             </nav>
           </div>
           <div className="header-actions">
-            <SwitchDarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-            <SelectLanguage />
+            <ProfileMenu isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           </div>
         </div>
       </header>
 
       <main className="main-content">
         {activeTab === 'search' ? (
-          <CardSearch onAddToDeck={handleAddToDeck} />
+          <CardSearch
+            onAddToDeck={handleAddToDeck}
+            onAddTokenToDeck={handleAddTokenToDeck}
+            activeFormat={editingDeck.deckFormat}
+          />
         ) : (
           <DeckManager
             currentDeck={currentDeck}
+            deckRelatedTokens={currentDeckRelatedTokens}
+            onUpdateTokens={setCurrentDeckRelatedTokens}
             onAddToDeck={handleAddToDeck}
             onRemoveFromDeck={handleRemoveFromDeck}
             onToggleCommander={handleToggleCommander}
@@ -318,6 +429,7 @@ function App() {
             onLoadDeckToEdit={handleLoadDeckToEdit}
             onCancelEdit={handleCancelEdit}
             showToast={showToast}
+            onUpdateCard={handleUpdateCard}
           />
         )}
       </main>

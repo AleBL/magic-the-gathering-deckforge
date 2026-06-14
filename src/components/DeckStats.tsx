@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
-import { FaChartBar, FaPalette, FaFileInvoice, FaCoins, FaInfoCircle } from 'react-icons/fa';
+import {
+  FaChartBar,
+  FaPalette,
+  FaFileInvoice,
+  FaCoins,
+  FaInfoCircle,
+  FaExclamationTriangle,
+  FaTint,
+  FaStar
+} from 'react-icons/fa';
 
 interface DeckStatsProps {
   currentDeck: Card[];
@@ -120,11 +129,49 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
 
     const totalManaColorSymbols = Object.values(manaColorSymbolCounts).reduce((a, b) => a + b, 0);
 
-    const targetLandCount = currentDeck.length >= 80 ? 38 : 24;
+    // Target total land count for the deck size
+    const targetTotalLands = currentDeck.length >= 80 ? 38 : 24;
+
+    // Count existing non-basic lands (don't replace them, only add basics)
+    const basicLandNamesList = [
+      'Plains',
+      'Island',
+      'Swamp',
+      'Mountain',
+      'Forest',
+      'Wastes',
+      'Planície',
+      'Ilha',
+      'Pântano',
+      'Montanha',
+      'Floresta',
+      'Deserto'
+    ];
+    const existingNonBasicLandCount = currentDeck.filter((card) => {
+      const typeLine = card.type_line?.toLowerCase() || '';
+      const isLand = typeLine.includes('land');
+      const isBasic = typeLine.includes('basic land') || basicLandNamesList.includes(card.name);
+      return isLand && !isBasic;
+    }).length;
+
+    // How many basic lands we actually need to add
+    const neededBasicLands = Math.max(0, targetTotalLands - existingNonBasicLandCount);
+
+    // Calculate limit warnings
+    const nonBasicCardsList = currentDeck.filter((card) => {
+      const typeLine = card.type_line?.toLowerCase() || '';
+      const isBasic = typeLine.includes('basic land') || basicLandNamesList.includes(card.name);
+      return !isBasic;
+    });
+    const totalNonBasicCards = nonBasicCardsList.length;
+    const finalDeckSize = totalNonBasicCards + neededBasicLands;
+    const targetDeckLimit = currentDeck.length >= 80 ? 100 : 60;
+    const removeCount = Math.max(0, finalDeckSize - targetDeckLimit);
+
     const suggestedBasicLandCounts: Record<string, number> = { Plains: 0, Island: 0, Swamp: 0, Mountain: 0, Forest: 0 };
 
-    if (totalManaColorSymbols > 0) {
-      let remainingLandsToAllocate = targetLandCount;
+    if (neededBasicLands > 0 && totalManaColorSymbols > 0) {
+      let remainingLandsToAllocate = neededBasicLands;
       const sortedColorSymbolEntries = Object.entries(manaColorSymbolCounts).sort((a, b) => b[1] - a[1]);
       const colorToBasicLandNameMap: Record<string, string> = {
         W: 'Plains',
@@ -139,18 +186,54 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
         if (allocationIndex === sortedColorSymbolEntries.length - 1) {
           suggestedBasicLandCounts[basicLandName] = remainingLandsToAllocate;
         } else {
-          const allocationShare = Math.round((symbolCount / totalManaColorSymbols) * targetLandCount);
+          const allocationShare = Math.round((symbolCount / totalManaColorSymbols) * neededBasicLands);
           const allocatedLands = Math.min(allocationShare, remainingLandsToAllocate);
           suggestedBasicLandCounts[basicLandName] = allocatedLands;
           remainingLandsToAllocate -= allocatedLands;
         }
       });
-    } else {
+    } else if (neededBasicLands > 0) {
       // Fallback wastes allocation for completely colorless spells
-      suggestedBasicLandCounts['Wastes'] = targetLandCount;
+      suggestedBasicLandCounts['Wastes'] = neededBasicLands;
     }
 
-    // 7. Budget Price Estimator Calculations
+    const targetLandCount = neededBasicLands;
+
+    // 7. Land Color Counter for Mana Pip Analysis
+    const landColorCounts = { W: 0, U: 0, B: 0, R: 0, G: 0 };
+    currentDeck.forEach((card) => {
+      const isLand = card.type_line?.toLowerCase().includes('land');
+      if (!isLand) return;
+
+      const name = card.name.toLowerCase();
+      const oracleText = card.oracle_text?.toLowerCase() || '';
+
+      // Check basic lands first
+      if (name.includes('plains') || name.includes('planície')) landColorCounts.W += 1;
+      else if (name.includes('island') || name.includes('ilha')) landColorCounts.U += 1;
+      else if (name.includes('swamp') || name.includes('pântano')) landColorCounts.B += 1;
+      else if (name.includes('mountain') || name.includes('montanha')) landColorCounts.R += 1;
+      else if (name.includes('forest') || name.includes('floresta')) landColorCounts.G += 1;
+      else {
+        // Non-basic lands: check color_identity first
+        if (card.color_identity && card.color_identity.length > 0) {
+          card.color_identity.forEach((color) => {
+            if (color in landColorCounts) {
+              landColorCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] += 1;
+            }
+          });
+        } else {
+          // Fallback to searching oracle text
+          if (oracleText.includes('{t}: add {w}')) landColorCounts.W += 1;
+          if (oracleText.includes('{t}: add {u}')) landColorCounts.U += 1;
+          if (oracleText.includes('{t}: add {b}')) landColorCounts.B += 1;
+          if (oracleText.includes('{t}: add {r}')) landColorCounts.R += 1;
+          if (oracleText.includes('{t}: add {g}')) landColorCounts.G += 1;
+        }
+      }
+    });
+
+    // 8. Budget Price Estimator Calculations
     let totalUsdPrice = 0;
     let totalEurPrice = 0;
     currentDeck.forEach((card) => {
@@ -174,9 +257,17 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
       cardTypeCounts,
       totalCards: currentDeck.length,
       suggestedBasicLandCounts,
+      neededBasicLands: targetLandCount,
+      targetTotalLands: currentDeck.length >= 80 ? 38 : 24,
+      totalNonBasicCards,
+      finalDeckSize,
+      targetDeckLimit,
+      removeCount,
       totalUsdPrice,
       totalEurPrice,
-      mostExpensiveCards
+      mostExpensiveCards,
+      manaColorSymbolCounts,
+      landColorCounts
     };
   }, [currentDeck]);
 
@@ -189,7 +280,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
     R: { name: t('red'), color: 'bg-red-600 text-white', fill: 'bg-red-600' },
     G: { name: t('green'), color: 'bg-green-600 text-white', fill: 'bg-green-600' },
     C: {
-      name: t('colorless', 'Incolor'),
+      name: t('colorless'),
       color: 'bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-200',
       fill: 'bg-gray-400'
     }
@@ -208,11 +299,13 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             {Object.entries(deckStatistics.convertedManaCostCounts).map(([convertedManaCost, count]) => {
               const heightPct = `${(count / deckStatistics.maximumConvertedManaCostCount) * 100}%`;
               return (
-                <div key={convertedManaCost} className="mana-bar-group group flex-1">
+                <div key={convertedManaCost} className="mana-bar-group group flex-1 h-full flex flex-col justify-end">
                   <div className="mana-bar-tooltip">
                     {count} {t('cards')}
                   </div>
-                  <div className="mana-bar-column" style={{ height: heightPct }} />
+                  <div className="h-24 w-full flex items-end justify-center">
+                    <div className="mana-bar-column" style={{ height: heightPct }} />
+                  </div>
                   <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mt-2 block text-center">
                     {convertedManaCost}
                   </span>
@@ -284,8 +377,8 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
         </div>
       </div>
 
-      {/* additions: Mana Base Suggester & Budget Estimator */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
+      {/* additions: Mana Base Suggester, Mana Pips & Budget Estimator */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
         {/* Land suggester card */}
         <div className="space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-500/5 dark:bg-blue-950/10 transition-colors duration-300">
           <h4 className="font-bold text-sm text-blue-700 dark:text-blue-400 uppercase tracking-wider flex items-center gap-2">
@@ -293,11 +386,29 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             {t('manaBaseOptimizer')}
           </h4>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t(
-              'manaBaseExplanation',
-              'Analyze colors in your spells and auto-add basic lands to reach a solid {{target}} lands ratio.'
-            ).replace('{{target}}', String(currentDeck.length >= 80 ? 38 : 24))}
+            {t('manaBaseExplanation').replace('{{target}}', String(deckStatistics.targetTotalLands))}
           </p>
+          {deckStatistics.neededBasicLands > 0 ? (
+            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
+              {t('willAddLands').replace('{{count}}', String(deckStatistics.neededBasicLands))}
+            </p>
+          ) : (
+            <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">
+              {t('landsAlreadySufficient')}
+            </p>
+          )}
+
+          {deckStatistics.removeCount > 0 && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
+              <FaExclamationTriangle className="text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-[11px] text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
+                {t('manaBaseWarning')
+                  .replace('{{finalSize}}', String(deckStatistics.finalDeckSize))
+                  .replace('{{limit}}', String(deckStatistics.targetDeckLimit))
+                  .replace('{{removeCount}}', String(deckStatistics.removeCount))}
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-2 pt-1">
             {Object.entries(deckStatistics.suggestedBasicLandCounts).map(([landName, count]) => {
@@ -308,7 +419,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
                   className="flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-200 shadow-sm"
                 >
                   <span className="text-[10px] uppercase text-gray-400 dark:text-gray-500 font-bold">
-                    {t(landName.toLowerCase(), landName)}
+                    {t(landName.toLowerCase())}
                   </span>
                   <span className="font-bold text-blue-600 dark:text-blue-400">{count}</span>
                 </div>
@@ -325,6 +436,63 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
               {t('applySuggestedLands')}
             </button>
           )}
+        </div>
+
+        {/* Mana Pip Analysis Card */}
+        <div className="space-y-4 p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-500/5 dark:bg-amber-950/10 transition-colors duration-300">
+          <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+            <FaTint className="text-amber-500 animate-pulse" />
+            {t('manaPipAnalysis')}
+          </h4>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{t('manaPipAnalysisDesc')}</p>
+
+          <div className="space-y-3 pt-1">
+            {['W', 'U', 'B', 'R', 'G'].map((color) => {
+              const pipsCount = deckStatistics.manaColorSymbolCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
+              const landsCount = deckStatistics.landColorCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
+
+              if (pipsCount === 0 && landsCount === 0) return null;
+
+              const meta = colorLabels[color];
+              const total = Math.max(pipsCount + landsCount, 1);
+              const pipsPct = Math.round((pipsCount / total) * 100);
+              const landsPct = Math.round((landsCount / total) * 100);
+
+              return (
+                <div key={color} className="space-y-1">
+                  <div className="flex justify-between items-center text-xs font-semibold">
+                    <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                      <span className={`w-2.5 h-2.5 rounded-full inline-block ${meta.fill}`} />
+                      {meta.name}
+                    </span>
+                    <span className="text-[10px] text-gray-500 flex gap-2">
+                      <span>
+                        {t('pipsNeeded')}:{' '}
+                        <span className="font-bold text-gray-700 dark:text-gray-300">{pipsCount}</span>
+                      </span>
+                      <span>
+                        {t('landsAvailable')}:{' '}
+                        <span className="font-bold text-gray-700 dark:text-gray-300">{landsCount}</span>
+                      </span>
+                    </span>
+                  </div>
+                  {/* Visual Comparison Bar */}
+                  <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex shadow-inner">
+                    <div
+                      className={`h-full opacity-90 transition-all duration-500 ${meta.fill}`}
+                      style={{ width: `${pipsPct}%` }}
+                      title={`${t('pipsNeeded')}: ${pipsCount}`}
+                    />
+                    <div
+                      className="h-full bg-emerald-500 opacity-60 transition-all duration-500"
+                      style={{ width: `${landsPct}%` }}
+                      title={`${t('landsAvailable')}: ${landsCount}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Budget Estimator card */}
@@ -352,7 +520,8 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
           {deckStatistics.mostExpensiveCards.length > 0 && (
             <div className="space-y-1.5">
               <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">
-                ⭐ {t('topExpensiveCards')}
+                <FaStar className="text-amber-500" />
+                {t('topExpensiveCards')}
               </span>
               <div className="space-y-1 text-xs">
                 {deckStatistics.mostExpensiveCards.map((card) => (

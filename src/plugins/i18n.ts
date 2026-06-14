@@ -3,14 +3,21 @@ import { initReactI18next } from 'react-i18next';
 
 import translations from '../locales';
 
+const savedLanguage = localStorage.getItem('deckforge_language') || 'pt';
+
 i18n
   .use(initReactI18next)
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
+    lng: savedLanguage,
     fallbackLng: 'en',
     resources: translations,
     defaultNS: 'translations'
   });
+
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('deckforge_language', lng);
+});
 
 export default i18n;

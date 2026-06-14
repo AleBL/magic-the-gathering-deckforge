@@ -117,7 +117,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 text-left animate-fadeIn">
-      <div className="flex justify-between items-center pb-2 border-b border-gray-250 dark:border-slate-800">
+      <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-slate-800">
         <h4 className="text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-widest flex items-center gap-1.5 select-none">
           <FaPencilAlt className="text-blue-500 shrink-0 text-xs" />
           <span>{t('strategyGuide')}</span>
