@@ -9,8 +9,7 @@ import {
   FaInfoCircle,
   FaExclamationTriangle,
   FaTint,
-  FaStar,
-  FaMoneyBill
+  FaStar
 } from 'react-icons/fa';
 
 interface DeckStatsProps {
@@ -206,7 +205,6 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
       const isLand = card.type_line?.toLowerCase().includes('land');
       if (!isLand) return;
 
-      const typeLine = card.type_line?.toLowerCase() || '';
       const name = card.name.toLowerCase();
       const oracleText = card.oracle_text?.toLowerCase() || '';
 
@@ -282,7 +280,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
     R: { name: t('red'), color: 'bg-red-600 text-white', fill: 'bg-red-600' },
     G: { name: t('green'), color: 'bg-green-600 text-white', fill: 'bg-green-600' },
     C: {
-      name: t('colorless', 'Incolor'),
+      name: t('colorless'),
       color: 'bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-200',
       fill: 'bg-gray-400'
     }
@@ -388,21 +386,15 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             {t('manaBaseOptimizer')}
           </h4>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t(
-              'manaBaseExplanation',
-              'Analyze colors in your spells and auto-add basic lands to reach a solid {{target}} lands ratio.'
-            ).replace('{{target}}', String(deckStatistics.targetTotalLands))}
+            {t('manaBaseExplanation').replace('{{target}}', String(deckStatistics.targetTotalLands))}
           </p>
           {deckStatistics.neededBasicLands > 0 ? (
             <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
-              {t('willAddLands', '{{count}} basic lands will be added').replace(
-                '{{count}}',
-                String(deckStatistics.neededBasicLands)
-              )}
+              {t('willAddLands').replace('{{count}}', String(deckStatistics.neededBasicLands))}
             </p>
           ) : (
             <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">
-              {t('landsAlreadySufficient', 'Land count looks good — non-basic lands already cover the target.')}
+              {t('landsAlreadySufficient')}
             </p>
           )}
 
@@ -410,10 +402,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
               <FaExclamationTriangle className="text-amber-500 shrink-0 mt-0.5" />
               <p className="text-[11px] text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
-                {t(
-                  'manaBaseWarning',
-                  'Warning: Adding these lands will make the deck have {{finalSize}} cards (limit {{limit}}). You may need to remove {{removeCount}} non-land spells to optimize your deck size.'
-                )
+                {t('manaBaseWarning')
                   .replace('{{finalSize}}', String(deckStatistics.finalDeckSize))
                   .replace('{{limit}}', String(deckStatistics.targetDeckLimit))
                   .replace('{{removeCount}}', String(deckStatistics.removeCount))}
@@ -430,7 +419,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
                   className="flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-200 shadow-sm"
                 >
                   <span className="text-[10px] uppercase text-gray-400 dark:text-gray-500 font-bold">
-                    {t(landName.toLowerCase(), landName)}
+                    {t(landName.toLowerCase())}
                   </span>
                   <span className="font-bold text-blue-600 dark:text-blue-400">{count}</span>
                 </div>
@@ -455,9 +444,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands }: DeckStatsProps) {
             <FaTint className="text-amber-500 animate-pulse" />
             {t('manaPipAnalysis')}
           </h4>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t('manaPipAnalysisDesc', 'Compare colored pips in spells with land sources to optimize your colors.')}
-          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{t('manaPipAnalysisDesc')}</p>
 
           <div className="space-y-3 pt-1">
             {['W', 'U', 'B', 'R', 'G'].map((color) => {

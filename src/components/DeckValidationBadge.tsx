@@ -37,7 +37,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
           {t('deckValidation')} ({t(formatKey)})
           {hasErrors && (
             <span className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
-              ({isExpanded ? t('hideDetails', 'Hide details') : t('viewDetails', 'Click to view details')})
+              ({isExpanded ? t('hideDetails') : t('viewDetails')})
             </span>
           )}
         </span>

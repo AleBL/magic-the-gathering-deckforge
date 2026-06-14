@@ -20,7 +20,7 @@ import { Card } from '../types/Card';
 import { DeckRelatedToken } from '../types/Deck';
 import CardDetailModal from './CardDetailModal';
 import { PlaytestTokenModal } from './PlaytestTokenModal';
-import { useCardRelatedTokens } from '../hooks/useCardRelatedTokens';
+import cardBack from '../assets/card-back.jpg';
 
 interface PlaytestSimulatorProps {
   isOpen: boolean;
@@ -52,17 +52,11 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
   const [mulligans, setMulligans] = useState(0);
   const [isMulliganPhase, setIsMulliganPhase] = useState(false);
   const [selectedToBottom, setSelectedToBottom] = useState<Set<string>>(new Set()); // Stores playtestId values
-  const [isGraveyardOpen, setIsGraveyardOpen] = useState(false);
+  const [, setIsGraveyardOpen] = useState(false);
   const [selectedDetailCard, setSelectedDetailCard] = useState<Card | null>(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
 
-  const shouldFetchTokens = !deckRelatedTokens || deckRelatedTokens.length === 0;
-  const { relatedTokens } = useCardRelatedTokens(shouldFetchTokens ? deckCards : []);
-
-  const activeDeckTokens =
-    deckRelatedTokens && deckRelatedTokens.length > 0
-      ? deckRelatedTokens.filter((t) => t.isActive !== false)
-      : relatedTokens;
+  const activeDeckTokens = deckRelatedTokens || [];
 
   // Turn, Phase, and Life Log states
   const [turn, setTurn] = useState(1);
@@ -334,10 +328,11 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
 
   const handleSummonToken = useCallback(
     (tokenCard: Card) => {
+      const uniquePlaytestId = `${tokenCard.id}-${Math.random().toString(36).substring(2, 9)}`;
       setBattlefield((previousBattlefield) => [
         ...previousBattlefield,
         {
-          playtestId: tokenCard.id,
+          playtestId: uniquePlaytestId,
           card: tokenCard,
           isTapped: false
         }
@@ -411,10 +406,9 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
   const getCardImageUrl = (card: Card): string => {
     // Prioritize the selected print art chosen in the deck editor
     if (card.selectedPrintImageUri) return card.selectedPrintImageUri;
+    if (card.image_uris?.gatherer) return card.image_uris.gatherer;
     const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
     if (!imageUris) return '';
-    const isToken = card.type_line?.toLowerCase().includes('token') || card.id?.startsWith('token-');
-    if (!isToken && card.image_uris?.gatherer) return card.image_uris.gatherer;
     return imageUris.normal || imageUris.large || '';
   };
 
@@ -559,21 +553,20 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
                 {/* Library Pile */}
                 <div
                   onClick={handleDrawCard}
-                  className={`group relative w-24 h-34 sm:w-28 sm:h-40 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 border-indigo-500/30 hover:border-indigo-500 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-slate-700 pointer-events-none' : ''}`}
+                  className={`group relative w-24 aspect-[5/7] sm:w-28 sm:h-40 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 border-indigo-500/30 hover:border-indigo-500 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-slate-700 pointer-events-none' : ''}`}
                 >
                   {library.length > 0 ? (
                     <>
-                      {/* Card sleeve back simulation */}
-                      <div className="absolute inset-1.5 rounded-[10px] bg-slate-950 border border-slate-800/60 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 to-transparent" />
-                        <div className="w-10 h-10 rounded-full border border-indigo-500/20 flex items-center justify-center text-indigo-500/40">
-                          <FaLayerGroup className="text-indigo-500/60 text-lg" />
-                        </div>
-                      </div>
-                      <span className="absolute bottom-3 text-[10px] uppercase font-black tracking-widest text-indigo-400 group-hover:text-indigo-300">
+                      {/* Card back image */}
+                      <img
+                        src={cardBack}
+                        alt="MTG Card Back"
+                        className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-cover rounded-[10px]"
+                      />
+                      <span className="absolute bottom-3 text-[10px] uppercase font-black tracking-widest text-white bg-slate-950/70 px-2 py-0.5 rounded backdrop-blur-xs group-hover:bg-slate-950/90 transition-colors shadow shadow-black/30">
                         {t('draw').toUpperCase()}
                       </span>
-                      <div className="absolute -top-2 -right-2 bg-indigo-600 text-white font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow shadow-indigo-500/40">
+                      <div className="absolute -top-2 -right-2 bg-indigo-600 text-white font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow shadow-indigo-500/40 z-10">
                         {library.length}
                       </div>
                     </>
@@ -585,7 +578,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
                 {/* Graveyard Pile */}
                 <div
                   onClick={() => graveyard.length > 0 && setIsGraveyardOpen(true)}
-                  className={`group relative w-24 h-34 sm:w-28 sm:h-40 rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${graveyard.length > 0 ? 'border-slate-700 hover:border-red-500/60 hover:shadow-red-500/5 bg-slate-950 hover:-translate-y-1 cursor-pointer' : 'border-dashed border-slate-800 bg-slate-950/20 pointer-events-none'}`}
+                  className={`group relative w-24 aspect-[5/7] sm:w-28 sm:h-40 rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${graveyard.length > 0 ? 'border-slate-700 hover:border-red-500/60 hover:shadow-red-500/5 bg-slate-950 hover:-translate-y-1 cursor-pointer' : 'border-dashed border-slate-800 bg-slate-950/20 pointer-events-none'}`}
                 >
                   {graveyard.length > 0 ? (
                     <>
@@ -623,7 +616,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
                 </div>
 
                 {battlefield.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 pointer-events-none max-w-sm mx-auto">
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 pointer-events-none w-full mx-auto">
                     <p className="text-sm text-slate-500 font-semibold italic">{t('emptyBattlefieldMessage')}</p>
                     <p className="text-xs text-slate-600 mt-1">{t('playCardsHint')}</p>
                   </div>
@@ -638,7 +631,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
                           key={playtestId}
                           className="group relative transition-all duration-300 flex items-center justify-center"
                         >
-                          <div className="relative w-24 h-34 sm:w-28 sm:h-40 flex items-center justify-center">
+                          <div className="relative w-24 aspect-[5/7] sm:w-28 sm:h-40 flex items-center justify-center">
                             <div
                               onClick={() => handleToggleTapCard(playtestId)}
                               className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition-all duration-300 ${isTapped ? 'border-amber-500/80 ring-2 ring-amber-500/30 rotate-90 scale-90' : 'border-slate-800 hover:scale-105 hover:border-indigo-500'}`}
@@ -752,7 +745,7 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
                                 handlePlayCard(playtestId);
                               }
                             }}
-                            className={`relative w-24 h-34 sm:w-28 sm:h-40 rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-800'}`}
+                            className={`relative w-24 aspect-[5/7] sm:w-28 sm:h-40 rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-800'}`}
                           >
                             {imageUrl ? (
                               <img
@@ -941,6 +934,8 @@ function PlaytestSimulator({ isOpen, onClose, deckCards, deckFormat, deckRelated
           card={selectedDetailCard}
           imageUrl={getCardImageUrl(selectedDetailCard)}
           onClose={() => setSelectedDetailCard(null)}
+          hidePrintsSidebar={true}
+          hidePriceAndLegality={true}
         />
       )}
     </div>
