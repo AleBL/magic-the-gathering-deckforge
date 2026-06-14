@@ -7,6 +7,7 @@ interface CardGridProps {
   cards: Card[];
   size: CardSize;
   onAddToDeck?: (card: Card) => void;
+  onAddTokenToDeck?: (token: Card) => void;
   onRemoveFromDeck?: (card: Card) => void;
   showRemoveButton?: boolean;
   activeFormat?: DeckFormat;
@@ -28,6 +29,7 @@ function CardGrid({
   cards,
   size,
   onAddToDeck,
+  onAddTokenToDeck,
   onRemoveFromDeck,
   showRemoveButton = false,
   activeFormat,
@@ -45,6 +47,7 @@ function CardGrid({
             card={card}
             size={size}
             onAddToDeck={onAddToDeck}
+            onAddTokenToDeck={onAddTokenToDeck}
             onRemoveFromDeck={onRemoveFromDeck}
             showRemoveButton={showRemoveButton}
             activeFormat={activeFormat}

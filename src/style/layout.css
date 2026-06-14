@@ -169,11 +169,11 @@ html.dark .deck-preview-section {
 }
 
 .card-detail-image-wrapper {
-  @apply flex-shrink-0 flex justify-center w-full md:w-auto;
+  @apply flex-shrink-0 flex justify-center w-full md:w-[320px] lg:w-[384px];
 }
 
 .card-detail-image {
-  @apply rounded-lg w-full max-w-[280px] md:max-w-xs lg:max-w-sm max-h-[40vh] md:max-h-[500px] lg:max-h-[600px] object-contain shadow-md;
+  @apply rounded-lg w-full max-w-[280px] md:max-w-full max-h-[40vh] md:max-h-[500px] lg:max-h-[600px] object-contain shadow-md;
 }
 
 .card-detail-info {
@@ -327,12 +327,38 @@ html.dark .deck-preview-section {
   @apply flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto;
 }
 
-.header-title {
-  @apply text-xl font-black tracking-widest transition-colors duration-300 hidden md:block select-none;
-}
+
 
 .header-actions {
   @apply flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-300 dark:border-gray-700;
+}
+
+.app-brand {
+  @apply flex items-center gap-3;
+}
+
+.app-brand-logo-wrapper {
+  @apply relative w-8 h-8 flex items-center justify-center shrink-0;
+}
+
+.app-brand-logo-glow {
+  @apply absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse;
+}
+
+.app-brand-logo-image {
+  @apply relative w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(59,130,246,0.6)];
+}
+
+.app-brand-title {
+  @apply text-xl font-extrabold tracking-widest transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
+}
+
+.tab-button-icon {
+  @apply text-xs shrink-0;
+}
+
+.shortcut-hint {
+  @apply hidden xl:flex items-center text-[11px] text-gray-500 dark:text-gray-400 bg-gray-100/80 dark:bg-slate-800/70 border border-gray-300 dark:border-slate-700 rounded-md px-2 py-1 font-medium;
 }
 
 .manager-toolbar {

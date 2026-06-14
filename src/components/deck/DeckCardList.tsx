@@ -19,6 +19,7 @@ interface DeckCardListProps {
   activeFormat?: DeckFormat;
   onUpdateCardZone?: (cardId: string, zone: 'main' | 'sideboard' | 'maybeboard') => void;
   onAddToDeck: (card: Card) => void;
+  onAddTokenToDeck?: (token: Card) => void;
   onRemoveFromDeck: (card: Card) => void;
   onToggleCommander: (card: Card) => void;
   onHoverEnter: (card: Card, e: React.MouseEvent) => void;
@@ -55,6 +56,7 @@ function DeckCardList({
   activeFormat,
   onUpdateCardZone,
   onAddToDeck,
+  onAddTokenToDeck,
   onRemoveFromDeck,
   onToggleCommander,
   onHoverEnter,
@@ -64,6 +66,7 @@ function DeckCardList({
 }: DeckCardListProps) {
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
+  const [showPrintsOnOpen, setShowPrintsOnOpen] = useState(false);
 
   // Sync selectedModalCard when groups change (e.g. after art update)
   useEffect(() => {
@@ -105,11 +108,12 @@ function DeckCardList({
     if (groups.length === 1 && groups[0].title === '') {
       return (
         <div className="space-y-6">
-          {commandersHeader}
+          {!isTokenZone && commandersHeader}
           <CardGrid
             cards={groups[0].cards}
             size={cardSize}
             onAddToDeck={isRemovable && !isTokenZone ? onAddToDeck : undefined}
+            onAddTokenToDeck={onAddTokenToDeck}
             onRemoveFromDeck={isRemovable ? onRemoveFromDeck : undefined}
             showRemoveButton={isRemovable}
             isDeckCard={true}
@@ -123,7 +127,7 @@ function DeckCardList({
     }
     return (
       <div className="space-y-6">
-        {commandersHeader}
+        {!isTokenZone && commandersHeader}
         <div className="space-y-6">
           {groups.map((group) => {
             const title = TRANSLATABLE_TITLES.includes(group.title) ? t(group.title) : group.title;
@@ -139,6 +143,7 @@ function DeckCardList({
                   cards={group.cards}
                   size={cardSize}
                   onAddToDeck={isRemovable && !isTokenZone ? onAddToDeck : undefined}
+                  onAddTokenToDeck={onAddTokenToDeck}
                   onRemoveFromDeck={isRemovable ? onRemoveFromDeck : undefined}
                   showRemoveButton={isRemovable}
                   isDeckCard={true}
@@ -158,7 +163,7 @@ function DeckCardList({
   // List view
   return (
     <div className="space-y-6">
-      {commandersHeader}
+      {!isTokenZone && commandersHeader}
       <div className="space-y-6">
         {groups.map((group) => {
           const title = TRANSLATABLE_TITLES.includes(group.title) ? t(group.title) : group.title;
@@ -195,7 +200,10 @@ function DeckCardList({
                               ? 'border-amber-300 dark:border-amber-900/60 bg-amber-500/5 dark:bg-amber-950/10 hover:bg-amber-500/10'
                               : ''
                         }`}
-                        onClick={() => setSelectedModalCard(card)}
+                        onClick={() => {
+                          setShowPrintsOnOpen(false);
+                          setSelectedModalCard(card);
+                        }}
                         onMouseEnter={(e) => onHoverEnter(card, e)}
                         onMouseMove={onHoverMove}
                         onMouseLeave={onHoverLeave}
@@ -211,20 +219,21 @@ function DeckCardList({
                           >
                             {card.printed_name || card.name}
                           </span>
+
                           {card.isCommander && (
-                            <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm animate-pulse">
+                            <span className="deck-card-status-chip-commander animate-pulse">
                               <FaCrown className="text-amber-500 dark:text-amber-400 shrink-0 text-[10px]" />
                               {t('commanderBadge')}
                             </span>
                           )}
                           {isBanned && (
-                            <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-900/50 shrink-0 shadow-sm animate-pulse">
+                            <span className="deck-card-status-chip-banned">
                               <FaBan className="text-red-500 dark:text-red-400 text-[9px] shrink-0" />
                               {t('banned').toUpperCase()}
                             </span>
                           )}
                           {isRestricted && (
-                            <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm">
+                            <span className="deck-card-status-chip-restricted">
                               <FaExclamationTriangle className="text-amber-500 dark:text-amber-400 text-[9px] shrink-0" />
                               {t('restricted').toUpperCase()}
                             </span>
@@ -251,7 +260,7 @@ function DeckCardList({
                                 <button
                                   type="button"
                                   onClick={() => onToggleCommander(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-900/60 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900 transition-all shadow-sm"
+                                  className="deck-quick-action-commander"
                                   title={card.isCommander ? t('removeAsCommander') : t('setAsCommander')}
                                 >
                                   <FaCrown className="text-[10px]" />
@@ -275,8 +284,12 @@ function DeckCardList({
                               {onUpdateCard && !isTokenZone && (
                                 <button
                                   type="button"
-                                  onClick={() => setSelectedModalCard(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-pink-50 dark:bg-pink-950/60 border border-pink-300 dark:border-pink-900/60 text-pink-600 dark:text-pink-400 hover:bg-pink-500 hover:text-white transition-all font-bold shadow-sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowPrintsOnOpen(true);
+                                    setSelectedModalCard(card);
+                                  }}
+                                  className="deck-quick-action-art"
                                   title={t('changeArt')}
                                 >
                                   <FaPalette className="text-[9px]" />
@@ -287,8 +300,12 @@ function DeckCardList({
                               {isTokenZone && onUpdateCard && (
                                 <button
                                   type="button"
-                                  onClick={() => setSelectedModalCard(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-pink-50 dark:bg-pink-950/60 border border-pink-300 dark:border-pink-900/60 text-pink-600 dark:text-pink-400 hover:bg-pink-500 hover:text-white transition-all font-bold shadow-sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowPrintsOnOpen(true);
+                                    setSelectedModalCard(card);
+                                  }}
+                                  className="deck-quick-action-art"
                                   title={t('changeArt')}
                                 >
                                   <FaPalette className="text-[9px]" />
@@ -300,7 +317,7 @@ function DeckCardList({
                                 <button
                                   type="button"
                                   onClick={() => onAddToDeck(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-green-50 dark:bg-green-950/60 border border-green-300 dark:border-green-900/60 text-green-600 dark:text-green-400 hover:bg-green-500 hover:text-white transition-all font-bold shadow-sm"
+                                  className="deck-quick-action-add"
                                   title={t('addCopy')}
                                 >
                                   <FaPlus className="text-[8px]" />
@@ -311,7 +328,7 @@ function DeckCardList({
                                 <button
                                   type="button"
                                   onClick={() => onAddToDeck(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-green-50 dark:bg-green-950/60 border border-green-300 dark:border-green-900/60 text-green-600 dark:text-green-400 hover:bg-green-500 hover:text-white transition-all font-bold shadow-sm"
+                                  className="deck-quick-action-add"
                                   title={t('addCopy')}
                                 >
                                   <FaPlus className="text-[8px]" />
@@ -322,7 +339,7 @@ function DeckCardList({
                                 <button
                                   type="button"
                                   onClick={() => onRemoveFromDeck(card)}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-900/60 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white transition-all font-bold shadow-sm"
+                                  className="deck-quick-action-remove"
                                   title={t('removeCopy')}
                                 >
                                   <FaMinus className="text-[8px]" />
@@ -340,7 +357,7 @@ function DeckCardList({
                                     }
                                   }
                                 }}
-                                className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all font-bold shadow-sm"
+                                className="deck-quick-action-delete"
                                 title={isTokenZone ? t('deleteToken') : t('deleteCard')}
                               >
                                 <FaTrash className="text-[8px]" />
@@ -363,6 +380,7 @@ function DeckCardList({
           card={selectedModalCard}
           imageUrl={getCardImageUrl(selectedModalCard)}
           onAddToDeck={isRemovable ? onAddToDeck : undefined}
+          onAddTokenToDeck={onAddTokenToDeck}
           onClose={() => setSelectedModalCard(null)}
           onSelectPrint={handleUpdateCard}
           isToken={isTokenZone}
@@ -370,6 +388,12 @@ function DeckCardList({
           deckCards={groups.flatMap((g) => g.cards)}
           onRemoveFromDeck={onRemoveFromDeck}
           isEditMode={isRemovable}
+          defaultShowPrints={showPrintsOnOpen}
+          deckRelatedTokens={
+            isTokenZone
+              ? groups.flatMap((g) => g.cards).map((c) => ({ tokenCard: c, generatorCardName: '' }))
+              : undefined
+          }
         />
       )}
     </div>

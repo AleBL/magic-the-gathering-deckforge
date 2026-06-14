@@ -10,7 +10,6 @@ import {
   FaLightbulb,
   FaBook,
   FaSortAmountDown,
-  FaChartBar,
   FaExclamationTriangle
 } from 'react-icons/fa';
 import { Card } from '../types/Card';
@@ -21,7 +20,6 @@ import DeckList from './DeckList';
 import DeckPreview from './DeckPreview';
 import DeckSaveDialog from './DeckSaveDialog';
 import DeckValidationBadge from './DeckValidationBadge';
-import DeckStats from './DeckStats';
 import CustomDialog from './CustomDialog';
 import useDeckManager from '../hooks/useDeckManager';
 
@@ -93,7 +91,7 @@ function DeckManager({
     type: 'alert',
     title: '',
     message: '',
-    onConfirm: () => { },
+    onConfirm: () => {},
     variant: 'info'
   });
 
@@ -118,8 +116,6 @@ function DeckManager({
   } = useDeckManager(currentDeck, editingDeckId, editingDeckFormat, onCancelEdit);
 
   const activeFormat = editingDeckId ? editingDeckFormat : deckFormat;
-  const activeStatsDeck = selectedDeck ? selectedDeck.cards : currentDeck;
-
   const showAlert = (title: string, message: string, variant: 'danger' | 'warning' | 'info' | 'success' = 'info') => {
     setDialogState({
       isOpen: true,
@@ -268,6 +264,9 @@ function DeckManager({
         });
 
         if (!response.ok) {
+          if (response.status === 503 || response.status === 504) {
+            throw new Error('ScryfallOffline');
+          }
           throw new Error('Scryfall API error');
         }
 
@@ -329,10 +328,14 @@ function DeckManager({
       } else {
         setErrorMsg(t('importError'));
       }
-    } catch (err) {
+    } catch (err: any) {
       // eslint-disable-next-line no-console
       console.error(err);
-      setErrorMsg(t('importError'));
+      if (err?.message === 'ScryfallOffline') {
+        setErrorMsg(t('scryfallOffline'));
+      } else {
+        setErrorMsg(t('importError'));
+      }
     } finally {
       setIsImporting(false);
     }

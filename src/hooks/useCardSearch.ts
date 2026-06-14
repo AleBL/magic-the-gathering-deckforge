@@ -199,16 +199,30 @@ export function useCardSearch(language: string) {
         setCards(deduplicateCards(results, language));
         setHasMore(more);
         setCurrentPage(2);
-      } catch {
+      } catch (err: any) {
         if (searchId !== latestSearchIdRef.current) return;
-        setError('error');
+        const errMsg = err?.message || '';
+        const status = err?.status || 0;
+        if (
+          status === 503 ||
+          status === 504 ||
+          errMsg.includes('503') ||
+          errMsg.includes('504') ||
+          errMsg.toLowerCase().includes('offline') ||
+          errMsg.toLowerCase().includes('maintenance') ||
+          errMsg.toLowerCase().includes('timed out')
+        ) {
+          setError('scryfallOffline');
+        } else {
+          setError('error');
+        }
       } finally {
         if (searchId === latestSearchIdRef.current) {
           setIsLoadingInitial(false);
         }
       }
     },
-    [fetchPage, searchQuery, filters]
+    [fetchPage, searchQuery, filters, language]
   );
 
   const loadNextPage = useCallback(async () => {
@@ -227,10 +241,21 @@ export function useCardSearch(language: string) {
         setHasMore(more);
         setCurrentPage((p) => p + 1);
       }
-    } catch (e) {
+    } catch (err: any) {
       if (searchId !== latestSearchIdRef.current) return;
-      // eslint-disable-next-line no-console
-      console.error('Load more failed:', e);
+      const errMsg = err?.message || '';
+      const status = err?.status || 0;
+      if (
+        status === 503 ||
+        status === 504 ||
+        errMsg.includes('503') ||
+        errMsg.includes('504') ||
+        errMsg.toLowerCase().includes('offline') ||
+        errMsg.toLowerCase().includes('maintenance') ||
+        errMsg.toLowerCase().includes('timed out')
+      ) {
+        setError('scryfallOffline');
+      }
       setHasMore(false);
     } finally {
       if (searchId === latestSearchIdRef.current) {
@@ -238,7 +263,7 @@ export function useCardSearch(language: string) {
         isLoadingMoreRef.current = false;
       }
     }
-  }, [activeQuery, currentPage, fetchPage, hasMore]);
+  }, [activeQuery, currentPage, fetchPage, hasMore, language]);
 
   // Initial search on mount
   useEffect(() => {

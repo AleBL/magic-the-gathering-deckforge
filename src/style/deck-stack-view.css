@@ -1,0 +1,138 @@
+.deck-stack-container {
+  @apply space-y-8 p-6 bg-slate-900/20 dark:bg-slate-950/30 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl backdrop-blur-xs select-none;
+}
+
+.deck-stack-zone-title {
+  @apply text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 pb-1.5 border-b select-none text-left;
+}
+
+.deck-stack-zone-frontline {
+  @apply text-amber-600 dark:text-amber-400 border-amber-300/30 dark:border-amber-900/30;
+}
+
+.deck-stack-zone-frontline svg {
+  @apply text-amber-500;
+}
+
+.deck-stack-zone-backline {
+  @apply text-indigo-600 dark:text-indigo-400 border-indigo-300/30 dark:border-indigo-900/30;
+}
+
+.deck-stack-zone-backline svg {
+  @apply text-indigo-500;
+}
+
+.deck-stack-zone-spells {
+  @apply text-cyan-600 dark:text-cyan-400 border-cyan-300/30 dark:border-cyan-900/30;
+}
+
+.deck-stack-zone-spells svg {
+  @apply text-cyan-500;
+}
+
+.deck-stack-zone-lands {
+  @apply text-emerald-600 dark:text-emerald-400 border-emerald-300/30 dark:border-emerald-900/30;
+}
+
+.deck-stack-zone-lands svg {
+  @apply text-emerald-500;
+}
+
+.deck-stack-zone-count {
+  @apply text-[10px] px-2 py-0.5 rounded-full font-bold border;
+}
+
+.deck-stack-zone-frontline .deck-stack-zone-count {
+  @apply bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400;
+}
+
+.deck-stack-zone-backline .deck-stack-zone-count {
+  @apply bg-indigo-500/10 border-indigo-500/20 text-indigo-600 dark:text-indigo-400;
+}
+
+.deck-stack-zone-spells .deck-stack-zone-count {
+  @apply bg-cyan-500/10 border-cyan-500/20 text-cyan-600 dark:text-cyan-400;
+}
+
+.deck-stack-zone-lands .deck-stack-zone-count {
+  @apply bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400;
+}
+
+.deck-stack-empty-zone {
+  @apply text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left;
+}
+
+.deck-stack-cards-row {
+  @apply flex flex-row overflow-x-auto gap-5 py-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent;
+}
+
+.deck-stack-card-wrapper {
+  --stack-card-width: 112px;
+  --stack-card-height: 157px;
+  --stack-trim: 10px;
+  --stack-shadow-one-offset: 4px;
+  --stack-shadow-two-offset: 8px;
+  @apply relative cursor-pointer shrink-0;
+  width: var(--stack-card-width);
+  height: var(--stack-card-height);
+}
+
+.deck-stack-card-wrapper[data-stack-depth='2'],
+.deck-stack-card-wrapper[data-stack-depth='3'] {
+  padding-right: var(--stack-trim);
+  padding-bottom: var(--stack-trim);
+}
+
+.deck-stack-shadow {
+  width: calc(var(--stack-card-width) - var(--stack-trim));
+  height: calc(var(--stack-card-height) - var(--stack-trim));
+  @apply absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300;
+}
+
+.deck-stack-shadow-level-one {
+  top: var(--stack-shadow-one-offset);
+  left: var(--stack-shadow-one-offset);
+  z-index: 1;
+}
+
+.group:hover .deck-stack-shadow-level-one {
+  transform: translate(0.375rem, 0.375rem);
+}
+
+.deck-stack-shadow-level-two {
+  top: var(--stack-shadow-two-offset);
+  left: var(--stack-shadow-two-offset);
+  z-index: 2;
+}
+
+.group:hover .deck-stack-shadow-level-two {
+  transform: translate(0.625rem, 0.625rem);
+}
+
+.deck-stack-main-card {
+  @apply absolute inset-y-0 left-0 rounded-lg overflow-hidden border bg-slate-900 shadow-md transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl;
+  width: var(--stack-card-width);
+  height: var(--stack-card-height);
+  z-index: 3;
+}
+
+.deck-stack-main-card[data-has-stack='true'] {
+  width: calc(var(--stack-card-width) - var(--stack-trim));
+  height: calc(var(--stack-card-height) - var(--stack-trim));
+}
+
+.deck-stack-count-badge {
+  @apply absolute bottom-1.5 right-1.5 bg-blue-600 border border-blue-400 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
+}
+
+.deck-stack-status-badge {
+  @apply absolute top-1.5 left-1.5 z-10 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg flex items-center gap-0.5 select-none pointer-events-none;
+}
+
+.deck-stack-status-badge-banned {
+  @apply bg-rose-600/90 dark:bg-rose-700/90 border border-rose-500;
+}
+
+.deck-stack-status-badge-restricted {
+  @apply bg-amber-500/90 dark:bg-amber-600/90 border border-amber-400;
+}

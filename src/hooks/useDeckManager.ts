@@ -112,7 +112,7 @@ export default function useDeckManager(
     downloadAsJson(savedDecks, `all-decks-${Date.now()}.json`);
   };
 
-  const saveTokensToDeck = (deckId: string, tokens: { tokenCard: any; generatorCardName: string }[]) => {
+  const saveTokensToDeck = (deckId: string, tokens: DeckRelatedToken[]) => {
     const updatedDecks = savedDecks.map((deck) => (deck.id === deckId ? { ...deck, relatedTokens: tokens } : deck));
     persistDecks(updatedDecks);
   };

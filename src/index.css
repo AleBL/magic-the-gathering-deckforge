@@ -5,6 +5,7 @@
 @import "./style/buttons.css";
 @import "./style/forms.css";
 @import "./style/utilities.css";
+@import "./style/deck-stack-view.css";
 
 /* Dark mode via class strategy */
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import { CSSProperties, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFistRaised, FaMagic, FaBolt, FaTint, FaBan, FaExclamationTriangle } from 'react-icons/fa';
+import { FaFistRaised, FaMagic, FaBolt, FaTint, FaBan, FaExclamationTriangle, FaPalette } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
-import { GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
+import { DeckCardGrouped, GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
+import { isBacklineSupportCard, isFrontlineCard, isLandCard, isSpellCard } from '../../utils/cardTypePredicates';
 import CardDetailModal from '../CardDetailModal';
 
 interface DeckStackViewProps {
@@ -16,12 +17,23 @@ interface DeckStackViewProps {
   onHoverLeave: () => void;
   onRemoveFromDeck: (card: Card) => void;
   onAddToDeck: (card: Card) => void;
+  onAddTokenToDeck?: (token: Card) => void;
   activeFormat?: DeckFormat;
   onUpdateCard?: (updatedCard: Card) => void;
   isTokenZone?: boolean;
 }
 
-const CARD_DIMENSIONS: Record<CardSize, { width: string; height: string }> = {
+interface PlaymatSection {
+  sectionId: 'frontline' | 'backline' | 'spells' | 'lands';
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  subtitle: string;
+  cards: Card[];
+  groupedCards: DeckCardGrouped[];
+  accentClassName: string;
+}
+
+const CARD_DIMENSIONS_BY_SIZE: Record<CardSize, { width: string; height: string }> = {
   small: { width: '84px', height: '118px' },
   medium: { width: '112px', height: '157px' },
   large: { width: '140px', height: '196px' },
@@ -37,6 +49,7 @@ function DeckStackView({
   onHoverLeave,
   onRemoveFromDeck,
   onAddToDeck,
+  onAddTokenToDeck,
   activeFormat,
   onUpdateCard,
   isTokenZone = false
@@ -44,132 +57,122 @@ function DeckStackView({
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
 
-  // Flatten all cards from groups
-  const allCards = useMemo(() => groups.flatMap((g) => g.cards), [groups]);
+  const allCardsInDeck = useMemo(() => groups.flatMap((groupedCards) => groupedCards.cards), [groups]);
+  const cardDimensions = CARD_DIMENSIONS_BY_SIZE[cardSize];
 
-  // 1. Frontline (Creatures & Planeswalkers)
-  const frontline = useMemo(
-    () =>
-      allCards.filter(
-        (c) => c.type_line?.toLowerCase().includes('creature') || c.type_line?.toLowerCase().includes('planeswalker')
-      ),
-    [allCards]
+  const handleUpdateCard = (updatedCard: Card) => {
+    setSelectedModalCard(updatedCard);
+    onUpdateCard?.(updatedCard);
+  };
+
+  const frontlineCards = useMemo(() => allCardsInDeck.filter(isFrontlineCard), [allCardsInDeck]);
+  const backlineCards = useMemo(() => allCardsInDeck.filter(isBacklineSupportCard), [allCardsInDeck]);
+  const spellCards = useMemo(() => allCardsInDeck.filter(isSpellCard), [allCardsInDeck]);
+  const landCards = useMemo(() => allCardsInDeck.filter(isLandCard), [allCardsInDeck]);
+
+  const playmatSections: PlaymatSection[] = useMemo(
+    () => [
+      {
+        sectionId: 'frontline',
+        icon: FaFistRaised,
+        title: t('frontline'),
+        subtitle: `${t('creature')} & ${t('planeswalker')}`,
+        cards: frontlineCards,
+        groupedCards: groupCardsByUnique(frontlineCards),
+        accentClassName: 'deck-stack-zone-frontline'
+      },
+      {
+        sectionId: 'backline',
+        icon: FaMagic,
+        title: t('backline'),
+        subtitle: `${t('artifact')} & ${t('enchantment')}`,
+        cards: backlineCards,
+        groupedCards: groupCardsByUnique(backlineCards),
+        accentClassName: 'deck-stack-zone-backline'
+      },
+      {
+        sectionId: 'spells',
+        icon: FaBolt,
+        title: t('spells'),
+        subtitle: `${t('instant')} & ${t('sorcery')}`,
+        cards: spellCards,
+        groupedCards: groupCardsByUnique(spellCards),
+        accentClassName: 'deck-stack-zone-spells'
+      },
+      {
+        sectionId: 'lands',
+        icon: FaTint,
+        title: t('resourceLands'),
+        subtitle: t('land'),
+        cards: landCards,
+        groupedCards: groupCardsByUnique(landCards),
+        accentClassName: 'deck-stack-zone-lands'
+      }
+    ],
+    [t, frontlineCards, backlineCards, spellCards, landCards]
   );
 
-  // 2. Backline / Support (Artifacts & Enchantments that are not Creatures or Lands)
-  const backline = useMemo(
-    () =>
-      allCards.filter(
-        (c) =>
-          (c.type_line?.toLowerCase().includes('artifact') || c.type_line?.toLowerCase().includes('enchantment')) &&
-          !c.type_line?.toLowerCase().includes('creature') &&
-          !c.type_line?.toLowerCase().includes('land')
-      ),
-    [allCards]
-  );
+  function getCardLegalityStatus(card: Card): { isBanned: boolean; isRestricted: boolean } {
+    if (!activeFormat || activeFormat === 'freeform') {
+      return { isBanned: false, isRestricted: false };
+    }
 
-  // 3. Mana Resources (Lands)
-  const lands = useMemo(() => allCards.filter((c) => c.type_line?.toLowerCase().includes('land')), [allCards]);
-
-  // 4. Spells (Sorceries & Instants, etc.)
-  const spells = useMemo(
-    () =>
-      allCards.filter(
-        (c) =>
-          !c.type_line?.toLowerCase().includes('creature') &&
-          !c.type_line?.toLowerCase().includes('planeswalker') &&
-          !c.type_line?.toLowerCase().includes('land') &&
-          !c.type_line?.toLowerCase().includes('artifact') &&
-          !c.type_line?.toLowerCase().includes('enchantment')
-      ),
-    [allCards]
-  );
-
-  // Group unique cards in each category
-  const frontlineUnique = useMemo(() => groupCardsByUnique(frontline), [frontline]);
-  const backlineUnique = useMemo(() => groupCardsByUnique(backline), [backline]);
-  const spellsUnique = useMemo(() => groupCardsByUnique(spells), [spells]);
-  const landsUnique = useMemo(() => groupCardsByUnique(lands), [lands]);
-
-  const dim = CARD_DIMENSIONS[cardSize];
+    const legalityStatus = card.legalities?.[activeFormat as keyof typeof card.legalities];
+    return {
+      isBanned: legalityStatus === 'banned',
+      isRestricted: legalityStatus === 'restricted'
+    };
+  }
 
   const renderPlaymatCard = (item: { name: string; count: number; card: Card }) => {
     const { count, card } = item;
     const imageUrl = getCardImageUrl(card);
-    const isBanned =
-      activeFormat &&
-      activeFormat !== 'freeform' &&
-      card.legalities?.[activeFormat as keyof typeof card.legalities] === 'banned';
-    const isRestricted =
-      activeFormat &&
-      activeFormat !== 'freeform' &&
-      card.legalities?.[activeFormat as keyof typeof card.legalities] === 'restricted';
+    const { isBanned, isRestricted } = getCardLegalityStatus(card);
+    const dynamicCardStyle = {
+      '--stack-card-width': cardDimensions.width,
+      '--stack-card-height': cardDimensions.height
+    } as CSSProperties;
 
     return (
       <div
         key={card.id}
-        className="relative group cursor-pointer shrink-0"
-        style={{
-          width: dim.width,
-          height: dim.height,
-          paddingRight: count > 1 ? '10px' : '0px',
-          paddingBottom: count > 1 ? '10px' : '0px'
-        }}
+        className="deck-stack-card-wrapper group"
+        data-stack-depth={count > 2 ? '3' : count > 1 ? '2' : '1'}
+        style={dynamicCardStyle}
       >
-        {/* Shadow card layer 1 behind the main card (physically offset stack style) */}
         {count > 1 && (
           <div
-            className={`absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-1.5 group-hover:translate-y-1.5 ${
+            className={`deck-stack-shadow deck-stack-shadow-level-one ${
               isBanned
                 ? 'bg-red-950/60 border border-red-900/60'
                 : isRestricted
                   ? 'bg-amber-950/60 border border-amber-900/60'
                   : 'bg-slate-950 border border-slate-800/80'
             }`}
-            style={{
-              top: '4px',
-              left: '4px',
-              width: `calc(${dim.width} - 10px)`,
-              height: `calc(${dim.height} - 10px)`,
-              zIndex: 1
-            }}
           />
         )}
 
-        {/* Shadow card layer 2 behind the main card (offset stack style) */}
         {count > 2 && (
           <div
-            className={`absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300 group-hover:translate-x-2.5 group-hover:translate-y-2.5 ${
+            className={`deck-stack-shadow deck-stack-shadow-level-two ${
               isBanned
                 ? 'bg-red-950/40 border border-red-900/40'
                 : isRestricted
                   ? 'bg-amber-950/40 border border-amber-900/40'
                   : 'bg-slate-950 border border-slate-800/80'
             }`}
-            style={{
-              top: '8px',
-              left: '8px',
-              width: `calc(${dim.width} - 10px)`,
-              height: `calc(${dim.height} - 10px)`,
-              zIndex: 2
-            }}
           />
         )}
 
-        {/* Main Card */}
         <div
-          className={`absolute inset-y-0 left-0 rounded-lg overflow-hidden border bg-slate-900 shadow-md transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl ${
+          className={`deck-stack-main-card ${
             isBanned
               ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
               : isRestricted
                 ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
                 : 'border-slate-700/40 dark:border-slate-800/50 hover:border-blue-500/80'
           }`}
-          style={{
-            width: `calc(${dim.width} - ${count > 1 ? '10px' : '0px'})`,
-            height: `calc(${dim.height} - ${count > 1 ? '10px' : '0px'})`,
-            zIndex: 3
-          }}
+          data-has-stack={count > 1 ? 'true' : 'false'}
           onClick={() => setSelectedModalCard(card)}
           onMouseEnter={(e) => onHoverEnter(card, e)}
           onMouseMove={onHoverMove}
@@ -197,22 +200,18 @@ function DeckStackView({
           )}
 
           {/* Count Badge in lower corner */}
-          {count > 1 && (
-            <span className="absolute bottom-1.5 right-1.5 bg-blue-600 border border-blue-400 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none">
-              {count}x
-            </span>
-          )}
+          {count > 1 && <span className="deck-stack-count-badge">{count}x</span>}
 
           {/* Banned / Restricted Badge */}
           {isBanned && (
-            <div className="absolute top-1.5 left-1.5 z-10 bg-rose-600/90 dark:bg-rose-700/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg border border-rose-500 flex items-center gap-0.5 select-none pointer-events-none animate-pulse">
+            <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
               <FaBan className="text-white text-[8px] shrink-0" />
               <span>{t('banned').toUpperCase()}</span>
             </div>
           )}
 
           {isRestricted && (
-            <div className="absolute top-1.5 left-1.5 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg border border-amber-400 flex items-center gap-0.5 select-none pointer-events-none">
+            <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
               <FaExclamationTriangle className="text-white text-[8px] shrink-0" />
               <span>{t('restricted').toUpperCase()}</span>
             </div>
@@ -237,98 +236,85 @@ function DeckStackView({
     );
   };
 
+  if (isTokenZone) {
+    return (
+      <div className="deck-stack-container">
+        <section className="space-y-3">
+          <h4 className="deck-stack-zone-title deck-stack-zone-frontline animate-fadeIn">
+            <FaPalette className="shrink-0 text-xs text-indigo-400 animate-pulse" />
+            <span>{t('relatedTokens')}</span>
+            <span className="deck-stack-zone-count">{allCardsInDeck.length}</span>
+          </h4>
+
+          {allCardsInDeck.length === 0 ? (
+            <p className="deck-stack-empty-zone">{t('emptyZone')}</p>
+          ) : (
+            <div className="deck-stack-cards-row">
+              {groupCardsByUnique(allCardsInDeck).map((groupedCard) => renderPlaymatCard(groupedCard))}
+            </div>
+          )}
+        </section>
+
+        {selectedModalCard && (
+          <CardDetailModal
+            card={selectedModalCard}
+            imageUrl={getCardImageUrl(selectedModalCard)}
+            onAddToDeck={isRemovable ? onAddToDeck : undefined}
+            onAddTokenToDeck={onAddTokenToDeck}
+            onClose={() => setSelectedModalCard(null)}
+            onSelectPrint={handleUpdateCard}
+            isToken={true}
+            isDeckCard={true}
+            deckCards={allCardsInDeck}
+            onRemoveFromDeck={onRemoveFromDeck}
+            isEditMode={isRemovable}
+            deckRelatedTokens={allCardsInDeck.map((c) => ({
+              tokenCard: c,
+              generatorCardName: ''
+            }))}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8 p-6 bg-slate-900/20 dark:bg-slate-950/30 border border-gray-250 dark:border-slate-800 rounded-2xl shadow-xl backdrop-blur-xs select-none">
-      {/* 1. Combat Zone (Frontline) */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-amber-300/30 dark:border-amber-900/30 pb-1.5 select-none text-left">
-          <FaFistRaised className="text-amber-500 shrink-0 text-xs" />
-          <span>
-            {t('frontline')} ({t('creature')} & {t('planeswalker')})
-          </span>
-          <span className="text-[10px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full font-bold">
-            {frontline.length}
-          </span>
-        </h4>
-        {frontlineUnique.length === 0 ? (
-          <p className="text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left">{t('emptyZone')}</p>
-        ) : (
-          <div className="flex flex-row overflow-x-auto gap-5 py-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {frontlineUnique.map((item) => renderPlaymatCard(item))}
-          </div>
-        )}
-      </div>
+    <div className="deck-stack-container">
+      {playmatSections.map((section) => {
+        const SectionIcon = section.icon;
 
-      {/* 2. Support Zone (Backline) */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-indigo-300/30 dark:border-indigo-900/30 pb-1.5 select-none text-left">
-          <FaMagic className="text-indigo-500 shrink-0 text-xs" />
-          <span>
-            {t('backline')} ({t('artifact')} & {t('enchantment')})
-          </span>
-          <span className="text-[10px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full font-bold">
-            {backline.length}
-          </span>
-        </h4>
-        {backlineUnique.length === 0 ? (
-          <p className="text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left">{t('emptyZone')}</p>
-        ) : (
-          <div className="flex flex-row overflow-x-auto gap-5 py-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {backlineUnique.map((item) => renderPlaymatCard(item))}
-          </div>
-        )}
-      </div>
+        return (
+          <section key={section.sectionId} className="space-y-3">
+            <h4 className={`deck-stack-zone-title ${section.accentClassName}`}>
+              <SectionIcon className="shrink-0 text-xs" />
+              <span>
+                {section.title} ({section.subtitle})
+              </span>
+              <span className="deck-stack-zone-count">{section.cards.length}</span>
+            </h4>
 
-      {/* 3. Spells Zone */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-cyan-300/30 dark:border-cyan-900/30 pb-1.5 select-none text-left">
-          <FaBolt className="text-cyan-500 shrink-0 text-xs" />
-          <span>
-            {t('spells')} ({t('instant')} & {t('sorcery')})
-          </span>
-          <span className="text-[10px] bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 px-2 py-0.5 rounded-full font-bold">
-            {spells.length}
-          </span>
-        </h4>
-        {spellsUnique.length === 0 ? (
-          <p className="text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left">{t('emptyZone')}</p>
-        ) : (
-          <div className="flex flex-row overflow-x-auto gap-5 py-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {spellsUnique.map((item) => renderPlaymatCard(item))}
-          </div>
-        )}
-      </div>
-
-      {/* 4. Lands Zone (Resource Zone) */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-emerald-300/30 dark:border-emerald-900/30 pb-1.5 select-none text-left">
-          <FaTint className="text-emerald-500 shrink-0 text-xs" />
-          <span>
-            {t('resourceLands')} ({t('land')})
-          </span>
-          <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold">
-            {lands.length}
-          </span>
-        </h4>
-        {landsUnique.length === 0 ? (
-          <p className="text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left">{t('emptyZone')}</p>
-        ) : (
-          <div className="flex flex-row overflow-x-auto gap-5 py-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {landsUnique.map((item) => renderPlaymatCard(item))}
-          </div>
-        )}
-      </div>
+            {section.groupedCards.length === 0 ? (
+              <p className="deck-stack-empty-zone">{t('emptyZone')}</p>
+            ) : (
+              <div className="deck-stack-cards-row">
+                {section.groupedCards.map((groupedCard) => renderPlaymatCard(groupedCard))}
+              </div>
+            )}
+          </section>
+        );
+      })}
 
       {selectedModalCard && (
         <CardDetailModal
           card={selectedModalCard}
           imageUrl={getCardImageUrl(selectedModalCard)}
           onAddToDeck={isRemovable ? onAddToDeck : undefined}
+          onAddTokenToDeck={onAddTokenToDeck}
           onClose={() => setSelectedModalCard(null)}
-          onSelectPrint={onUpdateCard}
+          onSelectPrint={handleUpdateCard}
           isToken={isTokenZone}
           isDeckCard={true}
-          deckCards={allCards}
+          deckCards={allCardsInDeck}
           onRemoveFromDeck={onRemoveFromDeck}
           isEditMode={isRemovable}
         />
