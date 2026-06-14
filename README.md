@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Magic: The Gathering Search</h1>
+<h1>MTG Deck Forge</h1>
 
 Search Magic: The Gathering cards, build and manage decks with [Scryfall](https://scryfall.com/) API integration. Built with **TypeScript**, **React 19**, **Electron**, **Vite 6**, and **Tailwind CSS v4**.
 </div>
@@ -7,13 +7,16 @@ Search Magic: The Gathering cards, build and manage decks with [Scryfall](https:
 ## Features
 
 - **Card Search** — Advanced filtering by name, colors, types, rarity, and converted mana cost (CMC) using debounced Scryfall search.
-- **Deck Builder** — Add, remove, edit, and organize cards in a dedicated workspace deck.
+- **Card Art & Printing Selector** — Select alternative printings, sets, and artist illustrations for cards directly from the details modal, updating the specific card artwork inside your deck list.
+- **Deck Builder & Organizer** — Add, remove, edit, and organize cards in a dedicated workspace deck.
 - **Deck Manager** — Save, load, edit, import, and export decks locally via `localStorage` or JSON files (MTG Arena and `.DEC` file exports included).
 - **Double-Faced / Transforming Cards** — Flip cards dynamically in the card details modal to see their reverse side with interactive visual rotations and re-calculated attributes (image, P/T, text).
+- **Actual-Size MTG Proxy Printing** — Print proxy sheets for offline playtesting. Supports standard sizes (A4, A5, Letter, Legal), orientations (Portrait/Landscape), custom card spacing, cutting guide lines/dotted guides, page yield estimation, and true-to-life size scaling (63mm x 88mm).
 - **Dynamic Scryfall API Legality Check** — Real-time validation for Standard, Modern, Vintage, Pauper, and Commander querying the Scryfall API directly, with custom Vintage restricted 1-copy limit checks.
-- **Interactive Playtest Simulator** — Realistic playground playmat workspace supporting card drawing, life total tracker, graveyard rescue, and drag-less battlefield positioning (Combat Zone, Support Zone, Spells, and Resource Lands).
+- **Multi-Language Deck Token Management** — Visual deck token organizer. Automatic analyzer scans deck lists for token generators to auto-populate required token sheets. Includes localized search, quick presets for common tokens, and localized oracle card text.
+- **Interactive Playtest Simulator** — Realistic playground playmat workspace supporting card drawing, life total tracker, graveyard rescue, battlefield token summoning, and drag-less battlefield positioning (Combat Zone, Support Zone, Spells, and Resource Lands).
 - **Active Deck Statistics & Mana Curve** — High-fidelity visual breakdown of your deck's mana curve chart, average CMC (excluding lands), color distribution, and card types division.
-- **Fully Localized Commander Checks** — 100% internationalized validation rules (Commander validation, "Partner", "Friends Forever", "Doctor's Companion", and "Choose a Background") in English, Spanish, and Portuguese.
+- **Fully Localized Interface & Validation** — 100% internationalized UI and validation rules (Commander validation, "Partner", "Friends Forever", "Doctor's Companion", and "Choose a Background") in English, Spanish, and Portuguese.
 - **Dark Mode** — Modern dark-mode toggle with automatic local storage persistence.
 - **Cross-Platform** — Runs as a native desktop shell (Electron) or in a fast browser sandbox.
 
@@ -54,6 +57,7 @@ npm  -v # 11.12.1
 
 ```bash
 sudo apt-get install -yq --no-install-recommends libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 libnss3 libgbm-dev
+```
 
 ### Install dependencies
 
