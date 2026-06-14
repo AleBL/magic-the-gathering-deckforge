@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
+import { CardWithScryfallMetadata, ScryfallCardPart } from '../types/Scryfall';
 import { translateCards } from '../utils/translationHelper';
 
 export interface RelatedToken {
@@ -28,19 +29,18 @@ export function useCardRelatedTokensForCard(card: Card | null) {
 
     const fetchTokens = async () => {
       try {
-        let allParts = (card as any).all_parts;
+        let allParts = (card as CardWithScryfallMetadata).all_parts;
         if (!allParts) {
           try {
             // Fetch by English name to ensure we get the English card which has all_parts
-            const fullCard = await Scry.Cards.byName(card.name);
-            allParts = (fullCard as any).all_parts || [];
-          } catch (e) {
-            console.error(`Failed to fetch full card ${card.name} for related tokens:`, e);
+            const fullCard = (await Scry.Cards.byName(card.name)) as CardWithScryfallMetadata;
+            allParts = fullCard.all_parts || [];
+          } catch {
             allParts = [];
           }
         }
 
-        const tokenParts = allParts.filter((part: any) => part.id !== card.id && part.name !== card.name);
+        const tokenParts = allParts.filter((part) => part.id !== card.id && part.name !== card.name);
 
         if (tokenParts.length === 0) {
           setTokens([]);
@@ -51,14 +51,14 @@ export function useCardRelatedTokensForCard(card: Card | null) {
 
         // Fetch each token by ID in parallel
         await Promise.all(
-          tokenParts.map(async (part: any) => {
+          tokenParts.map(async (part: ScryfallCardPart) => {
             try {
               const fetchedCard = await Scry.Cards.byId(part.id);
               if (fetchedCard) {
                 fetched.push(fetchedCard as unknown as Card);
               }
-            } catch (err) {
-              console.error(`Failed to fetch token part with id ${part.id}:`, err);
+            } catch {
+              // Ignore isolated token fetch failures.
             }
           })
         );
@@ -67,9 +67,9 @@ export function useCardRelatedTokensForCard(card: Card | null) {
         const currentLang = i18n.language || 'en';
         const translated = await translateCards(fetched, currentLang);
         setTokens(translated);
-      } catch (err: any) {
-        console.error('Error fetching related tokens:', err);
-        setError(err.message);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch related tokens';
+        setError(message);
       } finally {
         setIsLoading(false);
       }
@@ -120,17 +120,17 @@ export function useCardRelatedTokens(cards: Card[]) {
         ];
         await Promise.all(
           nonLandCards.map(async (c) => {
-            let allParts = (c as any).all_parts;
+            let allParts = (c as CardWithScryfallMetadata).all_parts;
             if (!allParts) {
-              const text = (c.oracle_text || (c as any).printed_text || '').toLowerCase();
+              const text = (c.oracle_text || (c as CardWithScryfallMetadata).printed_text || '').toLowerCase();
               const hasTokenText = tokenKeywords.some((word) => text.includes(word));
 
               if (hasTokenText) {
                 try {
                   // Fetch by English name to ensure we get the English card which has all_parts
-                  const fullCard = await Scry.Cards.byName(c.name);
-                  allParts = (fullCard as any).all_parts || [];
-                } catch (err) {
+                  const fullCard = (await Scry.Cards.byName(c.name)) as CardWithScryfallMetadata;
+                  allParts = fullCard.all_parts || [];
+                } catch {
                   allParts = [];
                 }
               } else {
@@ -138,9 +138,9 @@ export function useCardRelatedTokens(cards: Card[]) {
               }
             }
 
-            const tokens = allParts.filter((part: any) => part.id !== c.id && part.name !== c.name);
+            const tokens = allParts.filter((part) => part.id !== c.id && part.name !== c.name);
 
-            tokens.forEach((t: any) => {
+            tokens.forEach((t: ScryfallCardPart) => {
               if (!tokenPartsMap.has(t.id)) {
                 tokenPartsMap.set(t.id, { id: t.id, generatorName: c.printed_name || c.name });
               }
@@ -167,8 +167,8 @@ export function useCardRelatedTokens(cards: Card[]) {
                   generatorCardName: part.generatorName
                 });
               }
-            } catch (err) {
-              console.error(`Failed to fetch token ${part.id} for deck:`, err);
+            } catch {
+              // Ignore isolated token fetch failures.
             }
           })
         );
@@ -184,9 +184,9 @@ export function useCardRelatedTokens(cards: Card[]) {
         }));
 
         setRelatedTokens(translatedList);
-      } catch (err: any) {
-        console.error('Error fetching all deck tokens:', err);
-        setError(err.message);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch deck tokens';
+        setError(message);
       } finally {
         setIsLoading(false);
       }

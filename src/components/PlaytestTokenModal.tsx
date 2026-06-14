@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTimes, FaPlus } from 'react-icons/fa';
+import { FaTimes, FaPlus, FaPalette } from 'react-icons/fa';
+import { getCardImageUrl } from '../utils/deckGrouping';
 import { Card } from '../types/Card';
 import { RelatedToken } from '../hooks/useCardRelatedTokens';
 
@@ -148,68 +149,26 @@ export function PlaytestTokenModal({
   deckRelatedTokens = []
 }: PlaytestTokenModalProps) {
   const { t } = useTranslation();
-  const [presets, setPresets] = useState<TokenPreset[]>(tokenPresets);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const fetchPresetImages = async () => {
-      try {
-        const query =
-          't:token (name:soldier or name:zombie or name:goblin or name:thopter or name:saproling or name:bird or name:beast or name:treasure or name:food)';
-        const response = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`);
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data.data && Array.isArray(data.data)) {
-          const updated = tokenPresets.map((preset) => {
-            const match = data.data.find((c: any) => c.name.toLowerCase() === preset.name.toLowerCase());
-            if (match) {
-              const normalImg = match.image_uris?.normal || match.card_faces?.[0]?.image_uris?.normal;
-              if (normalImg) {
-                return { ...preset, imageUrl: normalImg };
-              }
-            }
-            return preset;
-          });
-          setPresets(updated);
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching dynamic preset images:', err);
+  const uniqueDeckTokens = useMemo(() => {
+    const seen = new Set<string>();
+    const result: RelatedToken[] = [];
+    for (const token of deckRelatedTokens) {
+      const powerVal = token.tokenCard.power || '';
+      const toughnessVal = token.tokenCard.toughness || '';
+      const colorVal = (token.tokenCard.colors || []).join(',');
+      const oracleVal = token.tokenCard.oracle_text || '';
+      const typeVal = token.tokenCard.type_line || '';
+      const key = `${token.tokenCard.name}|${powerVal}|${toughnessVal}|${colorVal}|${oracleVal}|${typeVal}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(token);
       }
-    };
-    fetchPresetImages();
-  }, [isOpen]);
+    }
+    return result;
+  }, [deckRelatedTokens]);
 
   if (!isOpen) return null;
-
-  const handleCreateToken = (preset: TokenPreset) => {
-    // Generate a valid Card object structure
-    const tokenCard: Card = {
-      id: `token-${preset.id}-${Math.random().toString(36).substring(2, 9)}`,
-      oracle_id: `token-oracle-${preset.id}`,
-      name: preset.name,
-      printed_name: t(preset.localeKey, preset.name),
-      type_line: preset.type_line,
-      printed_type_line: preset.type_line,
-      oracle_text: preset.oracle_text,
-      rarity: preset.rarity,
-      set_name: preset.set_name,
-      colors: preset.colors,
-      color_identity: preset.colors,
-      power: preset.power,
-      toughness: preset.toughness,
-      image_uris: preset.imageUrl
-        ? {
-            small: preset.imageUrl,
-            normal: preset.imageUrl,
-            large: preset.imageUrl,
-            png: preset.imageUrl
-          }
-        : undefined
-    };
-
-    onSelectToken(tokenCard);
-  };
 
   const getColorClass = (colors: string[]) => {
     if (colors.length === 0) return 'border-slate-700 bg-slate-800/40 text-slate-300';
@@ -242,15 +201,15 @@ export function PlaytestTokenModal({
         {/* Presets Grid */}
         <div className="p-6 overflow-y-auto space-y-6 max-h-[70vh]">
           {/* Deck Specific Tokens */}
-          {deckRelatedTokens.length > 0 && (
+          {uniqueDeckTokens.length > 0 ? (
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
-                <span>{t('deckRelatedTokens', 'Deck Related Tokens')}</span>
+                <span>{t('deckRelatedTokens')}</span>
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {deckRelatedTokens.map(({ tokenCard, generatorCardName }) => {
-                  const imgUrl = tokenCard.image_uris?.normal || tokenCard.card_faces?.[0]?.image_uris?.normal || '';
+                {uniqueDeckTokens.map(({ tokenCard, generatorCardName }) => {
+                  const imgUrl = getCardImageUrl(tokenCard);
                   const colorClass = getColorClass(tokenCard.colors || []);
 
                   return (
@@ -259,7 +218,7 @@ export function PlaytestTokenModal({
                       onClick={() => onSelectToken(tokenCard)}
                       className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
                     >
-                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative">
+                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
                           <img
                             src={imgUrl}
@@ -268,9 +227,12 @@ export function PlaytestTokenModal({
                             loading="lazy"
                           />
                         ) : (
-                          <span className="text-[9px] text-slate-500 font-bold p-1 leading-tight">
-                            {tokenCard.name}
-                          </span>
+                          <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
+                            <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
+                            <span className="text-[8px] text-slate-400 font-bold leading-tight break-words line-clamp-3 select-none">
+                              {tokenCard.name}
+                            </span>
+                          </div>
                         )}
                         {tokenCard.power && tokenCard.toughness && (
                           <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
@@ -284,7 +246,7 @@ export function PlaytestTokenModal({
                           {tokenCard.printed_name || tokenCard.name}
                         </h4>
                         <p className="text-[8px] text-slate-500 truncate mt-1">
-                          {t('generatedBy', 'Created by')}:{' '}
+                          {t('generatedBy')}:{' '}
                           <span className="font-extrabold text-indigo-400">{generatorCardName}</span>
                         </p>
                       </div>
@@ -301,66 +263,12 @@ export function PlaytestTokenModal({
                 })}
               </div>
             </div>
-          )}
-
-          {/* Standard Token Presets */}
-          <div className="space-y-3">
-            {deckRelatedTokens.length > 0 && (
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
-                <span>{t('standardTokens', 'Standard Tokens')}</span>
-              </h4>
-            )}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {presets.map((preset) => {
-                const colorClass = getColorClass(preset.colors);
-                return (
-                  <div
-                    key={preset.id}
-                    onClick={() => handleCreateToken(preset)}
-                    className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
-                  >
-                    {/* Visual miniature representation */}
-                    <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative">
-                      {preset.imageUrl ? (
-                        <img
-                          src={preset.imageUrl}
-                          alt={preset.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <span className="text-[10px] text-slate-500 font-bold">{preset.name}</span>
-                      )}
-                      {preset.power && preset.toughness && (
-                        <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
-                          {preset.power}/{preset.toughness}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="w-full">
-                      <h4 className="text-xs font-bold text-slate-200 truncate leading-tight group-hover:text-indigo-400 transition-colors">
-                        {t(preset.localeKey, preset.name)}
-                      </h4>
-                      <p className="text-[9px] text-slate-500 truncate mt-0.5">
-                        {preset.power && preset.toughness ? `${preset.power}/${preset.toughness}` : ''}{' '}
-                        {preset.oracle_text || preset.name}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
-                    >
-                      <FaPlus className="text-[8px]" />
-                      {t('create')}
-                    </button>
-                  </div>
-                );
-              })}
+          ) : (
+            <div className="h-64 flex flex-col items-center justify-center text-slate-400 gap-2 text-center py-6">
+              <span className="text-sm font-bold">{t('noTokensFound')}</span>
+              <span className="text-xs text-slate-500">{t('playtestNoTokensTip')}</span>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

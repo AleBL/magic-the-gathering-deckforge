@@ -1,4 +1,9 @@
 import { Card } from '../types/Card';
+import locales from '../locales';
+
+interface CardWithSelectedPrintImage extends Card {
+  selectedPrintImageUri?: string;
+}
 
 export interface GroupedCards {
   title: string;
@@ -112,38 +117,49 @@ export const groupCardsByUnique = (cardsList: Card[]): DeckCardGrouped[] => {
   return grouped;
 };
 
-/** Fallback images for basic lands in case they were saved without image_uris */
-const BASIC_LAND_FALLBACK_IMAGES: Record<string, string> = {
-  plains: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
-  island: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
-  swamp: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
-  mountain: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
-  forest: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
-  wastes: 'https://cards.scryfall.io/normal/front/0/3/036c84c1-6b45-4424-aa61-5991d7c35fa9.jpg',
-  // Portuguese names
-  planície: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
-  ilha: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
-  pântano: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
-  montanha: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
-  floresta: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg'
+const getBasicLandNamesMap = (): Record<string, string> => {
+  const map: Record<string, string> = {};
+  const landKeys = ['plains', 'island', 'swamp', 'mountain', 'forest', 'wastes'];
+
+  landKeys.forEach((key) => {
+    map[key] = key;
+  });
+
+  Object.values(locales).forEach((locale) => {
+    const translations = locale.translations;
+    if (translations) {
+      landKeys.forEach((key) => {
+        const translatedName = translations[key as keyof typeof translations];
+        if (typeof translatedName === 'string') {
+          map[translatedName.toLowerCase()] = key;
+        }
+      });
+    }
+  });
+
+  return map;
 };
+
+const BASIC_LAND_NAMES = getBasicLandNamesMap();
 
 /** URL of the best available image for the card. */
 export const getCardImageUrl = (card: Card): string => {
+  const cardWithSelectedPrintImage = card as CardWithSelectedPrintImage;
+
   // Use selected print override if available
-  if ((card as any).selectedPrintImageUri) return (card as any).selectedPrintImageUri;
+  if (cardWithSelectedPrintImage.selectedPrintImageUri) return cardWithSelectedPrintImage.selectedPrintImageUri;
+
+  // Prioritize gatherer first for localized translation support
+  if (card.image_uris?.gatherer) return card.image_uris.gatherer;
 
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
-  const baseUrl = imageUris ? imageUris.normal || imageUris.large || card.image_uris?.gatherer || '' : '';
+  const baseUrl = imageUris ? imageUris.normal || imageUris.large || '' : '';
 
   if (baseUrl) return baseUrl;
 
-  // Fallback for basic lands that were stored without image_uris (pre-existing decks)
-  const isBasicLand =
-    card.type_line?.toLowerCase().includes('basic land') || !!BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()];
-
-  if (isBasicLand) {
-    return BASIC_LAND_FALLBACK_IMAGES[card.name?.toLowerCase()] || '';
+  const landName = BASIC_LAND_NAMES[card.name?.toLowerCase()];
+  if (landName) {
+    return `https://api.scryfall.com/cards/named?exact=${landName}&format=image`;
   }
 
   return '';
