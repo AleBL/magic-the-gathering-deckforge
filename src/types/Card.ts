@@ -63,4 +63,5 @@ export interface Card {
   collector_number?: string;
   artist?: string;
   lang?: string;
+  isActive?: boolean;
 }
