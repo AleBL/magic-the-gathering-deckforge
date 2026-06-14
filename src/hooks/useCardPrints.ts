@@ -3,14 +3,22 @@ import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
 
-export function useCardPrints(cardName: string | undefined, oracleId?: string, isToken?: boolean) {
+export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: string, isToken?: boolean) {
   const [prints, setPrints] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { i18n } = useTranslation();
 
+  const cardName = typeof cardOrName === 'string' ? cardOrName : cardOrName?.name;
+  const targetOracleId = typeof cardOrName === 'string' ? oracleId : cardOrName?.oracle_id;
+  const originalPower = typeof cardOrName === 'string' ? undefined : cardOrName?.power;
+  const originalToughness = typeof cardOrName === 'string' ? undefined : cardOrName?.toughness;
+  const originalColors = typeof cardOrName === 'string' ? undefined : cardOrName?.colors;
+  const originalTypeLine = typeof cardOrName === 'string' ? undefined : cardOrName?.type_line;
+  const originalOracleText = typeof cardOrName === 'string' ? undefined : cardOrName?.oracle_text;
+
   useEffect(() => {
-    if (!cardName && !oracleId) {
+    if (!cardName && !targetOracleId) {
       setPrints([]);
       return;
     }
@@ -26,9 +34,10 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string, i
 
     let query = '';
     if (isToken) {
-      query = `t:token name:"${cardName}" unique:prints ${langCondition}`;
-    } else if (oracleId && !oracleId.startsWith('token-oracle-')) {
-      query = `oracle_id:${oracleId} unique:prints ${langCondition}`;
+      // Use name:!"name" for exact name match on Scryfall
+      query = `t:token name:!"${cardName}" unique:prints ${langCondition}`;
+    } else if (targetOracleId && !targetOracleId.startsWith('token-oracle-')) {
+      query = `oracle_id:${targetOracleId} unique:prints ${langCondition}`;
     } else {
       query = `!"${cardName}" unique:prints ${langCondition}`;
     }
@@ -57,6 +66,20 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string, i
       // Group prints by set & collector number, prioritizing the target language print
       const uniqueMap = new Map<string, Card>();
       results.forEach((c) => {
+        // If it's a token and we have the original attributes, filter out non-matching tokens
+        if (isToken && typeof cardOrName !== 'string') {
+          const powerMatches = (c.power || '') === (originalPower || '');
+          const toughnessMatches = (c.toughness || '') === (originalToughness || '');
+          const colorsMatches = (c.colors ?? []).sort().join(',') === (originalColors ?? []).sort().join(',');
+          const typeLineMatches = (c.type_line || '') === (originalTypeLine || '');
+          const oracleTextMatches =
+            (c.oracle_text || '').trim().toLowerCase() === (originalOracleText || '').trim().toLowerCase();
+
+          if (!powerMatches || !toughnessMatches || !colorsMatches || !typeLineMatches || !oracleTextMatches) {
+            return;
+          }
+        }
+
         const key = `${c.set}_${c.collector_number || ''}`;
         const existing = uniqueMap.get(key);
         if (!existing) {
@@ -85,7 +108,6 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string, i
     });
 
     emitter.on('error', (err: Error) => {
-      console.error('Error fetching card prints:', err);
       // Suppress 404/not found errors, just return empty list
       if (err.message?.includes('404') || err.message?.includes('not found')) {
         setPrints([]);
@@ -99,11 +121,21 @@ export function useCardPrints(cardName: string | undefined, oracleId?: string, i
       // Cancel search emitter on unmount/card change
       try {
         emitter.cancel();
-      } catch (e) {
+      } catch {
         // Suppress emitter cancellation errors
       }
     };
-  }, [cardName, oracleId, i18n.language, isToken]);
+  }, [
+    cardName,
+    targetOracleId,
+    i18n.language,
+    isToken,
+    originalPower,
+    originalToughness,
+    originalColors,
+    originalTypeLine,
+    originalOracleText
+  ]);
 
   return { prints, isLoading, error };
 }

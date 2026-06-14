@@ -1,16 +1,19 @@
 import { ReactNode, useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaShieldAlt, FaSync, FaPalette, FaTimes, FaExpand, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaCrown, FaShieldAlt, FaSync, FaPalette, FaPlus, FaMinus } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { parseTextWithSymbols } from '../utils/symbolHelper';
 import { useCardPrints } from '../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../hooks/useCardRelatedTokens';
+import { getCardImageUrl } from '../utils/deckGrouping';
+import { DeckRelatedToken } from '../types/Deck';
 
 interface CardDetailModalProps {
   card: Card;
   imageUrl: string;
   onAddToDeck?: (card: Card) => void;
+  onAddTokenToDeck?: (token: Card) => void;
   onClose: () => void;
   onSelectPrint?: (updatedCard: Card) => void;
   isToken?: boolean;
@@ -18,6 +21,10 @@ interface CardDetailModalProps {
   deckCards?: Card[];
   onRemoveFromDeck?: (card: Card) => void;
   isEditMode?: boolean;
+  hidePrintsSidebar?: boolean;
+  hidePriceAndLegality?: boolean;
+  deckRelatedTokens?: DeckRelatedToken[];
+  defaultShowPrints?: boolean;
 }
 
 /** Rarity pill colours for the set sidebar */
@@ -33,26 +40,33 @@ function CardDetailModal({
   card: initialCard,
   imageUrl,
   onAddToDeck,
+  onAddTokenToDeck,
   onClose,
   onSelectPrint,
   isToken = false,
   isDeckCard = false,
   deckCards = [],
   onRemoveFromDeck,
-  isEditMode = false
+  isEditMode = false,
+  hidePrintsSidebar = false,
+  hidePriceAndLegality = false,
+  deckRelatedTokens = [],
+  defaultShowPrints
 }: CardDetailModalProps) {
   const { t } = useTranslation();
   const [card, setCard] = useState<Card>(initialCard);
   const [currentImageUrl, setCurrentImageUrl] = useState<string>(imageUrl);
-  const { prints, isLoading: isPrintsLoading } = useCardPrints(card.name, card.oracle_id, isToken);
+  const { prints, isLoading: isPrintsLoading } = useCardPrints(card, undefined, isToken);
   const [hoveredImageUrl, setHoveredImageUrl] = useState<string | null>(null);
-  const [showPrintsSidebar, setShowPrintsSidebar] = useState(!isDeckCard);
+  const [showPrintsSidebar, setShowPrintsSidebar] = useState(
+    defaultShowPrints !== undefined ? defaultShowPrints : !isDeckCard && !hidePrintsSidebar
+  );
 
   // Sync card state when initialCard or imageUrl changes from parent
   useEffect(() => {
     setCard(initialCard);
     setCurrentImageUrl(imageUrl);
-  }, [initialCard, imageUrl]);
+  }, [initialCard.id, imageUrl]);
 
   const copiesCount = useMemo(() => {
     if (!isDeckCard) return 0;
@@ -82,6 +96,23 @@ function CardDetailModal({
   const [showBackFace, setShowBackFace] = useState(false);
 
   const currentFace = hasMultipleFaces ? card.card_faces?.[showBackFace ? 1 : 0] : null;
+
+  const recursiveCard = useMemo(() => {
+    if (!selectedToken) return null;
+    const matchingDeckToken = deckRelatedTokens?.find((t) => t.tokenCard.name === selectedToken.name);
+    if (matchingDeckToken) {
+      return {
+        ...selectedToken,
+        id: matchingDeckToken.tokenCard.id
+      };
+    }
+    return selectedToken;
+  }, [selectedToken, deckRelatedTokens]);
+
+  const isRecursiveDeckCard = useMemo(() => {
+    if (!selectedToken) return false;
+    return !!deckRelatedTokens?.some((t) => t.tokenCard.name === selectedToken.name);
+  }, [selectedToken, deckRelatedTokens]);
 
   const displayImageUrl = useMemo(() => {
     if (hoveredImageUrl) return hoveredImageUrl;
@@ -137,13 +168,13 @@ function CardDetailModal({
     // Keep the original card id so parent can find and update the right card in the deck
     // but apply the new print's image_uris and metadata
     const confirmedCard: Card = {
-      ...initialCard,                         // keep original id (used to find in deck)
-      image_uris: card.image_uris,            // new print art
-      card_faces: card.card_faces,            // new print faces if any
+      ...initialCard, // keep original id (used to find in deck)
+      image_uris: card.image_uris, // new print art
+      card_faces: card.card_faces, // new print faces if any
       set: card.set,
       set_name: card.set_name,
       collector_number: card.collector_number,
-      selectedPrintId: card.id,              // the new print id
+      selectedPrintId: card.id, // the new print id
       selectedPrintImageUri: currentImageUrl // the resolved image URL
     };
     onSelectPrint?.(confirmedCard);
@@ -161,7 +192,8 @@ function CardDetailModal({
     <>
       {/* Main modal */}
       <div
-        className="modal-overlay"
+        className="modal-overlay z-[200]"
+        style={{ zIndex: 200 }}
         onClick={onClose}
         onKeyDown={(e) => {
           if (e.key === 'Escape') onClose();
@@ -182,6 +214,7 @@ function CardDetailModal({
             <div className="flex flex-col md:flex-row gap-4 items-center md:items-start shrink-0 animate-fadeIn">
               {/* Edition sidebar – vertical on desktop, horizontal scroll on mobile */}
               {showPrintsSidebar &&
+                !hidePrintsSidebar &&
                 (isPrintsLoading ? (
                   <div
                     className="flex flex-row md:flex-col gap-1.5 max-w-full max-h-20 md:max-h-[400px] py-1 shrink-0 animate-pulse select-none"
@@ -326,33 +359,35 @@ function CardDetailModal({
                 {t('setLabel')}: {card.set_name}
               </p>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
-                <h3 className="font-semibold mb-2 text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t('prices')}:
-                </h3>
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
-                    <span className="block text-xs text-gray-500">{t('usd')}</span>
-                    <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                      {card.prices?.usd ? `$${card.prices.usd}` : t('priceNotAvailable')}
-                    </span>
-                  </div>
-                  <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
-                    <span className="block text-xs text-gray-500">{t('eur')}</span>
-                    <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                      {card.prices?.eur ? `€${card.prices.eur}` : t('priceNotAvailable')}
-                    </span>
-                  </div>
-                  <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
-                    <span className="block text-xs text-gray-500">{t('tix')}</span>
-                    <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                      {card.prices?.tix ? `${card.prices.tix}` : t('priceNotAvailable')}
-                    </span>
+              {!isToken && !hidePriceAndLegality && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+                  <h3 className="font-semibold mb-2 text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('prices')}:
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
+                      <span className="block text-xs text-gray-500">{t('usd')}</span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                        {card.prices?.usd ? `$${card.prices.usd}` : t('priceNotAvailable')}
+                      </span>
+                    </div>
+                    <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
+                      <span className="block text-xs text-gray-500">{t('eur')}</span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                        {card.prices?.eur ? `€${card.prices.eur}` : t('priceNotAvailable')}
+                      </span>
+                    </div>
+                    <div className="bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-center">
+                      <span className="block text-xs text-gray-500">{t('tix')}</span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                        {card.prices?.tix ? `${card.prices.tix}` : t('priceNotAvailable')}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {card.legalities && !isToken && (
+              {card.legalities && !isToken && !hidePriceAndLegality && (
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-1">
                   <h3 className="font-bold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
                     <FaShieldAlt className="text-blue-500 text-xs shrink-0" />
@@ -445,7 +480,7 @@ function CardDetailModal({
                     </div>
                   </div>
 
-                  {!isToken && (
+                  {!isToken && !hidePrintsSidebar && (
                     <div className="flex flex-wrap gap-2.5">
                       {prints.length > 1 && (
                         <button
@@ -475,7 +510,7 @@ function CardDetailModal({
                     </div>
                   )}
 
-                  {isToken && prints.length > 1 && (
+                  {isToken && prints.length > 1 && !hidePrintsSidebar && (
                     <div className="flex flex-wrap gap-2.5">
                       <button
                         type="button"
@@ -510,41 +545,51 @@ function CardDetailModal({
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-3 text-left">
                   <h3 className="font-bold mb-2 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest flex items-center gap-1.5 select-none">
                     <FaPalette className="text-pink-500 text-xs shrink-0" />
-                    <span>{t('cardTokensSection', 'Cartas Relacionadas')}</span>
+                    <span>{t('cardTokensSection')}</span>
                   </h3>
-                  <div className="flex flex-wrap gap-3 pt-1">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 pt-1">
                     {relatedTokens.map((token) => {
-                      const tokenImg = token.image_uris?.normal || token.card_faces?.[0]?.image_uris?.normal || '';
+                      const tokenImg = getCardImageUrl(token);
                       return (
-                        <button
-                          key={token.id}
-                          type="button"
-                          onClick={() => setSelectedToken(token)}
-                          className="group relative flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-xl p-2 bg-gray-50 dark:bg-gray-800/20 hover:scale-105 hover:border-pink-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500/40 cursor-pointer"
-                          title={t('clickToView', 'Clique para ver')}
-                        >
-                          <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-750 bg-slate-950 flex items-center justify-center relative">
+                        <div key={token.id} className="card-item-wrapper group relative">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedToken(token)}
+                            className="card-image-button animate-fadeIn cursor-pointer"
+                            aria-label={token.name}
+                            title={t('clickToView')}
+                          >
                             {tokenImg ? (
                               <img
                                 src={tokenImg}
                                 alt={token.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="card-image-content transition-all duration-300"
                                 loading="lazy"
+                                onError={(e) => {
+                                  const target = e.currentTarget;
+                                  const fallbackUrl =
+                                    token.image_uris?.normal || token.card_faces?.[0]?.image_uris?.normal;
+                                  if (fallbackUrl && target.src !== fallbackUrl) {
+                                    target.src = fallbackUrl;
+                                  }
+                                }}
                               />
                             ) : (
-                              <span className="text-[8px] text-gray-500 font-bold p-1 text-center leading-tight">
-                                {token.name}
-                              </span>
+                              <div className="flex flex-col items-center justify-center gap-1.5 p-2 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
+                                <FaPalette className="text-pink-500/40 text-sm shrink-0" />
+                                <span className="text-[9px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
+                                  {token.name}
+                                </span>
+                              </div>
                             )}
-                            {/* Hover expand icon */}
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                              <FaExpand className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" />
-                            </div>
+                          </button>
+
+                          <div className="card-action-overlay pointer-events-none">
+                            <p className="card-action-title flex items-center justify-center gap-1 text-[10px] font-bold text-center">
+                              {token.printed_name || token.name}
+                            </p>
                           </div>
-                          <span className="text-[9px] font-bold text-gray-700 dark:text-gray-300 mt-1.5 truncate max-w-[80px]">
-                            {token.printed_name || token.name}
-                          </span>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
@@ -552,10 +597,14 @@ function CardDetailModal({
               )}
 
               <div className="modal-actions">
-                {!isDeckCard && onAddToDeck && (
+                {!isDeckCard && (isToken ? onAddTokenToDeck : onAddToDeck) && (
                   <button
                     onClick={() => {
-                      onAddToDeck(card);
+                      if (isToken && onAddTokenToDeck) {
+                        onAddTokenToDeck(card);
+                      } else if (onAddToDeck) {
+                        onAddToDeck(card);
+                      }
                       onClose();
                     }}
                     className="success-button"
@@ -572,68 +621,23 @@ function CardDetailModal({
         </div>
       </div>
 
-      {/* Token lightbox */}
+      {/* Token details modal */}
       {selectedToken && (
-        <div
-          className="fixed inset-0 bg-black/85 flex items-center justify-center z-[60] p-4 animate-fadeIn no-active-scale"
-          onClick={() => setSelectedToken(null)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') setSelectedToken(null);
-          }}
-          role="button"
-          tabIndex={-1}
-          aria-label={t('close')}
-        >
-          <div
-            className="relative flex flex-col items-center gap-4 max-w-sm w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={() => setSelectedToken(null)}
-              className="absolute -top-2 -right-2 z-10 w-8 h-8 rounded-full bg-gray-900 border border-gray-600 text-white flex items-center justify-center hover:bg-gray-700 transition-colors shadow-lg"
-              aria-label={t('close')}
-            >
-              <FaTimes className="text-xs" />
-            </button>
-
-            {/* Token image */}
-            {(() => {
-              const tokenImg =
-                selectedToken.image_uris?.normal || selectedToken.card_faces?.[0]?.image_uris?.normal || '';
-              return tokenImg ? (
-                <img
-                  src={tokenImg}
-                  alt={selectedToken.name}
-                  className="w-full max-w-[280px] rounded-2xl shadow-2xl border-2 border-white/10 animate-fadeIn"
-                />
-              ) : (
-                <div className="w-full max-w-[280px] aspect-[5/7] bg-gray-800 rounded-2xl flex items-center justify-center">
-                  <span className="text-gray-400 text-sm font-bold">{selectedToken.name}</span>
-                </div>
-              );
-            })()}
-
-            {/* Token name + type */}
-            <div className="text-center text-white space-y-1 animate-fadeIn">
-              <h3 className="text-lg font-extrabold drop-shadow">{selectedToken.printed_name || selectedToken.name}</h3>
-              <p className="text-sm text-gray-300 font-medium">
-                {selectedToken.printed_type_line || selectedToken.type_line}
-              </p>
-              {selectedToken.oracle_text && (
-                <p className="text-xs text-gray-400 max-w-xs leading-relaxed mt-2 text-left bg-black/40 rounded-xl p-3 border border-white/10 whitespace-pre-line">
-                  {parseTextWithSymbols(selectedToken.oracle_text)}
-                </p>
-              )}
-              {selectedToken.power && selectedToken.toughness && (
-                <p className="text-sm text-emerald-400 font-bold">
-                  {selectedToken.power}/{selectedToken.toughness}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+        <CardDetailModal
+          card={recursiveCard || selectedToken}
+          imageUrl={getCardImageUrl(selectedToken)}
+          onAddToDeck={isToken ? onAddTokenToDeck || onAddToDeck : onAddToDeck}
+          onAddTokenToDeck={onAddTokenToDeck}
+          onClose={() => setSelectedToken(null)}
+          isToken={true}
+          isDeckCard={isRecursiveDeckCard}
+          hidePrintsSidebar={true}
+          hidePriceAndLegality={hidePriceAndLegality}
+          deckRelatedTokens={deckRelatedTokens}
+          onRemoveFromDeck={onRemoveFromDeck}
+          isEditMode={isEditMode}
+          deckCards={isToken ? deckRelatedTokens?.map((t) => t.tokenCard) || [] : deckCards}
+        />
       )}
     </>,
     document.body
