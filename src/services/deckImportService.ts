@@ -1,0 +1,256 @@
+import { Card } from '../types/Card';
+
+export interface ParseResult {
+  name: string;
+  quantity: number;
+  set?: string;
+  collector_number?: string;
+}
+
+export const parseDeckText = (text: string): ParseResult[] => {
+  const lines = text.split('\n');
+  const parsedCards: ParseResult[] = [];
+
+  for (let line of lines) {
+    line = line.trim();
+    if (!line || line.startsWith('//')) continue;
+
+    const match = line.match(/^(\d+)[xX]?\s+(.+)$/) || line.match(/^([xX]\d+)\s+(.+)$/);
+    let qty = 1;
+    let cardName = line;
+
+    if (match) {
+      qty = parseInt(match[1].replace(/[xX]/g, ''), 10) || 1;
+      cardName = match[2].trim();
+    }
+
+    // Sometimes .dec or formats include tags like *F* or *CM* or *E*. Remove those too.
+    cardName = cardName.replace(/\s*\*[a-zA-Z0-9]+\*\s*$/, '').trim();
+
+    let setCode: string | undefined;
+    let collectorNumber: string | undefined;
+
+    // Extract set and collector number e.g. "(M10) 1" or "[M10] 1" or "(PLST) WOC-166"
+    const setMatch = cardName.match(/\s*[([]([A-Za-z0-9]{3,5})[)\]]\s*([A-Za-z0-9-]*)$/);
+    if (setMatch) {
+      setCode = setMatch[1].toLowerCase();
+      if (setMatch[2]) collectorNumber = setMatch[2];
+    } else {
+      const setMatch2 = cardName.match(/\s+([A-Za-z0-9]{3,5})\s+(\d+[a-zA-Z]?)$/);
+      if (setMatch2) {
+        setCode = setMatch2[1].toLowerCase();
+        collectorNumber = setMatch2[2];
+      }
+    }
+
+    // Remove collector number / set code from the end of the card name
+    cardName = cardName.replace(/\s*[([][A-Za-z0-9]{3,5}[)\]]\s*[A-Za-z0-9-]*$/, '').trim();
+    cardName = cardName.replace(/\s+[A-Za-z0-9]{3,5}\s+\d+[a-zA-Z]?$/, '').trim();
+
+    if (cardName) {
+      parsedCards.push({ name: cardName, quantity: qty, set: setCode, collector_number: collectorNumber });
+    }
+  }
+  return parsedCards;
+};
+
+export interface ImportProgressData {
+  isImporting: boolean;
+  current: number;
+  total: number;
+  message: string;
+}
+
+export const fetchCardsFromParsedList = async (
+  parsed: ParseResult[],
+  currentLang: string = 'en',
+  onProgress?: (progress: ImportProgressData) => void,
+  t?: (key: string, options?: any) => string
+): Promise<{ cards: Card[]; missing: string[] }> => {
+  const uniqueParsed = Array.from(
+    new Map(
+      parsed.map((p) => [`${p.name}|${p.set || ''}|${p.collector_number || ''}`, p])
+    ).values()
+  );
+
+  const allResolvedCards: Card[] = [];
+  const initialNotFound: any[] = [];
+  const CHUNK_SIZE = 75;
+
+  for (let chunkStartIndex = 0; chunkStartIndex < uniqueParsed.length; chunkStartIndex += CHUNK_SIZE) {
+    const chunk = uniqueParsed.slice(chunkStartIndex, chunkStartIndex + CHUNK_SIZE);
+    
+    if (onProgress) {
+      onProgress({
+        isImporting: true,
+        current: chunkStartIndex,
+        total: uniqueParsed.length,
+        message: t ? t('deck.importingCardsProgress', { current: chunkStartIndex, total: uniqueParsed.length }) : ''
+      });
+    }
+
+    const body = {
+      identifiers: chunk.map((item) => {
+        if (item.set && item.collector_number) {
+          return { set: item.set, collector_number: item.collector_number };
+        }
+        if (item.set) {
+          return { name: item.name, set: item.set };
+        }
+        return { name: item.name };
+      })
+    };
+
+    const response = await fetch('https://api.scryfall.com/cards/collection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      if (response.status === 503 || response.status === 504) {
+        throw new Error('ScryfallOffline');
+      }
+      throw new Error('Scryfall API error');
+    }
+
+    const json = await response.json();
+    if (json.data && Array.isArray(json.data)) {
+      allResolvedCards.push(...json.data);
+    }
+    if (json.not_found && Array.isArray(json.not_found)) {
+      initialNotFound.push(...json.not_found);
+    }
+  }
+
+  // Retry logic for not_found items, stripping set and collector_number, just use name
+  if (initialNotFound.length > 0) {
+    if (onProgress) {
+      onProgress({
+        isImporting: true,
+        current: uniqueParsed.length,
+        total: uniqueParsed.length,
+        message: t ? t('deck.importingAlternativesProgress', { count: initialNotFound.length }) : ''
+      });
+    }
+
+    const retryIdentifiers = initialNotFound.map((nf: any) => {
+      let originalName = '';
+      if (nf.set && nf.collector_number) {
+        const found = uniqueParsed.find(p => p.set == nf.set && p.collector_number == nf.collector_number);
+        if (found) originalName = found.name;
+      }
+      if (!originalName && nf.set && nf.name) {
+        const found = uniqueParsed.find(p => p.set == nf.set && p.name == nf.name);
+        if (found) originalName = found.name;
+      }
+      if (!originalName && nf.name) {
+        originalName = nf.name;
+      }
+      
+      if (!originalName) return null;
+      
+      // For DFCs, sending just the front face is more reliable
+      let frontFace = originalName.split(/\s+\/?\/?\s+/)[0].trim();
+      
+      // Aggressive fallback cleanup for names that STILL have set info attached
+      frontFace = frontFace.replace(/\s*[([].*$/, '').trim();
+
+      return { name: frontFace };
+    }).filter(Boolean) as {name: string}[];
+
+    // Unique retries to avoid duplicate name lookups
+    const uniqueRetries = Array.from(new Map(retryIdentifiers.map(r => [r.name, r])).values());
+
+    for (let chunkStartIndex = 0; chunkStartIndex < uniqueRetries.length; chunkStartIndex += CHUNK_SIZE) {
+      const chunk = uniqueRetries.slice(chunkStartIndex, chunkStartIndex + CHUNK_SIZE);
+      
+      const body = { identifiers: chunk };
+
+      const response = await fetch('https://api.scryfall.com/cards/collection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        if (json.data && Array.isArray(json.data)) {
+          allResolvedCards.push(...json.data);
+        }
+      }
+    }
+  }
+
+  if (allResolvedCards.length === 0) {
+    throw new Error('No cards found');
+  }
+
+  let translatedCardsList = allResolvedCards;
+  if (currentLang !== 'en') {
+    if (onProgress) {
+      onProgress({
+        isImporting: true,
+        current: uniqueParsed.length,
+        total: uniqueParsed.length,
+        message: t ? t('deck.translatingCards') : 'Traduzindo cartas...'
+      });
+    }
+    const { translateCards } = await import('../utils/translationHelper');
+    translatedCardsList = await translateCards(allResolvedCards, currentLang);
+  }
+
+  const exactLookup = new Map<string, Card>();
+  const nameLookup = new Map<string, Card>();
+  
+  allResolvedCards.forEach((originalCard, index) => {
+    const translatedCard = translatedCardsList[index] || originalCard;
+    if (originalCard.set && originalCard.collector_number) {
+      exactLookup.set(`${originalCard.set.toLowerCase()}|${originalCard.collector_number.toLowerCase()}`, translatedCard);
+    }
+    if (originalCard.name) {
+      nameLookup.set(originalCard.name.toLowerCase(), translatedCard);
+      const namePart = originalCard.name.split('//')[0].trim().toLowerCase();
+      nameLookup.set(namePart, translatedCard);
+      // Also index single slash if it's a DFC
+      if (originalCard.name.includes('//')) {
+          const singleSlashName = originalCard.name.replace('//', '/').toLowerCase();
+          nameLookup.set(singleSlashName, translatedCard);
+      }
+    }
+    if (originalCard.printed_name) nameLookup.set(originalCard.printed_name.toLowerCase(), translatedCard);
+  });
+
+  const finalCards: Card[] = [];
+  const missingNames: string[] = [];
+
+  parsed.forEach((item) => {
+    const normalizedName = item.name.toLowerCase();
+    let foundCard: Card | undefined;
+    
+    if (item.set && item.collector_number) {
+      foundCard = exactLookup.get(`${item.set.toLowerCase()}|${item.collector_number.toLowerCase()}`);
+    }
+    
+    if (!foundCard) {
+      foundCard = nameLookup.get(normalizedName);
+    }
+    
+    // Additional fallback for DFC names in input like "Front / Back"
+    if (!foundCard && normalizedName.includes('/')) {
+        const frontFace = normalizedName.split(/\s+\/?\/?\s+/)[0].trim();
+        foundCard = nameLookup.get(frontFace);
+    }
+    
+    if (foundCard) {
+      for (let copyIndex = 0; copyIndex < item.quantity; copyIndex++) {
+        // We append a timestamp so every imported copy has a unique id
+        finalCards.push({ ...foundCard, id: `${foundCard.id}-${copyIndex}-${Date.now()}` } as unknown as Card);
+      }
+    } else {
+      missingNames.push(item.name);
+    }
+  });
+
+  return { cards: finalCards, missing: Array.from(new Set(missingNames)) };
+};
