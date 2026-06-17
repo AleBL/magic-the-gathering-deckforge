@@ -1,4 +1,6 @@
 import { Card } from '../types/Card';
+import i18n from '../plugins/i18n';
+import { dispatchToast } from './toastHelper';
 
 /**
  * Translates a list of cards to a target language (e.g., 'en', 'es', 'pt') in batch
@@ -62,9 +64,8 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
           });
         }
       }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error translating card batch:', error);
+    } catch {
+      dispatchToast(i18n.t('common.errorTranslatingBatch') as string, 'danger');
     }
   }
 

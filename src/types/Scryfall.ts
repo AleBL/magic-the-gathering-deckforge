@@ -2,7 +2,11 @@ import { Card } from './Card';
 
 export interface ScryfallCardPart {
   id: string;
+  object: string;
+  component: string;
   name: string;
+  type_line: string;
+  uri: string;
 }
 
 export interface ScryfallSearchResponse {
