@@ -10,7 +10,7 @@ import { tokenPresets, TokenPreset } from '../PlaytestTokenModal';
 import { translateCards } from '../../utils/translationHelper';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { CardWithScryfallMetadata, ScryfallCardPart, ScryfallSearchResponse } from '../../types/Scryfall';
-import CardDetailModal from '../CardDetailModal';
+import CardDetailModal from '../card/CardDetailModal';
 
 interface DeckTokensTabProps {
   cards: Card[];
@@ -108,17 +108,17 @@ function DeckTokensTab({
       toughness: preset.toughness,
       image_uris: preset.imageUrl
         ? {
-            small: preset.imageUrl,
-            normal: preset.imageUrl,
-            large: preset.imageUrl,
-            png: preset.imageUrl
-          }
+          small: preset.imageUrl,
+          normal: preset.imageUrl,
+          large: preset.imageUrl,
+          png: preset.imageUrl
+        }
         : undefined
     };
 
     const newToken: RelatedToken = {
       tokenCard,
-      generatorCardName: t('manualAddition')
+      generatorCardName: t('common.manualAddition')
     };
     const updated = [...localTokens, newToken];
     setLocalTokens(updated);
@@ -149,7 +149,7 @@ function DeckTokensTab({
         if (response.status === 503 || response.status === 504) {
           throw new Error('ScryfallOffline');
         }
-        throw new Error('Falha ao buscar fichas');
+        throw new Error('SearchError');
       }
 
       const json = await response.json();
@@ -173,9 +173,9 @@ function DeckTokensTab({
       }
     } catch (err: any) {
       if (err?.message === 'ScryfallOffline') {
-        setSearchError(t('scryfallOffline'));
+        setSearchError(t('search.scryfallOffline'));
       } else {
-        setSearchError(t('searchError'));
+        setSearchError(t('tokens.searchError'));
       }
     } finally {
       setIsSearching(false);
@@ -209,7 +209,7 @@ function DeckTokensTab({
 
       const newToken: RelatedToken = {
         tokenCard: uniqueTokenCard,
-        generatorCardName: t('manualAddition')
+        generatorCardName: t('common.manualAddition')
       };
 
       const updated = [...localTokens, newToken];
@@ -328,7 +328,7 @@ function DeckTokensTab({
     return (
       <div className="h-64 flex flex-col items-center justify-center gap-3 text-gray-500 dark:text-gray-400">
         <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
-        <p className="text-xs font-semibold">{t('loadingTokens')}</p>
+        <p className="text-xs font-semibold">{t('tokens.loadingTokens')}</p>
       </div>
     );
   }
@@ -344,10 +344,10 @@ function DeckTokensTab({
               type="button"
               onClick={handleAnalyzeDeck}
               className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-1.5 px-3 rounded-lg transition-all cursor-pointer"
-              title={t('analyzeDeck')}
+              title={t('deck.analyzeDeck')}
             >
               <FaSync className="text-[10px]" />
-              {t('analyzeDeck')}
+              {t('deck.analyzeDeck')}
             </button>
 
             {/* Trigger Token Search Modal */}
@@ -362,7 +362,7 @@ function DeckTokensTab({
               className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-all cursor-pointer"
             >
               <FaPlus className="text-[10px]" />
-              {t('addToken')}
+              {t('tokens.addToken')}
             </button>
           </div>
         </div>
@@ -372,8 +372,8 @@ function DeckTokensTab({
         <div className="h-64 flex flex-col items-center justify-center gap-4 text-gray-450 dark:text-gray-500 text-center px-6">
           <FaInfoCircle className="text-3xl text-slate-500/80" />
           <div className="space-y-1.5">
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-350">{t('noTokensFound')}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-650">{t('noTokensExplanation')}</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-350">{t('tokens.noTokensFound')}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-650">{t('tokens.noTokensExplanation')}</p>
           </div>
 
           {isEditMode && (
@@ -384,7 +384,7 @@ function DeckTokensTab({
                 className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-4 rounded-xl shadow-md transition-all cursor-pointer"
               >
                 <FaSync className="text-[10px]" />
-                {t('analyzeDeck')}
+                {t('deck.analyzeDeck')}
               </button>
             </div>
           )}
@@ -405,7 +405,7 @@ function DeckTokensTab({
                     <button
                       type="button"
                       onClick={() => handleDeleteToken(tokenCard.id)}
-                      title={t('deleteToken')}
+                      title={t('tokens.deleteToken')}
                       className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
                     >
                       <FaTrash className="text-[10px]" />
@@ -435,7 +435,7 @@ function DeckTokensTab({
                     {/* Click hint overlay */}
                     <div className="absolute inset-0 bg-indigo-900/0 group-hover/img:bg-indigo-900/25 transition-colors duration-300 flex items-center justify-center">
                       <span className="text-[8px] text-white font-bold opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow">
-                        {t('viewLabel')}
+                        {t('tokens.viewLabel')}
                       </span>
                     </div>
                   </div>
@@ -446,7 +446,8 @@ function DeckTokensTab({
                       {tokenCard.printed_name || tokenCard.name}
                     </h5>
                     <p className="text-[8px] text-gray-400 dark:text-gray-500 truncate font-semibold uppercase tracking-wider">
-                      {t('generatedBy')}: <span className="font-extrabold text-indigo-500">{generatorCardName}</span>
+                      {t('common.generatedBy')}:{' '}
+                      <span className="font-extrabold text-indigo-500">{generatorCardName}</span>
                     </p>
                   </div>
                 </div>
@@ -468,7 +469,7 @@ function DeckTokensTab({
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/40">
                 <h3 className="text-base font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
                   <FaPalette className="text-indigo-500" />
-                  {t('searchTokensTitle')}
+                  {t('tokens.searchTokensTitle')}
                 </h3>
                 <button
                   type="button"
@@ -488,7 +489,7 @@ function DeckTokensTab({
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder={t('searchTokenPlaceholder')}
+                      placeholder={t('tokens.searchTokenPlaceholder')}
                       className="w-full text-sm py-2 px-3 pl-9 bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-slate-100 border border-gray-300 dark:border-slate-850 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                       autoFocus
                     />
@@ -500,7 +501,7 @@ function DeckTokensTab({
                     className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     {isSearching ? <FaSpinner className="animate-spin text-xs" /> : <FaSearch className="text-xs" />}
-                    {t('searchButton')}
+                    {t('search.searchButton')}
                   </button>
                 </form>
 
@@ -508,7 +509,7 @@ function DeckTokensTab({
                 <div className="space-y-2.5">
                   <h4 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 border-b border-gray-150 dark:border-slate-850 pb-1 select-none">
                     <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                    <span>{t('quickPresets')}</span>
+                    <span>{t('tokens.quickPresets')}</span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {presets.map((preset) => (
@@ -538,13 +539,13 @@ function DeckTokensTab({
                 <div className="space-y-3 pt-2">
                   <h4 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 border-b border-gray-150 dark:border-slate-850 pb-1 select-none">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                    <span>{t('searchResults')}</span>
+                    <span>{t('tokens.searchResults')}</span>
                   </h4>
 
                   {isSearching ? (
                     <div className="h-48 flex flex-col items-center justify-center gap-2.5 text-gray-400">
                       <FaSpinner className="text-2xl text-indigo-500 animate-spin" />
-                      <span className="text-xs font-semibold">{t('searching')}</span>
+                      <span className="text-xs font-semibold">{t('tokens.searching')}</span>
                     </div>
                   ) : searchError ? (
                     <div className="h-48 flex items-center justify-center text-xs font-bold text-red-500">
@@ -552,9 +553,9 @@ function DeckTokensTab({
                     </div>
                   ) : searchResults.length === 0 ? (
                     <div className="h-48 flex flex-col items-center justify-center text-gray-400 dark:text-slate-500 gap-1">
-                      <span className="text-xs font-bold">{t('noTokensFoundSearch')}</span>
+                      <span className="text-xs font-bold">{t('tokens.noTokensFoundSearch')}</span>
                       <span className="text-[10px] text-gray-400/80 dark:text-slate-600">
-                        {t('searchInstructions')}
+                        {t('tokens.searchInstructions')}
                       </span>
                     </div>
                   ) : (
@@ -612,7 +613,7 @@ function DeckTokensTab({
                               className="mt-3 w-full justify-center bg-indigo-650/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
                             >
                               <FaPlus className="text-[8px]" />
-                              {t('add')}
+                              {t('tokens.add')}
                             </button>
                           </div>
                         );
@@ -629,7 +630,7 @@ function DeckTokensTab({
                   onClick={() => setIsSearchModalOpen(false)}
                   className="bg-gray-200 hover:bg-gray-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-750 dark:text-slate-200 font-extrabold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
                 >
-                  {t('close')}
+                  {t('common.close')}
                 </button>
               </div>
             </div>

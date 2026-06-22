@@ -1,19 +1,23 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaPrint, FaTimes, FaCog, FaInfoCircle, FaFileAlt, FaExclamationTriangle } from 'react-icons/fa';
+import { FaPrint, FaTimes, FaCog, FaInfoCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { getCardImageUrl } from '../utils/deckGrouping';
+import { DeckRelatedToken } from '../types/Deck';
+import { DeckZone, PrintZoneFilter } from '../types/enums';
 
 interface DeckProxyPrintProps {
   isOpen: boolean;
   onClose: () => void;
   cards: Card[];
   deckName?: string;
+  deckRelatedTokens?: DeckRelatedToken[];
+  defaultZone?: DeckZone;
 }
 
 type SpacingOption = 'none' | 'small' | 'large';
 type CuttingGuide = 'none' | 'solid' | 'dotted';
-type ZoneFilter = 'all' | 'main' | 'sideboard';
 
 const SPACING_MAP: Record<SpacingOption, string> = {
   none: '0px',
@@ -39,63 +43,107 @@ const CSS_PAGE_SIZE_MAP: Record<PageSizeOption, string> = {
   legal: 'legal'
 };
 
-const paperDims = {
-  a4: { w: 210, h: 297 },
-  a5: { w: 148, h: 210 },
-  letter: { w: 216, h: 279 },
-  legal: { w: 216, h: 356 }
+const PAPER_DIMENSIONS_MM = {
+  a4: { width: 210, height: 297 },
+  a5: { width: 148, height: 210 },
+  letter: { width: 216, height: 279 },
+  legal: { width: 216, height: 356 }
 };
 
-function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
+function DeckProxyPrint({ isOpen, onClose, cards, deckRelatedTokens = [], defaultZone = DeckZone.MAIN }: DeckProxyPrintProps) {
   const { t } = useTranslation();
   const [useRealSize, setUseRealSize] = useState<boolean>(true);
   const [spacing, setSpacing] = useState<SpacingOption>('small');
   const [cuttingGuide, setCuttingGuide] = useState<CuttingGuide>('dotted');
   const [cardsPerRow, setCardsPerRow] = useState<number>(3);
-  const [zoneFilter, setZoneFilter] = useState<ZoneFilter>('all');
+  const [zoneFilter, setZoneFilter] = useState<PrintZoneFilter>(defaultZone as unknown as PrintZoneFilter || PrintZoneFilter.ALL);
   const [pageSize, setPageSize] = useState<PageSizeOption>('a4');
   const [orientation, setOrientation] = useState<OrientationOption>('portrait');
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
+  const printRootRef = useRef<HTMLDivElement>(null);
+
+  const tokenCards = useMemo(
+    () => deckRelatedTokens.map((relatedToken) => relatedToken.tokenCard),
+    [deckRelatedTokens]
+  );
+
+  const mainCards = useMemo(() => cards.filter((card) => !card.zone || card.zone === DeckZone.MAIN), [cards]);
+
+  const sideboardCards = useMemo(() => cards.filter((card) => card.zone === DeckZone.SIDEBOARD), [cards]);
+
+  const maybeboardCards = useMemo(() => cards.filter((card) => card.zone === DeckZone.MAYBEBOARD), [cards]);
 
   const filteredCards = useMemo(() => {
-    if (zoneFilter === 'all') return cards;
-    if (zoneFilter === 'main') return cards.filter((c) => !c.zone || c.zone === 'main');
-    return cards.filter((c) => c.zone === 'sideboard');
-  }, [cards, zoneFilter]);
+    switch (zoneFilter) {
+      case PrintZoneFilter.MAIN:
+        return mainCards;
+      case PrintZoneFilter.SIDEBOARD:
+        return sideboardCards;
+      case PrintZoneFilter.MAYBEBOARD:
+        return maybeboardCards;
+      case PrintZoneFilter.TOKENS:
+        return tokenCards;
+      case PrintZoneFilter.MAIN_TOKENS:
+        return [...mainCards, ...tokenCards];
+      case PrintZoneFilter.MAIN_SIDEBOARD:
+        return [...mainCards, ...sideboardCards];
+      case PrintZoneFilter.MAIN_MAYBEBOARD:
+        return [...mainCards, ...maybeboardCards];
+      case PrintZoneFilter.SIDEBOARD_MAYBEBOARD:
+        return [...sideboardCards, ...maybeboardCards];
+      case PrintZoneFilter.MAIN_SIDEBOARD_MAYBEBOARD:
+        return [...mainCards, ...sideboardCards, ...maybeboardCards];
+      default:
+        return [...cards, ...tokenCards]; // 'all'
+    }
+  }, [cards, zoneFilter, tokenCards, mainCards, sideboardCards, maybeboardCards]);
 
-  const cols = useMemo(() => {
+  const calculatedColumns = useMemo(() => {
     if (useRealSize) {
-      const dims = paperDims[pageSize];
-      const paperW = orientation === 'portrait' ? dims.w : dims.h;
-      const margins = 20; // 10mm margins on left + right
-      const usableW = paperW - margins;
-      const spacingMm = spacing === 'none' ? 0 : spacing === 'small' ? 2.5 : 6;
-      return Math.max(1, Math.floor((usableW + spacingMm) / (63 + spacingMm)));
+      const currentPaperDimensions = PAPER_DIMENSIONS_MM[pageSize];
+      const paperWidthMm = orientation === 'portrait' ? currentPaperDimensions.width : currentPaperDimensions.height;
+      const leftRightMarginsMm = 10; // 5mm margins on left + right
+      const usableWidthMm = paperWidthMm - leftRightMarginsMm;
+      return Math.max(1, Math.floor(usableWidthMm / 63));
     }
     return cardsPerRow;
+  }, [useRealSize, pageSize, orientation, cardsPerRow]);
+
+  const calculatedRows = useMemo(() => {
+    const currentPaperDimensions = PAPER_DIMENSIONS_MM[pageSize];
+    const paperHeightMm = orientation === 'portrait' ? currentPaperDimensions.height : currentPaperDimensions.width;
+    const topBottomMarginsMm = 10; // 5mm margins on top + bottom
+    const usableHeightMm = paperHeightMm - topBottomMarginsMm;
+
+    if (useRealSize) {
+      return Math.max(1, Math.floor(usableHeightMm / 88));
+    }
+
+    const paperWidthMm = orientation === 'portrait' ? currentPaperDimensions.width : currentPaperDimensions.height;
+    const leftRightMarginsMm = 10;
+    const usableWidthMm = paperWidthMm - leftRightMarginsMm;
+    const spacingMarginMm = spacing === 'none' ? 0 : spacing === 'small' ? 2.5 : 6;
+
+    const totalGapWidth = spacingMarginMm * (cardsPerRow - 1);
+    const cardWidthMm = (usableWidthMm - totalGapWidth) / cardsPerRow;
+    const cardHeightMm = cardWidthMm * (88 / 63);
+
+    const rowsThatFit = Math.floor((usableHeightMm + spacingMarginMm) / (cardHeightMm + spacingMarginMm) + 0.05);
+    return Math.max(1, rowsThatFit);
   }, [useRealSize, pageSize, orientation, spacing, cardsPerRow]);
 
-  const rows = useMemo(() => {
-    if (useRealSize) {
-      const dims = paperDims[pageSize];
-      const paperH = orientation === 'portrait' ? dims.h : dims.w;
-      const margins = 20; // 10mm margins on top + bottom
-      const usableH = paperH - margins;
-      const spacingMm = spacing === 'none' ? 0 : spacing === 'small' ? 2.5 : 6;
-      return Math.max(1, Math.floor((usableH + spacingMm) / (88 + spacingMm)));
-    }
-    return 3; // default 3 rows for non-real size page chunking
-  }, [useRealSize, pageSize, orientation, spacing]);
-
   const cardsPerPage = useMemo(() => {
-    return cols * rows;
-  }, [cols, rows]);
+    return calculatedColumns * calculatedRows;
+  }, [calculatedColumns, calculatedRows]);
 
-  const estimatedPages = useMemo(() => {
-    return Math.ceil(filteredCards.length / cardsPerPage);
-  }, [filteredCards.length, cardsPerPage]);
+  useEffect(() => {
+    if (useRealSize) {
+      setCardsPerRow(calculatedColumns);
+    }
+  }, [useRealSize, calculatedColumns]);
 
-  const gapValue = SPACING_MAP[spacing];
-  const printGapValue = PRINT_SPACING_MAP[spacing];
+  const cssGridGapValue = SPACING_MAP[spacing];
+  const printGridGapValue = PRINT_SPACING_MAP[spacing];
 
   const borderStyle = useMemo(() => {
     if (cuttingGuide === 'none') return 'none';
@@ -103,53 +151,116 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
     return '1px dashed #aaa';
   }, [cuttingGuide]);
 
+  const facesToPrint = useMemo(() => {
+    const faces: { card: Card; faceIndex: number; id: string }[] = [];
+    filteredCards.forEach((card) => {
+      faces.push({ card, faceIndex: 0, id: `${card.id}-front` });
+      if (card.card_faces && card.card_faces.length > 1 && card.card_faces[1].image_uris) {
+        faces.push({ card, faceIndex: 1, id: `${card.id}-back` });
+      }
+    });
+    return faces;
+  }, [filteredCards]);
+
   const chunkedCards = useMemo(() => {
-    const chunks: Card[][] = [];
-    const size = cardsPerPage;
-    for (let i = 0; i < filteredCards.length; i += size) {
-      chunks.push(filteredCards.slice(i, i + size));
+    const cardChunks: { card: Card; faceIndex: number; id: string }[][] = [];
+    const chunkSize = cardsPerPage;
+    for (let index = 0; index < facesToPrint.length; index += chunkSize) {
+      cardChunks.push(facesToPrint.slice(index, index + chunkSize));
     }
-    return chunks;
-  }, [filteredCards, cardsPerPage]);
+    return cardChunks;
+  }, [facesToPrint, cardsPerPage]);
 
-  const paperW = paperDims[pageSize].w;
-  const paperH = paperDims[pageSize].h;
+  const estimatedPages = useMemo(() => {
+    return Math.ceil(facesToPrint.length / cardsPerPage);
+  }, [facesToPrint.length, cardsPerPage]);
 
-  const handlePrint = () => {
-    // Inject print-specific styles and trigger native print dialog
+  const currentPaperWidthMm = PAPER_DIMENSIONS_MM[pageSize].width;
+  const currentPaperHeightMm = PAPER_DIMENSIONS_MM[pageSize].height;
+
+  const handlePrint = useCallback(async () => {
+    setIsPrinting(true);
+
+    const waitForImagesToLoad = (): Promise<void> => {
+      const printRootElement = printRootRef.current;
+      if (!printRootElement) return Promise.resolve();
+      const imageElements = Array.from(printRootElement.querySelectorAll('img'));
+      const pendingImages = imageElements.filter((imgElement) => !imgElement.complete);
+      if (pendingImages.length === 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        let loadedImagesCount = 0;
+        const handleImageLoadOrError = () => {
+          loadedImagesCount++;
+          if (loadedImagesCount >= pendingImages.length) resolve();
+        };
+        pendingImages.forEach((imgElement) => {
+          imgElement.addEventListener('load', handleImageLoadOrError, { once: true });
+          imgElement.addEventListener('error', handleImageLoadOrError, { once: true });
+        });
+        setTimeout(resolve, 8000);
+      });
+    };
+
+    await waitForImagesToLoad();
+
     const style = document.createElement('style');
     style.id = 'proxy-print-override';
     const cssSize = `${CSS_PAGE_SIZE_MAP[pageSize]} ${orientation}`;
     style.textContent = `
       @media print {
-        body > * { display: none !important; }
-        #proxy-print-root { display: block !important; width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
+        html, body {
+          height: auto !important;
+          min-height: 100% !important;
+          overflow: visible !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: white !important;
+        }
+        body > *:not(#proxy-print-root) {
+          display: none !important;
+        }
+        #proxy-print-root {
+          display: block !important;
+          position: static !important;
+          width: auto !important;
+          height: auto !important;
+          overflow: visible !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: white !important;
+          visibility: visible !important;
+        }
+        #proxy-print-root * { visibility: visible !important; }
         @page {
           size: ${cssSize};
-          margin: 0mm !important;
+          margin: 0mm;
         }
       }
     `;
     document.head.appendChild(style);
-    window.print();
-    setTimeout(() => {
-      const el = document.getElementById('proxy-print-override');
-      if (el) el.remove();
-    }, 1000);
-  };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+        setTimeout(() => {
+          const styleElement = document.getElementById('proxy-print-override');
+          if (styleElement) styleElement.remove();
+          setIsPrinting(false);
+        }, 500);
+      });
+    });
+  }, [pageSize, orientation]);
 
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Screen modal */}
       <div className="modal-overlay animate-fadeIn" style={{ zIndex: 9999 }}>
         <div className="proxy-modal-container">
-          {/* Header */}
           <div className="modal-header-container">
             <h3 className="text-gray-900 dark:text-white text-lg font-bold flex items-center gap-2">
               <FaPrint className="text-blue-500" />
-              {t('printProxiesTitle')}
+              {t('print.printProxiesTitle')}
             </h3>
             <button
               type="button"
@@ -160,11 +271,9 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
             </button>
           </div>
 
-          {/* Settings bar */}
           <div className="proxy-settings-bar flex-wrap">
             <div className="flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-gray-700 mr-2">
               <FaCog className="text-gray-400 text-sm shrink-0" />
-              {/* Real Size Toggle */}
               <label className="flex items-center gap-1.5 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -173,159 +282,191 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
                   className="rounded border-gray-300 dark:border-gray-750 text-blue-600 focus:ring-blue-500 w-3.5 h-3.5 cursor-pointer bg-white dark:bg-gray-800"
                 />
                 <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                  {t('printRealSize')}
+                  {t('print.printRealSize')}
                 </span>
               </label>
             </div>
 
-            {/* Zone filter */}
             <div className="proxy-setting-group">
-              <label className="proxy-setting-label">{t('selectZoneToPrint')}</label>
+              <label className="proxy-setting-label">{t('print.selectZoneToPrint')}</label>
               <select
                 value={zoneFilter}
-                onChange={(e) => setZoneFilter(e.target.value as ZoneFilter)}
+                onChange={(e) => setZoneFilter(e.target.value as PrintZoneFilter)}
                 className="proxy-select"
               >
-                <option value="all">{t('printZoneAll')}</option>
-                <option value="main">{t('printZoneMain')}</option>
-                <option value="sideboard">{t('printZoneSide')}</option>
+                <optgroup label={t('print.printGroupSingle')}>
+                  <option value={PrintZoneFilter.ALL}>{t('print.printZoneAll')}</option>
+                  <option
+                    value={PrintZoneFilter.MAIN}
+                    label={
+                      mainCards.length > 0 ? t('deck.printFilters.mainCount', { count: mainCards.length }) : t('deck.printFilters.main')
+                    }
+                  />
+                  <option
+                    value={PrintZoneFilter.SIDEBOARD}
+                    label={
+                      sideboardCards.length > 0 ? t('deck.printFilters.sideboardCount', { count: sideboardCards.length }) : t('deck.printFilters.sideboard')
+                    }
+                  />
+                  <option
+                    value={PrintZoneFilter.MAYBEBOARD}
+                    label={
+                      maybeboardCards.length > 0 ? t('deck.printFilters.maybeboardCount', { count: maybeboardCards.length }) : t('deck.printFilters.maybeboard')
+                    }
+                  />
+                  {tokenCards.length > 0 && <option value={PrintZoneFilter.TOKENS}>{t('print.printZoneTokens')}</option>}
+                </optgroup>
+                <optgroup label={t('print.printGroupCombined')}>
+                  {mainCards.length > 0 && sideboardCards.length > 0 && (
+                    <option
+                      value={PrintZoneFilter.MAIN_SIDEBOARD}
+                      label={t('deck.printFilters.mainAndSideCount', { count: mainCards.length + sideboardCards.length })}
+                    />
+                  )}
+                  {mainCards.length > 0 && tokenCards.length > 0 && (
+                    <option value={PrintZoneFilter.MAIN_TOKENS}>{t('print.printZoneMainTokens')}</option>
+                  )}
+                  {mainCards.length > 0 && maybeboardCards.length > 0 && (
+                    <option
+                      value={PrintZoneFilter.MAIN_MAYBEBOARD}
+                      label={t('deck.printFilters.mainAndMaybeCount', { count: mainCards.length + maybeboardCards.length })}
+                    />
+                  )}
+                  {sideboardCards.length > 0 && maybeboardCards.length > 0 && (
+                    <option
+                      value={PrintZoneFilter.SIDEBOARD_MAYBEBOARD}
+                      label={t('deck.printFilters.sideAndMaybeCount', { count: sideboardCards.length + maybeboardCards.length })}
+                    />
+                  )}
+                  {sideboardCards.length > 0 && maybeboardCards.length > 0 && mainCards.length > 0 && (
+                    <option
+                      value={PrintZoneFilter.MAIN_SIDEBOARD_MAYBEBOARD}
+                      label={t('deck.printFilters.mainSideMaybeCount', {
+                        count: mainCards.length + sideboardCards.length + maybeboardCards.length
+                      })}
+                    />
+                  )}
+                </optgroup>
               </select>
             </div>
 
-            {/* Paper Size selector */}
             <div className="proxy-setting-group">
-              <label className="proxy-setting-label">{t('paperSize')}</label>
+              <label className="proxy-setting-label">{t('print.paperSize')}</label>
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(e.target.value as PageSizeOption)}
                 className="proxy-select"
               >
-                <option value="a4">{t('paperSizeA4')}</option>
-                <option value="a5">{t('paperSizeA5')}</option>
-                <option value="letter">{t('paperSizeLetter')}</option>
-                <option value="legal">{t('paperSizeLegal')}</option>
+                <option value="a4">{t('print.paperSizeA4')}</option>
+                <option value="a5">{t('print.paperSizeA5')}</option>
+                <option value="letter">{t('print.paperSizeLetter')}</option>
+                <option value="legal">{t('print.paperSizeLegal')}</option>
               </select>
             </div>
 
-            {/* Orientation selector */}
             <div className="proxy-setting-group">
-              <label className="proxy-setting-label">{t('orientation')}</label>
+              <label className="proxy-setting-label">{t('print.orientation')}</label>
               <select
                 value={orientation}
                 onChange={(e) => setOrientation(e.target.value as OrientationOption)}
                 className="proxy-select"
               >
-                <option value="portrait">{t('portrait')}</option>
-                <option value="landscape">{t('landscape')}</option>
+                <option value="portrait">{t('print.portrait')}</option>
+                <option value="landscape">{t('print.landscape')}</option>
               </select>
             </div>
 
-            {/* Cards per row */}
             <div
               className={`proxy-setting-group transition-all duration-200 ${useRealSize ? 'opacity-40 pointer-events-none' : ''}`}
             >
-              <label className="proxy-setting-label">
-                {t('cardsPerRow')}
-                {useRealSize && (
-                  <span className="text-[10px] text-blue-500 font-extrabold ml-1 font-mono">({cols})</span>
-                )}
-              </label>
+              <label className="proxy-setting-label">{t('print.cardsPerRow')}</label>
               <div className="flex gap-1">
-                {CARDS_PER_ROW_OPTIONS.map((n) => (
+                {CARDS_PER_ROW_OPTIONS.map((cardsPerRowOption) => (
                   <button
-                    key={n}
+                    key={cardsPerRowOption}
                     type="button"
                     disabled={useRealSize}
-                    onClick={() => setCardsPerRow(n)}
-                    className={`proxy-option-btn ${cardsPerRow === n ? 'proxy-option-btn-active' : ''}`}
+                    onClick={() => setCardsPerRow(cardsPerRowOption)}
+                    className={`proxy-option-btn ${cardsPerRow === cardsPerRowOption ? 'proxy-option-btn-active' : ''}`}
                   >
-                    {n}
+                    {cardsPerRowOption}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Spacing */}
             <div className="proxy-setting-group">
-              <label className="proxy-setting-label">{t('printSpacing')}</label>
+              <label className="proxy-setting-label">{t('print.printSpacing')}</label>
               <div className="flex gap-1">
-                {(['none', 'small', 'large'] as SpacingOption[]).map((s) => (
+                {(['none', 'small', 'large'] as SpacingOption[]).map((spacingOptionValue) => (
                   <button
-                    key={s}
+                    key={spacingOptionValue}
                     type="button"
-                    onClick={() => setSpacing(s)}
-                    className={`proxy-option-btn ${spacing === s ? 'proxy-option-btn-active' : ''}`}
+                    onClick={() => setSpacing(spacingOptionValue)}
+                    className={`proxy-option-btn ${spacing === spacingOptionValue ? 'proxy-option-btn-active' : ''}`}
                   >
                     {t(
-                      `spacing${s.charAt(0).toUpperCase() + s.slice(1)}` as
-                        | 'spacingNone'
-                        | 'spacingSmall'
-                        | 'spacingLarge'
+                      `spacing${spacingOptionValue.charAt(0).toUpperCase() + spacingOptionValue.slice(1)}` as
+                      | 'spacingNone'
+                      | 'spacingSmall'
+                      | 'spacingLarge'
                     )}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Cutting guide */}
             <div className="proxy-setting-group">
-              <label className="proxy-setting-label">{t('cuttingGuide')}</label>
+              <label className="proxy-setting-label">{t('print.cuttingGuide')}</label>
               <div className="flex gap-1">
-                {(['none', 'solid', 'dotted'] as CuttingGuide[]).map((g) => (
+                {(['none', 'solid', 'dotted'] as CuttingGuide[]).map((guideOption) => (
                   <button
-                    key={g}
+                    key={guideOption}
                     type="button"
-                    onClick={() => setCuttingGuide(g)}
-                    className={`proxy-option-btn ${cuttingGuide === g ? 'proxy-option-btn-active' : ''}`}
+                    onClick={() => setCuttingGuide(guideOption)}
+                    className={`proxy-option-btn ${cuttingGuide === guideOption ? 'proxy-option-btn-active' : ''}`}
                   >
-                    {t(g === 'none' ? 'cuttingGuideNone' : g === 'solid' ? 'cuttingGuideLine' : 'cuttingGuideDotted')}
+                    {t(
+                      guideOption === 'none'
+                        ? 'cuttingGuideNone'
+                        : guideOption === 'solid'
+                          ? 'cuttingGuideLine'
+                          : 'cuttingGuideDotted'
+                    )}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Info Banner for Real Size Printing */}
-          <div className="mx-6 my-3 p-3.5 bg-blue-500/10 dark:bg-blue-500/5 border border-blue-500/20 dark:border-blue-500/15 rounded-xl text-left space-y-1.5 animate-fadeIn">
-            <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
-              <FaInfoCircle className="text-blue-500 text-xs shrink-0" />
-              {t('realSizeGuaranteed')}
-            </h4>
-            <div className="text-[11px] text-gray-700 dark:text-gray-300 leading-relaxed font-medium flex items-start gap-1.5">
-              <span>
-                {t('realSizeDescription')}{' '}
-                <strong className="text-gray-900 dark:text-white font-extrabold">63mm x 88mm</strong>{' '}
-                {t('realSizeDescriptionSleeves')}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] text-gray-600 dark:text-gray-400 pt-2 border-t border-blue-500/10">
-              <div className="flex items-start gap-1.5">
-                <FaFileAlt className="text-gray-400 dark:text-gray-500 text-xs shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-gray-800 dark:text-gray-300">{t('pageYield')}:</strong>{' '}
-                  {t('cardsPerPageText')}{' '}
-                  <span className="font-extrabold text-blue-600 dark:text-blue-400 text-xs">{cardsPerPage}</span>{' '}
-                  {t('cardsPerPageTextSuffix')} (<span className="uppercase font-bold">{pageSize}</span> ·{' '}
-                  {orientation === 'portrait' ? t('portrait') : t('landscape')}).
-                </span>
+          {useRealSize ? (
+            <div className="mx-6 my-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <FaInfoCircle className="text-blue-500 shrink-0 text-lg" />
+              <div className="flex-1 text-gray-700 dark:text-gray-300">
+                <strong>{t('print.realSizeGuaranteed')} (63x88mm):</strong> {t('print.printInstructionsText')}{' '}
+                <strong className="text-gray-900 dark:text-white underline">{t('print.scaleOption')}</strong>{' '}
+                {t('print.printInstructionsTextSuffix')}
               </div>
-              <div className="flex items-start gap-1.5">
-                <FaExclamationTriangle className="text-red-500 dark:text-red-400 text-xs shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-red-500 dark:text-red-400">{t('importantInstructions')}:</strong>{' '}
-                  {t('printInstructionsText')}{' '}
-                  <strong className="text-gray-800 dark:text-gray-300 underline font-bold">{t('scaleOption')}</strong>{' '}
-                  {t('printInstructionsTextSuffix')}
-                </span>
+              <div className="text-blue-700 dark:text-blue-300 font-medium whitespace-nowrap bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded">
+                {cardsPerPage} {t('print.cardsPerPageTextSuffix')}
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="mx-6 my-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <FaExclamationTriangle className="text-amber-500 shrink-0 text-lg" />
+              <div className="flex-1 text-gray-700 dark:text-gray-300">
+                <strong>{t('print.customSizeLabel')}</strong> {t('print.customSizeWarning')}
+              </div>
+              <div className="text-amber-700 dark:text-amber-300 font-medium whitespace-nowrap bg-amber-100 dark:bg-amber-800/50 px-2 py-1 rounded">
+                {cardsPerPage} {t('print.cardsPerPageSimple')}
+              </div>
+            </div>
+          )}
 
-          {/* Preview area */}
           <div className="proxy-preview-scroll">
             <div className="flex flex-col items-center gap-8 py-6 bg-slate-900/10 dark:bg-slate-950/20 rounded-xl p-4">
               {chunkedCards.length === 0 ? (
-                <div className="text-gray-500 py-12">{t('noResults')}</div>
+                <div className="text-gray-500 py-12">{t('search.noResults')}</div>
               ) : (
                 chunkedCards.map((pageCards, pageIndex) => (
                   <div
@@ -334,11 +475,10 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
                     style={{
                       width: orientation === 'portrait' ? '170mm' : '240mm',
                       aspectRatio: orientation === 'portrait' ? '210/297' : '297/210',
-                      padding: '10mm',
+                      padding: '5mm',
                       boxSizing: 'border-box'
                     }}
                   >
-                    {/* Page tag on screen */}
                     <span className="absolute -top-3 -left-3 bg-blue-600 text-white font-extrabold text-[10px] px-2.5 py-1 rounded-lg shadow-md z-10 select-none">
                       PÁG. {pageIndex + 1} / {estimatedPages}
                     </span>
@@ -346,15 +486,25 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
                     <div
                       className="grid w-full h-full"
                       style={{
-                        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                        gridTemplateRows: `repeat(${rows}, 1fr)`,
-                        gap: gapValue,
-                        justifyContent: 'center',
-                        alignContent: 'center'
+                        gridTemplateColumns: `repeat(${calculatedColumns}, 1fr)`,
+                        gridTemplateRows: useRealSize
+                          ? `repeat(${calculatedRows}, minmax(0, 1fr))`
+                          : `repeat(${calculatedRows}, max-content)`,
+                        alignContent: useRealSize ? 'center' : 'start',
+                        gap: cssGridGapValue,
+                        justifyContent: 'center'
                       }}
                     >
-                      {pageCards.map((card, cardIndex) => {
-                        const imgUrl = card.selectedPrintImageUri || getCardImageUrl(card);
+                      {pageCards.map(({ card, faceIndex }, cardIndex) => {
+                        const imageUris =
+                          faceIndex === 0
+                            ? (card.image_uris ?? card.card_faces?.[0]?.image_uris)
+                            : card.card_faces?.[faceIndex]?.image_uris;
+                        const baseUrl = imageUris ? imageUris.normal || imageUris.large || '' : '';
+                        const cardImageUrl =
+                          faceIndex === 0 && card.selectedPrintImageUri
+                            ? card.selectedPrintImageUri
+                            : baseUrl || getCardImageUrl(card);
                         return (
                           <div
                             key={cardIndex}
@@ -365,8 +515,8 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
                               borderRadius: cuttingGuide !== 'none' ? '4px' : '0'
                             }}
                           >
-                            {imgUrl ? (
-                              <img src={imgUrl} alt={card.name} className="proxy-card-image" loading="lazy" />
+                            {cardImageUrl ? (
+                              <img src={cardImageUrl} alt={card.name} className="proxy-card-image" />
                             ) : (
                               <div className="proxy-card-placeholder">
                                 <span className="text-[10px] text-gray-400 text-center px-1 font-bold">
@@ -387,99 +537,137 @@ function DeckProxyPrint({ isOpen, onClose, cards }: DeckProxyPrintProps) {
           {/* Footer */}
           <div className="modal-footer-container">
             <span className="text-xs text-gray-500 dark:text-gray-400 flex-1 text-left">
-              {filteredCards.length} {t('cards')} &bull; {t('estimatedPages')}{' '}
+              {facesToPrint.length} {t('common.cards')} &bull; {t('print.estimatedPages')}{' '}
               <span className="font-bold text-gray-700 dark:text-gray-300">{estimatedPages}</span>
             </span>
-            <button type="button" onClick={onClose} className="secondary-button text-xs py-2 px-4">
-              {t('cancel')}
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isPrinting}
+              className="secondary-button text-xs py-2 px-4"
+            >
+              {t('common.cancel')}
             </button>
-            <button type="button" onClick={handlePrint} className="primary-button text-xs py-2 px-4">
-              <FaPrint className="text-xs shrink-0" />
-              {t('printAll')}
+            <button
+              type="button"
+              onClick={handlePrint}
+              disabled={isPrinting}
+              className="primary-button text-xs py-2 px-4 flex items-center gap-2"
+            >
+              {isPrinting ? (
+                <FaSpinner className="text-xs shrink-0 animate-spin" />
+              ) : (
+                <FaPrint className="text-xs shrink-0" />
+              )}
+              {isPrinting ? t('print.preparing') : t('print.printAll')}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Print-only DOM node — always in DOM but hidden on screen */}
-      <div
-        id="proxy-print-root"
-        style={{
-          display: 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          background: 'white',
-          zIndex: 99999,
-          boxSizing: 'border-box'
-        }}
-      >
-        {chunkedCards.map((pageCards, pageIndex) => (
-          <div
-            key={pageIndex}
-            className="print-page"
-            style={{
-              width: orientation === 'portrait' ? `${paperW}mm` : `${paperH}mm`,
-              height: orientation === 'portrait' ? `${paperH}mm` : `${paperW}mm`,
-              padding: '10mm',
-              boxSizing: 'border-box',
-              pageBreakAfter: 'always',
-              breakAfter: 'page',
-              display: 'grid',
-              gridTemplateColumns: useRealSize ? `repeat(${cols}, 63mm)` : `repeat(${cols}, 1fr)`,
-              gridTemplateRows: useRealSize ? `repeat(${rows}, 88mm)` : `repeat(${rows}, 1fr)`,
-              gap: useRealSize ? printGapValue : gapValue,
-              justifyContent: 'center',
-              alignContent: 'center',
-              background: 'white',
-              overflow: 'hidden'
-            }}
-          >
-            {pageCards.map((card, cardIndex) => {
-              const imgUrl = card.selectedPrintImageUri || getCardImageUrl(card);
-              return (
-                <div
-                  key={`print-${card.id}-${cardIndex}`}
-                  style={{
-                    width: useRealSize ? '63mm' : '100%',
-                    height: useRealSize ? '88mm' : '100%',
-                    boxSizing: 'border-box',
-                    border: borderStyle,
-                    borderRadius: cuttingGuide !== 'none' ? '1.5mm' : '0',
-                    overflow: 'hidden',
-                    breakInside: 'avoid',
-                    background: '#1a1a1a',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  {imgUrl ? (
-                    <img
-                      src={imgUrl}
-                      alt={card.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                    />
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: '8px',
-                        color: '#aaa',
-                        textAlign: 'center',
-                        padding: '4px',
-                        fontFamily: 'system-ui, sans-serif'
-                      }}
-                    >
-                      {card.name}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      {/* Print-only DOM node — visible to browser (so images load) but invisible on screen */}
+      {createPortal(
+        <div
+          ref={printRootRef}
+          id="proxy-print-root"
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden',
+            background: 'white',
+            zIndex: -1,
+            pointerEvents: 'none',
+            visibility: 'hidden'
+          }}
+        >
+          {chunkedCards.map((pageCards, pageIndex) => (
+            <div
+              key={pageIndex}
+              className="print-page"
+              style={{
+                width: orientation === 'portrait' ? `${currentPaperWidthMm}mm` : `${currentPaperHeightMm}mm`,
+                height: orientation === 'portrait' ? `${currentPaperHeightMm}mm` : `${currentPaperWidthMm}mm`,
+                padding: '5mm',
+                boxSizing: 'border-box',
+                pageBreakAfter: 'always',
+                breakAfter: 'page',
+                display: 'grid',
+                gridTemplateColumns: useRealSize
+                  ? `repeat(${calculatedColumns}, 63mm)`
+                  : `repeat(${calculatedColumns}, 1fr)`,
+                gridTemplateRows: useRealSize
+                  ? `repeat(${calculatedRows}, 88mm)`
+                  : `repeat(${calculatedRows}, max-content)`,
+                alignContent: useRealSize ? 'center' : 'start',
+                gap: useRealSize ? printGridGapValue : cssGridGapValue,
+                justifyContent: 'center',
+                background: 'white',
+                overflow: 'hidden'
+              }}
+            >
+              {pageCards.map(({ card, faceIndex, id }, cardIndex) => {
+                const imageUris =
+                  faceIndex === 0
+                    ? (card.image_uris ?? card.card_faces?.[0]?.image_uris)
+                    : card.card_faces?.[faceIndex]?.image_uris;
+                const baseUrl = imageUris ? imageUris.normal || imageUris.large || '' : '';
+                const cardImageUrl =
+                  faceIndex === 0 && card.selectedPrintImageUri
+                    ? card.selectedPrintImageUri
+                    : baseUrl || getCardImageUrl(card);
+
+                return (
+                  <div
+                    key={`print-${id}-${cardIndex}`}
+                    style={{
+                      width: useRealSize ? '63mm' : '100%',
+                      height: useRealSize ? '88mm' : 'auto',
+                      aspectRatio: useRealSize ? 'auto' : '63/88',
+                      boxSizing: 'border-box',
+                      border: borderStyle,
+                      borderRadius: cuttingGuide !== 'none' ? '1.5mm' : '0',
+                      overflow: 'hidden',
+                      breakInside: 'avoid',
+                      background: '#1a1a1a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      alignSelf: 'center'
+                    }}
+                  >
+                    {cardImageUrl ? (
+                      <img
+                        src={cardImageUrl}
+                        alt={card.name}
+                        loading="eager"
+                        decoding="sync"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                    ) : (
+                      <span
+                        style={{
+                          fontSize: '8px',
+                          color: '#aaa',
+                          textAlign: 'center',
+                          padding: '4px',
+                          fontFamily: 'system-ui, sans-serif'
+                        }}
+                      >
+                        {card.name}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
     </>
   );
 }
