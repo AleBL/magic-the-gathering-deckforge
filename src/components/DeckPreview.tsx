@@ -1,26 +1,40 @@
-import { useState, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
+import {
+  FaFileAlt,
+  FaLayerGroup,
+  FaPencilAlt,
+  FaBolt,
+  FaExclamationTriangle,
+  FaChartBar,
+  FaSearch,
+  FaSlidersH,
+  FaList,
+  FaTh
+} from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
-import { groupCards, getCardImageUrl } from '../utils/deckGrouping';
-import { RelatedToken } from '../hooks/useCardRelatedTokens';
+import { groupCards } from '../utils/deckGrouping';
 import { validateDeck } from '../utils/deckValidator';
+import { ViewMode, NoteTab, useDeckPreviewState } from '../hooks/useDeckPreviewState';
+import { DeckFormatType, DeckZone } from '../types/enums';
+import { useTokenHandlers } from '../hooks/useTokenHandlers';
+import { useDeckStore } from '../store/useDeckStore';
+import EmptyState from './ui/EmptyState';
 import DeckValidationBadge from './DeckValidationBadge';
-import PlaytestSimulator from './PlaytestSimulator';
 import DeckFloatingPreview from './deck/DeckFloatingPreview';
 import DeckZoneTabs from './deck/DeckZoneTabs';
-import DeckViewToggle from './deck/DeckViewToggle';
 import DeckActionBar from './deck/DeckActionBar';
 import DeckNotesEditor from './deck/DeckNotesEditor';
 import DeckCardList from './deck/DeckCardList';
 import DeckStackView from './deck/DeckStackView';
-import CardSizeSelector from './CardSizeSelector';
-import DeckProxyPrint from './DeckProxyPrint';
-import DeckStats from './DeckStats';
 import DeckTokensTab from './deck/DeckTokensTab';
-import CardDetailModal from './CardDetailModal';
+import CardDetailModal from './card/CardDetailModal';
+
+const PlaytestSimulator = lazy(() => import('./PlaytestSimulator'));
+const DeckProxyPrint = lazy(() => import('./DeckProxyPrint'));
+const DeckStats = lazy(() => import('./DeckStats'));
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -29,15 +43,20 @@ interface DeckPreviewProps {
   editingDeckId: string | null;
   editingDeckNotes?: string;
   onUpdateNotes?: (notes: string) => void;
-  onUpdateCardZone?: (cardId: string, zone: 'main' | 'sideboard' | 'maybeboard') => void;
-  onLoadDeckToEdit: (id: string, name: string, format: DeckFormat, cards: Card[], notes?: string) => void;
+  onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
+  onLoadDeckToEdit: (
+    id: string,
+    name: string,
+    format: DeckFormat,
+    cards: Card[],
+    notes?: string,
+    relatedTokens?: DeckRelatedToken[]
+  ) => void;
   onDeselectDeck: () => void;
   onAddToDeck: (card: Card) => void;
   onRemoveFromDeck: (card: Card) => void;
   onToggleCommander: (card: Card) => void;
   activeFormat?: DeckFormat;
-  groupBy: 'none' | 'type' | 'cmc' | 'color';
-  sortBy: 'name' | 'cmc' | 'rarity';
   showToast: (text: string) => void;
   onCardSizeChange?: (size: CardSize) => void;
   onSaveNotesDirectly?: (deckId: string, notes: string) => void;
@@ -47,11 +66,7 @@ interface DeckPreviewProps {
   deckRelatedTokens?: DeckRelatedToken[];
 }
 
-type ViewMode = 'list' | 'grid' | 'stack';
-type NoteTab = 'cards' | 'notes' | 'stats';
-type Zone = 'main' | 'sideboard' | 'maybeboard' | 'tokens';
-
-function DeckPreview({
+export function DeckPreview({
   selectedDeck,
   currentDeck,
   cardSize,
@@ -65,8 +80,6 @@ function DeckPreview({
   onRemoveFromDeck,
   onToggleCommander,
   activeFormat,
-  groupBy,
-  sortBy,
   showToast,
   onCardSizeChange,
   onSaveNotesDirectly,
@@ -77,175 +90,117 @@ function DeckPreview({
 }: DeckPreviewProps) {
   const { t } = useTranslation();
 
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [isPlaytestOpen, setIsPlaytestOpen] = useState(false);
-  const [isProxyPrintOpen, setIsProxyPrintOpen] = useState(false);
-  const [activeNoteTab, setActiveNoteTab] = useState<NoteTab>('cards');
-  const [activeZone, setActiveZone] = useState<Zone>('main');
-  const [selectedTokenForView, setSelectedTokenForView] = useState<Card | null>(null);
+  const {
+    viewMode,
+    setViewMode,
+    hoveredCard,
+    mousePos,
+    isPlaytestOpen,
+    setIsPlaytestOpen,
+    isProxyPrintOpen,
+    setIsProxyPrintOpen,
+    activeNoteTab,
+    setActiveNoteTab,
+    activeZone,
+    setActiveZone,
+    selectedTokenForView,
+    setSelectedTokenForView,
+    groupBy,
+    setGroupBy,
+    sortBy,
+    setSortBy,
+    isDisplaySettingsOpen,
+    setIsDisplaySettingsOpen,
+    activeCards,
+    commanders,
+    activeTokens,
+    groupedCards,
+    zoneCounts,
+    handleHoverEnter,
+    handleHoverMove,
+    handleHoverLeave
+  } = useDeckPreviewState({ selectedDeck, currentDeck, activeFormat, deckRelatedTokens });
 
-  const activeCards = useMemo(() => (selectedDeck ? selectedDeck.cards : currentDeck), [selectedDeck, currentDeck]);
+  const { handleDeleteTokenCard, handleAddTokenCardCopy, handleUpdateTokenCard } = useTokenHandlers({
+    activeTokens,
+    selectedDeckId: selectedDeck?.id,
+    editingDeckId,
+    onSaveTokens,
+    manualAdditionLabel: t('common.manualAddition'),
+    setSelectedTokenForView
+  });
 
-  // Preload card images into browser cache to avoid flickers on hover enter
-  useEffect(() => {
-    if (!activeCards || activeCards.length === 0) return;
-    const preloadImages = () => {
-      const uniqueUrls = new Set<string>();
-      activeCards.forEach((c) => {
-        const url = getCardImageUrl(c);
-        if (url) uniqueUrls.add(url);
-      });
-      uniqueUrls.forEach((url) => {
-        const img = new Image();
-        img.src = url;
-      });
-    };
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(preloadImages);
-    } else {
-      setTimeout(preloadImages, 100);
-    }
-  }, [activeCards]);
-
-  const isCommanderFormat = useMemo(() => {
-    const fmt = selectedDeck ? selectedDeck.format : activeFormat;
-    return fmt === 'commander';
-  }, [selectedDeck, activeFormat]);
-
-  const commanders = useMemo(
-    () => (isCommanderFormat ? activeCards.filter((c) => c.isCommander) : []),
-    [activeCards, isCommanderFormat]
-  );
-
-  const activeTokens = useMemo(() => {
-    return deckRelatedTokens || selectedDeck?.relatedTokens || [];
-  }, [deckRelatedTokens, selectedDeck]);
-
-  const zoneCards = useMemo(() => {
-    if (activeZone === 'tokens') {
-      return activeTokens.map((t) => ({
-        ...t.tokenCard,
-        isActive: t.isActive !== false
-      }));
-    }
-    return activeCards.filter((c) => (c.zone || 'main') === activeZone);
-  }, [activeCards, activeZone, activeTokens]);
-
-  const deckCards = useMemo(
-    () => (isCommanderFormat && activeZone !== 'tokens' ? zoneCards.filter((c) => !c.isCommander) : zoneCards),
-    [zoneCards, isCommanderFormat, activeZone]
-  );
-
-  const groupedCards = useMemo(() => groupCards(deckCards, groupBy, sortBy), [deckCards, groupBy, sortBy]);
-
-  const zoneCounts = useMemo(
-    () => ({
-      main: activeCards.filter((c) => !c.zone || c.zone === 'main').length,
-      sideboard: activeCards.filter((c) => c.zone === 'sideboard').length,
-      maybeboard: activeCards.filter((c) => c.zone === 'maybeboard').length,
-      tokens: activeTokens.length
-    }),
-    [activeCards, activeTokens]
-  );
-
-  const handleDeleteTokenCard = (tokenCard: Card) => {
-    const updated = activeTokens.filter((t) => t.tokenCard.id !== tokenCard.id);
-    if (selectedDeck && onSaveTokens) {
-      onSaveTokens(selectedDeck.id, updated);
-    } else if (editingDeckId && onSaveTokens) {
-      onSaveTokens(editingDeckId, updated);
-    } else if (onSaveTokens) {
-      onSaveTokens('', updated);
-    }
-  };
-
-  const handleAddTokenCardCopy = (tokenCard: Card) => {
-    const uniqueTokenCard = {
-      ...tokenCard,
-      id: `token-${tokenCard.id.split('-')[1] || tokenCard.id}-${Math.random().toString(36).substring(2, 9)}`
-    };
-    const newToken: RelatedToken = {
-      tokenCard: uniqueTokenCard,
-      generatorCardName: t('manualAddition'),
-      isActive: true
-    };
-    const updated = [...activeTokens, newToken];
-    if (selectedDeck && onSaveTokens) {
-      onSaveTokens(selectedDeck.id, updated);
-    } else if (editingDeckId && onSaveTokens) {
-      onSaveTokens(editingDeckId, updated);
-    } else if (onSaveTokens) {
-      onSaveTokens('', updated);
-    }
-  };
-
-  const handleUpdateTokenCard = (updatedTokenCard: Card) => {
-    setSelectedTokenForView(updatedTokenCard);
-    const updated = activeTokens.map((t) => {
-      const isMatching =
-        t.tokenCard.name === updatedTokenCard.name &&
-        t.tokenCard.power === updatedTokenCard.power &&
-        t.tokenCard.toughness === updatedTokenCard.toughness &&
-        t.tokenCard.type_line === updatedTokenCard.type_line;
-
-      if (isMatching) {
-        return {
-          ...t,
-          tokenCard: {
-            ...updatedTokenCard,
-            id: t.tokenCard.id // preserve the unique id of the copy
-          }
-        };
+  const handleTokensLoaded = useCallback(
+    (tokens: DeckRelatedToken[]) => {
+      if (selectedDeck && onSaveTokens) {
+        onSaveTokens(selectedDeck.id, tokens);
+      } else if (onSaveTokens) {
+        onSaveTokens(editingDeckId || '', tokens);
       }
-      return t;
-    });
-    if (selectedDeck && onSaveTokens) {
-      onSaveTokens(selectedDeck.id, updated);
-    } else if (editingDeckId && onSaveTokens) {
-      onSaveTokens(editingDeckId, updated);
-    } else if (onSaveTokens) {
-      onSaveTokens('', updated);
-    }
-  };
+    },
+    [selectedDeck, onSaveTokens, editingDeckId]
+  );
 
-  const handleHoverEnter = (card: Card, e: React.MouseEvent) => {
-    setHoveredCard(card);
-    setMousePos({ x: e.clientX, y: e.clientY });
-  };
-  const handleHoverMove = (e: React.MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
-  const handleHoverLeave = () => setHoveredCard(null);
+  const handleClosePlaytest = useCallback(() => setIsPlaytestOpen(false), [setIsPlaytestOpen]);
+  const handleCloseProxyPrint = useCallback(() => setIsProxyPrintOpen(false), [setIsProxyPrintOpen]);
+  const handleCloseTokenModal = useCallback(() => setSelectedTokenForView(null), [setSelectedTokenForView]);
+  const handleOpenPlaytest = useCallback(() => setIsPlaytestOpen(true), [setIsPlaytestOpen]);
+  const handleOpenProxyPrint = useCallback(() => setIsProxyPrintOpen(true), [setIsProxyPrintOpen]);
+
+  const pendingAction = useDeckStore((state) => state.pendingAction);
+  const setPendingAction = useDeckStore((state) => state.setPendingAction);
+
+  useEffect(() => {
+    if (pendingAction === 'playtest-deck') {
+      setIsPlaytestOpen(true);
+      setPendingAction(null);
+    }
+  }, [pendingAction, setIsPlaytestOpen, setPendingAction]);
+
+
+  const handleLoadSelectedDeckToEdit = useCallback(() => {
+    if (selectedDeck) {
+      onLoadDeckToEdit(
+        selectedDeck.id,
+        selectedDeck.name,
+        selectedDeck.format || DeckFormatType.FREEFORM,
+        selectedDeck.cards,
+        selectedDeck.notes,
+        selectedDeck.relatedTokens
+      );
+    }
+  }, [selectedDeck, onLoadDeckToEdit]);
 
   const noteTabHeader = (
-    <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4 text-xs font-bold gap-3 select-none">
+    <div className="deck-content-tab-bar">
       <button
         type="button"
         onClick={() => setActiveNoteTab('cards')}
-        className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'cards' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
+        className={`deck-content-tab ${activeNoteTab === 'cards' ? 'deck-content-tab-active' : ''}`}
       >
-        <FaLayerGroup className="text-[11px]" /> {t('currentDeck')}
+        <FaLayerGroup className="text-[11px]" /> {t('deck.currentDeck')}
       </button>
       <button
         type="button"
         onClick={() => setActiveNoteTab('notes')}
-        className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'notes' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
+        className={`deck-content-tab ${activeNoteTab === 'notes' ? 'deck-content-tab-active' : ''}`}
       >
-        <FaPencilAlt className="text-[11px]" /> {t('strategyGuide')}
+        <FaPencilAlt className="text-[11px]" /> {t('strategy.strategyGuide')}
       </button>
       <button
         type="button"
         onClick={() => setActiveNoteTab('stats')}
-        className={`pb-2 transition-all border-b-2 flex items-center gap-1.5 ${activeNoteTab === 'stats' ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-500'}`}
+        className={`deck-content-tab ${activeNoteTab === 'stats' ? 'deck-content-tab-active' : ''}`}
       >
-        <FaChartBar className="text-[11px]" /> {t('deckStats')}
+        <FaChartBar className="text-[11px]" /> {t('stats.deckStats')}
       </button>
     </div>
   );
 
   const renderCards = (isRemovable: boolean) => (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+      {/* Display Options & Deck Navigation */}
+      <div className="deck-zone-row">
         <DeckZoneTabs
           mainCount={zoneCounts.main}
           sideCount={zoneCounts.sideboard}
@@ -253,29 +208,19 @@ function DeckPreview({
           tokensCount={zoneCounts.tokens}
           activeZone={activeZone}
           onZoneChange={setActiveZone}
+          onUpdateCardZone={onUpdateCardZone}
         />
-        {activeZone !== 'tokens' && (viewMode === 'grid' || viewMode === 'stack') && onCardSizeChange && (
-          <div className="scale-90 origin-right shrink-0">
-            <CardSizeSelector selectedSize={cardSize} onSizeChange={onCardSizeChange} />
-          </div>
-        )}
       </div>
-      {activeZone === 'tokens' && (
+      {activeZone === 'tokens' ? (
         <DeckTokensTab
           cards={activeCards}
           cachedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-          onTokensLoaded={(tokens: RelatedToken[]) => {
-            if (selectedDeck && onSaveTokens) {
-              onSaveTokens(selectedDeck.id, tokens);
-            } else if (onSaveTokens) {
-              onSaveTokens(editingDeckId || '', tokens);
-            }
-          }}
+          onTokensLoaded={handleTokensLoaded}
           onTokenClick={setSelectedTokenForView}
           onlyHeader={true}
           isEditMode={isRemovable}
         />
-      )}
+      ) : null}
       {viewMode === 'stack' ? (
         <DeckStackView
           groups={groupedCards}
@@ -290,6 +235,7 @@ function DeckPreview({
           onAddTokenToDeck={handleAddTokenCardCopy}
           onUpdateCard={onUpdateCard}
           isTokenZone={activeZone === 'tokens'}
+          onUpdateCardZone={onUpdateCardZone}
         />
       ) : (
         <DeckCardList
@@ -314,13 +260,134 @@ function DeckPreview({
     </>
   );
 
-  // ─── Selected Deck (View Mode) ────────────────────────────────────
+  const renderDisplayOptionsDropdown = () => (
+    <div className="relative inline-block text-left">
+      <button
+        type="button"
+        onClick={() => setIsDisplaySettingsOpen(!isDisplaySettingsOpen)}
+        className={`display-settings-btn ${isDisplaySettingsOpen ? 'display-settings-btn-active' : ''}`}
+        title={t('common.displaySettings')}
+      >
+        <FaSlidersH className="text-xs shrink-0 text-blue-500 dark:text-blue-400" />
+        <span>{t('common.viewMode')}</span>
+        <span
+          className="text-[9px] opacity-60 transition-transform duration-200"
+          style={{ transform: isDisplaySettingsOpen ? 'rotate(180deg)' : 'none' }}
+        >
+          ▼
+        </span>
+      </button>
+      {isDisplaySettingsOpen ? (
+        <>
+          <div className="fixed inset-0 z-[100]" onClick={() => setIsDisplaySettingsOpen(false)} />
+          <div className="display-settings-dropdown">
+            <div className="space-y-2">
+              <span className="display-settings-section-label">{t('common.viewMode')}</span>
+              <div className="grid grid-cols-3 gap-1.5">
+                {(
+                  [
+                    { mode: 'list', label: t('common.listView'), icon: FaList },
+                    { mode: 'grid', label: t('common.gridView'), icon: FaTh },
+                    { mode: 'stack', label: t('strategy.stackView'), icon: FaLayerGroup }
+                  ] as const
+                ).map(({ mode, label, icon: Icon }) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setViewMode(mode)}
+                    className={`option-toggle-btn ${viewMode === mode ? 'option-toggle-btn-active' : ''}`}
+                  >
+                    <Icon className="text-sm" />
+                    <span className="text-[10px] leading-none">{label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <span className="display-settings-section-label">{t('deck.groupBy')}</span>
+              <div className="grid grid-cols-2 gap-1.5">
+                {(
+                  [
+                    { key: 'none', label: t('deck.groupNone') },
+                    { key: 'type', label: t('deck.groupType') },
+                    { key: 'cmc', label: t('deck.groupCmc') },
+                    { key: 'color', label: t('deck.groupColor') }
+                  ] as const
+                ).map(({ key, label }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setGroupBy(key)}
+                    className={`option-toggle-btn-compact ${groupBy === key ? 'option-toggle-btn-compact-active' : ''}`}
+                    title={label}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <span className="display-settings-section-label">{t('deck.sortBy')}</span>
+              <div className="grid grid-cols-3 gap-1.5">
+                {(
+                  [
+                    { key: 'name', label: t('deck.sortName') },
+                    { key: 'cmc', label: t('deck.sortCmc') },
+                    { key: 'rarity', label: t('deck.sortRarity') }
+                  ] as const
+                ).map(({ key, label }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSortBy(key)}
+                    className={`option-toggle-btn-compact ${sortBy === key ? 'option-toggle-btn-compact-active' : ''}`}
+                    title={label}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {viewMode !== 'list' && onCardSizeChange ? (
+              <div className="space-y-2">
+                <span className="display-settings-section-label">{t('search.cardSize')}</span>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {(
+                    [
+                      { key: 'small', label: t('search.smallInitial') },
+                      { key: 'medium', label: t('search.mediumInitial') },
+                      { key: 'large', label: t('search.largeInitial') },
+                      { key: 'xlarge', label: t('search.xlargeInitial') }
+                    ] as const
+                  ).map(({ key, label }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => onCardSizeChange(key)}
+                      className={`option-toggle-btn-compact ${cardSize === key ? 'option-toggle-btn-compact-active' : ''}`}
+                      title={t(`search.${key}`)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+
   if (selectedDeck) {
-    const validation = validateDeck(selectedDeck.cards, selectedDeck.format || 'freeform');
+    const validation = validateDeck(selectedDeck.cards, selectedDeck.format || DeckFormatType.FREEFORM);
 
     return (
       <div className="deck-preview-section relative">
-        <div className="panel-header">
+        <div className="panel-header relative z-50">
           <div>
             <h3 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 flex items-center gap-2">
               <FaFileAlt className="text-blue-600 shrink-0" />
@@ -328,41 +395,33 @@ function DeckPreview({
             </h3>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-muted">
-                {t('format')}:{' '}
+                {t('validation.format')}:{' '}
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  {t(selectedDeck.format || 'freeform')}
+                  {t(selectedDeck.format || DeckFormatType.FREEFORM)}
                 </span>
               </span>
               <span className="text-muted">•</span>
               <span className="text-muted">
-                {selectedDeck.cards.length} {t('cards')}
+                {selectedDeck.cards.length} {t('common.cards')}
               </span>
             </div>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
-            <DeckViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            {renderDisplayOptionsDropdown()}
             <DeckActionBar
               cards={activeCards}
               selectedDeck={selectedDeck}
               showToast={showToast}
-              onPlaytest={() => setIsPlaytestOpen(true)}
-              onPrintProxies={() => setIsProxyPrintOpen(true)}
-              onLoadDeckToEdit={() =>
-                onLoadDeckToEdit(
-                  selectedDeck.id,
-                  selectedDeck.name,
-                  selectedDeck.format || 'freeform',
-                  selectedDeck.cards,
-                  selectedDeck.notes
-                )
-              }
+              onPlaytest={handleOpenPlaytest}
+              onPrintProxies={handleOpenProxyPrint}
+              onLoadDeckToEdit={handleLoadSelectedDeckToEdit}
               onDeselectDeck={onDeselectDeck}
             />
           </div>
         </div>
 
         <div className="mb-4">
-          <DeckValidationBadge validation={validation} formatKey={selectedDeck.format || 'freeform'} />
+          <DeckValidationBadge validation={validation} formatKey={selectedDeck.format || DeckFormatType.FREEFORM} />
         </div>
 
         {noteTabHeader}
@@ -374,120 +433,256 @@ function DeckPreview({
             onSave={(notes) => onSaveNotesDirectly?.(selectedDeck.id, notes)}
           />
         ) : activeNoteTab === 'stats' ? (
-          <DeckStats currentDeck={activeCards} />
+          <Suspense
+            fallback={
+              <div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>
+            }
+          >
+            <DeckStats
+              currentDeck={activeCards}
+              renderFilteredCards={(filteredCards) => (
+                <div className="mt-4">
+                  {viewMode === 'stack' ? (
+                    <DeckStackView
+                      groups={groupCards(filteredCards, groupBy, sortBy)}
+                      cardSize={cardSize}
+                      isRemovable={false}
+                      activeFormat={(selectedDeck?.format || activeFormat) as any}
+                      onHoverEnter={handleHoverEnter}
+                      onHoverMove={handleHoverMove}
+                      onHoverLeave={handleHoverLeave}
+                      onRemoveFromDeck={onRemoveFromDeck}
+                      onAddToDeck={onAddToDeck}
+                      onAddTokenToDeck={handleAddTokenCardCopy}
+                      onUpdateCard={onUpdateCard}
+                      onUpdateCardZone={onUpdateCardZone}
+                    />
+                  ) : (
+                    <DeckCardList
+                      groups={groupCards(filteredCards, groupBy, sortBy)}
+                      commanders={commanders.filter((c) => filteredCards.some((f) => f.id === c.id))}
+                      cardSize={cardSize}
+                      viewMode={viewMode}
+                      isRemovable={false}
+                      isTokenZone={false}
+                      activeFormat={selectedDeck ? selectedDeck.format : activeFormat}
+                      onUpdateCardZone={onUpdateCardZone}
+                      onAddToDeck={onAddToDeck}
+                      onAddTokenToDeck={handleAddTokenCardCopy}
+                      onRemoveFromDeck={onRemoveFromDeck}
+                      onToggleCommander={onToggleCommander}
+                      onHoverEnter={handleHoverEnter}
+                      onHoverMove={handleHoverMove}
+                      onHoverLeave={handleHoverLeave}
+                    />
+                  )}
+                </div>
+              )}
+            />
+          </Suspense>
         ) : (
           renderCards(false)
         )}
 
-        {viewMode === 'list' && activeNoteTab === 'cards' && hoveredCard && (
+        {viewMode === 'list' && activeNoteTab === 'cards' && hoveredCard ? (
           <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
-        )}
+        ) : null}
 
-        <PlaytestSimulator
-          isOpen={isPlaytestOpen}
-          onClose={() => setIsPlaytestOpen(false)}
-          deckCards={activeCards}
-          deckFormat={selectedDeck.format || 'freeform'}
-          deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-        />
+        <Suspense fallback={null}>
+          <PlaytestSimulator
+            isOpen={isPlaytestOpen}
+            onClose={handleClosePlaytest}
+            deckCards={activeCards}
+            deckFormat={selectedDeck.format || DeckFormatType.FREEFORM}
+            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
+          />
+        </Suspense>
 
-        <DeckProxyPrint
-          isOpen={isProxyPrintOpen}
-          onClose={() => setIsProxyPrintOpen(false)}
-          cards={activeCards}
-          deckName={selectedDeck.name}
-        />
+        <Suspense fallback={null}>
+          <DeckProxyPrint
+            isOpen={isProxyPrintOpen}
+            onClose={handleCloseProxyPrint}
+            cards={activeCards}
+            deckName={selectedDeck.name}
+            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
+          />
+        </Suspense>
 
-        {/* Token lightbox */}
-        {selectedTokenForView && (
+        {selectedTokenForView ? (
           <CardDetailModal
             card={selectedTokenForView}
             imageUrl={
               selectedTokenForView.image_uris?.normal || selectedTokenForView.card_faces?.[0]?.image_uris?.normal || ''
             }
-            onClose={() => setSelectedTokenForView(null)}
+            onClose={handleCloseTokenModal}
             isDeckCard={true}
             isToken={true}
             deckCards={activeTokens.map((t) => t.tokenCard)}
             isEditMode={false}
             deckRelatedTokens={activeTokens}
           />
-        )}
+        ) : null}
       </div>
     );
   }
 
-  // ─── Deck in Edit / Construction Mode ────────────────────────────────────────
   return (
-    <div className="deck-preview-section relative">
-      <div className="panel-header">
+    <div
+      className={`deck-preview-section relative ${editingDeckId ? 'border-l-4 border-amber-400 dark:border-amber-500 pl-3' : ''}`}
+    >
+      <div className="panel-header relative z-50">
         <div>
-          <h3 className="text-gray-900 dark:text-white text-xl font-semibold transition-colors duration-300 text-left">
-            {t('currentDeck')} {editingDeckId && `(${t('editingDeck')})`}
-          </h3>
           {editingDeckId ? (
-            <span className="active-edit-badge mt-1 inline-flex items-center gap-1.5">
-              <FaBolt className="text-amber-400 animate-pulse text-[10px]" />
-              <span>{t('activeEditingMode')}</span>
-            </span>
-          ) : currentDeck.length > 0 ? (
-            <span className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/25 px-2.5 py-0.5 rounded-full text-[10px] font-bold mt-1.5 inline-flex items-center gap-1 shadow-sm">
-              <FaExclamationTriangle className="text-rose-500 dark:text-rose-400 text-[9px] shrink-0" />
-              <span>{t('temporaryUnsavedDeck')}</span>
-            </span>
-          ) : null}
+            <>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="editing-mode-badge">
+                  <FaBolt className="text-[9px] shrink-0" />
+                  {t('deck.activeEditingMode')}
+                </span>
+              </div>
+              <h3 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 text-left truncate">
+                {activeCards.length > 0 ? `${activeCards.length} ${t('common.cards')}` : t('deck.addCardsMessage')}
+              </h3>
+            </>
+          ) : (
+            <>
+              <h3 className="text-gray-900 dark:text-white text-xl font-semibold transition-colors duration-300 text-left">
+                {t('deck.currentDeck')}
+              </h3>
+              {currentDeck.length > 0 ? (
+                <span className="unsaved-deck-chip">
+                  <FaExclamationTriangle className="text-rose-500 dark:text-rose-400 text-[9px] shrink-0" />
+                  <span>{t('deck.temporaryUnsavedDeck')}</span>
+                </span>
+              ) : null}
+            </>
+          )}
         </div>
-        {currentDeck.length > 0 && (
+        {currentDeck.length > 0 ? (
           <div className="flex flex-wrap gap-2 items-center">
-            <DeckViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            {renderDisplayOptionsDropdown()}
             <DeckActionBar
               cards={activeCards}
               showToast={showToast}
-              onPlaytest={() => setIsPlaytestOpen(true)}
-              onPrintProxies={() => setIsProxyPrintOpen(true)}
+              onPlaytest={handleOpenPlaytest}
+              onPrintProxies={handleOpenProxyPrint}
             />
           </div>
-        )}
+        ) : null}
       </div>
+
+      {currentDeck.length > 0 ? (
+        <div className="mb-4">
+          <DeckValidationBadge
+            validation={validateDeck(currentDeck, activeFormat || DeckFormatType.FREEFORM)}
+            formatKey={activeFormat || DeckFormatType.FREEFORM}
+          />
+        </div>
+      ) : null}
 
       {noteTabHeader}
 
       {activeNoteTab === 'notes' ? (
         <DeckNotesEditor initialNotes={editingDeckNotes} isEditable={true} onSave={onUpdateNotes} />
       ) : activeNoteTab === 'stats' ? (
-        <DeckStats currentDeck={activeCards} onApplySuggestedLands={onApplySuggestedLands} />
+        <Suspense
+          fallback={<div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>}
+        >
+          <DeckStats
+            currentDeck={activeCards}
+            onApplySuggestedLands={onApplySuggestedLands}
+            renderFilteredCards={(filteredCards) => (
+              <div className="mt-4">
+                {viewMode === 'stack' ? (
+                  <DeckStackView
+                    groups={groupCards(filteredCards, groupBy, sortBy)}
+                    cardSize={cardSize}
+                    isRemovable={false}
+                    activeFormat={activeFormat}
+                    onHoverEnter={handleHoverEnter}
+                    onHoverMove={handleHoverMove}
+                    onHoverLeave={handleHoverLeave}
+                    onRemoveFromDeck={onRemoveFromDeck}
+                    onAddToDeck={onAddToDeck}
+                    onAddTokenToDeck={handleAddTokenCardCopy}
+                    onUpdateCard={onUpdateCard}
+                    onUpdateCardZone={onUpdateCardZone}
+                  />
+                ) : (
+                  <DeckCardList
+                    groups={groupCards(filteredCards, groupBy, sortBy)}
+                    commanders={commanders.filter((c) => filteredCards.some((f) => f.id === c.id))}
+                    cardSize={cardSize}
+                    viewMode={viewMode}
+                    isRemovable={false}
+                    isTokenZone={false}
+                    activeFormat={activeFormat}
+                    onUpdateCardZone={onUpdateCardZone}
+                    onAddToDeck={onAddToDeck}
+                    onAddTokenToDeck={handleAddTokenCardCopy}
+                    onRemoveFromDeck={onRemoveFromDeck}
+                    onToggleCommander={onToggleCommander}
+                    onHoverEnter={handleHoverEnter}
+                    onHoverMove={handleHoverMove}
+                    onHoverLeave={handleHoverLeave}
+                  />
+                )}
+              </div>
+            )}
+          />
+        </Suspense>
       ) : (
         <>
           {currentDeck.length === 0 ? (
-            <p className="text-muted text-left">{t('addCardsMessage')}</p>
+            <EmptyState
+              icon={<FaLayerGroup />}
+              title={t('deck.emptyDeck')}
+              description={t('deck.addCardsMessage')}
+              action={{
+                label: t('search.searchForCards'),
+                onClick: () => {
+                  const setPendingAction = useDeckStore.getState().setPendingAction;
+                  setPendingAction('focus-search');
+                  document.getElementById('nav-search-btn')?.click(); // Fallback for changing tab, as activeTab is in App state
+                }
+              }}
+            />
           ) : (
             renderCards(true)
           )}
         </>
       )}
 
-      {viewMode === 'list' && activeNoteTab === 'cards' && hoveredCard && (
+      {viewMode === 'list' && activeNoteTab === 'cards' && hoveredCard ? (
         <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
-      )}
+      ) : null}
 
-      <PlaytestSimulator
-        isOpen={isPlaytestOpen}
-        onClose={() => setIsPlaytestOpen(false)}
-        deckCards={activeCards}
-        deckFormat={activeFormat}
-        deckRelatedTokens={deckRelatedTokens}
-      />
+      <Suspense fallback={null}>
+        <PlaytestSimulator
+          isOpen={isPlaytestOpen}
+          onClose={handleClosePlaytest}
+          deckCards={activeCards}
+          deckFormat={activeFormat}
+          deckRelatedTokens={deckRelatedTokens}
+        />
+      </Suspense>
 
-      <DeckProxyPrint isOpen={isProxyPrintOpen} onClose={() => setIsProxyPrintOpen(false)} cards={activeCards} />
+      <Suspense fallback={null}>
+        <DeckProxyPrint
+          isOpen={isProxyPrintOpen}
+          onClose={handleCloseProxyPrint}
+          cards={activeCards}
+          deckRelatedTokens={deckRelatedTokens}
+        />
+      </Suspense>
 
-      {/* Token lightbox */}
-      {selectedTokenForView && (
+      {selectedTokenForView ? (
         <CardDetailModal
           card={selectedTokenForView}
           imageUrl={
             selectedTokenForView.image_uris?.normal || selectedTokenForView.card_faces?.[0]?.image_uris?.normal || ''
           }
-          onClose={() => setSelectedTokenForView(null)}
+          onClose={handleCloseTokenModal}
           isDeckCard={true}
           isToken={true}
           deckCards={activeTokens.map((t) => t.tokenCard)}
@@ -498,7 +693,7 @@ function DeckPreview({
           isEditMode={true}
           deckRelatedTokens={activeTokens}
         />
-      )}
+      ) : null}
     </div>
   );
 }

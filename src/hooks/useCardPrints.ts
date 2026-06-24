@@ -65,30 +65,30 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
     emitter.on('done', () => {
       // Group prints by set & collector number, prioritizing the target language print
       const uniqueMap = new Map<string, Card>();
-      results.forEach((c) => {
+      results.forEach((printCard) => {
         // If it's a token and we have the original attributes, filter out non-matching tokens
         if (isToken && typeof cardOrName !== 'string') {
-          const powerMatches = (c.power || '') === (originalPower || '');
-          const toughnessMatches = (c.toughness || '') === (originalToughness || '');
-          const colorsMatches = (c.colors ?? []).sort().join(',') === (originalColors ?? []).sort().join(',');
-          const typeLineMatches = (c.type_line || '') === (originalTypeLine || '');
+          const powerMatches = (printCard.power || '') === (originalPower || '');
+          const toughnessMatches = (printCard.toughness || '') === (originalToughness || '');
+          const colorsMatches = (printCard.colors ?? []).sort().join(',') === (originalColors ?? []).sort().join(',');
+          const typeLineMatches = (printCard.type_line || '') === (originalTypeLine || '');
           const oracleTextMatches =
-            (c.oracle_text || '').trim().toLowerCase() === (originalOracleText || '').trim().toLowerCase();
+            (printCard.oracle_text || '').trim().toLowerCase() === (originalOracleText || '').trim().toLowerCase();
 
           if (!powerMatches || !toughnessMatches || !colorsMatches || !typeLineMatches || !oracleTextMatches) {
             return;
           }
         }
 
-        const key = `${c.set}_${c.collector_number || ''}`;
+        const key = `${printCard.set}_${printCard.collector_number || ''}`;
         const existing = uniqueMap.get(key);
         if (!existing) {
-          uniqueMap.set(key, c);
+          uniqueMap.set(key, printCard);
         } else {
           const existingIsEnglish = existing.lang === 'en' || !existing.lang;
-          const newIsPreferred = c.lang === cleanLang;
+          const newIsPreferred = printCard.lang === cleanLang;
           if (existingIsEnglish && newIsPreferred) {
-            uniqueMap.set(key, c);
+            uniqueMap.set(key, printCard);
           }
         }
       });

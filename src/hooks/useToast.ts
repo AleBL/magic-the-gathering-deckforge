@@ -2,38 +2,47 @@ import { useState, useEffect, useCallback } from 'react';
 
 const TOAST_DURATION_MS = 2500;
 
+import { ToastState, ToastVariant, ToastAction } from '../types/Toast';
+
 export default function useToast() {
-  const [message, setMessage] = useState<string | null>(null);
+  const [toastState, setToastState] = useState<ToastState>({ message: null, variant: 'success' });
 
   useEffect(() => {
-    if (!message) return undefined;
+    if (!toastState.message) return undefined;
 
     const timer = setTimeout(() => {
-      setMessage(null);
+      setToastState((prev) => ({ ...prev, message: null }));
     }, TOAST_DURATION_MS);
 
     return () => clearTimeout(timer);
-  }, [message]);
+  }, [toastState.message]);
 
-  const showToast = useCallback((text: string) => {
-    setMessage(text);
+  const showToast = useCallback((text: string, variant: ToastVariant = 'success', action?: ToastAction) => {
+    setToastState({ message: text, variant, action });
 
     // Trigger native desktop OS notification
-    if (window.Notification && Notification.permission !== 'denied') {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification('MTG Deck Forge', {
-            body: text,
-            silent: false
-          });
-        }
-      });
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        new Notification('MTG Deck Forge', { body: text, silent: false });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification('MTG Deck Forge', { body: text, silent: false });
+          }
+        });
+      }
     }
   }, []);
 
   const dismissToast = useCallback(() => {
-    setMessage(null);
+    setToastState((prev) => ({ ...prev, message: null }));
   }, []);
 
-  return { toastMessage: message, showToast, dismissToast };
+  return {
+    toastMessage: toastState.message,
+    toastVariant: toastState.variant,
+    toastAction: toastState.action,
+    showToast,
+    dismissToast
+  };
 }

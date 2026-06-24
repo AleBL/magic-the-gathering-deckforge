@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { FaTimes, FaSpinner, FaPalette } from 'react-icons/fa';
-import { Card } from '../types/Card';
-import { CardWithScryfallMetadata } from '../types/Scryfall';
-import { useCardPrints } from '../hooks/useCardPrints';
+import { Card } from '../../types/Card';
+import { CardWithScryfallMetadata } from '../../types/Scryfall';
+import { useCardPrints } from '../../hooks/useCardPrints';
 
 interface CardPrintsModalProps {
   cardName: string;
@@ -46,7 +46,7 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/40">
           <h3 className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
             <FaPalette className="text-pink-500" />
-            {t('otherVersions')} &mdash; {cardName}
+            {t('cardDetails.otherVersions')} &mdash; {cardName}
           </h3>
           <button
             type="button"
@@ -62,16 +62,16 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
           {isLoading ? (
             <div className="h-64 flex flex-col items-center justify-center gap-3 text-slate-400">
               <FaSpinner className="text-3xl text-pink-500 animate-spin" />
-              <p className="text-sm font-semibold">{t('loadingAlternateArts')}</p>
+              <p className="text-sm font-semibold">{t('cardDetails.loadingAlternateArts')}</p>
             </div>
           ) : prints.length === 0 ? (
             <div className="h-64 flex flex-col items-center justify-center gap-2 text-slate-500">
               <FaPalette className="text-3xl" />
-              <p className="text-sm italic">{t('noArtFound')}</p>
+              <p className="text-sm italic">{t('cardDetails.noArtFound')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {prints.map((printCard) => {
+              {prints.map((printCard: CardWithScryfallMetadata) => {
                 const imgUrl = getCardFaceImageUrl(printCard);
                 const printMetadata = printCard as CardWithScryfallMetadata;
                 const collectorNumber = printMetadata.collector_number || '';
@@ -103,14 +103,18 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
                         {printCard.set_name} ({printCard.set?.toUpperCase()})
                       </h4>
                       {collectorNumber && <p className="text-[9px] text-slate-500">#{collectorNumber}</p>}
-                      {artist && <p className="text-[9px] text-slate-400 truncate italic">Art: {artist}</p>}
+                      {artist && (
+                        <p className="text-[9px] text-slate-400 truncate italic">
+                          {t('cardDetails.artBy', { artist })}
+                        </p>
+                      )}
                     </div>
 
                     <button
                       type="button"
                       className="mt-3 w-full justify-center bg-pink-500/20 text-pink-400 border border-pink-500/20 hover:bg-pink-500 hover:text-white rounded-lg py-1.5 text-[9px] font-bold transition-all uppercase tracking-wider"
                     >
-                      {t('selectArt')}
+                      {t('cardDetails.selectArt')}
                     </button>
                   </div>
                 );

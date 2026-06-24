@@ -9,7 +9,7 @@ Search Magic: The Gathering cards, build and manage decks with [Scryfall](https:
 - **Card Search** — Advanced filtering by name, colors, types, rarity, and converted mana cost (CMC) using debounced Scryfall search.
 - **Card Art & Printing Selector** — Select alternative printings, sets, and artist illustrations for cards directly from the details modal, updating the specific card artwork inside your deck list.
 - **Deck Builder & Organizer** — Add, remove, edit, and organize cards in a dedicated workspace deck.
-- **Deck Manager** — Save, load, edit, import, and export decks locally via `localStorage` or JSON files (MTG Arena and `.DEC` file exports included).
+- **Deck Manager** — Save, load, edit, import, and export decks locally via IndexedDB or JSON files (MTG Arena and `.DEC` file exports included).
 - **Double-Faced / Transforming Cards** — Flip cards dynamically in the card details modal to see their reverse side with interactive visual rotations and re-calculated attributes (image, P/T, text).
 - **Actual-Size MTG Proxy Printing** — Print proxy sheets for offline playtesting. Supports standard sizes (A4, A5, Letter, Legal), orientations (Portrait/Landscape), custom card spacing, cutting guide lines/dotted guides, page yield estimation, and true-to-life size scaling (63mm x 88mm).
 - **Dynamic Scryfall API Legality Check** — Real-time validation for Standard, Modern, Vintage, Pauper, and Commander querying the Scryfall API directly, with custom Vintage restricted 1-copy limit checks.
@@ -102,12 +102,18 @@ npm run clean          # remove build output folders
 
 ```
 src/
-├── components/   # UI components (CardGrid, DeckManager, CardSearch, …)
-├── hooks/        # Custom React hooks (useCardSearch, useDeckManager, …)
+├── components/   # UI components organized by domain
+│   ├── card/     # Card-related components (Search, Grid, Detail Modal, ...)
+│   ├── deck/     # Deck management components (List, Editor, Stats, ...)
+│   ├── playtest/ # Playtest simulator components (Battlefield, Hand, Log, ...)
+│   └── ui/       # Reusable base components (Dialogs, Toasts, EmptyStates, ...)
+├── db/           # Local database configuration (IndexedDB)
+├── hooks/        # Custom React hooks (useDeckManager, usePlaytestSimulator, ...)
 ├── locales/      # i18n translations (en, es, pt)
-├── services/     # File download utilities
-├── style/        # Modular CSS (variables, layout, buttons, forms, …)
-├── types/        # TypeScript types (Card, Deck, …)
+├── services/     # External integrations and file utilities (Deck imports, etc)
+├── store/        # Global state management (Zustand)
+├── style/        # Modular CSS (variables, layout, components, ...)
+├── types/        # TypeScript types (Card, Deck, Playtest, ...)
 └── utils/        # Deck validator, mana symbol helpers
 electron/         # Electron main process & preload script
 ```

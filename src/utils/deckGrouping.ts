@@ -1,4 +1,5 @@
 import { Card } from '../types/Card';
+import { GroupCriteria, SortCriteria } from '../types/enums';
 import locales from '../locales';
 
 interface CardWithSelectedPrintImage extends Card {
@@ -16,15 +17,15 @@ export interface DeckCardGrouped {
   card: Card;
 }
 
-export const sortCards = (cardsList: Card[], sortCriteria: 'name' | 'cmc' | 'rarity'): Card[] => {
+export const sortCards = (cardsList: Card[], sortCriteria: SortCriteria): Card[] => {
   const list = [...cardsList];
   const rarityWeight: Record<string, number> = { mythic: 4, rare: 3, uncommon: 2, common: 1 };
 
   return list.sort((a, b) => {
-    if (sortCriteria === 'cmc') {
+    if (sortCriteria === SortCriteria.CMC) {
       return (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name);
     }
-    if (sortCriteria === 'rarity') {
+    if (sortCriteria === SortCriteria.RARITY) {
       const weightA = rarityWeight[a.rarity?.toLowerCase()] || 0;
       const weightB = rarityWeight[b.rarity?.toLowerCase()] || 0;
       return weightB - weightA || a.name.localeCompare(b.name);
@@ -35,18 +36,18 @@ export const sortCards = (cardsList: Card[], sortCriteria: 'name' | 'cmc' | 'rar
 
 export const groupCards = (
   cardsList: Card[],
-  groupCriteria: 'none' | 'type' | 'cmc' | 'color',
-  sortCriteria: 'name' | 'cmc' | 'rarity'
+  groupCriteria: GroupCriteria,
+  sortCriteria: SortCriteria
 ): GroupedCards[] => {
   const sorted = sortCards(cardsList, sortCriteria);
 
-  if (groupCriteria === 'none') {
+  if (groupCriteria === GroupCriteria.NONE) {
     return [{ title: '', cards: sorted }];
   }
 
   const groups: Record<string, Card[]> = {};
 
-  if (groupCriteria === 'type') {
+  if (groupCriteria === GroupCriteria.TYPE) {
     sorted.forEach((card) => {
       const typeLine = card.type_line?.toLowerCase() || '';
       let key = 'Other';
@@ -60,14 +61,14 @@ export const groupCards = (
       groups[key] = groups[key] || [];
       groups[key].push(card);
     });
-  } else if (groupCriteria === 'cmc') {
+  } else if (groupCriteria === GroupCriteria.CMC) {
     sorted.forEach((card) => {
       const cmc = Math.floor(card.cmc || 0);
       const key = cmc >= 7 ? 'CMC 7+' : `CMC ${cmc}`;
       groups[key] = groups[key] || [];
       groups[key].push(card);
     });
-  } else if (groupCriteria === 'color') {
+  } else if (groupCriteria === GroupCriteria.COLOR) {
     sorted.forEach((card) => {
       const colors = card.colors;
       let key = 'colorless';
@@ -88,7 +89,7 @@ export const groupCards = (
 
   const orderedGroups = Object.entries(groups).map(([title, cards]) => ({ title, cards }));
 
-  if (groupCriteria === 'cmc') {
+  if (groupCriteria === GroupCriteria.CMC) {
     return orderedGroups.sort((a, b) => {
       const numA = parseInt(a.title.replace(/\D/g, '')) || 0;
       const numB = parseInt(b.title.replace(/\D/g, '')) || 0;
@@ -126,10 +127,10 @@ const getBasicLandNamesMap = (): Record<string, string> => {
   });
 
   Object.values(locales).forEach((locale) => {
-    const translations = locale.translations;
-    if (translations) {
+    const translations = locale.translations as any;
+    if (translations?.deckStats) {
       landKeys.forEach((key) => {
-        const translatedName = translations[key as keyof typeof translations];
+        const translatedName = translations.deckStats[key];
         if (typeof translatedName === 'string') {
           map[translatedName.toLowerCase()] = key;
         }
@@ -146,14 +147,27 @@ const BASIC_LAND_NAMES = getBasicLandNamesMap();
 export const getCardImageUrl = (card: Card): string => {
   const cardWithSelectedPrintImage = card as CardWithSelectedPrintImage;
 
-  // Use selected print override if available
   if (cardWithSelectedPrintImage.selectedPrintImageUri) return cardWithSelectedPrintImage.selectedPrintImageUri;
 
-  // Prioritize gatherer first for localized translation support
   if (card.image_uris?.gatherer) return card.image_uris.gatherer;
 
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
   const baseUrl = imageUris ? imageUris.normal || imageUris.large || '' : '';
+
+  if (baseUrl) return baseUrl;
+
+  const landName = BASIC_LAND_NAMES[card.name?.toLowerCase()];
+  if (landName) {
+    return `https://api.scryfall.com/cards/named?exact=${landName}&format=image`;
+  }
+
+  return '';
+};
+
+/** URL of the art crop image for the card, often used as backgrounds. */
+export const getCardArtCropUrl = (card: Card): string => {
+  const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
+  const baseUrl = imageUris ? imageUris.art_crop || imageUris.normal || imageUris.large || '' : '';
 
   if (baseUrl) return baseUrl;
 

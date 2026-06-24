@@ -1,3 +1,5 @@
+import { DeckZone } from './enums';
+
 export interface Card {
   printed_name: string;
   id: string;
@@ -14,11 +16,31 @@ export interface Card {
   rarity: string;
   set?: string;
   set_name: string;
+  all_parts?: {
+    id: string;
+    object: string;
+    component: string;
+    name: string;
+    type_line: string;
+    uri: string;
+  }[];
+
+  // Scryfall standard fields
+  scryfall_uri?: string;
+  related_uris?: {
+    gatherer?: string;
+    [key: string]: string | undefined;
+  };
+  purchase_uris?: {
+    tcgplayer?: string;
+    [key: string]: string | undefined;
+  };
   image_uris?: {
     small: string;
     normal: string;
     large: string;
     png: string;
+    art_crop?: string;
     gatherer?: string;
   };
   prices?: {
@@ -52,12 +74,13 @@ export interface Card {
       normal: string;
       large: string;
       png: string;
+      art_crop?: string;
     };
   }>;
   colors?: string[];
   color_identity?: string[];
   isCommander?: boolean;
-  zone?: 'main' | 'sideboard' | 'maybeboard';
+  zone?: DeckZone;
   selectedPrintId?: string;
   selectedPrintImageUri?: string;
   collector_number?: string;

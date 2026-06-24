@@ -100,7 +100,7 @@ export function useCardRelatedTokens(cards: Card[]) {
     const fetchAllDeckTokens = async () => {
       try {
         // Filter non-land cards
-        const nonLandCards = cards.filter((c) => !c.type_line?.toLowerCase().includes('land'));
+        const nonLandCards = cards.filter((card) => !card.type_line?.toLowerCase().includes('land'));
         const tokenPartsMap = new Map<string, { id: string; generatorName: string }>();
 
         // Fetch full card details for cards lacking all_parts only if they contain token keywords
@@ -119,16 +119,16 @@ export function useCardRelatedTokens(cards: Card[]) {
           'amass'
         ];
         await Promise.all(
-          nonLandCards.map(async (c) => {
-            let allParts = (c as CardWithScryfallMetadata).all_parts;
+          nonLandCards.map(async (card) => {
+            let allParts = (card as CardWithScryfallMetadata).all_parts;
             if (!allParts) {
-              const text = (c.oracle_text || (c as CardWithScryfallMetadata).printed_text || '').toLowerCase();
+              const text = (card.oracle_text || (card as CardWithScryfallMetadata).printed_text || '').toLowerCase();
               const hasTokenText = tokenKeywords.some((word) => text.includes(word));
 
               if (hasTokenText) {
                 try {
                   // Fetch by English name to ensure we get the English card which has all_parts
-                  const fullCard = (await Scry.Cards.byName(c.name)) as CardWithScryfallMetadata;
+                  const fullCard = (await Scry.Cards.byName(card.name)) as CardWithScryfallMetadata;
                   allParts = fullCard.all_parts || [];
                 } catch {
                   allParts = [];
@@ -138,11 +138,11 @@ export function useCardRelatedTokens(cards: Card[]) {
               }
             }
 
-            const tokens = allParts.filter((part) => part.id !== c.id && part.name !== c.name);
+            const tokens = allParts.filter((part) => part.id !== card.id && part.name !== card.name);
 
-            tokens.forEach((t: ScryfallCardPart) => {
-              if (!tokenPartsMap.has(t.id)) {
-                tokenPartsMap.set(t.id, { id: t.id, generatorName: c.printed_name || c.name });
+            tokens.forEach((tokenPart: ScryfallCardPart) => {
+              if (!tokenPartsMap.has(tokenPart.id)) {
+                tokenPartsMap.set(tokenPart.id, { id: tokenPart.id, generatorName: card.printed_name || card.name });
               }
             });
           })

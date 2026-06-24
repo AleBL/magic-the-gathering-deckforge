@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import CardItem from './CardItem';
-import { Card } from '../types/Card';
-import { CardSize } from '../types';
-import { DeckFormat } from '../types/Deck';
+import { DeckZone } from '../../types/enums';
+import { Card } from '../../types/Card';
+import { CardSize } from '../../types';
+import { DeckFormat } from '../../types/Deck';
 
 interface CardGridProps {
   cards: Card[];
@@ -16,6 +18,7 @@ interface CardGridProps {
   onSelectPrint?: (updatedCard: Card) => void;
   isToken?: boolean;
   isEditMode?: boolean;
+  onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
 }
 
 const GRID_CLASSES: Record<CardSize, string> = {
@@ -37,7 +40,8 @@ function CardGrid({
   deckCards,
   onSelectPrint,
   isToken,
-  isEditMode
+  isEditMode,
+  onUpdateCardZone
 }: CardGridProps) {
   return (
     <div className={GRID_CLASSES[size]}>
@@ -56,6 +60,7 @@ function CardGrid({
             onSelectPrint={onSelectPrint}
             isToken={isToken}
             isEditMode={isEditMode}
+            onUpdateCardZone={onUpdateCardZone}
           />
         </div>
       ))}
@@ -63,4 +68,4 @@ function CardGrid({
   );
 }
 
-export default CardGrid;
+export default memo(CardGrid);

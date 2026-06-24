@@ -1,6 +1,7 @@
 import { Card } from './Card';
+import { DeckFormatType } from './enums';
 
-export type DeckFormat = 'standard' | 'modern' | 'commander' | 'vintage' | 'pauper' | 'freeform';
+export type DeckFormat = DeckFormatType;
 
 export interface DeckRelatedToken {
   tokenCard: Card;

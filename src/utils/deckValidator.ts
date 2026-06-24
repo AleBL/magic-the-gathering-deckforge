@@ -1,5 +1,6 @@
 import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
+import { DeckFormatType } from '../types/enums';
 import i18n from '../plugins/i18n';
 
 export interface ValidationError {
@@ -44,7 +45,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
     };
   }
 
-  if (format === 'freeform') {
+  if (format === DeckFormatType.FREEFORM) {
     return { isValid: true, errors: [] };
   }
 
@@ -74,7 +75,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
   });
 
   // Rules: Max 4 copies of any non-basic land card for Standard, Modern, Vintage, Pauper
-  if (['standard', 'modern', 'vintage', 'pauper'].includes(format)) {
+  if ([DeckFormatType.STANDARD, DeckFormatType.MODERN, DeckFormatType.VINTAGE, DeckFormatType.PAUPER].includes(format as any)) {
     if (cards.length < 60) {
       errors.push({
         key: 'validationMinCards',
@@ -93,7 +94,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
   }
 
   // Commander Format Rules
-  if (format === 'commander') {
+  if (format === DeckFormatType.COMMANDER) {
     if (cards.length !== 100) {
       errors.push({
         key: 'validationCommanderExactCards',
@@ -222,7 +223,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
   }
 
   // Pauper Format Rules
-  if (format === 'pauper') {
+  if (format === DeckFormatType.PAUPER) {
     const nonCommonCards = cards.filter((card) => card.rarity !== 'common');
     if (nonCommonCards.length > 0) {
       const uniqueNonCommons = Array.from(new Set(nonCommonCards.map((c) => c.name)));
@@ -250,7 +251,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
     }
 
     // Check Vintage Restricted (limit 1)
-    if (format === 'vintage' && card.legalities?.vintage === 'restricted') {
+    if (format === DeckFormatType.VINTAGE && card.legalities?.vintage === 'restricted') {
       const count = cardCounts[cardName] || 0;
       if (count > 1) {
         restrictedMatches.push(cardName);
