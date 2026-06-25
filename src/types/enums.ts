@@ -5,7 +5,7 @@ export const AlertVariant = {
   INFO: 'info'
 } as const;
 
-export type AlertVariant = typeof AlertVariant[keyof typeof AlertVariant];
+export type AlertVariant = (typeof AlertVariant)[keyof typeof AlertVariant];
 
 export const DeckFormatType = {
   STANDARD: 'standard',
@@ -16,7 +16,7 @@ export const DeckFormatType = {
   FREEFORM: 'freeform'
 } as const;
 
-export type DeckFormatType = typeof DeckFormatType[keyof typeof DeckFormatType];
+export type DeckFormatType = (typeof DeckFormatType)[keyof typeof DeckFormatType];
 
 export const ManaColor = {
   WHITE: 'W',
@@ -27,7 +27,7 @@ export const ManaColor = {
   COLORLESS: 'C'
 } as const;
 
-export type ManaColor = typeof ManaColor[keyof typeof ManaColor];
+export type ManaColor = (typeof ManaColor)[keyof typeof ManaColor];
 
 export const DeckZone = {
   MAIN: 'main',
@@ -36,7 +36,7 @@ export const DeckZone = {
   TOKENS: 'tokens'
 } as const;
 
-export type DeckZone = typeof DeckZone[keyof typeof DeckZone];
+export type DeckZone = (typeof DeckZone)[keyof typeof DeckZone];
 
 export const PrintZoneFilter = {
   ALL: 'all',
@@ -53,7 +53,7 @@ export const PrintZoneFilter = {
   MAIN_SIDEBOARD_MAYBEBOARD: `${DeckZone.MAIN}+${DeckZone.SIDEBOARD}+${DeckZone.MAYBEBOARD}`
 } as const;
 
-export type PrintZoneFilter = typeof PrintZoneFilter[keyof typeof PrintZoneFilter];
+export type PrintZoneFilter = (typeof PrintZoneFilter)[keyof typeof PrintZoneFilter];
 
 export const GroupCriteria = {
   NONE: 'none',
@@ -62,7 +62,7 @@ export const GroupCriteria = {
   COLOR: 'color'
 } as const;
 
-export type GroupCriteria = typeof GroupCriteria[keyof typeof GroupCriteria];
+export type GroupCriteria = (typeof GroupCriteria)[keyof typeof GroupCriteria];
 
 export const SortCriteria = {
   NAME: 'name',
@@ -70,16 +70,34 @@ export const SortCriteria = {
   RARITY: 'rarity'
 } as const;
 
-export type SortCriteria = typeof SortCriteria[keyof typeof SortCriteria];
+export type SortCriteria = (typeof SortCriteria)[keyof typeof SortCriteria];
 
+/**
+ * The five physical zones a card can occupy during a playtest. Library positioning
+ * (top/bottom/index) is expressed through {@link LibraryPlacement} rather than as
+ * separate zones, so every move is `from` one zone `to` another.
+ */
 export const PlaytestZone = {
+  LIBRARY: 'library',
   HAND: 'hand',
   BATTLEFIELD: 'battlefield',
-  LIBRARY_TOP: 'libraryTop',
-  LIBRARY_BOTTOM: 'libraryBottom',
   GRAVEYARD: 'graveyard',
-  EXILE: 'exile',
-  COMMAND_ZONE: 'commandZone'
+  EXILE: 'exile'
 } as const;
 
-export type PlaytestZone = typeof PlaytestZone[keyof typeof PlaytestZone];
+export type PlaytestZone = (typeof PlaytestZone)[keyof typeof PlaytestZone];
+
+/** Where a card lands when moved into the library: the top, the bottom, or a 0-based index. */
+export type LibraryPlacement = 'top' | 'bottom' | number;
+
+export const DECK_FORMATS = ['standard', 'modern', 'commander', 'vintage', 'pauper'] as const;
+export type DeckFormat = (typeof DECK_FORMATS)[number];
+
+export const LEGALITY = {
+  LEGAL: 'legal',
+  BANNED: 'banned',
+  RESTRICTED: 'restricted',
+  NOT_LEGAL: 'not_legal'
+} as const;
+
+export type LegalityStatus = (typeof LEGALITY)[keyof typeof LEGALITY];
