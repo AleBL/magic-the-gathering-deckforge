@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSave, FaPlus, FaTrash, FaFileImport, FaTimes, FaLightbulb, FaBook, FaColumns } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
+import { CARD_SIZES } from '../constants';
 import DeckList from './DeckList';
 import DeckPreview from './DeckPreview';
 import DeckSaveDialog from './DeckSaveDialog';
@@ -14,6 +14,8 @@ import useDeckManager from '../hooks/useDeckManager';
 import useDialog from '../hooks/useDialog';
 import DeckTextImportModal from './deck/DeckTextImportModal';
 import DeckImportProgressModal from './deck/DeckImportProgressModal';
+import { DeckManagerToolbar } from './deck/DeckManagerToolbar';
+import { DeckExportDialog } from './deck/DeckExportDialog';
 import { useDeckTextImport } from '../hooks/useDeckTextImport';
 import { useSuggestedLands } from '../hooks/useSuggestedLands';
 
@@ -23,7 +25,14 @@ interface DeckManagerProps {
 
 function DeckManager({ showToast }: DeckManagerProps) {
   const { t, i18n } = useTranslation();
-  const [cardSize, setCardSize] = useState<CardSize>('small');
+  const [cardSize, setCardSize] = useState<CardSize>(() => {
+    const saved = localStorage.getItem('deckforge_card_size');
+    return saved && (CARD_SIZES as readonly string[]).includes(saved) ? (saved as CardSize) : 'small';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('deckforge_card_size', cardSize);
+  }, [cardSize]);
   const [showDeckList, setShowDeckList] = useState(true);
   const [showImportExportDropdown, setShowImportExportDropdown] = useState(false);
 
@@ -130,10 +139,10 @@ function DeckManager({ showToast }: DeckManagerProps) {
     t
   ]);
 
-  const { 
-    isImporting: isTextImporting, 
-    errorMsg: textImportErrorMsg, 
-    setErrorMsg: setTextErrorMsg, 
+  const {
+    isImporting: isTextImporting,
+    errorMsg: textImportErrorMsg,
+    setErrorMsg: setTextErrorMsg,
     importTextDeck,
     isProgressModalOpen,
     setIsProgressModalOpen,
@@ -177,7 +186,17 @@ function DeckManager({ showToast }: DeckManagerProps) {
     } else if (result.errorKey) {
       showAlert(t('common.errorTitle'), t(result.errorKey), 'danger');
     }
-  }, [deckName, deckFormat, currentDeck, editingDeckNotes, deckRelatedTokens, saveDeck, showAlert, onLoadDeckToEdit, t]);
+  }, [
+    deckName,
+    deckFormat,
+    currentDeck,
+    editingDeckNotes,
+    deckRelatedTokens,
+    saveDeck,
+    showAlert,
+    onLoadDeckToEdit,
+    t
+  ]);
 
   const handleSaveEditedDeck = useCallback(async () => {
     if (!editingDeckId) return;
@@ -203,7 +222,32 @@ function DeckManager({ showToast }: DeckManagerProps) {
       setSelectedDeck(updatedDeck);
       onCancelEdit();
     }
-  }, [editingDeckId, editingDeckName, editingDeckFormat, currentDeck, editingDeckNotes, deckRelatedTokens, saveEditedDeck, showAlert, savedDecks, setSelectedDeck, onCancelEdit, t]);
+  }, [
+    editingDeckId,
+    editingDeckName,
+    editingDeckFormat,
+    currentDeck,
+    editingDeckNotes,
+    deckRelatedTokens,
+    saveEditedDeck,
+    showAlert,
+    savedDecks,
+    setSelectedDeck,
+    onCancelEdit,
+    t
+  ]);
+
+  const clearDeckWithConfirm = useCallback(() => {
+    showConfirm(
+      t('deck.clearDeckConfirmationTitle'),
+      t('deck.clearDeckConfirmationMessage'),
+      () => {
+        onClearDeck();
+        showToast(t('deck.deckCleared'));
+      },
+      'danger'
+    );
+  }, [showConfirm, t, onClearDeck, showToast]);
 
   useEffect(() => {
     if (pendingAction === 'save-deck') {
@@ -215,18 +259,18 @@ function DeckManager({ showToast }: DeckManagerProps) {
       }
       setPendingAction(null);
     } else if (pendingAction === 'clear-deck') {
-      showConfirm(
-        t('deck.clearDeckConfirmationTitle'),
-        t('deck.clearDeckConfirmationMessage'),
-        () => {
-          onClearDeck();
-          showToast(t('deck.deckCleared'));
-        },
-        'danger'
-      );
+      clearDeckWithConfirm();
       setPendingAction(null);
     }
-  }, [pendingAction, editingDeckId, handleSaveEditedDeck, setDeckName, setShowSaveDialog, setPendingAction, showConfirm, t, onClearDeck, showToast]);
+  }, [
+    pendingAction,
+    editingDeckId,
+    handleSaveEditedDeck,
+    setDeckName,
+    setShowSaveDialog,
+    setPendingAction,
+    clearDeckWithConfirm
+  ]);
 
   const confirmDeleteDeck = (deck: Deck) => {
     showConfirm(
@@ -321,171 +365,34 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   return (
     <div className="workspace-container">
-      <div className="workspace-header">
-        <div className="manager-title-row">
-          <h2 className="text-gray-900 dark:text-white text-2xl font-bold transition-colors duration-300 flex items-center gap-2 w-full">
-            <FaBook className="text-blue-600 text-xl" />
-            {t('deck.deckManager')}
-            <div className="manager-info-tooltip-trigger group/tooltip">
-              <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>
-                <FaLightbulb className="text-yellow-500 text-base" />
-              </button>
-              <div className="manager-info-tooltip-panel">
-                <p className="font-medium leading-relaxed">{t('validation.savedLocationNote')}</p>
-              </div>
-            </div>
-
-            {selectedDeck ? (
-              <button
-                type="button"
-                onClick={() => setShowDeckList(!showDeckList)}
-                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
-                title={showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
-              >
-                <FaColumns className="text-xs shrink-0" />
-                <span>{showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}</span>
-              </button>
-            ) : null}
-          </h2>
-        </div>
-
-        {!selectedDeck ? (
-          <div className="manager-toolbar">
-            <div className="toolbar-group">
-              {editingDeckId ? (
-                <div className="toolbar-group-responsive">
-                  <button
-                    id="save-changes-btn"
-                    type="button"
-                    onClick={handleSaveEditedDeck}
-                    className="primary-button text-xs py-1.5 px-3"
-                  >
-                    <FaSave className="text-xs shrink-0" />
-                    {t('deck.saveChanges')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDeckName(`${editingDeckName} (${t('common.copy')})`);
-                      setDeckFormat(editingDeckFormat);
-                      setShowSaveDialog(true);
-                    }}
-                    className="success-button text-xs py-1.5 px-3"
-                  >
-                    <FaPlus className="text-xs shrink-0" />
-                    {t('deck.saveAsNew')}
-                  </button>
-                  <button type="button" onClick={onCancelEdit} className="danger-button text-xs py-1.5 px-3">
-                    <FaTimes className="text-xs shrink-0" />
-                    {t('common.cancel')}
-                  </button>
-                </div>
-              ) : (
-                <button
-                  id="save-deck-btn"
-                  type="button"
-                  onClick={() => {
-                    setDeckName('');
-                    setShowSaveDialog(true);
-                  }}
-                  disabled={currentDeck.length === 0}
-                  className="success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <FaSave className="text-xs shrink-0" />
-                  {t('deck.saveCurrentDeck')} ({currentDeck.length} {t('common.cards')})
-                </button>
-              )}
-
-              <button
-                id="clear-deck-btn"
-                type="button"
-                onClick={() => {
-                  showConfirm(
-                    t('deck.clearDeckConfirmationTitle'),
-                    t('deck.clearDeckConfirmationMessage'),
-                    () => {
-                      onClearDeck();
-                      showToast(t('deck.deckCleared'));
-                    },
-                    'danger'
-                  );
-                }}
-                disabled={currentDeck.length === 0}
-                className="danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <FaTrash className="text-xs shrink-0" />
-                {t('deck.clearCurrentDeck')}
-              </button>
-            </div>
-
-            <div className="toolbar-actions">
-              <div className="relative inline-block text-left">
-                <button
-                  type="button"
-                  onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
-                  className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
-                >
-                  <FaFileImport className="text-xs shrink-0" />
-                  {t('deck.importExport')}
-                  <span className="text-[10px] opacity-75">▼</span>
-                </button>
-                {showImportExportDropdown ? (
-                  <>
-                    <div className="fixed inset-0 z-[100]" onClick={() => setShowImportExportDropdown(false)} />
-                    <div className="import-export-dropdown">
-                      <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowImportExportDropdown(false);
-                          setTextErrorMsg(null);
-                          setIsTextImportOpen(true);
-                        }}
-                        className="import-export-dropdown-item"
-                      >
-                        <FaFileImport className="text-gray-400 shrink-0" />
-                        {t('deck.importTextList')}
-                      </button>
-                      <label className="import-export-dropdown-item">
-                        <FaFileImport className="text-gray-400 shrink-0" />
-                        {t('deck.importDeck')}{' '}
-                        <span className="text-[10px] text-gray-400 font-mono ml-auto">.json / .dec</span>
-                        <input
-                          id="deck-import-file-input"
-                          type="file"
-                          accept=".json,.dec,.txt"
-                          onChange={(e) => {
-                            setShowImportExportDropdown(false);
-                            handleImportDeck(e);
-                          }}
-                          className="hidden"
-                        />
-                      </label>
-                      {savedDecks.length > 0 ? (
-                        <>
-                          <div className="import-export-dropdown-divider" />
-                          <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowImportExportDropdown(false);
-                              exportAllDecks();
-                            }}
-                            className="import-export-dropdown-item"
-                          >
-                            {t('deck.exportAllDecks')}{' '}
-                            <span className="text-[10px] text-gray-400 font-mono ml-auto">.json</span>
-                          </button>
-                        </>
-                      ) : null}
-                    </div>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        ) : null}
-      </div>
+      <DeckManagerToolbar
+        selectedDeck={selectedDeck}
+        showDeckList={showDeckList}
+        onToggleDeckList={() => setShowDeckList(!showDeckList)}
+        editingDeckId={editingDeckId}
+        currentDeckCount={currentDeck.length}
+        hasSavedDecks={savedDecks.length > 0}
+        showImportExportDropdown={showImportExportDropdown}
+        setShowImportExportDropdown={setShowImportExportDropdown}
+        onSaveChanges={handleSaveEditedDeck}
+        onSaveAsNew={() => {
+          setDeckName(`${editingDeckName} (${t('common.copy')})`);
+          setDeckFormat(editingDeckFormat);
+          setShowSaveDialog(true);
+        }}
+        onCancelEdit={onCancelEdit}
+        onOpenSaveDialog={() => {
+          setDeckName('');
+          setShowSaveDialog(true);
+        }}
+        onClearDeck={clearDeckWithConfirm}
+        onOpenTextImport={() => {
+          setTextErrorMsg(null);
+          setIsTextImportOpen(true);
+        }}
+        onImportFile={handleImportDeck}
+        onExportAll={exportAllDecks}
+      />
 
       <div className="workspace-body">
         <div
@@ -558,41 +465,18 @@ function DeckManager({ showToast }: DeckManagerProps) {
       ) : null}
 
       {deckToExport ? (
-        <div className="modal-overlay z-[200]">
-          <div className="modal-container w-full animate-fadeIn">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              {t('deck.export')} {deckToExport.name}
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">{t('export.exportFormatPrompt')}</p>
-            <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                className="w-full primary-button bg-indigo-600 hover:bg-indigo-700 py-3"
-                onClick={() => {
-                  exportDeck(deckToExport);
-                  setDeckToExport(null);
-                }}
-              >
-                <div className="font-bold text-lg">JSON</div>
-                <div className="text-xs font-normal opacity-80">{t('export.exportJsonDesc')}</div>
-              </button>
-              <button
-                type="button"
-                className="w-full primary-button bg-emerald-600 hover:bg-emerald-700 py-3"
-                onClick={() => {
-                  exportDeckAsDec(deckToExport);
-                  setDeckToExport(null);
-                }}
-              >
-                <div className="font-bold text-lg">DEC (MTGO)</div>
-                <div className="text-xs font-normal opacity-80">{t('export.exportDecDesc')}</div>
-              </button>
-              <button type="button" className="w-full mt-2 secondary-button py-2" onClick={() => setDeckToExport(null)}>
-                {t('common.cancel')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeckExportDialog
+          deck={deckToExport}
+          onExportJson={(deck) => {
+            exportDeck(deck);
+            setDeckToExport(null);
+          }}
+          onExportDec={(deck) => {
+            exportDeckAsDec(deck);
+            setDeckToExport(null);
+          }}
+          onCancel={() => setDeckToExport(null)}
+        />
       ) : null}
 
       <DeckTextImportModal
