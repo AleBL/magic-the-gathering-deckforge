@@ -68,9 +68,7 @@ export const fetchCardsFromParsedList = async (
   t?: (key: string, options?: any) => string
 ): Promise<{ cards: Card[]; missing: string[] }> => {
   const uniqueParsed = Array.from(
-    new Map(
-      parsed.map((p) => [`${p.name}|${p.set || ''}|${p.collector_number || ''}`, p])
-    ).values()
+    new Map(parsed.map((p) => [`${p.name}|${p.set || ''}|${p.collector_number || ''}`, p])).values()
   );
 
   const allResolvedCards: Card[] = [];
@@ -79,7 +77,7 @@ export const fetchCardsFromParsedList = async (
 
   for (let chunkStartIndex = 0; chunkStartIndex < uniqueParsed.length; chunkStartIndex += CHUNK_SIZE) {
     const chunk = uniqueParsed.slice(chunkStartIndex, chunkStartIndex + CHUNK_SIZE);
-    
+
     if (onProgress) {
       onProgress({
         isImporting: true,
@@ -134,37 +132,39 @@ export const fetchCardsFromParsedList = async (
       });
     }
 
-    const retryIdentifiers = initialNotFound.map((nf: any) => {
-      let originalName = '';
-      if (nf.set && nf.collector_number) {
-        const found = uniqueParsed.find(p => p.set == nf.set && p.collector_number == nf.collector_number);
-        if (found) originalName = found.name;
-      }
-      if (!originalName && nf.set && nf.name) {
-        const found = uniqueParsed.find(p => p.set == nf.set && p.name == nf.name);
-        if (found) originalName = found.name;
-      }
-      if (!originalName && nf.name) {
-        originalName = nf.name;
-      }
-      
-      if (!originalName) return null;
-      
-      // For DFCs, sending just the front face is more reliable
-      let frontFace = originalName.split(/\s+\/?\/?\s+/)[0].trim();
-      
-      // Aggressive fallback cleanup for names that STILL have set info attached
-      frontFace = frontFace.replace(/\s*[([].*$/, '').trim();
+    const retryIdentifiers = initialNotFound
+      .map((nf: any) => {
+        let originalName = '';
+        if (nf.set && nf.collector_number) {
+          const found = uniqueParsed.find((p) => p.set == nf.set && p.collector_number == nf.collector_number);
+          if (found) originalName = found.name;
+        }
+        if (!originalName && nf.set && nf.name) {
+          const found = uniqueParsed.find((p) => p.set == nf.set && p.name == nf.name);
+          if (found) originalName = found.name;
+        }
+        if (!originalName && nf.name) {
+          originalName = nf.name;
+        }
 
-      return { name: frontFace };
-    }).filter(Boolean) as {name: string}[];
+        if (!originalName) return null;
+
+        // For DFCs, sending just the front face is more reliable
+        let frontFace = originalName.split(/\s+\/?\/?\s+/)[0].trim();
+
+        // Aggressive fallback cleanup for names that STILL have set info attached
+        frontFace = frontFace.replace(/\s*[([].*$/, '').trim();
+
+        return { name: frontFace };
+      })
+      .filter(Boolean) as { name: string }[];
 
     // Unique retries to avoid duplicate name lookups
-    const uniqueRetries = Array.from(new Map(retryIdentifiers.map(r => [r.name, r])).values());
+    const uniqueRetries = Array.from(new Map(retryIdentifiers.map((r) => [r.name, r])).values());
 
     for (let chunkStartIndex = 0; chunkStartIndex < uniqueRetries.length; chunkStartIndex += CHUNK_SIZE) {
       const chunk = uniqueRetries.slice(chunkStartIndex, chunkStartIndex + CHUNK_SIZE);
-      
+
       const body = { identifiers: chunk };
 
       const response = await fetch('https://api.scryfall.com/cards/collection', {
@@ -202,11 +202,14 @@ export const fetchCardsFromParsedList = async (
 
   const exactLookup = new Map<string, Card>();
   const nameLookup = new Map<string, Card>();
-  
+
   allResolvedCards.forEach((originalCard, index) => {
     const translatedCard = translatedCardsList[index] || originalCard;
     if (originalCard.set && originalCard.collector_number) {
-      exactLookup.set(`${originalCard.set.toLowerCase()}|${originalCard.collector_number.toLowerCase()}`, translatedCard);
+      exactLookup.set(
+        `${originalCard.set.toLowerCase()}|${originalCard.collector_number.toLowerCase()}`,
+        translatedCard
+      );
     }
     if (originalCard.name) {
       nameLookup.set(originalCard.name.toLowerCase(), translatedCard);
@@ -214,8 +217,8 @@ export const fetchCardsFromParsedList = async (
       nameLookup.set(namePart, translatedCard);
       // Also index single slash if it's a DFC
       if (originalCard.name.includes('//')) {
-          const singleSlashName = originalCard.name.replace('//', '/').toLowerCase();
-          nameLookup.set(singleSlashName, translatedCard);
+        const singleSlashName = originalCard.name.replace('//', '/').toLowerCase();
+        nameLookup.set(singleSlashName, translatedCard);
       }
     }
     if (originalCard.printed_name) nameLookup.set(originalCard.printed_name.toLowerCase(), translatedCard);
@@ -227,21 +230,21 @@ export const fetchCardsFromParsedList = async (
   parsed.forEach((item) => {
     const normalizedName = item.name.toLowerCase();
     let foundCard: Card | undefined;
-    
+
     if (item.set && item.collector_number) {
       foundCard = exactLookup.get(`${item.set.toLowerCase()}|${item.collector_number.toLowerCase()}`);
     }
-    
+
     if (!foundCard) {
       foundCard = nameLookup.get(normalizedName);
     }
-    
+
     // Additional fallback for DFC names in input like "Front / Back"
     if (!foundCard && normalizedName.includes('/')) {
-        const frontFace = normalizedName.split(/\s+\/?\/?\s+/)[0].trim();
-        foundCard = nameLookup.get(frontFace);
+      const frontFace = normalizedName.split(/\s+\/?\/?\s+/)[0].trim();
+      foundCard = nameLookup.get(frontFace);
     }
-    
+
     if (foundCard) {
       for (let copyIndex = 0; copyIndex < item.quantity; copyIndex++) {
         // We append a timestamp so every imported copy has a unique id

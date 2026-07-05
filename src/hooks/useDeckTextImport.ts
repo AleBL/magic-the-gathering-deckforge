@@ -32,20 +32,30 @@ export function useDeckTextImport(
     if (parsed.length === 0) return;
 
     setIsProgressModalOpen(true);
-    setImportProgress({ isImporting: true, current: 0, total: parsed.length, message: t('common.loading', 'Carregando...') });
+    setImportProgress({
+      isImporting: true,
+      current: 0,
+      total: parsed.length,
+      message: t('common.loading', 'Carregando...')
+    });
     setErrorMsg(null);
     setMissingCards([]);
     setImportedCardsCache([]);
 
     try {
       const currentLang = i18n.language || 'en';
-      
-      const { cards: finalCards, missing } = await fetchCardsFromParsedList(parsed, currentLang, (progress: ImportProgressData) => {
-        setImportProgress(progress);
-      }, t);
+
+      const { cards: finalCards, missing } = await fetchCardsFromParsedList(
+        parsed,
+        currentLang,
+        (progress: ImportProgressData) => {
+          setImportProgress(progress);
+        },
+        t
+      );
 
       setMissingCards(missing);
-      
+
       if (finalCards.length > 0) {
         setImportedCardsCache(finalCards);
         setImportProgress((prev: ImportProgressData) => ({ ...prev, isImporting: false, current: prev.total }));
@@ -89,4 +99,3 @@ export function useDeckTextImport(
     finishImport
   };
 }
-
