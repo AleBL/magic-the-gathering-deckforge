@@ -1,6 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaMinus, FaPlus, FaInbox, FaCheck, FaSkull, FaFileAlt, FaTimes } from 'react-icons/fa';
+import {
+  FaMinus,
+  FaPlus,
+  FaInbox,
+  FaCheck,
+  FaSkull,
+  FaFileAlt,
+  FaTimes,
+  FaUndo,
+  FaRedo,
+  FaKeyboard
+} from 'react-icons/fa';
 import { usePlaytestContext } from './PlaytestContext';
 
 export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -8,12 +19,17 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
   const {
     handleUntapAll,
     handleNextTurn,
+    handleUndo,
+    handleRedo,
+    canUndo,
+    canRedo,
     lifeTotal,
     setLifeTotal,
     isMulliganPhase,
     turn,
     mulligans,
     setPileExplorerConfig,
+    setIsShortcutsOpen,
     library,
     hand,
     graveyard,
@@ -40,6 +56,27 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
           >
             {t('playtest.nextTurn')}
           </button>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleUndo}
+              disabled={!canUndo}
+              title={`${t('playtest.undo')} (Ctrl+Z)`}
+              className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+            >
+              <FaUndo />
+            </button>
+            <button
+              type="button"
+              onClick={handleRedo}
+              disabled={!canRedo}
+              title={`${t('playtest.redo')} (Ctrl+Y)`}
+              className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+            >
+              <FaRedo />
+            </button>
+          </div>
 
           <div className="flex items-center bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/50 rounded-xl px-2 sm:px-3 py-1 shadow-inner gap-1.5 sm:gap-2">
             <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider">
@@ -73,7 +110,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
           )}
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
           <div className="hidden lg:flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
             <button
               type="button"
@@ -119,7 +156,16 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             <span className="hidden md:inline font-bold">{t('playtest.playtestLog')}</span>
           </button>
 
-          <div className="hidden md:flex gap-2">
+          <button
+            type="button"
+            onClick={() => setIsShortcutsOpen((prev: boolean) => !prev)}
+            title={`${t('playtest.shortcuts')} (?)`}
+            className="p-1.5 rounded-lg border bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all text-xs flex items-center cursor-pointer"
+          >
+            <FaKeyboard className="text-xs shrink-0" />
+          </button>
+
+          <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setScrySurveilPrompt({ type: 'scry' })}

@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync, FaInbox, FaSkull, FaInfoCircle } from 'react-icons/fa';
+import { FaSync, FaInbox, FaSkull, FaInfoCircle, FaBan } from 'react-icons/fa';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
 import { PlaytestCard } from '../../types/Playtest';
+import { PLAYTEST_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
+import { clampMenuYToViewport } from '../../utils/contextMenuPosition';
 
 const PlaytestBattlefieldCard = memo(
   ({
@@ -13,7 +15,8 @@ const PlaytestBattlefieldCard = memo(
     onContextMenu,
     onShowDetails,
     onReturnToHand,
-    onSendToGraveyard
+    onSendToGraveyard,
+    onSendToExile
   }: {
     playtestCard: PlaytestCard;
     imageUrl: string;
@@ -22,6 +25,7 @@ const PlaytestBattlefieldCard = memo(
     onShowDetails: (card: any) => void;
     onReturnToHand: (id: string, from: 'battlefield' | 'graveyard') => void;
     onSendToGraveyard: (id: string) => void;
+    onSendToExile: (id: string) => void;
   }) => {
     const { t } = useTranslation();
     const { playtestId, card, isTapped, isFaceDown, counters } = playtestCard;
@@ -39,7 +43,7 @@ const PlaytestBattlefieldCard = memo(
           (event.currentTarget as HTMLElement).style.opacity = '1';
         }}
       >
-        <div className="relative w-28 sm:w-32 md:w-36 lg:w-40 xl:w-48 aspect-[5/7] flex items-center justify-center">
+        <div className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} flex items-center justify-center`}>
           <div
             onClick={() => onTap(playtestId)}
             onContextMenu={(event) => onContextMenu(event, playtestId)}
@@ -121,6 +125,17 @@ const PlaytestBattlefieldCard = memo(
           >
             <FaSkull />
           </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onSendToExile(playtestId);
+            }}
+            title={t('playtest.moveToExile')}
+            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[9px] cursor-pointer"
+          >
+            <FaBan />
+          </button>
         </div>
       </div>
     );
@@ -141,16 +156,14 @@ export const PlaytestBattlefield: React.FC = () => {
     setSelectedDetailCard,
     handleReturnToHand,
     handleSendToGraveyard,
+    handleSendToExile,
     setContextMenu
   } = usePlaytestContext();
 
   const handleContextMenu = (e: React.MouseEvent, playtestId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    let y = e.clientY;
-    if (window.innerHeight - y < 250) {
-      y = window.innerHeight - 260;
-    }
+    const y = clampMenuYToViewport(e.clientY, 250, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX);
     setContextMenu({ playtestId, x: e.clientX, y, zone: 'battlefield' });
   };
 
@@ -200,6 +213,7 @@ export const PlaytestBattlefield: React.FC = () => {
               onShowDetails={setSelectedDetailCard}
               onReturnToHand={handleReturnToHand}
               onSendToGraveyard={handleSendToGraveyard}
+              onSendToExile={handleSendToExile}
             />
           ))}
         </div>

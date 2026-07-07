@@ -13,6 +13,7 @@ import { PlaytestBattlefield } from './playtest/PlaytestBattlefield';
 import { PlaytestHand } from './playtest/PlaytestHand';
 import { PlaytestLog } from './playtest/PlaytestLog';
 import { PlaytestModals } from './playtest/PlaytestModals';
+import { PlaytestShortcutsOverlay } from './playtest/PlaytestShortcutsOverlay';
 import { PlaytestParticles } from './PlaytestParticles';
 import { useRipple } from '../hooks/useRipple';
 
@@ -39,10 +40,21 @@ const PlaytestSimulatorContent: React.FC<{
     handleKeepHand,
     handleDrawCard,
     handleShuffleLibrary,
-    handleNextTurn
+    handleNextTurn,
+    handleUndo,
+    handleRedo,
+    setIsShortcutsOpen
   } = usePlaytestContext();
 
   const remainingToSelect = mulligans - selectedToBottom.size;
+
+  // Mark the playtest as active so app-level shortcuts (Ctrl+K, ?) stand down.
+  useEffect(() => {
+    document.body.dataset.playtestOpen = 'true';
+    return () => {
+      delete document.body.dataset.playtestOpen;
+    };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -51,8 +63,26 @@ const PlaytestSimulatorContent: React.FC<{
         return;
       }
 
+      const ctrl = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
-      if (key === 'd') {
+
+      if (ctrl && key === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) handleRedo();
+        else handleUndo();
+        return;
+      }
+      if (ctrl && key === 'y') {
+        e.preventDefault();
+        handleRedo();
+        return;
+      }
+      if (ctrl) return; // don't fire single-key shortcuts alongside modifiers
+
+      if (e.key === '?') {
+        e.preventDefault();
+        setIsShortcutsOpen((prev) => !prev);
+      } else if (key === 'd') {
         e.preventDefault();
         handleDrawCard();
       } else if (key === 's') {
@@ -66,10 +96,10 @@ const PlaytestSimulatorContent: React.FC<{
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleDrawCard, handleShuffleLibrary, handleNextTurn]);
+  }, [handleDrawCard, handleShuffleLibrary, handleNextTurn, handleUndo, handleRedo, setIsShortcutsOpen]);
 
   return (
-    <div className="modal-overlay p-2 sm:p-4 !z-[99999]" style={{ zIndex: 99999 }}>
+    <div className="modal-overlay p-2 sm:p-4 !z-[var(--z-playtest)]" style={{ zIndex: 'var(--z-playtest)' }}>
       <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition-all duration-300">
         <PlaytestControlBarTop onClose={onClose} />
 
@@ -133,6 +163,7 @@ const PlaytestSimulatorContent: React.FC<{
       </div>
 
       <PlaytestModals deckRelatedTokens={deckRelatedTokens} />
+      <PlaytestShortcutsOverlay />
     </div>
   );
 };

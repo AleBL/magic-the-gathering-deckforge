@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { FaInfoCircle, FaSkull } from 'react-icons/fa';
 import { usePlaytestContext } from './PlaytestContext';
 import { PlaytestCard } from '../../types/Playtest';
+import { PLAYTEST_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
+import { clampMenuYToViewport } from '../../utils/contextMenuPosition';
 
 const PlaytestHandCard = memo(
   ({
@@ -49,7 +51,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative w-28 sm:w-32 md:w-36 lg:w-40 xl:w-48 aspect-[5/7] rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-300 dark:border-slate-800'}`}
+          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-300 dark:border-slate-800'}`}
         >
           {imageUrl ? (
             <img
@@ -133,10 +135,7 @@ export const PlaytestHand: React.FC = () => {
   const handleContextMenu = (e: React.MouseEvent, playtestId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    let y = e.clientY;
-    if (window.innerHeight - y < 220) {
-      y = window.innerHeight - 230;
-    }
+    const y = clampMenuYToViewport(e.clientY, 220, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX);
     setContextMenu({ playtestId, x: e.clientX, y, zone: 'hand' });
   };
 

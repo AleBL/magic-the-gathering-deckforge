@@ -1,8 +1,31 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { Card } from '../types/Card';
 import { PlaytestCard, LogEntry } from '../types/Playtest';
 import { useTranslation } from 'react-i18next';
-import { PlaytestZone } from '../types/enums';
+import { PlaytestZone, LibraryPlacement } from '../types/enums';
+
+const getCardName = (item: PlaytestCard): string => item.card.printed_name || item.card.name;
+
+/** A restorable snapshot of the board for undo/redo. */
+interface GameSnapshot {
+  library: PlaytestCard[];
+  hand: PlaytestCard[];
+  battlefield: PlaytestCard[];
+  graveyard: PlaytestCard[];
+  exile: PlaytestCard[];
+  lifeTotal: number;
+  turn: number;
+}
+
+const MAX_HISTORY = 60;
+
+/** Normalizes a card's tap/face state as it enters a zone (library cards are hidden). */
+function applyZoneTransform(card: PlaytestCard, to: PlaytestZone): PlaytestCard {
+  if (to === PlaytestZone.LIBRARY) {
+    return { ...card, isTapped: false, isFaceDown: true };
+  }
+  return { ...card, isTapped: false, isFaceDown: false };
+}
 
 export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isOpen?: boolean) {
   const { t } = useTranslation();
@@ -17,8 +40,22 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
   const [selectedToBottom, setSelectedToBottom] = useState<Set<string>>(new Set());
 
   const [turn, setTurn] = useState(1);
-  const [lifeLog, setLifeLog] = useState<LogEntry[]>([]);
+  const [gameLog, setGameLog] = useState<LogEntry[]>([]);
   const [prevLifeTotal, setPrevLifeTotal] = useState<number | null>(null);
+
+  // Undo/redo history of board snapshots, captured after each batched state change.
+  const historyRef = useRef<GameSnapshot[]>([]);
+  const historyIndexRef = useRef(-1);
+  const skipSnapshotRef = useRef(false);
+  const skipLifeEffectRef = useRef(false);
+  const [undoState, setUndoState] = useState({ canUndo: false, canRedo: false });
+
+  const refreshUndoState = useCallback(() => {
+    setUndoState({
+      canUndo: historyIndexRef.current > 0,
+      canRedo: historyIndexRef.current < historyRef.current.length - 1
+    });
+  }, []);
 
   const shuffleDeck = (cards: PlaytestCard[]): PlaytestCard[] => {
     const shuffledCards = [...cards];
@@ -42,7 +79,7 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
   };
 
   const logAction = useCallback((text: string) => {
-    setLifeLog((prev) => [
+    setGameLog((prev) => [
       ...prev,
       {
         id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
@@ -72,13 +109,20 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     setSelectedToBottom(new Set());
 
     setTurn(1);
-    setLifeLog([
+    setGameLog([
       {
         id: 'start',
         text: t('playtest.gameStartedLog'),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       }
     ]);
+
+    // Reset undo history for the fresh game.
+    historyRef.current = [];
+    historyIndexRef.current = -1;
+    skipSnapshotRef.current = false;
+    skipLifeEffectRef.current = false;
+    setUndoState({ canUndo: false, canRedo: false });
   }, [deckCards, deckFormat, t]);
 
   useEffect(() => {
@@ -88,11 +132,31 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
   }, [isOpen, startSimulation]);
 
   useEffect(() => {
+    if (skipLifeEffectRef.current) {
+      skipLifeEffectRef.current = false;
+      setPrevLifeTotal(lifeTotal);
+      return;
+    }
     if (prevLifeTotal !== null && prevLifeTotal !== lifeTotal) {
       logAction(t('playtest.lifeChangedLog', { from: prevLifeTotal, to: lifeTotal }));
     }
     setPrevLifeTotal(lifeTotal);
   }, [lifeTotal, prevLifeTotal, logAction, t]);
+
+  // Capture a board snapshot after each batched change (skipped while restoring).
+  useEffect(() => {
+    if (skipSnapshotRef.current) {
+      skipSnapshotRef.current = false;
+      return;
+    }
+    const snapshot: GameSnapshot = { library, hand, battlefield, graveyard, exile, lifeTotal, turn };
+    const nextHistory = historyRef.current.slice(0, historyIndexRef.current + 1);
+    nextHistory.push(snapshot);
+    if (nextHistory.length > MAX_HISTORY) nextHistory.shift();
+    historyRef.current = nextHistory;
+    historyIndexRef.current = nextHistory.length - 1;
+    refreshUndoState();
+  }, [library, hand, battlefield, graveyard, exile, lifeTotal, turn, refreshUndoState]);
 
   const handleMulligan = () => {
     const nextMulligans = mulligans + 1;
@@ -178,18 +242,67 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     });
   }, [logAction, t]);
 
+  // Single source of truth for moving one card between zones. The named handlers
+  // below are thin wrappers that add their specific log message.
+  const moveCard = useCallback(
+    (
+      playtestId: string,
+      from: PlaytestZone,
+      to: PlaytestZone,
+      placement: LibraryPlacement = 'top'
+    ): PlaytestCard | undefined => {
+      const zones: Record<PlaytestZone, PlaytestCard[]> = {
+        [PlaytestZone.LIBRARY]: library,
+        [PlaytestZone.HAND]: hand,
+        [PlaytestZone.BATTLEFIELD]: battlefield,
+        [PlaytestZone.GRAVEYARD]: graveyard,
+        [PlaytestZone.EXILE]: exile
+      };
+      const setters: Record<PlaytestZone, Dispatch<SetStateAction<PlaytestCard[]>>> = {
+        [PlaytestZone.LIBRARY]: setLibrary,
+        [PlaytestZone.HAND]: setHand,
+        [PlaytestZone.BATTLEFIELD]: setBattlefield,
+        [PlaytestZone.GRAVEYARD]: setGraveyard,
+        [PlaytestZone.EXILE]: setExile
+      };
+
+      const found = zones[from].find((item) => item.playtestId === playtestId);
+      if (!found) return undefined;
+
+      const entering = applyZoneTransform(found, to);
+
+      if (from !== to) {
+        setters[from]((prev) => prev.filter((item) => item.playtestId !== playtestId));
+      }
+
+      setters[to]((prev) => {
+        const base = prev.filter((item) => item.playtestId !== playtestId);
+        if (to === PlaytestZone.LIBRARY) {
+          if (placement === 'top') return [entering, ...base];
+          if (placement === 'bottom') return [...base, entering];
+          const index = Math.max(0, Math.min(placement, base.length));
+          const next = [...base];
+          next.splice(index, 0, entering);
+          return next;
+        }
+        // Graveyard and exile stack newest-on-top; hand and battlefield append.
+        if (to === PlaytestZone.GRAVEYARD || to === PlaytestZone.EXILE) {
+          return [entering, ...base];
+        }
+        return [...base, entering];
+      });
+
+      return found;
+    },
+    [library, hand, battlefield, graveyard, exile]
+  );
+
   const handlePlayCard = useCallback(
     (playtestId: string) => {
-      setHand((previousHand) => {
-        const targetCard = previousHand.find((item) => item.playtestId === playtestId);
-        if (!targetCard) return previousHand;
-        setBattlefield((previousBattlefield) => [...previousBattlefield, { ...targetCard, isTapped: false }]);
-        const cardName = targetCard.card.printed_name || targetCard.card.name;
-        logAction(t('playtest.playedCardLog', { name: cardName }));
-        return previousHand.filter((item) => item.playtestId !== playtestId);
-      });
+      const moved = moveCard(playtestId, PlaytestZone.HAND, PlaytestZone.BATTLEFIELD);
+      if (moved) logAction(t('playtest.playedCardLog', { name: getCardName(moved) }));
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleToggleTapCard = useCallback(
@@ -208,189 +321,118 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     [logAction, t]
   );
 
-  const handleAddCounter = useCallback((playtestId: string) => {
-    setBattlefield((prev) =>
-      prev.map((item) => {
-        if (item.playtestId === playtestId) {
-          const cardName = item.card.printed_name || item.card.name;
-          logAction(t('playtest.addedCounterLog', { name: cardName }));
-          return { ...item, counters: (item.counters || 0) + 1 };
-        }
-        return item;
-      })
-    );
-  }, [logAction, t]);
-
-  const handleRemoveCounter = useCallback((playtestId: string) => {
-    setBattlefield((prev) =>
-      prev.map((item) => {
-        if (item.playtestId === playtestId) {
-          if ((item.counters || 0) > 0) {
+  const handleAddCounter = useCallback(
+    (playtestId: string) => {
+      setBattlefield((prev) =>
+        prev.map((item) => {
+          if (item.playtestId === playtestId) {
             const cardName = item.card.printed_name || item.card.name;
-            logAction(t('playtest.removedCounterLog', { name: cardName }));
+            logAction(t('playtest.addedCounterLog', { name: cardName }));
+            return { ...item, counters: (item.counters || 0) + 1 };
           }
-          return { ...item, counters: Math.max(0, (item.counters || 0) - 1) };
-        }
-        return item;
-      })
-    );
-  }, [logAction, t]);
+          return item;
+        })
+      );
+    },
+    [logAction, t]
+  );
 
-  const handleToggleFaceDown = useCallback((playtestId: string) => {
-    setBattlefield((prev) =>
-      prev.map((item) => {
-        if (item.playtestId === playtestId) {
-          const cardName = item.card.printed_name || item.card.name;
-          const isFaceDown = !item.isFaceDown;
-          logAction(
-            isFaceDown ? t('playtest.turnedFaceDownLog', { name: cardName }) : t('playtest.turnedFaceUpLog', { name: cardName })
-          );
-          return { ...item, isFaceDown };
-        }
-        return item;
-      })
-    );
-  }, [logAction, t]);
+  const handleRemoveCounter = useCallback(
+    (playtestId: string) => {
+      setBattlefield((prev) =>
+        prev.map((item) => {
+          if (item.playtestId === playtestId) {
+            if ((item.counters || 0) > 0) {
+              const cardName = item.card.printed_name || item.card.name;
+              logAction(t('playtest.removedCounterLog', { name: cardName }));
+            }
+            return { ...item, counters: Math.max(0, (item.counters || 0) - 1) };
+          }
+          return item;
+        })
+      );
+    },
+    [logAction, t]
+  );
+
+  const handleToggleFaceDown = useCallback(
+    (playtestId: string) => {
+      setBattlefield((prev) =>
+        prev.map((item) => {
+          if (item.playtestId === playtestId) {
+            const cardName = item.card.printed_name || item.card.name;
+            const isFaceDown = !item.isFaceDown;
+            logAction(
+              isFaceDown
+                ? t('playtest.turnedFaceDownLog', { name: cardName })
+                : t('playtest.turnedFaceUpLog', { name: cardName })
+            );
+            return { ...item, isFaceDown };
+          }
+          return item;
+        })
+      );
+    },
+    [logAction, t]
+  );
 
   const handleSendToGraveyard = useCallback(
     (playtestId: string) => {
-      setBattlefield((previousBattlefield) => {
-        const targetCard = previousBattlefield.find((item) => item.playtestId === playtestId);
-        if (!targetCard) return previousBattlefield;
-        // desvirar a carta ao ir pro cemitério
-        const cardToGrave = { ...targetCard, isFaceDown: false };
-        setGraveyard((previousGraveyard) => [cardToGrave, ...previousGraveyard]);
-        const cardName = targetCard.card.printed_name || targetCard.card.name;
-        logAction(t('playtest.graveyardCardLog', { name: cardName }));
-        return previousBattlefield.filter((item) => item.playtestId !== playtestId);
-      });
+      const moved = moveCard(playtestId, PlaytestZone.BATTLEFIELD, PlaytestZone.GRAVEYARD);
+      if (moved) logAction(t('playtest.graveyardCardLog', { name: getCardName(moved) }));
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleSendToExile = useCallback(
     (playtestId: string, source: PlaytestZone = PlaytestZone.BATTLEFIELD) => {
-      let targetCard: PlaytestCard | undefined;
-      
-      if (source === PlaytestZone.BATTLEFIELD) {
-        setBattlefield((prev) => {
-          targetCard = prev.find((item) => item.playtestId === playtestId);
-          return prev.filter((item) => item.playtestId !== playtestId);
-        });
-      } else if (source === PlaytestZone.GRAVEYARD) {
-        setGraveyard((prev) => {
-          targetCard = prev.find((item) => item.playtestId === playtestId);
-          return prev.filter((item) => item.playtestId !== playtestId);
-        });
-      } else if (source === PlaytestZone.HAND) {
-        setHand((prev) => {
-          targetCard = prev.find((item) => item.playtestId === playtestId);
-          return prev.filter((item) => item.playtestId !== playtestId);
-        });
-      }
-
-      if (targetCard) {
-        const cardToExile = { ...targetCard, isFaceDown: false };
-        setExile((prev) => [cardToExile, ...prev]);
-        const cardName = targetCard.card.printed_name || targetCard.card.name;
-        logAction(t('playtest.sentToExileLog', { name: cardName }));
-      }
+      const moved = moveCard(playtestId, source, PlaytestZone.EXILE);
+      if (moved) logAction(t('playtest.sentToExileLog', { name: getCardName(moved) }));
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleLibraryToGraveyard = useCallback(
     (playtestId: string) => {
-      setLibrary((previousLibrary) => {
-        const targetCard = previousLibrary.find((item) => item.playtestId === playtestId);
-        if (!targetCard) return previousLibrary;
-        // desvirar a carta ao ir pro cemitério
-        const cardToGrave = { ...targetCard, isFaceDown: false };
-        setGraveyard((previousGraveyard) => [cardToGrave, ...previousGraveyard]);
-        const cardName = targetCard.card.printed_name || targetCard.card.name;
+      const moved = moveCard(playtestId, PlaytestZone.LIBRARY, PlaytestZone.GRAVEYARD);
+      if (moved) {
         logAction(
           t('playtest.movedFromPileLog', {
-            name: cardName,
+            name: getCardName(moved),
             source: t('playtest.library'),
             dest: t('playtest.graveyard')
           })
         );
-        return previousLibrary.filter((item) => item.playtestId !== playtestId);
-      });
+      }
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleDiscardFromHand = useCallback(
     (playtestId: string) => {
-      setHand((previousHand) => {
-        const targetCard = previousHand.find((item) => item.playtestId === playtestId);
-        if (!targetCard) return previousHand;
-        setGraveyard((previousGraveyard) => [targetCard, ...previousGraveyard]);
-        const cardName = targetCard.card.printed_name || targetCard.card.name;
-        logAction(t('playtest.discardedCardLog', { name: cardName }));
-        return previousHand.filter((item) => item.playtestId !== playtestId);
-      });
+      const moved = moveCard(playtestId, PlaytestZone.HAND, PlaytestZone.GRAVEYARD);
+      if (moved) logAction(t('playtest.discardedCardLog', { name: getCardName(moved) }));
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleSendToLibraryPosition = useCallback(
     (playtestId: string, position: number, source: PlaytestZone = PlaytestZone.HAND) => {
-      let targetCard: PlaytestCard | undefined;
-
-      if (source === PlaytestZone.HAND) targetCard = hand.find((c) => c.playtestId === playtestId);
-      else if (source === PlaytestZone.BATTLEFIELD) targetCard = battlefield.find((c) => c.playtestId === playtestId);
-      else if (source === PlaytestZone.GRAVEYARD) targetCard = graveyard.find((c) => c.playtestId === playtestId);
-
-      if (!targetCard) return;
-      const card = targetCard;
-
-      if (source === PlaytestZone.HAND) {
-        setHand((prev) => prev.filter((item) => item.playtestId !== playtestId));
-      } else if (source === PlaytestZone.BATTLEFIELD) {
-        setBattlefield((prev) => prev.filter((item) => item.playtestId !== playtestId));
-      } else if (source === PlaytestZone.GRAVEYARD) {
-        setGraveyard((prev) => prev.filter((item) => item.playtestId !== playtestId));
+      const clampedPosition = Math.max(0, Math.min(position, library.length));
+      const moved = moveCard(playtestId, source, PlaytestZone.LIBRARY, position);
+      if (moved) {
+        logAction(t('playtest.libraryPositionLog', { name: getCardName(moved), pos: clampedPosition + 1 }));
       }
-
-      setLibrary((prevLibrary) => {
-        const nextLibrary = [...prevLibrary];
-        const clampedPosition = Math.max(0, Math.min(position, nextLibrary.length));
-        nextLibrary.splice(clampedPosition, 0, { ...card, isFaceDown: false });
-
-        const cardName = card.card.printed_name || card.card.name;
-        logAction(t('playtest.libraryPositionLog', { name: cardName, pos: clampedPosition + 1 }));
-
-        return nextLibrary;
-      });
     },
-    [hand, battlefield, graveyard, logAction, t]
+    [moveCard, library.length, logAction, t]
   );
 
   const handleReturnToHand = useCallback(
     (playtestId: string, fromZone: PlaytestZone) => {
-      if (fromZone === PlaytestZone.BATTLEFIELD) {
-        setBattlefield((previousBattlefield) => {
-          const targetCard = previousBattlefield.find((item) => item.playtestId === playtestId);
-          if (!targetCard) return previousBattlefield;
-          setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
-          const cardName = targetCard.card.printed_name || targetCard.card.name;
-          logAction(t('playtest.returnedHandLog', { name: cardName }));
-          return previousBattlefield.filter((item) => item.playtestId !== playtestId);
-        });
-      } else {
-        setGraveyard((previousGraveyard) => {
-          const targetCard = previousGraveyard.find((item) => item.playtestId === playtestId);
-          if (!targetCard) return previousGraveyard;
-          setHand((previousHand) => [...previousHand, { ...targetCard, isTapped: false }]);
-          const cardName = targetCard.card.printed_name || targetCard.card.name;
-          logAction(t('playtest.returnedHandLog', { name: cardName }));
-          return previousGraveyard.filter((item) => item.playtestId !== playtestId);
-        });
-      }
+      const moved = moveCard(playtestId, fromZone, PlaytestZone.HAND);
+      if (moved) logAction(t('playtest.returnedHandLog', { name: getCardName(moved) }));
     },
-    [logAction, t]
+    [moveCard, logAction, t]
   );
 
   const handleUntapAll = useCallback(() => {
@@ -417,6 +459,34 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     },
     [logAction, t]
   );
+
+  const restoreSnapshot = useCallback((snapshot: GameSnapshot) => {
+    skipSnapshotRef.current = true;
+    skipLifeEffectRef.current = true;
+    setLibrary(snapshot.library);
+    setHand(snapshot.hand);
+    setBattlefield(snapshot.battlefield);
+    setGraveyard(snapshot.graveyard);
+    setExile(snapshot.exile);
+    setLifeTotal(snapshot.lifeTotal);
+    setTurn(snapshot.turn);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    if (historyIndexRef.current <= 0) return;
+    historyIndexRef.current -= 1;
+    restoreSnapshot(historyRef.current[historyIndexRef.current]);
+    refreshUndoState();
+    logAction(t('playtest.undoLog'));
+  }, [restoreSnapshot, refreshUndoState, logAction, t]);
+
+  const handleRedo = useCallback(() => {
+    if (historyIndexRef.current >= historyRef.current.length - 1) return;
+    historyIndexRef.current += 1;
+    restoreSnapshot(historyRef.current[historyIndexRef.current]);
+    refreshUndoState();
+    logAction(t('playtest.redoLog'));
+  }, [restoreSnapshot, refreshUndoState, logAction, t]);
 
   const handleNextTurn = useCallback(() => {
     setTurn((prevTurn) => {
@@ -457,8 +527,12 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     isMulliganPhase,
     selectedToBottom,
     turn,
-    lifeLog,
-    setLifeLog,
+    gameLog,
+    setGameLog,
+    handleUndo,
+    handleRedo,
+    canUndo: undoState.canUndo,
+    canRedo: undoState.canRedo,
     startSimulation,
     handleMulligan,
     handleToggleCardSelection,
@@ -480,11 +554,9 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     handleUntapAll,
     handleSummonToken,
     handleNextTurn,
+    moveCard,
     setLibrary,
-    setHand,
-    setBattlefield,
     setGraveyard,
-    setExile,
     logAction
   };
 }

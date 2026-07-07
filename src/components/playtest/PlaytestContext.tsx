@@ -1,28 +1,41 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
 import { usePlaytestSimulator } from '../../hooks/usePlaytestSimulator';
 import { Card } from '../../types/Card';
+import { PlaytestDragZone, PlaytestMenuZone, PlaytestPileZone, ScrySurveilType } from '../../types/Playtest';
 
 type PlaytestState = ReturnType<typeof usePlaytestSimulator>;
 
 export interface ExtendedPlaytestState extends PlaytestState {
   isLogOpen: boolean;
   setIsLogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  dragOverZone: 'battlefield' | 'graveyard' | 'hand' | 'library' | 'exile' | null;
-  setDragOverZone: React.Dispatch<React.SetStateAction<'battlefield' | 'graveyard' | 'hand' | 'library' | 'exile' | null>>;
-  contextMenu: { playtestId: string; x: number; y: number; zone: 'battlefield' | 'hand' | 'graveyard' | 'exile' } | null;
+  isShortcutsOpen: boolean;
+  setIsShortcutsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  dragOverZone: PlaytestDragZone | null;
+  setDragOverZone: React.Dispatch<React.SetStateAction<PlaytestDragZone | null>>;
+  contextMenu: {
+    playtestId: string;
+    x: number;
+    y: number;
+    zone: PlaytestMenuZone;
+  } | null;
   setContextMenu: React.Dispatch<
-    React.SetStateAction<{ playtestId: string; x: number; y: number; zone: 'battlefield' | 'hand' | 'graveyard' | 'exile' } | null>
+    React.SetStateAction<{
+      playtestId: string;
+      x: number;
+      y: number;
+      zone: PlaytestMenuZone;
+    } | null>
   >;
   libraryContextMenu: { x: number; y: number } | null;
   setLibraryContextMenu: React.Dispatch<React.SetStateAction<{ x: number; y: number } | null>>;
   positionPrompt: { playtestId: string } | null;
   setPositionPrompt: React.Dispatch<React.SetStateAction<{ playtestId: string } | null>>;
-  pileExplorerConfig: { title: string; pile: 'library' | 'graveyard' | 'exile' } | null;
-  setPileExplorerConfig: React.Dispatch<React.SetStateAction<{ title: string; pile: 'library' | 'graveyard' | 'exile' } | null>>;
-  scrySurveilPrompt: { type: 'scry' | 'surveil' } | null;
-  setScrySurveilPrompt: React.Dispatch<React.SetStateAction<{ type: 'scry' | 'surveil' } | null>>;
-  scrySurveilConfig: { type: 'scry' | 'surveil'; amount: number } | null;
-  setScrySurveilConfig: React.Dispatch<React.SetStateAction<{ type: 'scry' | 'surveil'; amount: number } | null>>;
+  pileExplorerConfig: { title: string; pile: PlaytestPileZone } | null;
+  setPileExplorerConfig: React.Dispatch<React.SetStateAction<{ title: string; pile: PlaytestPileZone } | null>>;
+  scrySurveilPrompt: { type: ScrySurveilType } | null;
+  setScrySurveilPrompt: React.Dispatch<React.SetStateAction<{ type: ScrySurveilType } | null>>;
+  scrySurveilConfig: { type: ScrySurveilType; amount: number } | null;
+  setScrySurveilConfig: React.Dispatch<React.SetStateAction<{ type: ScrySurveilType; amount: number } | null>>;
   isTokenModalOpen: boolean;
   setIsTokenModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedDetailCard: Card | null;
@@ -42,21 +55,24 @@ interface PlaytestProviderProps {
 export function PlaytestProvider({ children, deckCards, deckFormat, isOpen }: PlaytestProviderProps) {
   const baseState = usePlaytestSimulator(deckCards, deckFormat, isOpen);
 
-  const [isLogOpen, setIsLogOpen] = useState(true);
-  const [dragOverZone, setDragOverZone] = useState<'battlefield' | 'graveyard' | 'hand' | 'library' | 'exile' | null>(null);
+  // Start open on desktop, collapsed on small screens where it would overlay the board.
+  const [isLogOpen, setIsLogOpen] = useState(() => (typeof window !== 'undefined' ? window.innerWidth >= 1024 : true));
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [dragOverZone, setDragOverZone] = useState<PlaytestDragZone | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     playtestId: string;
     x: number;
     y: number;
-    zone: 'battlefield' | 'hand' | 'graveyard' | 'exile';
+    zone: PlaytestMenuZone;
   } | null>(null);
   const [libraryContextMenu, setLibraryContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [positionPrompt, setPositionPrompt] = useState<{ playtestId: string } | null>(null);
-  const [scrySurveilPrompt, setScrySurveilPrompt] = useState<{ type: 'scry' | 'surveil' } | null>(null);
-  const [pileExplorerConfig, setPileExplorerConfig] = useState<{ title: string; pile: 'library' | 'graveyard' | 'exile' } | null>(
-    null
-  );
-  const [scrySurveilConfig, setScrySurveilConfig] = useState<{ type: 'scry' | 'surveil'; amount: number } | null>(null);
+  const [scrySurveilPrompt, setScrySurveilPrompt] = useState<{ type: ScrySurveilType } | null>(null);
+  const [pileExplorerConfig, setPileExplorerConfig] = useState<{
+    title: string;
+    pile: PlaytestPileZone;
+  } | null>(null);
+  const [scrySurveilConfig, setScrySurveilConfig] = useState<{ type: ScrySurveilType; amount: number } | null>(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
   const [selectedDetailCard, setSelectedDetailCard] = useState<Card | null>(null);
 
@@ -72,6 +88,8 @@ export function PlaytestProvider({ children, deckCards, deckFormat, isOpen }: Pl
     ...baseState,
     isLogOpen,
     setIsLogOpen,
+    isShortcutsOpen,
+    setIsShortcutsOpen,
     dragOverZone,
     setDragOverZone,
     contextMenu,

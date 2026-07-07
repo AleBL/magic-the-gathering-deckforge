@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSkull, FaBan } from 'react-icons/fa';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
+import { PLAYTEST_PILE_SIZE_CLASSES } from '../../constants';
 
 export const PlaytestLibraryGraveyard: React.FC = () => {
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
             // Do nothing for unknown drops
           }
         }}
-        className={`group relative w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 2xl:w-48 aspect-[5/7] rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-slate-300 dark:border-slate-700' : dragOverZone === 'library' ? 'border-dashed border-indigo-400 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-400/30 scale-105' : 'border-indigo-500/30 hover:border-indigo-500'}`}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-slate-300 dark:border-slate-700' : dragOverZone === 'library' ? 'border-dashed border-indigo-400 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-400/30 scale-105' : 'border-indigo-500/30 hover:border-indigo-500'}`}
         draggable={library.length > 0}
         onDragStart={(event) => {
           if (library.length === 0) {
@@ -80,10 +81,8 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
 
       {/* Graveyard Pile */}
       <div
-        onClick={() =>
-          graveyard.length > 0 && setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' })
-        }
-        className={`group relative w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 2xl:w-48 aspect-[5/7] rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
+        onClick={() => setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' })}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'graveyard'
             ? 'border-dashed border-red-400 bg-red-500/10 shadow-lg shadow-red-500/10 ring-2 ring-red-400/30 scale-105'
             : graveyard.length > 0
@@ -139,10 +138,8 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
       </div>
       {/* Exile Pile */}
       <div
-        onClick={() =>
-          exile.length > 0 && setPileExplorerConfig({ title: t('playtest.exile'), pile: 'exile' })
-        }
-        className={`group relative w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 2xl:w-48 aspect-[5/7] rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
+        onClick={() => setPileExplorerConfig({ title: t('playtest.exile'), pile: 'exile' })}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'exile'
             ? 'border-dashed border-gray-400 bg-gray-500/10 shadow-lg shadow-gray-500/10 ring-2 ring-gray-400/30 scale-105'
             : exile.length > 0
