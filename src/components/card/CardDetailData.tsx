@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { FaCrown, FaShieldAlt } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
+import { DECK_FORMATS, LEGALITY } from '../../types/enums';
+import { formatLabelKey } from '../../utils/formatLabel';
 
 interface CardDetailDataProps {
   card: Card;
@@ -97,24 +99,24 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
             <span>{t('cardDetails.legality')}</span>
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-            {(['standard', 'modern', 'commander', 'vintage', 'pauper'] as const).map((fmt) => {
-              const status = card.legalities?.[fmt];
+            {DECK_FORMATS.map((deckFormat) => {
+              const status = card.legalities?.[deckFormat];
               if (!status) return null;
 
               let bgClass = '';
               let dotClass = '';
               let label = t('cardDetails.notLegal');
 
-              if (status === 'legal') {
+              if (status === LEGALITY.LEGAL) {
                 bgClass =
                   'bg-emerald-500/5 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40';
                 dotClass = 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]';
                 label = t('cardDetails.legal');
-              } else if (status === 'banned') {
+              } else if (status === LEGALITY.BANNED) {
                 bgClass = 'bg-red-500/5 text-red-800 dark:text-red-400 border-red-200 dark:border-red-900/40';
                 dotClass = 'bg-red-500 dark:bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse';
                 label = t('cardDetails.banned');
-              } else if (status === 'restricted') {
+              } else if (status === LEGALITY.RESTRICTED) {
                 bgClass = 'bg-amber-500/5 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900/40';
                 dotClass = 'bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.5)]';
                 label = t('cardDetails.restricted');
@@ -126,11 +128,11 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
 
               return (
                 <div
-                  key={fmt}
+                  key={deckFormat}
                   className={`flex flex-col justify-center px-2.5 py-1.5 rounded-xl border transition-all duration-200 hover:brightness-105 hover:shadow-xs ${bgClass}`}
                 >
                   <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider leading-none">
-                    {t(fmt)}
+                    {t(formatLabelKey(deckFormat))}
                   </span>
                   <div className="flex items-center gap-1.5 mt-1 shrink-0">
                     <span className={`w-1.5 h-1.5 rounded-full inline-block ${dotClass}`} />

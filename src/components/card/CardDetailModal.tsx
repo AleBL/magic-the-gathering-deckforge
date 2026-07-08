@@ -49,7 +49,7 @@ function CardDetailModal({
   hidePriceAndLegality = false,
   deckRelatedTokens = [],
   defaultShowPrints,
-  zIndex = 200
+  zIndex = 250
 }: CardDetailModalProps) {
   const { t } = useTranslation();
   const [card, setCard] = useState<Card>(initialCard);
@@ -80,13 +80,6 @@ function CardDetailModal({
 
   // Token lightbox
   const [selectedToken, setSelectedToken] = useState<Card | null>(null);
-
-  const getCardFaceImageUrl = (printCard: Card): string => {
-    if (printCard.selectedPrintImageUri) return printCard.selectedPrintImageUri;
-    const imageUris = printCard.image_uris ?? printCard.card_faces?.[0]?.image_uris;
-    if (!imageUris) return '';
-    return imageUris.normal || imageUris.large || '';
-  };
 
   const { tokens: relatedTokens } = useCardRelatedTokensForCard(isToken ? null : card);
 
@@ -152,7 +145,7 @@ function CardDetailModal({
   }, [displayImageUrl, visibleImageUrl]);
 
   const handleSelectPrint = (printCard: Card) => {
-    const imgUrl = getCardFaceImageUrl(printCard);
+    const imgUrl = getCardImageUrl(printCard);
     const updatedCard: Card = {
       ...printCard,
       selectedPrintId: printCard.id,
@@ -190,7 +183,7 @@ function CardDetailModal({
     <>
       {/* Main modal */}
       <div
-        className="modal-overlay z-[200]"
+        className="modal-overlay z-[var(--z-overlay)]"
         style={{ zIndex }}
         onClick={onClose}
         onKeyDown={(e) => {
@@ -226,7 +219,7 @@ function CardDetailModal({
                   currentCard={card}
                   onHoverImageUrl={setHoveredImageUrl}
                   onSelectPrint={handleSelectPrint}
-                  getCardFaceImageUrl={getCardFaceImageUrl}
+                  getCardFaceImageUrl={getCardImageUrl}
                 />
               )}
 
@@ -235,8 +228,9 @@ function CardDetailModal({
                 <img
                   src={visibleImageUrl}
                   alt={currentFace ? currentFace.name : card.name}
-                  className={`card-detail-image transition-all duration-200 ${isPreloading ? 'opacity-70 scale-[0.98] brightness-90' : 'opacity-100 scale-100'
-                    }`}
+                  className={`card-detail-image transition-all duration-200 ${
+                    isPreloading ? 'opacity-70 scale-[0.98] brightness-90' : 'opacity-100 scale-100'
+                  }`}
                 />
                 {hasMultipleFaces && (
                   <button
@@ -249,7 +243,9 @@ function CardDetailModal({
                       flex items-center justify-center opacity-80 hover:opacity-100"
                     title={t('cardDetails.flipAction')}
                   >
-                    <FaSync className={`text-xl transition-transform duration-500 ${showBackFace ? '-rotate-180' : 'rotate-0'}`} />
+                    <FaSync
+                      className={`text-xl transition-transform duration-500 ${showBackFace ? '-rotate-180' : 'rotate-0'}`}
+                    />
                   </button>
                 )}
               </div>
@@ -292,13 +288,13 @@ function CardDetailModal({
                   onAddCardToDeck={
                     (isToken && onAddTokenToDeck) || onAddToDeck
                       ? () => {
-                        if (isToken && onAddTokenToDeck) {
-                          onAddTokenToDeck(card);
-                        } else if (onAddToDeck) {
-                          onAddToDeck(card);
+                          if (isToken && onAddTokenToDeck) {
+                            onAddTokenToDeck(card);
+                          } else if (onAddToDeck) {
+                            onAddToDeck(card);
+                          }
+                          onClose();
                         }
-                        onClose();
-                      }
                       : undefined
                   }
                 />

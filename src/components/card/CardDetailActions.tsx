@@ -23,8 +23,8 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
           title={t('export.scryfall')}
         >
           <img
-            src="https://assets.scryfall.com/assets/favicon-7aece1879cd785ebf7f6f1f2e46b0ee6ccbf4cf9ab3b0365851493b8e7345db5.ico"
-            alt="Scryfall"
+            src="https://scryfall.com/favicon.ico"
+            alt={t('export.scryfall')}
             className="w-3 h-3 opacity-70"
             onError={(e) => (e.currentTarget.style.display = 'none')}
           />
@@ -39,6 +39,12 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-50 text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
             title={t('export.gatherer')}
           >
+            <img
+              src="https://gatherer.wizards.com/favicon.ico"
+              alt={t('export.gatherer')}
+              className="w-3 h-3 opacity-70"
+              onError={(e) => (e.currentTarget.style.display = 'none')}
+            />
             <FaExternalLinkAlt className="text-[10px] opacity-60" />
             {t('export.gatherer')}
           </a>

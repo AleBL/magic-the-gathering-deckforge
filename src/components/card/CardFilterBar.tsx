@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { SearchFilters as SearchFiltersType } from '../../types';
 import { useSearchFilters } from '../../hooks/useSearchFilters';
+import { MANA_COLOR_GRADIENTS } from '../../constants/manaColors';
 
 interface CardFilterBarProps {
   filters: SearchFiltersType;
@@ -18,27 +19,14 @@ export default function CardFilterBar({ filters, setFilters }: CardFilterBarProp
     if (!isActive)
       return `${base} bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-500 border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:scale-110`;
 
-    switch (code) {
-      case 'W':
-        return `${base} bg-gradient-to-br from-[#fff7de] to-[#f8e7b9] text-[#80724b] ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ring-[#f8e7b9] shadow-lg scale-110 z-10`;
-      case 'U':
-        return `${base} bg-gradient-to-br from-[#1a7bc4] to-[#0e68ab] text-white ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ring-[#0e68ab] shadow-lg scale-110 z-10`;
-      case 'B':
-        return `${base} bg-gradient-to-br from-[#2a1600] to-[#150b00] text-[#c0b3a3] ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ring-[#150b00] shadow-lg scale-110 z-10`;
-      case 'R':
-        return `${base} bg-gradient-to-br from-[#e63c45] to-[#d3202a] text-white ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ring-[#d3202a] shadow-lg scale-110 z-10`;
-      case 'G':
-        return `${base} bg-gradient-to-br from-[#008f4d] to-[#00733e] text-white ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ring-[#00733e] shadow-lg scale-110 z-10`;
-      default:
-        return base;
-    }
+    return `${base} ${MANA_COLOR_GRADIENTS[code] ?? ''}`;
   };
 
   return (
     <div className="flex flex-wrap items-center gap-4 py-4 w-full">
       {/* Colors */}
       <div className="flex items-center gap-2">
-        {colors.map((color: { code: string; name: string; activeClasses: string }) => (
+        {colors.map((color: { code: string; name: string }) => (
           <div
             key={color.code}
             onClick={() => toggleColor(color.code)}

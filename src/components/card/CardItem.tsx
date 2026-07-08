@@ -260,10 +260,10 @@ function CardItem({
                 }}
                 className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
                   card.zone === DeckZone.MAIN
-                    ? 'bg-blue-600 text-white ring-2 ring-white/50'
+                    ? 'bg-primary text-white ring-2 ring-white/50'
                     : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
                 }`}
-                title="Mainboard"
+                title={t('deck.printFilters.main')}
               >
                 M
               </button>
@@ -278,7 +278,7 @@ function CardItem({
                     ? 'bg-purple-600 text-white ring-2 ring-white/50'
                     : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
                 }`}
-                title="Sideboard"
+                title={t('deck.printFilters.sideboard')}
               >
                 S
               </button>
@@ -290,10 +290,10 @@ function CardItem({
                 }}
                 className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
                   card.zone === DeckZone.MAYBEBOARD
-                    ? 'bg-amber-600 text-white ring-2 ring-white/50'
+                    ? 'bg-warning text-white ring-2 ring-white/50'
                     : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
                 }`}
-                title="Mayboard"
+                title={t('deck.printFilters.maybeboard')}
               >
                 ?
               </button>

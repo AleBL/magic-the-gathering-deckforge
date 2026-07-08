@@ -3,6 +3,7 @@ import { FaTimes, FaSpinner, FaPalette } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardWithScryfallMetadata } from '../../types/Scryfall';
 import { useCardPrints } from '../../hooks/useCardPrints';
+import { getCardImageUrl } from '../../utils/deckGrouping';
 
 interface CardPrintsModalProps {
   cardName: string;
@@ -17,16 +18,8 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
 
   if (!isOpen) return null;
 
-  const getCardFaceImageUrl = (printCard: Card): string => {
-    if (printCard.selectedPrintImageUri) return printCard.selectedPrintImageUri;
-    const imageUris = printCard.image_uris ?? printCard.card_faces?.[0]?.image_uris;
-    if (!imageUris) return '';
-    if (printCard.image_uris?.gatherer) return printCard.image_uris.gatherer;
-    return imageUris.normal || imageUris.large || '';
-  };
-
   const handleSelectPrint = (printCard: Card) => {
-    const imageUrl = getCardFaceImageUrl(printCard);
+    const imageUrl = getCardImageUrl(printCard);
 
     // Pass the printCard with selectedPrintId and selectedPrintImageUri set
     const updatedCard: Card = {
@@ -40,7 +33,7 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-[var(--z-dialog)] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
       <div className="bg-slate-900 border border-slate-800 text-white rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/40">
@@ -72,7 +65,7 @@ export function CardPrintsModal({ cardName, isOpen, onClose, onSelectPrint }: Ca
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {prints.map((printCard: CardWithScryfallMetadata) => {
-                const imgUrl = getCardFaceImageUrl(printCard);
+                const imgUrl = getCardImageUrl(printCard);
                 const printMetadata = printCard as CardWithScryfallMetadata;
                 const collectorNumber = printMetadata.collector_number || '';
                 const artist = printMetadata.artist || '';
