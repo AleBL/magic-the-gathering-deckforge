@@ -31,7 +31,7 @@ function DeckZoneTabs({
     return [
       'px-3 py-1.5 rounded-t-lg transition-all text-xs font-semibold relative',
       isActive
-        ? 'bg-blue-600 text-white font-extrabold shadow-sm'
+        ? 'bg-primary text-white font-extrabold shadow-sm'
         : 'bg-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
       isDragTarget
         ? 'ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-slate-900 bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-extrabold scale-105 shadow-lg shadow-indigo-500/20'

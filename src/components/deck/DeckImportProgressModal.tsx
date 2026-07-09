@@ -28,9 +28,8 @@ export default function DeckImportProgressModal({
   const hasMissing = missingCards.length > 0;
 
   return (
-    <div className="modal-overlay z-[200]">
+    <div className="modal-overlay z-[var(--z-overlay)]">
       <div className="modal-container modal-container-small mx-auto p-6 animate-fadeIn">
-
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
             {progress.isImporting ? (
@@ -40,12 +39,17 @@ export default function DeckImportProgressModal({
             ) : (
               <FaCheckCircle className="text-emerald-500" />
             )}
-            {progress.isImporting ? t('deck.importingDeck') :
-              errorMsg ? t('common.errorTitle') :
-                t('deck.importComplete')}
+            {progress.isImporting
+              ? t('deck.importingDeck')
+              : errorMsg
+                ? t('common.errorTitle')
+                : t('deck.importComplete')}
           </h2>
           {!progress.isImporting && (
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+            >
               <FaTimes size={20} />
             </button>
           )}
@@ -100,16 +104,16 @@ export default function DeckImportProgressModal({
                 onClose();
                 if (onFinish && !errorMsg) onFinish();
               }}
-              className={`px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm ${errorMsg
-                ? 'bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white'
-                : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20'
-                }`}
+              className={`px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
+                errorMsg
+                  ? 'bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20'
+              }`}
             >
               {errorMsg ? t('common.close') : t('common.continue')}
             </button>
           </div>
         )}
-
       </div>
     </div>
   );

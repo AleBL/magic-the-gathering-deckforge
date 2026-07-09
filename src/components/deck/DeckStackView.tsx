@@ -237,7 +237,7 @@ const DeckStackView = memo(function DeckStackView({
                     e.stopPropagation();
                     onAddToDeck(card);
                   }}
-                  className="w-6 h-6 rounded-full bg-green-600/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-green-500 hover:scale-110 transition-all pointer-events-auto"
+                  className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-green-500 hover:scale-110 transition-all pointer-events-auto"
                   title={t('cardDetails.addCopy')}
                 >
                   <FaPlus className="text-[10px]" />
@@ -248,7 +248,7 @@ const DeckStackView = memo(function DeckStackView({
                     e.stopPropagation();
                     onRemoveFromDeck(card);
                   }}
-                  className="w-6 h-6 rounded-full bg-red-600/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
+                  className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
                   title={t('cardDetails.removeCopy')}
                 >
                   <FaMinus className="text-[10px]" />
@@ -265,10 +265,10 @@ const DeckStackView = memo(function DeckStackView({
                     }}
                     className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
                       card.zone === DeckZone.MAIN
-                        ? 'bg-blue-600 text-white ring-1 ring-white/50'
+                        ? 'bg-primary text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
                     }`}
-                    title="Mainboard"
+                    title={t('deck.printFilters.main')}
                   >
                     M
                   </button>
@@ -283,7 +283,7 @@ const DeckStackView = memo(function DeckStackView({
                         ? 'bg-purple-600 text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
                     }`}
-                    title="Sideboard"
+                    title={t('deck.printFilters.sideboard')}
                   >
                     S
                   </button>
@@ -295,10 +295,10 @@ const DeckStackView = memo(function DeckStackView({
                     }}
                     className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
                       card.zone === DeckZone.MAYBEBOARD
-                        ? 'bg-amber-600 text-white ring-1 ring-white/50'
+                        ? 'bg-warning text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
                     }`}
-                    title="Mayboard"
+                    title={t('deck.printFilters.maybeboard')}
                   >
                     ?
                   </button>

@@ -234,7 +234,7 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onLoadDeckToEdit}
-            className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary hover:bg-primary-hover text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
             aria-label={t('common.edit')}
           >
             <FaEdit className="text-sm shrink-0" />

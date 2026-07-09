@@ -4,6 +4,7 @@ import { FaEdit, FaDownload, FaTrash } from 'react-icons/fa';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
+import { formatLabelKey } from '../../utils/formatLabel';
 import DeckValidationBadge from '../DeckValidationBadge';
 
 interface DeckListItemProps {
@@ -85,9 +86,13 @@ export const DeckListItem = memo(function DeckListItem({
             <span
               className={`format-badge deck-list-item-format-badge ${isSelected ? 'deck-list-item-format-badge-selected' : 'deck-list-item-format-badge-default'}`}
             >
-              {t((deck.format || DeckFormatType.FREEFORM).toLowerCase())}
+              {t(formatLabelKey(deck.format))}
             </span>
-            <DeckValidationBadge validation={validation} formatKey={deck.format || DeckFormatType.FREEFORM} variant="compact" />
+            <DeckValidationBadge
+              validation={validation}
+              formatKey={deck.format || DeckFormatType.FREEFORM}
+              variant="compact"
+            />
           </div>
         </div>
 
@@ -96,9 +101,16 @@ export const DeckListItem = memo(function DeckListItem({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(deck.id, deck.name, deck.format || DeckFormatType.FREEFORM, deck.cards, deck.notes, deck.relatedTokens);
+              onEdit(
+                deck.id,
+                deck.name,
+                deck.format || DeckFormatType.FREEFORM,
+                deck.cards,
+                deck.notes,
+                deck.relatedTokens
+              );
             }}
-            className={`button-small deck-list-action-btn bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center min-w-[32px]`}
+            className={`button-small deck-list-action-btn bg-primary hover:bg-primary-hover text-white flex items-center justify-center min-w-[32px]`}
             title={t('common.edit')}
             aria-label={`${t('common.edit')} ${deck.name}`}
           >

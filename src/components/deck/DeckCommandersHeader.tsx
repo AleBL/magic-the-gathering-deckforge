@@ -145,7 +145,7 @@ function DeckCommandersHeader({
                             onRemoveFromDeck(card);
                           }
                         }}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-red-600 dark:text-red-400 hover:bg-danger hover:text-white transition-all font-bold shadow-sm"
                         title={t('cardDetails.deleteCard')}
                       >
                         <FaTrash className="text-[8px]" />

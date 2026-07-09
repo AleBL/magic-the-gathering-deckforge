@@ -57,11 +57,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
     <div className="animate-fadeIn">
       <div
         className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-gray-300 dark:border-gray-800 cursor-pointer ${
-          isBanned
-            ? 'ring-1 ring-inset ring-red-500'
-            : isRestricted
-              ? 'ring-1 ring-inset ring-amber-500'
-              : ''
+          isBanned ? 'ring-1 ring-inset ring-red-500' : isRestricted ? 'ring-1 ring-inset ring-amber-500' : ''
         }`}
         draggable={isRemovable && !isTokenZone}
         onDragStart={(e) => {
