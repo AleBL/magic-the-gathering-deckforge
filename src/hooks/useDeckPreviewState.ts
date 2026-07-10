@@ -65,7 +65,8 @@ export function useDeckPreviewState({
   }, [activeCards, activeZone, activeTokens]);
 
   const deckCards = useMemo(
-    () => (isCommanderFormat && activeZone !== DeckZone.TOKENS ? zoneCards.filter((card) => !card.isCommander) : zoneCards),
+    () =>
+      isCommanderFormat && activeZone !== DeckZone.TOKENS ? zoneCards.filter((card) => !card.isCommander) : zoneCards,
     [zoneCards, isCommanderFormat, activeZone]
   );
 

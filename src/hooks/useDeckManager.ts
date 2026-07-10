@@ -26,8 +26,13 @@ export default function useDeckManager(
     isValid: true,
     errors: []
   });
-  
-  const [importProgress, setImportProgress] = useState<ImportProgressData>({ isImporting: false, current: 0, total: 0, message: '' });
+
+  const [importProgress, setImportProgress] = useState<ImportProgressData>({
+    isImporting: false,
+    current: 0,
+    total: 0,
+    message: ''
+  });
   const [fileMissingCards, setFileMissingCards] = useState<string[]>([]);
   const [fileImportError, setFileImportError] = useState<string | null>(null);
   const [isFileImportModalOpen, setIsFileImportModalOpen] = useState(false);
@@ -173,21 +178,21 @@ export default function useDeckManager(
             const deck = JSON.parse(content) as Deck;
             if (!deck.name || !Array.isArray(deck.cards)) {
               setFileImportError(t('deck.invalidFile', 'Arquivo inválido'));
-              setImportProgress(prev => ({ ...prev, isImporting: false }));
+              setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
               return;
             }
             deck.id = Date.now().toString();
             if (!deck.format) deck.format = DeckFormatType.FREEFORM;
             await db.decks.put(deck);
-            setImportProgress(prev => ({ ...prev, isImporting: false, current: prev.total }));
+            setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
             dispatchToast(t('deck.deckImported', 'Deck importado com sucesso'));
             resolve();
           } else if (file.name.endsWith('.dec') || file.name.endsWith('.txt')) {
             const parsed = parseDeckText(content);
             if (parsed.length === 0) {
               setFileImportError(t('deck.invalidFile', 'Arquivo inválido ou vazio'));
-              setImportProgress(prev => ({ ...prev, isImporting: false }));
+              setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
               return;
             }
@@ -202,7 +207,7 @@ export default function useDeckManager(
 
               if (cards.length === 0) {
                 setFileImportError(t('deck.importError', 'Erro ao importar deck'));
-                setImportProgress(prev => ({ ...prev, isImporting: false }));
+                setImportProgress((prev) => ({ ...prev, isImporting: false }));
                 resolve();
                 return;
               }
@@ -215,29 +220,29 @@ export default function useDeckManager(
                 createdAt: new Date().toISOString()
               };
               await db.decks.put(newDeck);
-              
-              setImportProgress(prev => ({ ...prev, isImporting: false, current: prev.total }));
+
+              setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
               dispatchToast(t('deck.deckImported', 'Deck importado com sucesso'));
               resolve();
             } catch (err) {
               setFileImportError(t('deck.importError', 'Erro ao importar deck'));
-              setImportProgress(prev => ({ ...prev, isImporting: false }));
+              setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
             }
           } else {
             setFileImportError(t('deck.invalidFile', 'Formato de arquivo não suportado'));
-            setImportProgress(prev => ({ ...prev, isImporting: false }));
+            setImportProgress((prev) => ({ ...prev, isImporting: false }));
             resolve();
           }
         } catch {
           setFileImportError(t('deck.invalidFile', 'Erro ao ler arquivo'));
-          setImportProgress(prev => ({ ...prev, isImporting: false }));
+          setImportProgress((prev) => ({ ...prev, isImporting: false }));
           resolve();
         }
       };
       reader.onerror = () => {
         setFileImportError(t('deck.invalidFile', 'Erro de leitura do arquivo'));
-        setImportProgress(prev => ({ ...prev, isImporting: false }));
+        setImportProgress((prev) => ({ ...prev, isImporting: false }));
         resolve();
       };
       reader.readAsText(file);

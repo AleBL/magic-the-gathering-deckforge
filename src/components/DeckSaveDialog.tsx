@@ -66,7 +66,7 @@ function DeckSaveDialog({
               >
                 {DECK_FORMATS.map((fmt) => (
                   <option key={fmt.value} value={fmt.value}>
-                    {t(fmt.labelKey)}
+                    {t(`validation.${fmt.labelKey}`)}
                   </option>
                 ))}
               </select>

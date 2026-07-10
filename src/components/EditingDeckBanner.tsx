@@ -4,6 +4,7 @@ import { FaBolt, FaTimes } from 'react-icons/fa';
 import { useDeckStore } from '../store/useDeckStore';
 import { DeckFormat } from '../types/Deck';
 import { DeckFormatType } from '../types/enums';
+import { formatLabelKey } from '../utils/formatLabel';
 
 interface EditingDeckBannerProps {
   deckName: string;
@@ -98,7 +99,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                 onClick={() => setIsEditingFormat(true)}
                 title={t('deck.editDeckInfo')}
               >
-                {t(deckFormat || DeckFormatType.FREEFORM)}
+                {t(formatLabelKey(deckFormat))}
               </span>
             )}
           </div>

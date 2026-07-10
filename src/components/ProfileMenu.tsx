@@ -95,7 +95,7 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
       </button>
 
       {isOpen ? (
-        <div className="profile-menu-panel animate-dropdownEnter origin-top-right z-[1500]" role="menu">
+        <div className="profile-menu-panel animate-dropdownEnter origin-top-right z-[var(--z-modal)]" role="menu">
           {activeSection === 'main' ? (
             <>
               <div className="profile-menu-header">

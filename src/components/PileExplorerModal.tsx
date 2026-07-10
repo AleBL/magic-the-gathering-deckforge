@@ -3,16 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { PlaytestCard } from '../types/Playtest';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 
-import { PlaytestZone } from '../types/enums';
+import { PlaytestZone, LibraryPlacement } from '../types/enums';
 
 export interface PileExplorerModalProps {
   title: string;
   cards: PlaytestCard[];
   onClose: () => void;
-  onMoveCard: (
-    playtestId: string,
-    destination: PlaytestZone
-  ) => void;
+  onMoveCard: (playtestId: string, destination: PlaytestZone, placement?: LibraryPlacement) => void;
 }
 
 export default function PileExplorerModal({ title, cards, onClose, onMoveCard }: PileExplorerModalProps) {
@@ -43,7 +40,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
   }, []);
 
   return (
-    <div className="modal-overlay" style={{ zIndex: 3000 }}>
+    <div className="modal-overlay" style={{ zIndex: 'var(--z-playtest-dialog)' }}>
       <div className="w-full max-w-6xl mx-4 bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-800 flex flex-col h-[80vh] animate-fadeIn relative">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -95,7 +92,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
 
         {contextMenu && (
           <div
-            className="fixed z-[3100] bg-slate-800 border border-slate-700 shadow-2xl rounded-xl py-1 w-48 animate-fadeIn"
+            className="fixed z-[var(--z-playtest-menu)] bg-slate-800 border border-slate-700 shadow-2xl rounded-xl py-1 w-48 animate-fadeIn"
             style={{ top: contextMenu.y, left: contextMenu.x }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -120,7 +117,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
             <button
               className="w-full text-left px-4 py-2 hover:bg-slate-700 text-sm text-slate-200 transition-colors"
               onClick={() => {
-                onMoveCard(contextMenu.playtestId, PlaytestZone.LIBRARY_TOP);
+                onMoveCard(contextMenu.playtestId, PlaytestZone.LIBRARY, 'top');
                 setContextMenu(null);
               }}
             >
@@ -129,7 +126,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
             <button
               className="w-full text-left px-4 py-2 hover:bg-slate-700 text-sm text-slate-200 transition-colors"
               onClick={() => {
-                onMoveCard(contextMenu.playtestId, PlaytestZone.LIBRARY_BOTTOM);
+                onMoveCard(contextMenu.playtestId, PlaytestZone.LIBRARY, 'bottom');
                 setContextMenu(null);
               }}
             >

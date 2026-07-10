@@ -1,24 +1,13 @@
 import { lazy, Suspense, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  FaFileAlt,
-  FaLayerGroup,
-  FaPencilAlt,
-  FaBolt,
-  FaExclamationTriangle,
-  FaChartBar,
-  FaSearch,
-  FaSlidersH,
-  FaList,
-  FaTh
-} from 'react-icons/fa';
+import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
-import { groupCards } from '../utils/deckGrouping';
 import { validateDeck } from '../utils/deckValidator';
-import { ViewMode, NoteTab, useDeckPreviewState } from '../hooks/useDeckPreviewState';
+import { useDeckPreviewState } from '../hooks/useDeckPreviewState';
 import { DeckFormatType, DeckZone } from '../types/enums';
+import { formatLabelKey } from '../utils/formatLabel';
 import { useTokenHandlers } from '../hooks/useTokenHandlers';
 import { useDeckStore } from '../store/useDeckStore';
 import EmptyState from './ui/EmptyState';
@@ -30,6 +19,8 @@ import DeckNotesEditor from './deck/DeckNotesEditor';
 import DeckCardList from './deck/DeckCardList';
 import DeckStackView from './deck/DeckStackView';
 import DeckTokensTab from './deck/DeckTokensTab';
+import { DeckDisplayOptions } from './deck/DeckDisplayOptions';
+import { DeckStatsFilteredCards } from './deck/DeckStatsFilteredCards';
 import CardDetailModal from './card/CardDetailModal';
 
 const PlaytestSimulator = lazy(() => import('./PlaytestSimulator'));
@@ -157,7 +148,6 @@ export function DeckPreview({
     }
   }, [pendingAction, setIsPlaytestOpen, setPendingAction]);
 
-
   const handleLoadSelectedDeckToEdit = useCallback(() => {
     if (selectedDeck) {
       onLoadDeckToEdit(
@@ -260,128 +250,6 @@ export function DeckPreview({
     </>
   );
 
-  const renderDisplayOptionsDropdown = () => (
-    <div className="relative inline-block text-left">
-      <button
-        type="button"
-        onClick={() => setIsDisplaySettingsOpen(!isDisplaySettingsOpen)}
-        className={`display-settings-btn ${isDisplaySettingsOpen ? 'display-settings-btn-active' : ''}`}
-        title={t('common.displaySettings')}
-      >
-        <FaSlidersH className="text-xs shrink-0 text-blue-500 dark:text-blue-400" />
-        <span>{t('common.viewMode')}</span>
-        <span
-          className="text-[9px] opacity-60 transition-transform duration-200"
-          style={{ transform: isDisplaySettingsOpen ? 'rotate(180deg)' : 'none' }}
-        >
-          ▼
-        </span>
-      </button>
-      {isDisplaySettingsOpen ? (
-        <>
-          <div className="fixed inset-0 z-[100]" onClick={() => setIsDisplaySettingsOpen(false)} />
-          <div className="display-settings-dropdown">
-            <div className="space-y-2">
-              <span className="display-settings-section-label">{t('common.viewMode')}</span>
-              <div className="grid grid-cols-3 gap-1.5">
-                {(
-                  [
-                    { mode: 'list', label: t('common.listView'), icon: FaList },
-                    { mode: 'grid', label: t('common.gridView'), icon: FaTh },
-                    { mode: 'stack', label: t('strategy.stackView'), icon: FaLayerGroup }
-                  ] as const
-                ).map(({ mode, label, icon: Icon }) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() => setViewMode(mode)}
-                    className={`option-toggle-btn ${viewMode === mode ? 'option-toggle-btn-active' : ''}`}
-                  >
-                    <Icon className="text-sm" />
-                    <span className="text-[10px] leading-none">{label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <span className="display-settings-section-label">{t('deck.groupBy')}</span>
-              <div className="grid grid-cols-2 gap-1.5">
-                {(
-                  [
-                    { key: 'none', label: t('deck.groupNone') },
-                    { key: 'type', label: t('deck.groupType') },
-                    { key: 'cmc', label: t('deck.groupCmc') },
-                    { key: 'color', label: t('deck.groupColor') }
-                  ] as const
-                ).map(({ key, label }) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setGroupBy(key)}
-                    className={`option-toggle-btn-compact ${groupBy === key ? 'option-toggle-btn-compact-active' : ''}`}
-                    title={label}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <span className="display-settings-section-label">{t('deck.sortBy')}</span>
-              <div className="grid grid-cols-3 gap-1.5">
-                {(
-                  [
-                    { key: 'name', label: t('deck.sortName') },
-                    { key: 'cmc', label: t('deck.sortCmc') },
-                    { key: 'rarity', label: t('deck.sortRarity') }
-                  ] as const
-                ).map(({ key, label }) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSortBy(key)}
-                    className={`option-toggle-btn-compact ${sortBy === key ? 'option-toggle-btn-compact-active' : ''}`}
-                    title={label}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {viewMode !== 'list' && onCardSizeChange ? (
-              <div className="space-y-2">
-                <span className="display-settings-section-label">{t('search.cardSize')}</span>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {(
-                    [
-                      { key: 'small', label: t('search.smallInitial') },
-                      { key: 'medium', label: t('search.mediumInitial') },
-                      { key: 'large', label: t('search.largeInitial') },
-                      { key: 'xlarge', label: t('search.xlargeInitial') }
-                    ] as const
-                  ).map(({ key, label }) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => onCardSizeChange(key)}
-                      className={`option-toggle-btn-compact ${cardSize === key ? 'option-toggle-btn-compact-active' : ''}`}
-                      title={t(`search.${key}`)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
-
   if (selectedDeck) {
     const validation = validateDeck(selectedDeck.cards, selectedDeck.format || DeckFormatType.FREEFORM);
 
@@ -397,7 +265,7 @@ export function DeckPreview({
               <span className="text-muted">
                 {t('validation.format')}:{' '}
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  {t(selectedDeck.format || DeckFormatType.FREEFORM)}
+                  {t(formatLabelKey(selectedDeck.format))}
                 </span>
               </span>
               <span className="text-muted">•</span>
@@ -407,7 +275,18 @@ export function DeckPreview({
             </div>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
-            {renderDisplayOptionsDropdown()}
+            <DeckDisplayOptions
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              groupBy={groupBy}
+              setGroupBy={setGroupBy}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              cardSize={cardSize}
+              onCardSizeChange={onCardSizeChange}
+              isOpen={isDisplaySettingsOpen}
+              setIsOpen={setIsDisplaySettingsOpen}
+            />
             <DeckActionBar
               cards={activeCards}
               selectedDeck={selectedDeck}
@@ -441,42 +320,25 @@ export function DeckPreview({
             <DeckStats
               currentDeck={activeCards}
               renderFilteredCards={(filteredCards) => (
-                <div className="mt-4">
-                  {viewMode === 'stack' ? (
-                    <DeckStackView
-                      groups={groupCards(filteredCards, groupBy, sortBy)}
-                      cardSize={cardSize}
-                      isRemovable={false}
-                      activeFormat={(selectedDeck?.format || activeFormat) as any}
-                      onHoverEnter={handleHoverEnter}
-                      onHoverMove={handleHoverMove}
-                      onHoverLeave={handleHoverLeave}
-                      onRemoveFromDeck={onRemoveFromDeck}
-                      onAddToDeck={onAddToDeck}
-                      onAddTokenToDeck={handleAddTokenCardCopy}
-                      onUpdateCard={onUpdateCard}
-                      onUpdateCardZone={onUpdateCardZone}
-                    />
-                  ) : (
-                    <DeckCardList
-                      groups={groupCards(filteredCards, groupBy, sortBy)}
-                      commanders={commanders.filter((c) => filteredCards.some((f) => f.id === c.id))}
-                      cardSize={cardSize}
-                      viewMode={viewMode}
-                      isRemovable={false}
-                      isTokenZone={false}
-                      activeFormat={selectedDeck ? selectedDeck.format : activeFormat}
-                      onUpdateCardZone={onUpdateCardZone}
-                      onAddToDeck={onAddToDeck}
-                      onAddTokenToDeck={handleAddTokenCardCopy}
-                      onRemoveFromDeck={onRemoveFromDeck}
-                      onToggleCommander={onToggleCommander}
-                      onHoverEnter={handleHoverEnter}
-                      onHoverMove={handleHoverMove}
-                      onHoverLeave={handleHoverLeave}
-                    />
-                  )}
-                </div>
+                <DeckStatsFilteredCards
+                  filteredCards={filteredCards}
+                  selectedDeck={selectedDeck}
+                  activeFormat={activeFormat}
+                  viewMode={viewMode}
+                  groupBy={groupBy}
+                  sortBy={sortBy}
+                  cardSize={cardSize}
+                  commanders={commanders}
+                  onHoverEnter={handleHoverEnter}
+                  onHoverMove={handleHoverMove}
+                  onHoverLeave={handleHoverLeave}
+                  onRemoveFromDeck={onRemoveFromDeck}
+                  onAddToDeck={onAddToDeck}
+                  onAddTokenToDeck={handleAddTokenCardCopy}
+                  onToggleCommander={onToggleCommander}
+                  onUpdateCard={onUpdateCard}
+                  onUpdateCardZone={onUpdateCardZone}
+                />
               )}
             />
           </Suspense>
@@ -560,7 +422,18 @@ export function DeckPreview({
         </div>
         {currentDeck.length > 0 ? (
           <div className="flex flex-wrap gap-2 items-center">
-            {renderDisplayOptionsDropdown()}
+            <DeckDisplayOptions
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              groupBy={groupBy}
+              setGroupBy={setGroupBy}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              cardSize={cardSize}
+              onCardSizeChange={onCardSizeChange}
+              isOpen={isDisplaySettingsOpen}
+              setIsOpen={setIsDisplaySettingsOpen}
+            />
             <DeckActionBar
               cards={activeCards}
               showToast={showToast}
@@ -592,42 +465,25 @@ export function DeckPreview({
             currentDeck={activeCards}
             onApplySuggestedLands={onApplySuggestedLands}
             renderFilteredCards={(filteredCards) => (
-              <div className="mt-4">
-                {viewMode === 'stack' ? (
-                  <DeckStackView
-                    groups={groupCards(filteredCards, groupBy, sortBy)}
-                    cardSize={cardSize}
-                    isRemovable={false}
-                    activeFormat={activeFormat}
-                    onHoverEnter={handleHoverEnter}
-                    onHoverMove={handleHoverMove}
-                    onHoverLeave={handleHoverLeave}
-                    onRemoveFromDeck={onRemoveFromDeck}
-                    onAddToDeck={onAddToDeck}
-                    onAddTokenToDeck={handleAddTokenCardCopy}
-                    onUpdateCard={onUpdateCard}
-                    onUpdateCardZone={onUpdateCardZone}
-                  />
-                ) : (
-                  <DeckCardList
-                    groups={groupCards(filteredCards, groupBy, sortBy)}
-                    commanders={commanders.filter((c) => filteredCards.some((f) => f.id === c.id))}
-                    cardSize={cardSize}
-                    viewMode={viewMode}
-                    isRemovable={false}
-                    isTokenZone={false}
-                    activeFormat={activeFormat}
-                    onUpdateCardZone={onUpdateCardZone}
-                    onAddToDeck={onAddToDeck}
-                    onAddTokenToDeck={handleAddTokenCardCopy}
-                    onRemoveFromDeck={onRemoveFromDeck}
-                    onToggleCommander={onToggleCommander}
-                    onHoverEnter={handleHoverEnter}
-                    onHoverMove={handleHoverMove}
-                    onHoverLeave={handleHoverLeave}
-                  />
-                )}
-              </div>
+              <DeckStatsFilteredCards
+                filteredCards={filteredCards}
+                selectedDeck={selectedDeck}
+                activeFormat={activeFormat}
+                viewMode={viewMode}
+                groupBy={groupBy}
+                sortBy={sortBy}
+                cardSize={cardSize}
+                commanders={commanders}
+                onHoverEnter={handleHoverEnter}
+                onHoverMove={handleHoverMove}
+                onHoverLeave={handleHoverLeave}
+                onRemoveFromDeck={onRemoveFromDeck}
+                onAddToDeck={onAddToDeck}
+                onAddTokenToDeck={handleAddTokenCardCopy}
+                onToggleCommander={onToggleCommander}
+                onUpdateCard={onUpdateCard}
+                onUpdateCardZone={onUpdateCardZone}
+              />
             )}
           />
         </Suspense>
