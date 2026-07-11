@@ -11,32 +11,11 @@ export function useSearchFilters(
 
   const colors = useMemo(
     () => [
-      {
-        code: 'W',
-        name: t('search.white'),
-        activeClasses:
-          'bg-yellow-100 text-yellow-900 shadow-md ring-2 ring-yellow-400 dark:bg-yellow-900 dark:text-yellow-100 dark:ring-yellow-500'
-      },
-      {
-        code: 'U',
-        name: t('search.blue'),
-        activeClasses: 'bg-blue-500 text-white shadow-md ring-2 ring-blue-400 dark:bg-blue-600 dark:ring-blue-500'
-      },
-      {
-        code: 'B',
-        name: t('search.black'),
-        activeClasses: 'bg-gray-800 text-white shadow-md ring-2 ring-gray-400 dark:bg-black dark:ring-gray-600'
-      },
-      {
-        code: 'R',
-        name: t('search.red'),
-        activeClasses: 'bg-red-600 text-white shadow-md ring-2 ring-red-400 dark:bg-red-700 dark:ring-red-500'
-      },
-      {
-        code: 'G',
-        name: t('search.green'),
-        activeClasses: 'bg-green-600 text-white shadow-md ring-2 ring-green-400 dark:bg-green-700 dark:ring-green-500'
-      }
+      { code: 'W', name: t('search.white') },
+      { code: 'U', name: t('search.blue') },
+      { code: 'B', name: t('search.black') },
+      { code: 'R', name: t('search.red') },
+      { code: 'G', name: t('search.green') }
     ],
     [t]
   );

@@ -1,5 +1,6 @@
 import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
+import { BASIC_LAND_NAMES } from '../constants';
 
 export function useSuggestedLands(
   currentDeck: Card[],
@@ -12,23 +13,8 @@ export function useSuggestedLands(
   t: (key: string) => string
 ) {
   const handleApplySuggestedLands = (landCounts: Record<string, number>) => {
-    const basicLandsList = [
-      'Plains',
-      'Island',
-      'Swamp',
-      'Mountain',
-      'Forest',
-      'Wastes',
-      'Planície',
-      'Ilha',
-      'Pântano',
-      'Montanha',
-      'Floresta',
-      'Deserto'
-    ];
-
     const nonBasicLands = currentDeck.filter((card) => {
-      const isBasic = card.type_line?.toLowerCase().includes('basic land') || basicLandsList.includes(card.name);
+      const isBasic = card.type_line?.toLowerCase().includes('basic land') || BASIC_LAND_NAMES.includes(card.name);
       return !isBasic;
     });
 

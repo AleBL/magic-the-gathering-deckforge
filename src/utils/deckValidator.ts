@@ -2,6 +2,7 @@ import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
 import { DeckFormatType } from '../types/enums';
 import i18n from '../plugins/i18n';
+import { BASIC_LAND_NAMES, MIN_DECK_SIZE, COMMANDER_DECK_SIZE } from '../constants';
 
 export interface ValidationError {
   key: string;
@@ -51,32 +52,22 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
 
   // Count copies of each card (excluding basic lands)
   const cardCounts: { [name: string]: number } = {};
-  const basicLands = [
-    'Plains',
-    'Island',
-    'Swamp',
-    'Mountain',
-    'Forest',
-    'Wastes',
-    'Planície',
-    'Ilha',
-    'Pântano',
-    'Montanha',
-    'Floresta',
-    'Deserto'
-  ];
 
   cards.forEach((card) => {
     const { name } = card;
-    const isBasic = card.type_line?.toLowerCase().includes('basic land') || basicLands.includes(name);
+    const isBasic = card.type_line?.toLowerCase().includes('basic land') || BASIC_LAND_NAMES.includes(name);
     if (!isBasic) {
       cardCounts[name] = (cardCounts[name] || 0) + 1;
     }
   });
 
   // Rules: Max 4 copies of any non-basic land card for Standard, Modern, Vintage, Pauper
-  if ([DeckFormatType.STANDARD, DeckFormatType.MODERN, DeckFormatType.VINTAGE, DeckFormatType.PAUPER].includes(format as any)) {
-    if (cards.length < 60) {
+  if (
+    [DeckFormatType.STANDARD, DeckFormatType.MODERN, DeckFormatType.VINTAGE, DeckFormatType.PAUPER].includes(
+      format as any
+    )
+  ) {
+    if (cards.length < MIN_DECK_SIZE) {
       errors.push({
         key: 'validationMinCards',
         params: { count: cards.length }
@@ -95,7 +86,7 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
 
   // Commander Format Rules
   if (format === DeckFormatType.COMMANDER) {
-    if (cards.length !== 100) {
+    if (cards.length !== COMMANDER_DECK_SIZE) {
       errors.push({
         key: 'validationCommanderExactCards',
         params: { count: cards.length }

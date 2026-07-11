@@ -39,7 +39,7 @@ interface DeckStoreState {
     notes?: string,
     relatedTokens?: DeckRelatedToken[]
   ) => void;
-  
+
   pendingAction: string | null;
   setPendingAction: (action: string | null) => void;
 }

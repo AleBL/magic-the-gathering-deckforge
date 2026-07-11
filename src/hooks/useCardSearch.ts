@@ -106,9 +106,9 @@ export function useCardSearch(language: string) {
             ...(card as unknown as Card),
             image_uris: card.image_uris
               ? {
-                ...card.image_uris,
-                gatherer: gathererUrl
-              }
+                  ...card.image_uris,
+                  gatherer: gathererUrl
+                }
               : undefined
           });
         });
