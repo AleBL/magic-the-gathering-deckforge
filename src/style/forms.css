@@ -34,7 +34,7 @@
 }
 
 .dropdown-item-active {
-  @apply bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold;
+  @apply bg-blue-50 dark:bg-gray-700 text-primary dark:text-blue-400 font-semibold;
 }
 
 /* Advanced filter panel */

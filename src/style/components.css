@@ -20,7 +20,7 @@
 }
 
 .deck-content-tab-active {
-  @apply border-blue-500 text-blue-600 dark:text-blue-400 font-extrabold;
+  @apply border-blue-500 text-primary dark:text-blue-400 font-extrabold;
 }
 
 
@@ -39,7 +39,7 @@
 }
 
 .option-toggle-btn-active {
-  @apply bg-blue-500 border-blue-600 text-white shadow-md font-black scale-[1.02];
+  @apply bg-blue-500 border-primary text-white shadow-md font-black scale-[1.02];
 }
 
 /* Compact variant for Group By and Sort By (smaller padding) */
@@ -54,7 +54,7 @@
 }
 
 .option-toggle-btn-compact-active {
-  @apply bg-blue-500 border-blue-600 text-white shadow-md scale-[1.02];
+  @apply bg-blue-500 border-primary text-white shadow-md scale-[1.02];
 }
 
 
@@ -106,7 +106,7 @@
 }
 
 .empty-deck-state-cta {
-  @apply flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0;
+  @apply flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0;
 }
 
 
@@ -238,7 +238,7 @@
 }
 
 .deck-list-item-format-badge-selected {
-  @apply bg-blue-600 text-white shadow-sm ring-1 ring-blue-500/30;
+  @apply bg-primary text-white shadow-sm ring-1 ring-blue-500/30;
 }
 
 .deck-list-item-format-badge-default {
@@ -278,7 +278,7 @@
 /* ── Modals & Overlays ─────────────────────────────────────── */
 
 .modal-overlay {
-  @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md text-left;
+  @apply fixed inset-0 z-[var(--z-overlay)] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md text-left;
   animation: fadeIn 0.3s ease both;
 }
 

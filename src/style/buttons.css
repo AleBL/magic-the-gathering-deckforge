@@ -1,7 +1,7 @@
 /* Standard and reusable button classes */
 
 .primary-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-primary text-white rounded-lg hover:bg-primary-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
 }
 
 .secondary-button {
@@ -9,11 +9,11 @@
 }
 
 .danger-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-danger text-white rounded-lg hover:bg-danger-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
 }
 
 .success-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-success text-white rounded-lg hover:bg-success-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
 }
 
 .purple-button {
@@ -35,7 +35,7 @@
 }
 
 .tab-button-active {
-  @apply bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 shadow-md font-extrabold border border-gray-300/30 dark:border-slate-600/50;
+  @apply bg-white dark:bg-slate-700 text-primary dark:text-blue-300 shadow-md font-extrabold border border-gray-300/30 dark:border-slate-600/50;
 }
 
 /* Segmented Control / Toggle Buttons */
@@ -48,7 +48,7 @@
 }
 
 .selector-button-active {
-  @apply bg-blue-600 text-white shadow-md hover:bg-blue-700;
+  @apply bg-primary text-white shadow-md hover:bg-primary-hover;
 }
 
 /* Filter badged-buttons */
@@ -57,5 +57,5 @@
 }
 
 .filter-badge-button-active {
-  @apply bg-blue-600 text-white shadow-md hover:bg-blue-700;
+  @apply bg-primary text-white shadow-md hover:bg-primary-hover;
 }
