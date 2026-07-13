@@ -14,7 +14,15 @@ interface CustomDialogProps {
   variant?: AlertVariant;
 }
 
-function CustomDialog({ isOpen, type, title, message, onConfirm, onCancel, variant = AlertVariant.INFO }: CustomDialogProps) {
+function CustomDialog({
+  isOpen,
+  type,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  variant = AlertVariant.INFO
+}: CustomDialogProps) {
   const { t } = useTranslation();
 
   const dialogRef = useRef<HTMLDivElement>(null);

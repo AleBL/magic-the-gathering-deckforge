@@ -28,12 +28,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, description, actio
           </div>
         </div>
       )}
-      <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
-        {title}
-      </h2>
-      {description && (
-        <p className="text-base text-gray-500 dark:text-slate-400 mb-8">{description}</p>
-      )}
+      <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">{title}</h2>
+      {description && <p className="text-base text-gray-500 dark:text-slate-400 mb-8">{description}</p>}
 
       {action && (
         <button
