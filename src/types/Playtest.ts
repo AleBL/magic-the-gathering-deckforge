@@ -20,3 +20,9 @@ export type PlaytestDragZone = PlaytestZone;
 export type PlaytestMenuZone = Exclude<PlaytestZone, typeof PlaytestZone.LIBRARY>;
 export type PlaytestPileZone = Extract<PlaytestZone, 'library' | 'graveyard' | 'exile'>;
 export type ScrySurveilType = 'scry' | 'surveil';
+
+/** Payload encoded via `dataTransfer.setData('text/plain', JSON.stringify(...))` during a playtest drag. */
+export interface PlaytestDragData {
+  id: string;
+  source: PlaytestDragZone;
+}

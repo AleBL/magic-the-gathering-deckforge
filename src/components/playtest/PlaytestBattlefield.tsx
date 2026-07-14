@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { FaSync, FaInbox, FaSkull, FaInfoCircle, FaBan } from 'react-icons/fa';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
-import { PlaytestCard } from '../../types/Playtest';
+import { Card } from '../../types/Card';
+import { PlaytestCard, PlaytestDragData } from '../../types/Playtest';
 import { PLAYTEST_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
 import { clampMenuYToViewport } from '../../utils/contextMenuPosition';
 
@@ -22,7 +23,7 @@ const PlaytestBattlefieldCard = memo(
     imageUrl: string;
     onTap: (id: string) => void;
     onContextMenu: (e: React.MouseEvent, id: string) => void;
-    onShowDetails: (card: any) => void;
+    onShowDetails: (card: Card) => void;
     onReturnToHand: (id: string, from: 'battlefield' | 'graveyard') => void;
     onSendToGraveyard: (id: string) => void;
     onSendToExile: (id: string) => void;
@@ -184,7 +185,7 @@ export const PlaytestBattlefield: React.FC = () => {
         event.preventDefault();
         setDragOverZone(null);
         try {
-          const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+          const data = JSON.parse(event.dataTransfer.getData('text/plain')) as PlaytestDragData;
           if (data.source === 'hand') handlePlayCard(data.id);
         } catch {
           const playtestId = event.dataTransfer.getData('text/plain');

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSkull, FaBan } from 'react-icons/fa';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
+import { PlaytestDragData } from '../../types/Playtest';
 import { PLAYTEST_PILE_SIZE_CLASSES } from '../../constants';
 
 export const PlaytestLibraryGraveyard: React.FC = () => {
@@ -43,9 +44,9 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
           event.preventDefault();
           setDragOverZone(null);
           try {
-            const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            const data = JSON.parse(event.dataTransfer.getData('text/plain')) as PlaytestDragData;
             if (data.source === 'hand' || data.source === 'battlefield')
-              handleSendToLibraryPosition(data.id, 0, data.source as any); // Put to top
+              handleSendToLibraryPosition(data.id, 0, data.source); // Put to top
           } catch {
             // Do nothing for unknown drops
           }
@@ -99,7 +100,7 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
           event.preventDefault();
           setDragOverZone(null);
           try {
-            const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            const data = JSON.parse(event.dataTransfer.getData('text/plain')) as PlaytestDragData;
             if (data.source === 'battlefield') handleSendToGraveyard(data.id);
             else if (data.source === 'hand') handleDiscardFromHand(data.id);
             else if (data.source === 'library') handleLibraryToGraveyard(data.id);
@@ -156,7 +157,7 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
           event.preventDefault();
           setDragOverZone(null);
           try {
-            const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            const data = JSON.parse(event.dataTransfer.getData('text/plain')) as PlaytestDragData;
             handleSendToExile(data.id, data.source);
           } catch {
             const playtestId = event.dataTransfer.getData('text/plain');
