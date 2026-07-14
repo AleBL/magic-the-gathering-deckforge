@@ -10,3 +10,13 @@ import '../plugins/i18n';
 afterEach(() => {
   cleanup();
 });
+
+// TODO(test-coverage): first-pass suite intentionally scoped to the pure logic and
+// components that the upcoming refactors (V5 phases A.3, B, C) will touch. Still
+// untested and worth adding as those land:
+//   - utils: deckStatistics, cardTypePredicates, formatLabel, contextMenuPosition, toastHelper
+//   - store/hooks: useDeckManager, useDeckActions, useDeckTextImport, useCardSearch,
+//     useSearchFilters, useShortcuts, and playtest undo/redo + mulligan flows
+//   - services: deckImportService, fileDownload
+//   - components: SearchFilters, DeckManager, PlaytestSimulator, stats/* panels,
+//     and deckValidator's commander partnership / color-identity branches
