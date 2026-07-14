@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaPlus, FaMinus, FaTrash, FaBan, FaExclamationTriangle, FaPalette } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
-import { GroupCriteria, SortCriteria, DeckZone } from '../../types/enums';
-import { GroupedCards, groupCardsByUnique, getCardImageUrl, getCardArtCropUrl } from '../../utils/deckGrouping';
-import { parseTextWithSymbols } from '../../utils/symbolHelper';
+import { DeckZone } from '../../types/enums';
+import { GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
 import CardGrid from '../card/CardGrid';
 import CardDetailModal from '../card/CardDetailModal';
 import DeckCommandersHeader from './DeckCommandersHeader';

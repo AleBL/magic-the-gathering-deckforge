@@ -63,7 +63,7 @@ export default function DeckImportProgressModal({
           <>
             <div className="mb-6">
               <div className="flex justify-between text-sm mb-2 font-medium text-slate-600 dark:text-slate-300">
-                <span>{progress.message || t('common.loading', 'Carregando...')}</span>
+                <span>{progress.message || t('common.loading')}</span>
                 <span>{percentage}%</span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
@@ -89,7 +89,7 @@ export default function DeckImportProgressModal({
                     </ul>
                   </div>
                   <p className="text-xs text-amber-600 dark:text-amber-500 mt-3 font-medium">
-                    {t('deck.importMissingExplanation', 'Verifique a grafia ou se a carta existe no Scryfall.')}
+                    {t('deck.importMissingExplanation')}
                   </p>
                 </div>
               </div>

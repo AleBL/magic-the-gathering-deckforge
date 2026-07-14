@@ -166,7 +166,7 @@ export default function useDeckManager(
     setIsFileImportModalOpen(true);
     setFileImportError(null);
     setFileMissingCards([]);
-    setImportProgress({ isImporting: true, current: 0, total: 100, message: t('common.loading', 'Lendo arquivo...') });
+    setImportProgress({ isImporting: true, current: 0, total: 100, message: t('common.loading') });
 
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -177,7 +177,7 @@ export default function useDeckManager(
           if (file.name.endsWith('.json')) {
             const deck = JSON.parse(content) as Deck;
             if (!deck.name || !Array.isArray(deck.cards)) {
-              setFileImportError(t('deck.invalidFile', 'Arquivo inválido'));
+              setFileImportError(t('deck.invalidFile'));
               setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
               return;
@@ -186,12 +186,12 @@ export default function useDeckManager(
             if (!deck.format) deck.format = DeckFormatType.FREEFORM;
             await db.decks.put(deck);
             setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
-            dispatchToast(t('deck.deckImported', 'Deck importado com sucesso'));
+            dispatchToast(t('deck.deckImported'));
             resolve();
           } else if (file.name.endsWith('.dec') || file.name.endsWith('.txt')) {
             const parsed = parseDeckText(content);
             if (parsed.length === 0) {
-              setFileImportError(t('deck.invalidFile', 'Arquivo inválido ou vazio'));
+              setFileImportError(t('deck.invalidFile'));
               setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
               return;
@@ -206,7 +206,7 @@ export default function useDeckManager(
               setFileMissingCards(missing);
 
               if (cards.length === 0) {
-                setFileImportError(t('deck.importError', 'Erro ao importar deck'));
+                setFileImportError(t('deck.importError'));
                 setImportProgress((prev) => ({ ...prev, isImporting: false }));
                 resolve();
                 return;
@@ -222,26 +222,26 @@ export default function useDeckManager(
               await db.decks.put(newDeck);
 
               setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
-              dispatchToast(t('deck.deckImported', 'Deck importado com sucesso'));
+              dispatchToast(t('deck.deckImported'));
               resolve();
-            } catch (err) {
-              setFileImportError(t('deck.importError', 'Erro ao importar deck'));
+            } catch {
+              setFileImportError(t('deck.importError'));
               setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
             }
           } else {
-            setFileImportError(t('deck.invalidFile', 'Formato de arquivo não suportado'));
+            setFileImportError(t('deck.invalidFile'));
             setImportProgress((prev) => ({ ...prev, isImporting: false }));
             resolve();
           }
         } catch {
-          setFileImportError(t('deck.invalidFile', 'Erro ao ler arquivo'));
+          setFileImportError(t('deck.invalidFile'));
           setImportProgress((prev) => ({ ...prev, isImporting: false }));
           resolve();
         }
       };
       reader.onerror = () => {
-        setFileImportError(t('deck.invalidFile', 'Erro de leitura do arquivo'));
+        setFileImportError(t('deck.invalidFile'));
         setImportProgress((prev) => ({ ...prev, isImporting: false }));
         resolve();
       };

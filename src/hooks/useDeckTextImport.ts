@@ -36,7 +36,7 @@ export function useDeckTextImport(
       isImporting: true,
       current: 0,
       total: parsed.length,
-      message: t('common.loading', 'Carregando...')
+      message: t('common.loading')
     });
     setErrorMsg(null);
     setMissingCards([]);
