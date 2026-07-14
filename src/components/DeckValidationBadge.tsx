@@ -73,7 +73,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
           <ul className="space-y-1 text-xs border-t border-red-200 dark:border-red-950 pt-2.5 list-disc pl-4">
             {validation.errors.map((err: ValidationError, i: number) => (
               <li key={i} className="text-red-700 dark:text-red-400 font-medium">
-                {t(err.key, err.params) as string}
+                {t(`validation.${err.key}`, err.params) as string}
               </li>
             ))}
           </ul>

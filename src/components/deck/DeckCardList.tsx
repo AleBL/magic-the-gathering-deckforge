@@ -143,7 +143,7 @@ const DeckCardList = memo(function DeckCardList({
         {!isTokenZone && commandersHeader}
         <div className="space-y-6">
           {groups.map((group) => {
-            const title = TRANSLATABLE_TITLES.includes(group.title) ? t(group.title) : group.title;
+            const title = TRANSLATABLE_TITLES.includes(group.title) ? t(`search.${group.title}`) : group.title;
             return (
               <div key={group.title} className="space-y-2">
                 <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-1 flex justify-between items-center">
@@ -180,7 +180,7 @@ const DeckCardList = memo(function DeckCardList({
       {!isTokenZone && commandersHeader}
       <div className="space-y-6">
         {groups.map((group) => {
-          const title = TRANSLATABLE_TITLES.includes(group.title) ? t(group.title) : group.title;
+          const title = TRANSLATABLE_TITLES.includes(group.title) ? t(`search.${group.title}`) : group.title;
           const uniqueCards = groupCardsByUnique(group.cards);
 
           return (
