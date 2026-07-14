@@ -22,23 +22,29 @@ const getGlowColor = (rarity: string | undefined): string => {
   }
 };
 
+type LocaleTranslations = (typeof locales)['en']['translations'];
+type BasicLandKey = keyof LocaleTranslations['land'];
+
 const getBasicLandNamesMap = (): Record<string, string> => {
   const map: Record<string, string> = {};
-  const landKeys = ['plains', 'island', 'swamp', 'mountain', 'forest', 'wastes'];
+  const landKeys: BasicLandKey[] = ['plains', 'island', 'swamp', 'mountain', 'forest'];
 
   landKeys.forEach((key) => {
     map[key] = key;
   });
+  map.wastes = 'wastes';
 
-  Object.values(locales).forEach((locale) => {
-    const translations = locale.translations as any;
-    if (translations?.deckStats) {
-      landKeys.forEach((key) => {
-        const translatedName = translations.deckStats[key];
-        if (typeof translatedName === 'string') {
-          map[translatedName.toLowerCase()] = key;
-        }
-      });
+  Object.values(locales).forEach(({ translations }) => {
+    landKeys.forEach((key) => {
+      const translatedName = translations.land[key];
+      if (typeof translatedName === 'string') {
+        map[translatedName.toLowerCase()] = key;
+      }
+    });
+
+    const translatedWastes = translations.stats.wastes;
+    if (typeof translatedWastes === 'string') {
+      map[translatedWastes.toLowerCase()] = 'wastes';
     }
   });
 
