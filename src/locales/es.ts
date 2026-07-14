@@ -322,7 +322,6 @@ const es = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Desglose de Tipos',
-      wastes: 'Yermo',
       willAddLands: 'Se agregarán {{count}} tierras básicas'
     },
     print: {
