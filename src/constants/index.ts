@@ -17,7 +17,6 @@ export const APP_NAME = 'MTG Deck Forge';
 export const GITHUB_REPO_URL = 'https://github.com/AleBL/magic-the-gathering-search';
 
 export const SUPPORTED_LANGUAGES = ['en', 'pt', 'es'] as const;
-export const DEFAULT_LANGUAGE = 'en';
 
 export const BASIC_LAND_NAMES: readonly string[] = [
   'Plains',
