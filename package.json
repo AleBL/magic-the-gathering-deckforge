@@ -108,6 +108,12 @@
           "arch": [
             "x64"
           ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -124,7 +130,8 @@
       "icon": "resources/icon.png",
       "category": "public.app-category.entertainment",
       "target": [
-        "dmg"
+        "dmg",
+        "zip"
       ]
     },
     "dmg": {
@@ -150,9 +157,11 @@
     "linux": {
       "icon": "resources/icon.png",
       "category": "Game",
+      "maintainer": "Alessandro Barros",
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "zip"
       ]
     }
   }
