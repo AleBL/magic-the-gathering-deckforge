@@ -3,17 +3,6 @@ import i18n from '../plugins/i18n';
 import { dispatchToast } from './toastHelper';
 let symbolMap: Record<string, string> = {};
 let isFetching = false;
-const listeners: Array<() => void> = [];
-
-export function subscribeSymbols(listener: () => void) {
-  listeners.push(listener);
-  return () => {
-    const idx = listeners.indexOf(listener);
-    if (idx > -1) {
-      listeners.splice(idx, 1);
-    }
-  };
-}
 
 interface ScryfallSymbol {
   symbol?: string;
@@ -34,7 +23,6 @@ export async function fetchSymbols() {
         }
       });
       symbolMap = map;
-      listeners.forEach((l) => l());
     }
   } catch {
     dispatchToast(i18n.t('common.errorFetchingSymbology') as string, 'danger');
