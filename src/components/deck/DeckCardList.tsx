@@ -39,6 +39,7 @@ const TRANSLATABLE_TITLES = [
   'enchantment',
   'artifact',
   'land',
+  'other',
   'white',
   'blue',
   'black',

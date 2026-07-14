@@ -50,7 +50,7 @@ export const groupCards = (
   if (groupCriteria === GroupCriteria.TYPE) {
     sorted.forEach((card) => {
       const typeLine = card.type_line?.toLowerCase() || '';
-      let key = 'Other';
+      let key = 'other';
       if (typeLine.includes('creature')) key = 'creature';
       else if (typeLine.includes('planeswalker')) key = 'planeswalker';
       else if (typeLine.includes('instant')) key = 'instant';

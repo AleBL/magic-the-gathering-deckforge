@@ -77,6 +77,7 @@ const pt = {
       multicolored: 'Multicolorido',
       mythic: 'Mítica',
       noResults: 'Nenhuma carta encontrada',
+      other: 'Outros',
       planeswalker: 'Planeswalker',
       rare: 'Rara',
       rarity: 'Raridade:',

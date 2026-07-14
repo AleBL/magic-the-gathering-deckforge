@@ -77,6 +77,7 @@ const en = {
       multicolored: 'Multicolored',
       mythic: 'Mythic',
       noResults: 'No cards found',
+      other: 'Other',
       planeswalker: 'Planeswalker',
       rare: 'Rare',
       rarity: 'Rarity:',
