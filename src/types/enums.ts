@@ -18,17 +18,6 @@ export const DeckFormatType = {
 
 export type DeckFormatType = (typeof DeckFormatType)[keyof typeof DeckFormatType];
 
-export const ManaColor = {
-  WHITE: 'W',
-  BLUE: 'U',
-  BLACK: 'B',
-  RED: 'R',
-  GREEN: 'G',
-  COLORLESS: 'C'
-} as const;
-
-export type ManaColor = (typeof ManaColor)[keyof typeof ManaColor];
-
 export const DeckZone = {
   MAIN: 'main',
   SIDEBOARD: 'sideboard',
