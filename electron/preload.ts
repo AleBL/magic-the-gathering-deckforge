@@ -141,29 +141,51 @@ window.onmessage = (ev) => {
   if (ev.data.payload === 'removeLoading') removeLoading();
 };
 
+// ── WHITELIST: Only expose specific channels ──
+const ALLOWED_SEND_CHANNELS = ['message', 'show-notification'] as const;
+
+const ALLOWED_RECEIVE_CHANNELS = ['message', 'menu-clear-deck'] as const;
+
+type SendChannel = (typeof ALLOWED_SEND_CHANNELS)[number];
+type ReceiveChannel = (typeof ALLOWED_RECEIVE_CHANNELS)[number];
+
 // Expose ipcRenderer safely to the renderer process
 try {
-  contextBridge.exposeInMainWorld('ipcRenderer', {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    send: (channel: string, data: any) => {
-      ipcRenderer.send(channel, data);
+  contextBridge.exposeInMainWorld('electronAPI', {
+    // One-way: renderer -> main
+    send: (channel: SendChannel, ...args: unknown[]) => {
+      if (ALLOWED_SEND_CHANNELS.includes(channel)) {
+        ipcRenderer.send(channel, ...args);
+      }
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    on: (channel: string, listener: (...args: any[]) => void) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const subscription = (_event: any, ...args: any[]) => listener(...args);
-      ipcRenderer.on(channel, subscription);
-      return () => {
-        ipcRenderer.removeListener(channel, subscription);
-      };
+
+    // Two-way: renderer -> main -> renderer
+    invoke: (channel: SendChannel, ...args: unknown[]) => {
+      if (ALLOWED_SEND_CHANNELS.includes(channel)) {
+        return ipcRenderer.invoke(channel, ...args);
+      }
+      return Promise.reject(new Error(`Channel "${channel}" is not allowed`));
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    off: (channel: string, listener: (...args: any[]) => void) => {
-      ipcRenderer.off(channel, listener);
+
+    // One-way: main -> renderer
+    on: (channel: ReceiveChannel, callback: (...args: unknown[]) => void) => {
+      if (ALLOWED_RECEIVE_CHANNELS.includes(channel)) {
+        const subscription = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => callback(...args);
+        ipcRenderer.on(channel, subscription);
+        return () => {
+          ipcRenderer.removeListener(channel, subscription);
+        };
+      }
+      return () => {};
+    },
+
+    // Remove listener
+    off: (channel: ReceiveChannel, callback: (...args: unknown[]) => void) => {
+      if (ALLOWED_RECEIVE_CHANNELS.includes(channel)) {
+        ipcRenderer.off(channel, callback as any);
+      }
     }
   });
-} catch {
-  // Fallback for non-isolated context or custom builds
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).ipcRenderer = ipcRenderer;
+} catch (error) {
+  console.error('Failed to expose electronAPI', error);
 }

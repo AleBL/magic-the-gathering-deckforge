@@ -93,14 +93,11 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
   return nodes;
 }
 
-// ---------------------------------------------------------------------------
-
 function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesEditorProps) {
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState(false);
   const [notesInput, setNotesInput] = useState(initialNotes);
 
-  // Update when the selected deck changes
   useEffect(() => {
     setNotesInput(initialNotes);
     setEditMode(false);
@@ -120,11 +117,11 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
       <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-slate-800">
         <h4 className="text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-widest flex items-center gap-1.5 select-none">
           <FaPencilAlt className="text-blue-500 shrink-0 text-xs" />
-          <span>{t('strategyGuide')}</span>
+          <span>{t('strategy.strategyGuide')}</span>
         </h4>
         {isEditable && (
           <button type="button" onClick={handleToggleEdit} className="primary-button text-xs py-1 px-3 shadow-xs">
-            {editMode ? t('save') : t('edit')}
+            {editMode ? t('deck.save') : t('common.edit')}
           </button>
         )}
       </div>
@@ -134,15 +131,14 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
           <textarea
             value={notesInput}
             onChange={(e) => setNotesInput(e.target.value)}
-            placeholder={t('strategyGuidePlaceholder')}
+            placeholder={t('strategy.strategyGuidePlaceholder')}
             className="w-full h-full text-xs font-mono p-3 bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-slate-200 border border-gray-300 dark:border-slate-850 rounded-lg outline-none resize-none focus:ring-1 focus:ring-blue-500"
           />
-          {/* Live preview - pure JSX, no dangerouslySetInnerHTML */}
           <div className="w-full h-full overflow-y-auto p-4 bg-white/80 dark:bg-slate-950/20 border border-gray-200 dark:border-slate-850 rounded-lg max-h-96 text-xs">
             {renderedNodes.length > 0 ? (
               renderedNodes
             ) : (
-              <p className="text-gray-400 italic text-center py-12 select-none">{t('preview')}</p>
+              <p className="text-gray-400 italic text-center py-12 select-none">{t('strategy.preview')}</p>
             )}
           </div>
         </div>
@@ -152,7 +148,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
             renderedNodes
           ) : (
             <p className="text-xs text-gray-400 italic text-center py-12 select-none">
-              {isEditable ? t('edit') + ' →  ' : ''} {t('noStrategyNotes')}
+              {isEditable ? t('common.edit') + ' →  ' : ''} {t('strategy.noStrategyNotes')}
             </p>
           )}
         </div>

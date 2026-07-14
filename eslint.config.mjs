@@ -58,7 +58,7 @@ export default tseslint.config(
       // TypeScript
       'no-use-before-define': 'off',
       '@typescript-eslint/no-use-before-define': ['error'],
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
 
@@ -85,7 +85,17 @@ export default tseslint.config(
 
       // Native browser dialogs — warn but allow
       'no-alert': 'warn',
-      'no-console': 'warn'
+      'no-console': 'warn',
+
+      // Restrict translation fallbacks
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='t'][arguments.1.type='Literal']",
+          message:
+            "Do not use translation fallbacks (e.g. t('key', 'Fallback text')). Add the translation to the locales files instead."
+        }
+      ]
     }
   },
 

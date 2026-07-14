@@ -18,7 +18,7 @@ interface ProfileMenuProps {
   setIsDarkMode: (value: boolean) => void;
 }
 
-const APP_VERSION = '0.1.0';
+import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../constants';
 
 function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
   const { t, i18n } = useTranslation();
@@ -26,7 +26,6 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
   const [activeSection, setActiveSection] = useState<'main' | 'about' | 'help' | 'language'>('main');
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -60,20 +59,15 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
-    const safeWindow = window as unknown as {
-      ipcRenderer?: { send: (channel: string, data: string) => void };
-    };
-    if (safeWindow.ipcRenderer) {
-      safeWindow.ipcRenderer.send('change-language', lang);
-    }
+
     setActiveSection('main');
   };
 
   const shortcuts = [
-    { keys: ['Ctrl', 'F'], label: t('shortcutSearch') },
-    { keys: ['Ctrl', 'S'], label: t('shortcutSave') },
-    { keys: ['Ctrl', 'P'], label: t('shortcutPlaytest') },
-    { keys: ['Ctrl', 'Shift', 'N'], label: t('shortcutClear') }
+    { keys: ['Ctrl', 'F'], label: t('strategy.shortcutSearch') },
+    { keys: ['Ctrl', 'S'], label: t('strategy.shortcutSave') },
+    { keys: ['Ctrl', 'P'], label: t('strategy.shortcutPlaytest') },
+    { keys: ['Ctrl', 'Shift', 'N'], label: t('strategy.shortcutClear') }
   ];
 
   const handleToggle = () => {
@@ -83,13 +77,14 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
 
   return (
     <div className="profile-menu-wrapper" ref={menuRef}>
-      {/* Trigger Button */}
       <button
         type="button"
         onClick={handleToggle}
         className="profile-menu-trigger"
-        aria-label={t('profileMenu')}
-        title={t('profileMenu')}
+        aria-label={t('strategy.profileMenu')}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        title={t('strategy.profileMenu')}
       >
         <div className="profile-avatar">
           <FaUser className="text-xs text-white" />
@@ -99,22 +94,19 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
         />
       </button>
 
-      {/* Dropdown Panel */}
-      {isOpen && (
-        <div className="profile-menu-panel animate-fadeIn">
-          {/* ── MAIN SECTION ── */}
-          {activeSection === 'main' && (
+      {isOpen ? (
+        <div className="profile-menu-panel animate-dropdownEnter origin-top-right z-[var(--z-modal)]" role="menu">
+          {activeSection === 'main' ? (
             <>
-              {/* Header badge */}
               <div className="profile-menu-header">
                 <div className="flex items-center gap-3">
                   <div className="profile-avatar-lg">
                     <FaUser className="text-sm text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white">MTG Deck Forge</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">{APP_NAME}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t('version')} {APP_VERSION}
+                      {t('strategy.version')} {APP_VERSION}
                     </p>
                   </div>
                 </div>
@@ -122,7 +114,6 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
 
               <div className="profile-menu-divider" />
 
-              {/* Dark Mode Toggle */}
               <div className="profile-menu-row">
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   {isDarkMode ? (
@@ -130,23 +121,29 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   ) : (
                     <FaSun className="text-amber-400 text-sm" />
                   )}
-                  <span className="text-sm font-medium">{isDarkMode ? t('darkMode') : t('lightMode')}</span>
+                  <span className="text-sm font-medium">
+                    {isDarkMode ? t('common.darkMode') : t('common.lightMode')}
+                  </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsDarkMode(!isDarkMode)}
                   className={`profile-toggle ${isDarkMode ? 'profile-toggle-on' : 'profile-toggle-off'}`}
-                  aria-label={isDarkMode ? t('lightMode') : t('darkMode')}
+                  aria-label={isDarkMode ? t('common.lightMode') : t('common.darkMode')}
                 >
                   <span className={`profile-toggle-thumb ${isDarkMode ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </button>
               </div>
 
-              {/* Language */}
-              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('language')}>
+              <button
+                type="button"
+                className="profile-menu-item"
+                onClick={() => setActiveSection('language')}
+                role="menuitem"
+              >
                 <div className="flex items-center gap-2">
                   <FaGlobeAmericas className="text-blue-500 text-sm shrink-0" />
-                  <span>{t('language')}</span>
+                  <span>{t('common.language')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <img
@@ -161,47 +158,54 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
 
               <div className="profile-menu-divider" />
 
-              {/* About */}
-              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('about')}>
+              <button
+                type="button"
+                className="profile-menu-item"
+                onClick={() => setActiveSection('about')}
+                role="menuitem"
+              >
                 <div className="flex items-center gap-2">
                   <FaInfoCircle className="text-purple-500 text-sm shrink-0" />
-                  <span>{t('aboutApp')}</span>
+                  <span>{t('strategy.aboutApp')}</span>
                 </div>
                 <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
               </button>
 
-              {/* Help */}
-              <button type="button" className="profile-menu-item" onClick={() => setActiveSection('help')}>
+              <button
+                type="button"
+                className="profile-menu-item"
+                onClick={() => setActiveSection('help')}
+                role="menuitem"
+              >
                 <div className="flex items-center gap-2">
                   <FaKeyboard className="text-green-500 text-sm shrink-0" />
-                  <span>{t('help')}</span>
+                  <span>{t('common.help')}</span>
                 </div>
                 <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
               </button>
 
-              {/* GitHub */}
               <a
                 href="https://github.com/AleBL/magic-the-gathering-search"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="profile-menu-item"
+                role="menuitem"
               >
                 <div className="flex items-center gap-2">
                   <FaGithub className="text-gray-600 dark:text-gray-300 text-sm shrink-0" />
-                  <span>{t('gitHub')}</span>
+                  <span>{t('strategy.gitHub')}</span>
                 </div>
                 <span className="text-xs text-gray-400">↗</span>
               </a>
             </>
-          )}
+          ) : null}
 
-          {/* ── LANGUAGE SECTION ── */}
-          {activeSection === 'language' && (
+          {activeSection === 'language' ? (
             <>
               <div className="profile-menu-back-header">
                 <button type="button" onClick={() => setActiveSection('main')} className="profile-back-btn">
                   <FaChevronDown className="rotate-90 text-xs" />
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('language')}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.language')}</span>
                 </button>
                 <button
                   type="button"
@@ -221,24 +225,24 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   type="button"
                   onClick={() => changeLanguage(lang.key)}
                   className="profile-menu-item"
+                  role="menuitem"
                 >
                   <div className="flex items-center gap-2.5">
                     <img src={lang.iconPath} alt={lang.label} className="w-5 h-5 rounded-full object-cover shadow-sm" />
                     <span className="font-medium text-gray-800 dark:text-gray-200">{lang.label}</span>
                   </div>
-                  {currentLang.key === lang.key && <FaCheck className="text-blue-500 text-xs" />}
+                  {currentLang.key === lang.key ? <FaCheck className="text-blue-500 text-xs" /> : null}
                 </button>
               ))}
             </>
-          )}
+          ) : null}
 
-          {/* ── ABOUT SECTION ── */}
-          {activeSection === 'about' && (
+          {activeSection === 'about' ? (
             <>
               <div className="profile-menu-back-header">
                 <button type="button" onClick={() => setActiveSection('main')} className="profile-back-btn">
                   <FaChevronDown className="rotate-90 text-xs" />
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('aboutApp')}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('strategy.aboutApp')}</span>
                 </button>
                 <button
                   type="button"
@@ -258,34 +262,37 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                     <FaUser className="text-sm text-white" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 dark:text-white text-sm">MTG Deck Forge</p>
+                    <p className="font-bold text-gray-900 dark:text-white text-sm">{APP_NAME}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t('version')} {APP_VERSION} · MIT
+                      {t('strategy.version')} {APP_VERSION} · MIT
                     </p>
                   </div>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{t('appDescription')}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-500">Alessandro Barros</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {t('strategy.appDescription')}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-500">{AUTHOR_NAME}</p>
                 <a
-                  href="https://github.com/AleBL/magic-the-gathering-search"
+                  href={GITHUB_REPO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   <FaGithub />
-                  {t('gitHub')}
+                  {t('strategy.gitHub')}
                 </a>
               </div>
             </>
-          )}
+          ) : null}
 
-          {/* ── HELP / KEYBOARD SHORTCUTS SECTION ── */}
-          {activeSection === 'help' && (
+          {activeSection === 'help' ? (
             <>
               <div className="profile-menu-back-header">
                 <button type="button" onClick={() => setActiveSection('main')} className="profile-back-btn">
                   <FaChevronDown className="rotate-90 text-xs" />
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('keyboardShortcuts')}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    {t('strategy.keyboardShortcuts')}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -317,9 +324,9 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                 ))}
               </div>
             </>
-          )}
+          ) : null}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
   --color-slate-800: rgb(30 41 59);
   --color-slate-900: rgb(15 23 42);
   --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-family-serif: 'Playfair Display', ui-serif, Georgia, serif;
 
   /* Harmonious and Theme Colors */
   --color-primary: var(--color-blue-600);
@@ -15,16 +16,61 @@
   --color-warning: var(--color-amber-600);
   --color-warning-hover: var(--color-amber-700);
 
-  /* Spacing Scale (8px base) */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  /* ── Z-Index Scale ─────────────────────────────────────
+     Use these named layers to prevent stacking conflicts.
+     Always reference a variable instead of a raw number.
+  ─────────────────────────────────────────────────────── */
+  --z-base:     0;     /* Normal document flow              */
+  --z-raised:   10;    /* Card hover lifts, active list items */
+  --z-sticky:   100;   /* Sticky header                     */
+  --z-backdrop: 100;   /* Full-screen click-outside backdrop */
+  --z-dropdown: 110;   /* Dropdowns, tooltips, context menus */
+  --z-modal:    200;   /* Profile menu, side panels         */
+  --z-overlay:  250;   /* Modal overlays (dim bg)           */
+  --z-dialog:   300;   /* Alert/Confirm dialogs             */
+  --z-toast:    400;   /* Toast notifications (always on top) */
+  --z-header:   2000;  /* Sticky app header (above page & modals) */
+  --z-preview:  9999;  /* Floating card preview             */
+
+  /* The playtest simulator is a full-screen takeover that opens its
+     own stacking context. The two layers below order elements *inside*
+     that context relative to each other, not to the global scale above. */
+  --z-playtest:        99999; /* Fullscreen playtest simulator overlay */
+  --z-playtest-dialog: 3000;  /* Prompts / pile explorer inside playtest */
+  --z-playtest-menu:   3100;  /* Context menus inside playtest         */
+
+  /* Spacing Scale (8px base)
+     Named --space-, not --spacing-: Tailwind v4 treats any --spacing-KEY
+     inside @theme as an override of its built-in named size scale, shared by
+     width, height, max-width, max-height, min-width, min-height, padding,
+     margin, gap, and inset utilities. Using --spacing-xs/sm/md/lg/xl/2xl here
+     silently broke max-w-sm and max-w-lg (resolved to 8px/24px instead of the
+     Tailwind defaults 24rem/32rem). */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }

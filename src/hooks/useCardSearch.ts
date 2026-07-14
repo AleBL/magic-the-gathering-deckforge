@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import * as Scry from 'scryfall-sdk';
 import MagicEmitter from 'scryfall-sdk/out/util/MagicEmitter';
 import { Card } from '../types/Card';
-import { SearchFilters, EMPTY_SEARCH_FILTERS } from '../types';
+import { SearchFilters } from '../types';
+import { EMPTY_SEARCH_FILTERS } from '../constants';
+import { useTranslation } from 'react-i18next';
 
 const DEFAULT_QUERY = 'c>=1';
 const MIN_QUERY_LENGTH = 2;
@@ -30,6 +32,7 @@ const deduplicateCards = (combined: Card[], targetLang: string): Card[] => {
 };
 
 export function useCardSearch(language: string) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoadingInitial, setIsLoadingInitial] = useState(false);
@@ -88,7 +91,7 @@ export function useCardSearch(language: string) {
         activeEmittersRef.current.push(emitter);
 
         const cleanup = () => {
-          activeEmittersRef.current = activeEmittersRef.current.filter((e) => e !== emitter);
+          activeEmittersRef.current = activeEmittersRef.current.filter((emitterItem) => emitterItem !== emitter);
         };
 
         emitter.cancelAfterPage();
@@ -212,9 +215,9 @@ export function useCardSearch(language: string) {
           errMsg.toLowerCase().includes('maintenance') ||
           errMsg.toLowerCase().includes('timed out')
         ) {
-          setError('scryfallOffline');
+          setError(t('search.scryfallOffline'));
         } else {
-          setError('error');
+          setError(t('search.error') || 'Error');
         }
       } finally {
         if (searchId === latestSearchIdRef.current) {
@@ -239,7 +242,7 @@ export function useCardSearch(language: string) {
       } else {
         setCards((prev) => deduplicateCards([...prev, ...results], language));
         setHasMore(more);
-        setCurrentPage((p) => p + 1);
+        setCurrentPage((prevPage) => prevPage + 1);
       }
     } catch (err: any) {
       if (searchId !== latestSearchIdRef.current) return;
@@ -254,7 +257,7 @@ export function useCardSearch(language: string) {
         errMsg.toLowerCase().includes('maintenance') ||
         errMsg.toLowerCase().includes('timed out')
       ) {
-        setError('scryfallOffline');
+        setError(t('search.scryfallOffline'));
       }
       setHasMore(false);
     } finally {

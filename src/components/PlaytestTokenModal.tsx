@@ -181,31 +181,27 @@ export function PlaytestTokenModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn text-left">
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
+    <div className="modal-overlay">
+      <div className="modal-content">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/40">
+        <div className="modal-header">
           <h3 className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
             <FaPlus className="text-indigo-500" />
-            {t('tokenPool')}
+            {t('tokens.tokenPool')}
           </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all"
-          >
+          <button onClick={onClose} className="modal-close-btn" aria-label="Close modal">
             <FaTimes />
           </button>
         </div>
 
-        {/* Presets Grid */}
-        <div className="p-6 overflow-y-auto space-y-6 max-h-[70vh]">
+        {/* Body */}
+        <div className="modal-body">
           {/* Deck Specific Tokens */}
           {uniqueDeckTokens.length > 0 ? (
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
-                <span>{t('deckRelatedTokens')}</span>
+                <span>{t('tokens.deckRelatedTokens')}</span>
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {uniqueDeckTokens.map(({ tokenCard, generatorCardName }) => {
@@ -215,8 +211,8 @@ export function PlaytestTokenModal({
                   return (
                     <div
                       key={tokenCard.id}
+                      className={`token-card-wrapper group ${colorClass}`}
                       onClick={() => onSelectToken(tokenCard)}
-                      className={`border rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg ${colorClass} group`}
                     >
                       <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
@@ -246,17 +242,14 @@ export function PlaytestTokenModal({
                           {tokenCard.printed_name || tokenCard.name}
                         </h4>
                         <p className="text-[8px] text-slate-500 truncate mt-1">
-                          {t('generatedBy')}:{' '}
+                          {t('common.generatedBy')}:{' '}
                           <span className="font-extrabold text-indigo-400">{generatorCardName}</span>
                         </p>
                       </div>
 
-                      <button
-                        type="button"
-                        className="mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
-                      >
+                      <button className="token-card-add-btn">
                         <FaPlus className="text-[8px]" />
-                        {t('create')}
+                        {t('tokens.create')}
                       </button>
                     </div>
                   );
@@ -265,8 +258,8 @@ export function PlaytestTokenModal({
             </div>
           ) : (
             <div className="h-64 flex flex-col items-center justify-center text-slate-400 gap-2 text-center py-6">
-              <span className="text-sm font-bold">{t('noTokensFound')}</span>
-              <span className="text-xs text-slate-500">{t('playtestNoTokensTip')}</span>
+              <span className="text-sm font-bold">{t('tokens.noTokensFound')}</span>
+              <span className="text-xs text-slate-500">{t('playtest.playtestNoTokensTip')}</span>
             </div>
           )}
         </div>

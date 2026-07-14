@@ -8,12 +8,7 @@ interface DeckFloatingPreviewProps {
 const CARD_WIDTH = 260;
 const CARD_HEIGHT = 364;
 
-function getCardImageUrl(card: Card): string {
-  const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
-  if (!imageUris) return '';
-  return imageUris.normal || imageUris.large || card.image_uris?.gatherer || '';
-}
-
+import { getCardImageUrl } from '../../utils/deckGrouping';
 function DeckFloatingPreview({ card, mousePos }: DeckFloatingPreviewProps) {
   const imageUrl = getCardImageUrl(card);
   if (!imageUrl) return null;

@@ -1,0 +1,194 @@
+import { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FaSave, FaPlus, FaTrash, FaFileImport, FaTimes, FaLightbulb, FaBook, FaColumns } from 'react-icons/fa';
+import { Deck } from '../../types/Deck';
+
+interface DeckManagerToolbarProps {
+  selectedDeck: Deck | null;
+  showDeckList: boolean;
+  onToggleDeckList: () => void;
+  editingDeckId: string | null;
+  currentDeckCount: number;
+  hasSavedDecks: boolean;
+  showImportExportDropdown: boolean;
+  setShowImportExportDropdown: (value: boolean) => void;
+  onSaveChanges: () => void;
+  onSaveAsNew: () => void;
+  onCancelEdit: () => void;
+  onOpenSaveDialog: () => void;
+  onClearDeck: () => void;
+  onOpenTextImport: () => void;
+  onImportFile: (event: ChangeEvent<HTMLInputElement>) => void;
+  onExportAll: () => void;
+}
+
+/** Header for the deck manager: title, info tooltip, and the save/clear/import-export toolbar. */
+export function DeckManagerToolbar({
+  selectedDeck,
+  showDeckList,
+  onToggleDeckList,
+  editingDeckId,
+  currentDeckCount,
+  hasSavedDecks,
+  showImportExportDropdown,
+  setShowImportExportDropdown,
+  onSaveChanges,
+  onSaveAsNew,
+  onCancelEdit,
+  onOpenSaveDialog,
+  onClearDeck,
+  onOpenTextImport,
+  onImportFile,
+  onExportAll
+}: DeckManagerToolbarProps) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="workspace-header">
+      <div className="manager-title-row">
+        <h2 className="text-gray-900 dark:text-white text-2xl font-bold transition-colors duration-300 flex items-center gap-2 w-full">
+          <FaBook className="text-blue-600 text-xl" />
+          {t('deck.deckManager')}
+          <div className="manager-info-tooltip-trigger group/tooltip">
+            <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>
+              <FaLightbulb className="text-yellow-500 text-base" />
+            </button>
+            <div className="manager-info-tooltip-panel">
+              <p className="font-medium leading-relaxed">{t('validation.savedLocationNote')}</p>
+            </div>
+          </div>
+
+          {selectedDeck ? (
+            <button
+              type="button"
+              onClick={onToggleDeckList}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+              title={showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
+            >
+              <FaColumns className="text-xs shrink-0" />
+              <span>{showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}</span>
+            </button>
+          ) : null}
+        </h2>
+      </div>
+
+      {!selectedDeck ? (
+        <div className="manager-toolbar">
+          <div className="toolbar-group">
+            {editingDeckId ? (
+              <div className="toolbar-group-responsive">
+                <button
+                  id="save-changes-btn"
+                  type="button"
+                  onClick={onSaveChanges}
+                  className="primary-button text-xs py-1.5 px-3"
+                >
+                  <FaSave className="text-xs shrink-0" />
+                  {t('deck.saveChanges')}
+                </button>
+                <button type="button" onClick={onSaveAsNew} className="success-button text-xs py-1.5 px-3">
+                  <FaPlus className="text-xs shrink-0" />
+                  {t('deck.saveAsNew')}
+                </button>
+                <button type="button" onClick={onCancelEdit} className="danger-button text-xs py-1.5 px-3">
+                  <FaTimes className="text-xs shrink-0" />
+                  {t('common.cancel')}
+                </button>
+              </div>
+            ) : (
+              <button
+                id="save-deck-btn"
+                type="button"
+                onClick={onOpenSaveDialog}
+                disabled={currentDeckCount === 0}
+                className="success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <FaSave className="text-xs shrink-0" />
+                {t('deck.saveCurrentDeck')} ({currentDeckCount} {t('common.cards')})
+              </button>
+            )}
+
+            <button
+              id="clear-deck-btn"
+              type="button"
+              onClick={onClearDeck}
+              disabled={currentDeckCount === 0}
+              className="danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FaTrash className="text-xs shrink-0" />
+              {t('deck.clearCurrentDeck')}
+            </button>
+          </div>
+
+          <div className="toolbar-actions">
+            <div className="relative inline-block text-left">
+              <button
+                type="button"
+                onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
+                className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
+              >
+                <FaFileImport className="text-xs shrink-0" />
+                {t('deck.importExport')}
+                <span className="text-[10px] opacity-75">▼</span>
+              </button>
+              {showImportExportDropdown ? (
+                <>
+                  <div
+                    className="fixed inset-0 z-[var(--z-backdrop)]"
+                    onClick={() => setShowImportExportDropdown(false)}
+                  />
+                  <div className="import-export-dropdown">
+                    <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowImportExportDropdown(false);
+                        onOpenTextImport();
+                      }}
+                      className="import-export-dropdown-item"
+                    >
+                      <FaFileImport className="text-gray-400 shrink-0" />
+                      {t('deck.importTextList')}
+                    </button>
+                    <label className="import-export-dropdown-item">
+                      <FaFileImport className="text-gray-400 shrink-0" />
+                      {t('deck.importDeck')}{' '}
+                      <span className="text-[10px] text-gray-400 font-mono ml-auto">.json / .dec</span>
+                      <input
+                        id="deck-import-file-input"
+                        type="file"
+                        accept=".json,.dec,.txt"
+                        onChange={(e) => {
+                          setShowImportExportDropdown(false);
+                          onImportFile(e);
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                    {hasSavedDecks ? (
+                      <>
+                        <div className="import-export-dropdown-divider" />
+                        <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowImportExportDropdown(false);
+                            onExportAll();
+                          }}
+                          className="import-export-dropdown-item"
+                        >
+                          {t('deck.exportAllDecks')}{' '}
+                          <span className="text-[10px] text-gray-400 font-mono ml-auto">.json</span>
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

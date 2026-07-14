@@ -1,12 +1,23 @@
-import { CSSProperties, useMemo, useState } from 'react';
+import { CSSProperties, useMemo, useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFistRaised, FaMagic, FaBolt, FaTint, FaBan, FaExclamationTriangle, FaPalette } from 'react-icons/fa';
+import {
+  FaFistRaised,
+  FaMagic,
+  FaBolt,
+  FaTint,
+  FaBan,
+  FaExclamationTriangle,
+  FaPalette,
+  FaPlus,
+  FaMinus
+} from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
+import { DeckFormatType, DeckZone } from '../../types/enums';
 import { DeckFormat } from '../../types/Deck';
 import { DeckCardGrouped, GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
 import { isBacklineSupportCard, isFrontlineCard, isLandCard, isSpellCard } from '../../utils/cardTypePredicates';
-import CardDetailModal from '../CardDetailModal';
+import CardDetailModal from '../card/CardDetailModal';
 
 interface DeckStackViewProps {
   groups: GroupedCards[];
@@ -21,6 +32,7 @@ interface DeckStackViewProps {
   activeFormat?: DeckFormat;
   onUpdateCard?: (updatedCard: Card) => void;
   isTokenZone?: boolean;
+  onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
 }
 
 interface PlaymatSection {
@@ -40,7 +52,7 @@ const CARD_DIMENSIONS_BY_SIZE: Record<CardSize, { width: string; height: string 
   xlarge: { width: '168px', height: '235px' }
 };
 
-function DeckStackView({
+const DeckStackView = memo(function DeckStackView({
   groups,
   cardSize,
   isRemovable,
@@ -52,7 +64,8 @@ function DeckStackView({
   onAddTokenToDeck,
   activeFormat,
   onUpdateCard,
-  isTokenZone = false
+  isTokenZone = false,
+  onUpdateCardZone
 }: DeckStackViewProps) {
   const { t } = useTranslation();
   const [selectedModalCard, setSelectedModalCard] = useState<Card | null>(null);
@@ -75,8 +88,8 @@ function DeckStackView({
       {
         sectionId: 'frontline',
         icon: FaFistRaised,
-        title: t('frontline'),
-        subtitle: `${t('creature')} & ${t('planeswalker')}`,
+        title: t('strategy.frontline'),
+        subtitle: `${t('search.creature')} & ${t('search.planeswalker')}`,
         cards: frontlineCards,
         groupedCards: groupCardsByUnique(frontlineCards),
         accentClassName: 'deck-stack-zone-frontline'
@@ -84,8 +97,8 @@ function DeckStackView({
       {
         sectionId: 'backline',
         icon: FaMagic,
-        title: t('backline'),
-        subtitle: `${t('artifact')} & ${t('enchantment')}`,
+        title: t('strategy.backline'),
+        subtitle: `${t('search.artifact')} & ${t('search.enchantment')}`,
         cards: backlineCards,
         groupedCards: groupCardsByUnique(backlineCards),
         accentClassName: 'deck-stack-zone-backline'
@@ -93,8 +106,8 @@ function DeckStackView({
       {
         sectionId: 'spells',
         icon: FaBolt,
-        title: t('spells'),
-        subtitle: `${t('instant')} & ${t('sorcery')}`,
+        title: t('common.spells'),
+        subtitle: `${t('search.instant')} & ${t('search.sorcery')}`,
         cards: spellCards,
         groupedCards: groupCardsByUnique(spellCards),
         accentClassName: 'deck-stack-zone-spells'
@@ -102,8 +115,8 @@ function DeckStackView({
       {
         sectionId: 'lands',
         icon: FaTint,
-        title: t('resourceLands'),
-        subtitle: t('land'),
+        title: t('strategy.resourceLands'),
+        subtitle: t('search.land'),
         cards: landCards,
         groupedCards: groupCardsByUnique(landCards),
         accentClassName: 'deck-stack-zone-lands'
@@ -113,7 +126,7 @@ function DeckStackView({
   );
 
   function getCardLegalityStatus(card: Card): { isBanned: boolean; isRestricted: boolean } {
-    if (!activeFormat || activeFormat === 'freeform') {
+    if (!activeFormat || activeFormat === DeckFormatType.FREEFORM) {
       return { isBanned: false, isRestricted: false };
     }
 
@@ -140,29 +153,29 @@ function DeckStackView({
         data-stack-depth={count > 2 ? '3' : count > 1 ? '2' : '1'}
         style={dynamicCardStyle}
       >
-        {count > 1 && (
+        {count > 1 ? (
           <div
             className={`deck-stack-shadow deck-stack-shadow-level-one ${
               isBanned
                 ? 'bg-red-950/60 border border-red-900/60'
                 : isRestricted
-                  ? 'bg-amber-950/60 border border-amber-900/60'
-                  : 'bg-slate-950 border border-slate-800/80'
+                  ? 'bg-amber-100/60 dark:bg-amber-950/60 border border-amber-300/60 dark:border-amber-900/60'
+                  : 'bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80'
             }`}
           />
-        )}
+        ) : null}
 
-        {count > 2 && (
+        {count > 2 ? (
           <div
             className={`deck-stack-shadow deck-stack-shadow-level-two ${
               isBanned
                 ? 'bg-red-950/40 border border-red-900/40'
                 : isRestricted
-                  ? 'bg-amber-950/40 border border-amber-900/40'
-                  : 'bg-slate-950 border border-slate-800/80'
+                  ? 'bg-amber-100/40 dark:bg-amber-950/40 border border-amber-300/40 dark:border-amber-900/40'
+                  : 'bg-gray-200 dark:bg-slate-950 border border-gray-300/80 dark:border-slate-800/80'
             }`}
           />
-        )}
+        ) : null}
 
         <div
           className={`deck-stack-main-card ${
@@ -170,7 +183,7 @@ function DeckStackView({
               ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
               : isRestricted
                 ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
-                : 'border-slate-700/40 dark:border-slate-800/50 hover:border-blue-500/80'
+                : 'border-gray-300 dark:border-slate-800/50 hover:border-blue-500/80'
           }`}
           data-has-stack={count > 1 ? 'true' : 'false'}
           onClick={() => setSelectedModalCard(card)}
@@ -188,10 +201,10 @@ function DeckStackView({
             />
           ) : (
             <div
-              className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-950/20' : 'bg-slate-850'}`}
+              className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-100 dark:bg-red-950/20' : 'bg-gray-100 dark:bg-slate-850'}`}
             >
               <span
-                className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-400' : 'text-white'}`}
+                className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}
               >
                 {card.printed_name || card.name}
               </span>
@@ -199,38 +212,100 @@ function DeckStackView({
             </div>
           )}
 
-          {/* Count Badge in lower corner */}
-          {count > 1 && <span className="deck-stack-count-badge">{count}x</span>}
+          {count > 1 ? <span className="deck-stack-count-badge">{count}x</span> : null}
 
-          {/* Banned / Restricted Badge */}
-          {isBanned && (
+          {isBanned ? (
             <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
               <FaBan className="text-white text-[8px] shrink-0" />
-              <span>{t('banned').toUpperCase()}</span>
+              <span>{t('cardDetails.banned').toUpperCase()}</span>
             </div>
-          )}
+          ) : null}
 
-          {isRestricted && (
+          {isRestricted ? (
             <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
               <FaExclamationTriangle className="text-white text-[8px] shrink-0" />
-              <span>{t('restricted').toUpperCase()}</span>
+              <span>{t('cardDetails.restricted').toUpperCase()}</span>
             </div>
-          )}
+          ) : null}
 
-          {/* Fast circular Remove button on hover */}
-          {isRemovable && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemoveFromDeck(card);
-              }}
-              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600/90 text-white flex items-center justify-center text-[9px] font-extrabold opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-700 z-20"
-              title={t('removeCopy')}
-            >
-              ✕
-            </button>
-          )}
+          {isRemovable ? (
+            <div className="absolute top-1.5 right-1.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20 items-end">
+              <div className="flex gap-1.5 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/10 shadow-lg">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToDeck(card);
+                  }}
+                  className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-green-500 hover:scale-110 transition-all pointer-events-auto"
+                  title={t('cardDetails.addCopy')}
+                >
+                  <FaPlus className="text-[10px]" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRemoveFromDeck(card);
+                  }}
+                  className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
+                  title={t('cardDetails.removeCopy')}
+                >
+                  <FaMinus className="text-[10px]" />
+                </button>
+              </div>
+
+              {onUpdateCardZone && card.zone ? (
+                <div className="flex gap-1 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/10 shadow-lg pointer-events-auto mt-1 flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUpdateCardZone(card.id, DeckZone.MAIN);
+                    }}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.MAIN
+                        ? 'bg-primary text-white ring-1 ring-white/50'
+                        : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
+                    }`}
+                    title={t('deck.printFilters.main')}
+                  >
+                    M
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
+                    }}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.SIDEBOARD
+                        ? 'bg-purple-600 text-white ring-1 ring-white/50'
+                        : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
+                    }`}
+                    title={t('deck.printFilters.sideboard')}
+                  >
+                    S
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
+                    }}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.MAYBEBOARD
+                        ? 'bg-warning text-white ring-1 ring-white/50'
+                        : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
+                    }`}
+                    title={t('deck.printFilters.maybeboard')}
+                  >
+                    ?
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -242,12 +317,12 @@ function DeckStackView({
         <section className="space-y-3">
           <h4 className="deck-stack-zone-title deck-stack-zone-frontline animate-fadeIn">
             <FaPalette className="shrink-0 text-xs text-indigo-400 animate-pulse" />
-            <span>{t('relatedTokens')}</span>
+            <span>{t('tokens.relatedTokens')}</span>
             <span className="deck-stack-zone-count">{allCardsInDeck.length}</span>
           </h4>
 
           {allCardsInDeck.length === 0 ? (
-            <p className="deck-stack-empty-zone">{t('emptyZone')}</p>
+            <p className="deck-stack-empty-zone">{t('strategy.emptyZone')}</p>
           ) : (
             <div className="deck-stack-cards-row">
               {groupCardsByUnique(allCardsInDeck).map((groupedCard) => renderPlaymatCard(groupedCard))}
@@ -255,7 +330,7 @@ function DeckStackView({
           )}
         </section>
 
-        {selectedModalCard && (
+        {selectedModalCard ? (
           <CardDetailModal
             card={selectedModalCard}
             imageUrl={getCardImageUrl(selectedModalCard)}
@@ -273,7 +348,7 @@ function DeckStackView({
               generatorCardName: ''
             }))}
           />
-        )}
+        ) : null}
       </div>
     );
   }
@@ -294,7 +369,7 @@ function DeckStackView({
             </h4>
 
             {section.groupedCards.length === 0 ? (
-              <p className="deck-stack-empty-zone">{t('emptyZone')}</p>
+              <p className="deck-stack-empty-zone">{t('strategy.emptyZone')}</p>
             ) : (
               <div className="deck-stack-cards-row">
                 {section.groupedCards.map((groupedCard) => renderPlaymatCard(groupedCard))}
@@ -304,7 +379,7 @@ function DeckStackView({
         );
       })}
 
-      {selectedModalCard && (
+      {selectedModalCard ? (
         <CardDetailModal
           card={selectedModalCard}
           imageUrl={getCardImageUrl(selectedModalCard)}
@@ -318,9 +393,9 @@ function DeckStackView({
           onRemoveFromDeck={onRemoveFromDeck}
           isEditMode={isRemovable}
         />
-      )}
+      ) : null}
     </div>
   );
-}
+});
 
 export default DeckStackView;
