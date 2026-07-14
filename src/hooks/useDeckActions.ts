@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
 import { DeckRelatedToken } from '../types/Deck';
+import { ShowToastFn } from '../types/Toast';
 import { useDeckStore } from '../store/useDeckStore';
 import { translateCards } from '../utils/translationHelper';
 
-export function useDeckActions(showToast: (text: string, variant?: any, action?: any) => void) {
+export function useDeckActions(showToast: ShowToastFn) {
   const { t, i18n } = useTranslation();
 
   const addCard = useDeckStore((state) => state.addCard);
