@@ -19,6 +19,7 @@
     "url": "https://github.com/AleBL/magic-the-gathering-deckforge"
   },
   "productName": "MTG Deck Forge",
+  "packageManager": "yarn@4.17.1",
   "scripts": {
     "dev": "vite",
     "dev:web": "vite --config vite.config.web.ts",
@@ -36,6 +37,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "deps:update": "taze major -I"
   },
   "dependencies": {

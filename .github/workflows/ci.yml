@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref (e.g. rapid pushes to a PR branch).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write # needed to post the coverage report comment on PRs
+
+jobs:
+  verify:
+    name: Type-check, lint & test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+
+      # packageManager in package.json pins Yarn 4.17.1; Corepack activates it.
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Resolve Yarn cache folder
+        id: yarn-cache
+        run: echo "dir=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Yarn packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Type-check
+        run: yarn type-check
+
+      # Read-only lint (no --fix) so CI reports rather than silently rewrites code.
+      - name: Lint
+        run: yarn lint:check
+
+      # Runs the suite and enforces the coverage thresholds set in vitest.config.ts;
+      # the job fails here if coverage drops below the configured floor.
+      - name: Test with coverage
+        run: yarn test:coverage
+
+      # Posts / updates a coverage summary comment on the PR and flags threshold status.
+      - name: Report coverage on PR
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        continue-on-error: true
+        uses: davelosert/vitest-coverage-report-action@v2

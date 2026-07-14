@@ -14,8 +14,25 @@ export default defineConfig({
     css: false,
     coverage: {
       provider: 'v8',
-      include: ['src/utils/**', 'src/store/**', 'src/hooks/usePlaytestSimulator.ts'],
-      reporter: ['text', 'html']
+      // Scoped to the modules this first-pass suite actually targets, so the numbers
+      // reflect tested code rather than being diluted by not-yet-covered utilities.
+      include: [
+        'src/utils/deckGrouping.ts',
+        'src/utils/deckValidator.ts',
+        'src/utils/symbolHelper.tsx',
+        'src/utils/translationHelper.ts',
+        'src/store/useDeckStore.ts',
+        'src/hooks/usePlaytestSimulator.ts'
+      ],
+      // 'json-summary' + 'json' feed the PR coverage-report action; 'text' for CI logs.
+      reporter: ['text', 'text-summary', 'json', 'json-summary', 'html'],
+      // Hard floor: CI fails if coverage drops below these. Tune upward as tests grow.
+      thresholds: {
+        statements: 60,
+        branches: 45,
+        functions: 60,
+        lines: 62
+      }
     }
   }
 });
