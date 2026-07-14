@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Card } from '../../types/Card';
 
 import { useDeckStore } from '../../store/useDeckStore';
 
