@@ -49,7 +49,7 @@ Search Magic: The Gathering cards, build and manage decks with [Scryfall](https:
 
 ```bash
 node -v # 24.15.0
-yarn -v # 1.22.19
+yarn -v # 4.17.1
 npm  -v # 11.12.1
 ```
 
