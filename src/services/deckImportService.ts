@@ -1,4 +1,5 @@
 import { Card } from '../types/Card';
+import { ScryfallCollectionResponse, ScryfallNotFoundIdentifier } from '../types/Scryfall';
 
 export interface ParseResult {
   name: string;
@@ -65,14 +66,14 @@ export const fetchCardsFromParsedList = async (
   parsed: ParseResult[],
   currentLang: string = 'en',
   onProgress?: (progress: ImportProgressData) => void,
-  t?: (key: string, options?: any) => string
+  t?: (key: string, options?: Record<string, unknown>) => string
 ): Promise<{ cards: Card[]; missing: string[] }> => {
   const uniqueParsed = Array.from(
     new Map(parsed.map((p) => [`${p.name}|${p.set || ''}|${p.collector_number || ''}`, p])).values()
   );
 
   const allResolvedCards: Card[] = [];
-  const initialNotFound: any[] = [];
+  const initialNotFound: ScryfallNotFoundIdentifier[] = [];
   const CHUNK_SIZE = 75;
 
   for (let chunkStartIndex = 0; chunkStartIndex < uniqueParsed.length; chunkStartIndex += CHUNK_SIZE) {
@@ -112,7 +113,7 @@ export const fetchCardsFromParsedList = async (
       throw new Error('Scryfall API error');
     }
 
-    const json = await response.json();
+    const json = (await response.json()) as ScryfallCollectionResponse;
     if (json.data && Array.isArray(json.data)) {
       allResolvedCards.push(...json.data);
     }
@@ -133,7 +134,7 @@ export const fetchCardsFromParsedList = async (
     }
 
     const retryIdentifiers = initialNotFound
-      .map((nf: any) => {
+      .map((nf: ScryfallNotFoundIdentifier) => {
         let originalName = '';
         if (nf.set && nf.collector_number) {
           const found = uniqueParsed.find((p) => p.set == nf.set && p.collector_number == nf.collector_number);
@@ -174,7 +175,7 @@ export const fetchCardsFromParsedList = async (
       });
 
       if (response.ok) {
-        const json = await response.json();
+        const json = (await response.json()) as ScryfallCollectionResponse;
         if (json.data && Array.isArray(json.data)) {
           allResolvedCards.push(...json.data);
         }

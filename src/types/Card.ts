@@ -1,5 +1,24 @@
 import { DeckZone } from './enums';
 
+export interface CardFace {
+  name: string;
+  printed_name?: string;
+  type_line: string;
+  printed_type_line?: string;
+  oracle_text?: string;
+  printed_text?: string;
+  mana_cost?: string;
+  power?: string;
+  toughness?: string;
+  image_uris?: {
+    small: string;
+    normal: string;
+    large: string;
+    png: string;
+    art_crop?: string;
+  };
+}
+
 export interface Card {
   printed_name: string;
   id: string;
@@ -59,24 +78,7 @@ export interface Card {
     vintage: string;
     pioneer: string;
   };
-  card_faces?: Array<{
-    name: string;
-    printed_name?: string;
-    type_line: string;
-    printed_type_line?: string;
-    oracle_text?: string;
-    printed_text?: string;
-    mana_cost?: string;
-    power?: string;
-    toughness?: string;
-    image_uris?: {
-      small: string;
-      normal: string;
-      large: string;
-      png: string;
-      art_crop?: string;
-    };
-  }>;
+  card_faces?: CardFace[];
   colors?: string[];
   color_identity?: string[];
   isCommander?: boolean;

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { i18n as I18nInstance } from 'i18next';
 import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
 import { DeckFormatType } from '../types/enums';
 import { parseDeckText, fetchCardsFromParsedList, ImportProgressData } from '../services/deckImportService';
 
 export function useDeckTextImport(
-  i18n: any,
+  i18n: I18nInstance,
   editingDeckId: string | null,
   editingDeckName: string,
   editingDeckFormat: DeckFormat,

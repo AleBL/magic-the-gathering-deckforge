@@ -98,14 +98,14 @@ const pt = {
     deck: {
       printFilters: {
         main: 'Deck Principal',
-        sideboard: 'Reserva',
-        maybeboard: 'Talvez',
+        sideboard: 'Sideboard',
+        maybeboard: 'Mayboard',
         mainCount: 'Principal ({{count}})',
-        sideboardCount: 'Reserva ({{count}})',
-        maybeboardCount: 'Talvez ({{count}})',
-        mainAndSideCount: 'Principal + Reserva ({{count}})',
-        mainAndMaybeCount: 'Principal + Talvez ({{count}})',
-        sideAndMaybeCount: 'Reserva + Talvez ({{count}})',
+        sideboardCount: 'Sideboard ({{count}})',
+        maybeboardCount: 'Mayboard ({{count}})',
+        mainAndSideCount: 'Principal + Sideboard ({{count}})',
+        mainAndMaybeCount: 'Principal + Mayboard ({{count}})',
+        sideAndMaybeCount: 'Sideboard + Mayboard ({{count}})',
         mainSideMaybeCount: 'Todos ({{count}})'
       },
       importingCardsProgress: 'Buscando cartas ({{current}} de {{total}})...',
@@ -273,7 +273,8 @@ const pt = {
       island: 'Ilha',
       mountain: 'Montanha',
       plains: 'Planície',
-      swamp: 'Pântano'
+      swamp: 'Pântano',
+      wastes: 'Ermo'
     },
     stats: {
       applySuggestedLands: 'Aplicar Terrenos Básicos Recomendados',
@@ -316,7 +317,6 @@ const pt = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Divisão por Tipo',
-      wastes: 'Deserto',
       willAddLands: '{{count}} terrenos básicos serão adicionados'
     },
     print: {

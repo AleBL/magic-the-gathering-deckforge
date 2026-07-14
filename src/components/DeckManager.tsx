@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { CardSize } from '../types';
+import { ShowToastFn } from '../types/Toast';
 import { CARD_SIZES } from '../constants';
 import DeckList from './DeckList';
 import DeckPreview from './DeckPreview';
@@ -20,7 +21,7 @@ import { useDeckTextImport } from '../hooks/useDeckTextImport';
 import { useSuggestedLands } from '../hooks/useSuggestedLands';
 
 interface DeckManagerProps {
-  showToast: (text: string, variant?: any, action?: any) => void;
+  readonly showToast: ShowToastFn;
 }
 
 function DeckManager({ showToast }: DeckManagerProps) {
@@ -279,7 +280,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
       async () => {
         const deletedDeck = await deleteDeck(deck.id);
         if (deletedDeck) {
-          showToast(`${deletedDeck.name} ${t('deck.deleted')}`, {
+          showToast(`${deletedDeck.name} ${t('deck.deleted')}`, undefined, {
             label: t('common.undo'),
             onClick: () => {
               restoreDeck(deletedDeck);

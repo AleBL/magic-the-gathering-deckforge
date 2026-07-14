@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { FaCrown, FaShieldAlt } from 'react-icons/fa';
-import { Card } from '../../types/Card';
+import { Card, CardFace } from '../../types/Card';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DECK_FORMATS, LEGALITY } from '../../types/enums';
 import { formatLabelKey } from '../../utils/formatLabel';
 
 interface CardDetailDataProps {
-  card: Card;
-  currentFace: any;
-  hidePriceAndLegality: boolean;
-  isToken: boolean;
+  readonly card: Card;
+  readonly currentFace: CardFace | null | undefined;
+  readonly hidePriceAndLegality: boolean;
+  readonly isToken: boolean;
 }
 
 export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToken }: CardDetailDataProps) {

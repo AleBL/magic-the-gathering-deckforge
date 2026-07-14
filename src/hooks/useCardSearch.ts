@@ -202,10 +202,11 @@ export function useCardSearch(language: string) {
         setCards(deduplicateCards(results, language));
         setHasMore(more);
         setCurrentPage(2);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (searchId !== latestSearchIdRef.current) return;
-        const errMsg = err?.message || '';
-        const status = err?.status || 0;
+        const scryfallError = err as Partial<Error & { status: number }>;
+        const errMsg = scryfallError?.message || '';
+        const status = scryfallError?.status || 0;
         if (
           status === 503 ||
           status === 504 ||
@@ -225,7 +226,7 @@ export function useCardSearch(language: string) {
         }
       }
     },
-    [fetchPage, searchQuery, filters, language]
+    [fetchPage, searchQuery, filters, language, t]
   );
 
   const loadNextPage = useCallback(async () => {
@@ -244,10 +245,11 @@ export function useCardSearch(language: string) {
         setHasMore(more);
         setCurrentPage((prevPage) => prevPage + 1);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (searchId !== latestSearchIdRef.current) return;
-      const errMsg = err?.message || '';
-      const status = err?.status || 0;
+      const scryfallError = err as Partial<Error & { status: number }>;
+      const errMsg = scryfallError?.message || '';
+      const status = scryfallError?.status || 0;
       if (
         status === 503 ||
         status === 504 ||
@@ -266,7 +268,7 @@ export function useCardSearch(language: string) {
         isLoadingMoreRef.current = false;
       }
     }
-  }, [activeQuery, currentPage, fetchPage, hasMore, language]);
+  }, [activeQuery, currentPage, fetchPage, hasMore, language, t]);
 
   // Initial search on mount
   useEffect(() => {

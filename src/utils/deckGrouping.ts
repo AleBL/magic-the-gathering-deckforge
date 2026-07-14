@@ -118,24 +118,24 @@ export const groupCardsByUnique = (cardsList: Card[]): DeckCardGrouped[] => {
   return grouped;
 };
 
+type LocaleTranslations = (typeof locales)['en']['translations'];
+type BasicLandKey = keyof LocaleTranslations['land'];
+
 const getBasicLandNamesMap = (): Record<string, string> => {
   const map: Record<string, string> = {};
-  const landKeys = ['plains', 'island', 'swamp', 'mountain', 'forest', 'wastes'];
+  const landKeys: BasicLandKey[] = ['plains', 'island', 'swamp', 'mountain', 'forest', 'wastes'];
 
   landKeys.forEach((key) => {
     map[key] = key;
   });
 
-  Object.values(locales).forEach((locale) => {
-    const translations = locale.translations as any;
-    if (translations?.deckStats) {
-      landKeys.forEach((key) => {
-        const translatedName = translations.deckStats[key];
-        if (typeof translatedName === 'string') {
-          map[translatedName.toLowerCase()] = key;
-        }
-      });
-    }
+  Object.values(locales).forEach(({ translations }) => {
+    landKeys.forEach((key) => {
+      const translatedName = translations.land[key];
+      if (typeof translatedName === 'string') {
+        map[translatedName.toLowerCase()] = key;
+      }
+    });
   });
 
   return map;

@@ -62,11 +62,13 @@ export function validateDeck(cards: Card[], format: DeckFormat): ValidationResul
   });
 
   // Rules: Max 4 copies of any non-basic land card for Standard, Modern, Vintage, Pauper
-  if (
-    [DeckFormatType.STANDARD, DeckFormatType.MODERN, DeckFormatType.VINTAGE, DeckFormatType.PAUPER].includes(
-      format as any
-    )
-  ) {
+  const limitedCopyFormats: DeckFormat[] = [
+    DeckFormatType.STANDARD,
+    DeckFormatType.MODERN,
+    DeckFormatType.VINTAGE,
+    DeckFormatType.PAUPER
+  ];
+  if (limitedCopyFormats.includes(format)) {
     if (cards.length < MIN_DECK_SIZE) {
       errors.push({
         key: 'validationMinCards',

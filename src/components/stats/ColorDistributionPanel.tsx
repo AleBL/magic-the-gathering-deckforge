@@ -7,10 +7,16 @@ import { DeckStatistics, StatFilter } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
 
 interface ColorDistributionPanelProps {
-  stats: DeckStatistics;
-  colorLabels: Record<string, ColorLabel>;
-  activeFilter: StatFilter | null;
-  setActiveFilter: Dispatch<SetStateAction<StatFilter | null>>;
+  readonly stats: DeckStatistics;
+  readonly colorLabels: Record<string, ColorLabel>;
+  readonly activeFilter: StatFilter | null;
+  readonly setActiveFilter: Dispatch<SetStateAction<StatFilter | null>>;
+}
+
+/** Minimal shape of the Recharts `Pie` click payload we actually read. */
+interface PieClickPayload {
+  colorKey?: string;
+  payload?: { colorKey?: string };
 }
 
 export function ColorDistributionPanel({
@@ -73,7 +79,7 @@ export function ColorDistributionPanel({
                 outerRadius="75%"
                 paddingAngle={5}
                 stroke="none"
-                onClick={(data: any) => {
+                onClick={(data: PieClickPayload) => {
                   const colorKey = data?.payload?.colorKey || data?.colorKey;
                   if (colorKey) {
                     setActiveFilter((prev) =>

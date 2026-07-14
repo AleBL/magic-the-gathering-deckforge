@@ -273,7 +273,8 @@ const en = {
       island: 'Island',
       mountain: 'Mountain',
       plains: 'Plains',
-      swamp: 'Swamp'
+      swamp: 'Swamp',
+      wastes: 'Wastes'
     },
     stats: {
       applySuggestedLands: 'Apply Suggested Basic Lands',
@@ -316,7 +317,6 @@ const en = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Card Types Breakdown',
-      wastes: 'Wastes',
       willAddLands: '{{count}} basic lands will be added'
     },
     print: {

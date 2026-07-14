@@ -18,17 +18,6 @@ export const DeckFormatType = {
 
 export type DeckFormatType = (typeof DeckFormatType)[keyof typeof DeckFormatType];
 
-export const ManaColor = {
-  WHITE: 'W',
-  BLUE: 'U',
-  BLACK: 'B',
-  RED: 'R',
-  GREEN: 'G',
-  COLORLESS: 'C'
-} as const;
-
-export type ManaColor = (typeof ManaColor)[keyof typeof ManaColor];
-
 export const DeckZone = {
   MAIN: 'main',
   SIDEBOARD: 'sideboard',
@@ -91,7 +80,6 @@ export type PlaytestZone = (typeof PlaytestZone)[keyof typeof PlaytestZone];
 export type LibraryPlacement = 'top' | 'bottom' | number;
 
 export const DECK_FORMATS = ['standard', 'modern', 'commander', 'vintage', 'pauper'] as const;
-export type DeckFormat = (typeof DECK_FORMATS)[number];
 
 export const LEGALITY = {
   LEGAL: 'legal',
@@ -99,5 +87,3 @@ export const LEGALITY = {
   RESTRICTED: 'restricted',
   NOT_LEGAL: 'not_legal'
 } as const;
-
-export type LegalityStatus = (typeof LEGALITY)[keyof typeof LEGALITY];

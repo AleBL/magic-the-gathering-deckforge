@@ -5,7 +5,7 @@ import { PlaytestDragZone, PlaytestMenuZone, PlaytestPileZone, ScrySurveilType }
 
 type PlaytestState = ReturnType<typeof usePlaytestSimulator>;
 
-export interface ExtendedPlaytestState extends PlaytestState {
+interface ExtendedPlaytestState extends PlaytestState {
   isLogOpen: boolean;
   setIsLogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isShortcutsOpen: boolean;

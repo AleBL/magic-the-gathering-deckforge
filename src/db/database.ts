@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import { Deck } from '../types/Deck';
 
-export class MagicDatabase extends Dexie {
+class MagicDatabase extends Dexie {
   decks!: Table<Deck, string>;
 
   constructor() {

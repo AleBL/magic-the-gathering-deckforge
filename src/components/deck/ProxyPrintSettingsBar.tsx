@@ -194,10 +194,10 @@ export function ProxyPrintSettingsBar({
               className={`proxy-option-btn ${spacing === spacingOptionValue ? 'proxy-option-btn-active' : ''}`}
             >
               {t(
-                `spacing${spacingOptionValue.charAt(0).toUpperCase() + spacingOptionValue.slice(1)}` as
-                  | 'spacingNone'
-                  | 'spacingSmall'
-                  | 'spacingLarge'
+                `print.spacing${spacingOptionValue.charAt(0).toUpperCase() + spacingOptionValue.slice(1)}` as
+                  | 'print.spacingNone'
+                  | 'print.spacingSmall'
+                  | 'print.spacingLarge'
               )}
             </button>
           ))}
@@ -216,10 +216,10 @@ export function ProxyPrintSettingsBar({
             >
               {t(
                 guideOption === 'none'
-                  ? 'cuttingGuideNone'
+                  ? 'print.cuttingGuideNone'
                   : guideOption === 'solid'
-                    ? 'cuttingGuideLine'
-                    : 'cuttingGuideDotted'
+                    ? 'print.cuttingGuideLine'
+                    : 'print.cuttingGuideDotted'
               )}
             </button>
           ))}
