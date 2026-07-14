@@ -70,7 +70,9 @@ describe('validateDeck', () => {
 
   it('flags non-common cards in Pauper', () => {
     const deck = [makeCard({ name: 'Fancy', rarity: 'rare' }), ...copies(59, { name: 'Cheap', rarity: 'common' })];
-    const pauper = validateDeck(deck, DeckFormatType.PAUPER).errors.find((e) => e.key === 'validationPauperCommonsOnly');
+    const pauper = validateDeck(deck, DeckFormatType.PAUPER).errors.find(
+      (e) => e.key === 'validationPauperCommonsOnly'
+    );
     expect(pauper?.params).toMatchObject({ list: 'Fancy' });
   });
 
