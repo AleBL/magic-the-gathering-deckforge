@@ -171,8 +171,8 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
       } else {
         setSearchResults([]);
       }
-    } catch (err: any) {
-      if (err?.message === 'ScryfallOffline') {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message === 'ScryfallOffline') {
         setSearchError(t('search.scryfallOffline'));
       } else {
         setSearchError(t('tokens.searchError'));
