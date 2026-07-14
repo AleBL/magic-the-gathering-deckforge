@@ -123,12 +123,11 @@ type BasicLandKey = keyof LocaleTranslations['land'];
 
 const getBasicLandNamesMap = (): Record<string, string> => {
   const map: Record<string, string> = {};
-  const landKeys: BasicLandKey[] = ['plains', 'island', 'swamp', 'mountain', 'forest'];
+  const landKeys: BasicLandKey[] = ['plains', 'island', 'swamp', 'mountain', 'forest', 'wastes'];
 
   landKeys.forEach((key) => {
     map[key] = key;
   });
-  map.wastes = 'wastes';
 
   Object.values(locales).forEach(({ translations }) => {
     landKeys.forEach((key) => {
@@ -137,11 +136,6 @@ const getBasicLandNamesMap = (): Record<string, string> => {
         map[translatedName.toLowerCase()] = key;
       }
     });
-
-    const translatedWastes = translations.stats.wastes;
-    if (typeof translatedWastes === 'string') {
-      map[translatedWastes.toLowerCase()] = 'wastes';
-    }
   });
 
   return map;

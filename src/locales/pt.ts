@@ -273,7 +273,8 @@ const pt = {
       island: 'Ilha',
       mountain: 'Montanha',
       plains: 'Planície',
-      swamp: 'Pântano'
+      swamp: 'Pântano',
+      wastes: 'Ermo'
     },
     stats: {
       applySuggestedLands: 'Aplicar Terrenos Básicos Recomendados',
@@ -316,7 +317,6 @@ const pt = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Divisão por Tipo',
-      wastes: 'Deserto',
       willAddLands: '{{count}} terrenos básicos serão adicionados'
     },
     print: {

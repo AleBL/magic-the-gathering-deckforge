@@ -278,7 +278,8 @@ const es = {
       island: 'Isla',
       mountain: 'Montaña',
       plains: 'Llanura',
-      swamp: 'Pantano'
+      swamp: 'Pantano',
+      wastes: 'Yermos'
     },
     stats: {
       applySuggestedLands: 'Aplicar Tierras Básicas Recomendadas',
