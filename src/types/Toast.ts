@@ -10,3 +10,5 @@ export interface ToastState {
   variant: ToastVariant;
   action?: ToastAction;
 }
+
+export type ShowToastFn = (text: string, variant?: ToastVariant, action?: ToastAction) => void;
