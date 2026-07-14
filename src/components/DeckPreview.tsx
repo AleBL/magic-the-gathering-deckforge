@@ -57,7 +57,7 @@ interface DeckPreviewProps {
   deckRelatedTokens?: DeckRelatedToken[];
 }
 
-export function DeckPreview({
+function DeckPreview({
   selectedDeck,
   currentDeck,
   cardSize,

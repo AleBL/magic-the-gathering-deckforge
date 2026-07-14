@@ -4,19 +4,19 @@ function getNormalizedTypeLine(card: Card): string {
   return card.type_line?.toLowerCase() ?? '';
 }
 
-export function isCreatureCard(card: Card): boolean {
+function isCreatureCard(card: Card): boolean {
   return getNormalizedTypeLine(card).includes('creature');
 }
 
-export function isPlaneswalkerCard(card: Card): boolean {
+function isPlaneswalkerCard(card: Card): boolean {
   return getNormalizedTypeLine(card).includes('planeswalker');
 }
 
-export function isArtifactCard(card: Card): boolean {
+function isArtifactCard(card: Card): boolean {
   return getNormalizedTypeLine(card).includes('artifact');
 }
 
-export function isEnchantmentCard(card: Card): boolean {
+function isEnchantmentCard(card: Card): boolean {
   return getNormalizedTypeLine(card).includes('enchantment');
 }
 

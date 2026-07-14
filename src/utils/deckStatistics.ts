@@ -1,7 +1,7 @@
 import { Card } from '../types/Card';
 import { BASIC_LAND_NAMES, MIN_DECK_SIZE, COMMANDER_DECK_SIZE } from '../constants';
 
-export type StatFilterType = 'cmc' | 'color' | 'type';
+type StatFilterType = 'cmc' | 'color' | 'type';
 
 export interface StatFilter {
   type: StatFilterType;

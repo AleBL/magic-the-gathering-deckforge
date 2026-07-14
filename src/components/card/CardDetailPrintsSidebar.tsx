@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 
-export const RARITY_STYLES: Record<string, string> = {
+const RARITY_STYLES: Record<string, string> = {
   mythic:
     'border-orange-500/60 bg-gradient-to-b from-orange-500/20 to-orange-600/5 text-orange-500 dark:text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.15)]',
   rare: 'border-amber-400/60 bg-gradient-to-b from-amber-400/15 to-amber-500/5 text-amber-600 dark:text-amber-400',
