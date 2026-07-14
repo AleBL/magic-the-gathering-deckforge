@@ -9,13 +9,14 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
   const [error, setError] = useState<string | null>(null);
   const { i18n } = useTranslation();
 
-  const cardName = typeof cardOrName === 'string' ? cardOrName : cardOrName?.name;
-  const targetOracleId = typeof cardOrName === 'string' ? oracleId : cardOrName?.oracle_id;
-  const originalPower = typeof cardOrName === 'string' ? undefined : cardOrName?.power;
-  const originalToughness = typeof cardOrName === 'string' ? undefined : cardOrName?.toughness;
-  const originalColors = typeof cardOrName === 'string' ? undefined : cardOrName?.colors;
-  const originalTypeLine = typeof cardOrName === 'string' ? undefined : cardOrName?.type_line;
-  const originalOracleText = typeof cardOrName === 'string' ? undefined : cardOrName?.oracle_text;
+  const isCardObject = typeof cardOrName !== 'string';
+  const cardName = isCardObject ? cardOrName?.name : cardOrName;
+  const targetOracleId = isCardObject ? cardOrName?.oracle_id : oracleId;
+  const originalPower = isCardObject ? cardOrName?.power : undefined;
+  const originalToughness = isCardObject ? cardOrName?.toughness : undefined;
+  const originalColors = isCardObject ? cardOrName?.colors : undefined;
+  const originalTypeLine = isCardObject ? cardOrName?.type_line : undefined;
+  const originalOracleText = isCardObject ? cardOrName?.oracle_text : undefined;
 
   useEffect(() => {
     if (!cardName && !targetOracleId) {
@@ -67,7 +68,7 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
       const uniqueMap = new Map<string, Card>();
       results.forEach((printCard) => {
         // If it's a token and we have the original attributes, filter out non-matching tokens
-        if (isToken && typeof cardOrName !== 'string') {
+        if (isToken && isCardObject) {
           const powerMatches = (printCard.power || '') === (originalPower || '');
           const toughnessMatches = (printCard.toughness || '') === (originalToughness || '');
           const colorsMatches = (printCard.colors ?? []).sort().join(',') === (originalColors ?? []).sort().join(',');
@@ -130,6 +131,7 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
     targetOracleId,
     i18n.language,
     isToken,
+    isCardObject,
     originalPower,
     originalToughness,
     originalColors,
