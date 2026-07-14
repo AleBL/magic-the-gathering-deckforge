@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaTimes } from 'react-icons/fa';
 import { AlertVariant } from '../../types';
+import { WindowWithElectronAPI } from '../../types/electron';
 
 interface CustomDialogProps {
   isOpen: boolean;
@@ -34,9 +35,9 @@ function CustomDialog({
 
     // Show native OS notification
     if (typeof window !== 'undefined') {
-      const safeWindow = window as any;
-      if (safeWindow.ipcRenderer) {
-        safeWindow.ipcRenderer.send('show-notification', { title, body: message });
+      const safeWindow = window as unknown as WindowWithElectronAPI;
+      if (safeWindow.electronAPI) {
+        safeWindow.electronAPI.send('show-notification', { title, body: message });
       } else if (window.Notification) {
         if (Notification.permission === 'granted') {
           new Notification(title, { body: message });
