@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-
-const TOAST_DURATION_MS = 2500;
-
+import { TOAST_DURATION_MS } from '../constants';
 import { ToastState, ToastVariant, ToastAction } from '../types/Toast';
 
 export default function useToast() {
