@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
+import { dispatchToast } from '../utils/toastHelper';
 
 export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: string, isToken?: boolean) {
   const [prints, setPrints] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const isCardObject = typeof cardOrName !== 'string';
   const cardName = isCardObject ? cardOrName?.name : cardOrName;
@@ -113,7 +114,9 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
       if (err.message?.includes('404') || err.message?.includes('not found')) {
         setPrints([]);
       } else {
+        console.error('Failed to fetch card prints:', err);
         setError(err.message);
+        dispatchToast(t('common.printsLoadError'), 'danger');
       }
       setIsLoading(false);
     });
