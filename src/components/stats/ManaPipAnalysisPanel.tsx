@@ -41,11 +41,11 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
                 <div className="flex flex-col sm:flex-row sm:justify-between text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1 gap-1">
                   <span>
                     {t('stats.pipsNeeded')}:{' '}
-                    <span className="font-bold text-gray-900 dark:text-gray-100">{pipsCount}</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums">{pipsCount}</span>
                   </span>
                   <span>
                     {t('stats.landsAvailable')}:{' '}
-                    <span className="font-bold text-gray-900 dark:text-gray-100">{landsCount}</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums">{landsCount}</span>
                   </span>
                 </div>
               </div>

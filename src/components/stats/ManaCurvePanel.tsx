@@ -48,7 +48,9 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
       </div>
       <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
         {t('stats.averageCmc')}:{' '}
-        <span className="font-bold text-gray-800 dark:text-gray-200">{stats.averageConvertedManaCost}</span>
+        <span className="font-bold text-gray-800 dark:text-gray-200 tabular-nums">
+          {stats.averageConvertedManaCost}
+        </span>
       </div>
     </div>
   );

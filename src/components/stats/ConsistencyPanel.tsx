@@ -41,7 +41,7 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.keepableHands')}
           </span>
-          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
+          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 tabular-nums">
             {(keepable * 100).toFixed(0)}%
           </span>
         </div>
@@ -49,7 +49,7 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.avgLandsInHand')}
           </span>
-          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
+          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 tabular-nums">
             {expectedLands.toFixed(1)}
           </span>
         </div>
