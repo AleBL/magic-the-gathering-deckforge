@@ -24,7 +24,8 @@ export async function fetchSymbols() {
       });
       symbolMap = map;
     }
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch Scryfall symbology:', error);
     dispatchToast(i18n.t('common.errorFetchingSymbology') as string, 'danger');
   } finally {
     isFetching = false;
