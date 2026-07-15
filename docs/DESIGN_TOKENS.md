@@ -45,6 +45,22 @@ state for the base token.
 > The namespace is `--font-*` (Tailwind v4), **not** `--font-family-*` (v3). Using the
 > old key left `font-serif` silently falling back to Georgia.
 
+### Type scale
+
+Semantic size rungs on the Tailwind v4 `--text-*` namespace, each carrying a paired
+line-height and letter-spacing. They **add to** (never replace) the built-in
+`text-xs…text-9xl` scale.
+
+| Token | Utility | Size | Leading | Tracking | Usage |
+|-------|---------|------|---------|----------|-------|
+| `--text-display` | `text-display` | `1.875rem` | `1.15` | `-0.02em` | Hero/section display titles |
+| `--text-heading` | `text-heading` | `1.25rem` | `1.3` | `-0.01em` | Modal/panel titles |
+| `--text-body` | `text-body` | `0.9375rem` | `1.6` | — | Long-form body copy |
+| `--text-caption` | `text-caption` | `0.75rem` | `1.4` | `0.02em` | Meta, labels, captions |
+
+> Pair updating numbers (counters, prices, stats) with the `tabular-nums` utility so
+> digits don't jitter as values change.
+
 ## Radius
 
 | Token | Utility | Value |
@@ -72,6 +88,22 @@ cooler, less muddy feel. These override Tailwind's built-in `shadow-*`.
 | `--shadow-lg` | `shadow-lg` | Popovers, dropdowns |
 | `--shadow-xl` | `shadow-xl` | Floating panels, sidebars |
 | `--shadow-2xl` | `shadow-2xl` | Modals, full-screen overlays |
+
+## Liquid-glass surface
+
+Subtle glassmorphism material — a translucent fill designed to sit over a
+`backdrop-blur`, with a hairline border. Fills stay high-opacity (~0.8) so text keeps
+AA contrast in both themes. Pair with a `--shadow-*` elevation. Applied to modals,
+the profile menu, dropdowns, and the command palette; the `.surface-glass` helper
+class (in [`layout.css`](../src/style/layout.css)) bundles all four.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--glass-blur` | `16px` | Backdrop blur radius |
+| `--glass-fill-light` | `rgb(255 255 255 / 0.8)` | Panel fill, light theme |
+| `--glass-fill-dark` | `rgb(15 23 42 / 0.8)` | Panel fill, dark theme |
+| `--glass-border-light` | `rgb(255 255 255 / 0.55)` | Hairline border, light theme |
+| `--glass-border-dark` | `rgb(255 255 255 / 0.08)` | Hairline border, dark theme |
 
 ## Spacing
 
