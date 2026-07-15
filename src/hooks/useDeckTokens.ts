@@ -8,6 +8,7 @@ import { tokenPresets, TokenPreset } from '../components/PlaytestTokenModal';
 import { translateCards } from '../utils/translationHelper';
 import { getCardImageUrl } from '../utils/deckGrouping';
 import { CardWithScryfallMetadata, ScryfallCardPart, ScryfallSearchResponse } from '../types/Scryfall';
+import { dispatchToast } from '../utils/toastHelper';
 
 interface UseDeckTokensArgs {
   cards: Card[];
@@ -44,8 +45,9 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
           });
           setPresets(updated);
         }
-      } catch {
+      } catch (error) {
         // Keep default preset images when dynamic fetch fails.
+        console.error('Failed to fetch preset token images:', error);
       }
     };
     fetchPresetImages();
@@ -172,6 +174,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
         setSearchResults([]);
       }
     } catch (err: unknown) {
+      console.error('Failed to search tokens:', err);
       if (err instanceof Error && err.message === 'ScryfallOffline') {
         setSearchError(t('search.scryfallOffline'));
       } else {
@@ -217,8 +220,9 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
       onTokensLoaded?.(updated);
       setSelectedTokenForDetail(null);
       setIsSearchModalOpen(false);
-    } catch {
-      // Keep modal open state consistent even if token insertion fails.
+    } catch (error) {
+      console.error('Failed to add token:', error);
+      dispatchToast(t('tokens.addTokenError'), 'danger');
     } finally {
       setIsSearching(false);
     }
@@ -266,7 +270,8 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
             try {
               const fullCard = (await Scry.Cards.byName(c.name)) as CardWithScryfallMetadata;
               allParts = fullCard.all_parts || [];
-            } catch {
+            } catch (fetchAllPartsError) {
+              console.error('Failed to fetch full card during deck analysis:', fetchAllPartsError);
               allParts = [];
             }
           }
@@ -302,8 +307,8 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
                     generatorCardName: c.printed_name || c.name
                   });
                 }
-              } catch {
-                // Ignore isolated token fetch failures.
+              } catch (tokenFetchError) {
+                console.error('Failed to fetch token during deck analysis:', tokenFetchError);
               }
             })
           );
@@ -317,8 +322,9 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
 
       setLocalTokens(updated);
       onTokensLoaded?.(updated);
-    } catch {
-      // Keep existing token list if analysis fails.
+    } catch (error) {
+      console.error('Failed to analyze deck for tokens:', error);
+      dispatchToast(t('tokens.analysisError'), 'danger');
     } finally {
       setIsLoading(false);
     }
