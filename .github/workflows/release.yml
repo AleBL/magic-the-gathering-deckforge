@@ -96,6 +96,21 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      # electron-builder names artifacts (and the app reads its displayed version)
+      # from package.json's version field, not from the git tag. Stamp the tag's
+      # version into package.json before building so both match the release.
+      - name: Set package version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
       # No code-signing certificates are configured, so unsigned builds are expected
       # on Windows and Mac. Disabling auto-discovery avoids electron-builder failing
       # while looking for a signing identity that doesn't exist in this environment.
