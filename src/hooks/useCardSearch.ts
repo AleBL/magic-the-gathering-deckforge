@@ -204,10 +204,13 @@ export function useCardSearch(language: string) {
         setCurrentPage(2);
       } catch (err: unknown) {
         if (searchId !== latestSearchIdRef.current) return;
+        console.error('Failed to load first page of search results:', err);
         const scryfallError = err as Partial<Error & { status: number }>;
         const errMsg = scryfallError?.message || '';
         const status = scryfallError?.status || 0;
-        if (
+        if (status === 429 || errMsg.includes('429')) {
+          setError(t('search.rateLimited'));
+        } else if (
           status === 503 ||
           status === 504 ||
           errMsg.includes('503') ||
@@ -247,10 +250,13 @@ export function useCardSearch(language: string) {
       }
     } catch (err: unknown) {
       if (searchId !== latestSearchIdRef.current) return;
+      console.error('Failed to load next page of search results:', err);
       const scryfallError = err as Partial<Error & { status: number }>;
       const errMsg = scryfallError?.message || '';
       const status = scryfallError?.status || 0;
-      if (
+      if (status === 429 || errMsg.includes('429')) {
+        setError(t('search.rateLimited'));
+      } else if (
         status === 503 ||
         status === 504 ||
         errMsg.includes('503') ||
