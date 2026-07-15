@@ -65,9 +65,11 @@ export function useDeckTextImport(
         setImportProgress((prev: ImportProgressData) => ({ ...prev, isImporting: false }));
       }
     } catch (err: unknown) {
-      console.error(err);
+      console.error('Failed to import deck from text:', err);
       if (err instanceof Error && err.message === 'ScryfallOffline') {
         setErrorMsg(t('search.scryfallOffline'));
+      } else if (err instanceof Error && err.message === 'ScryfallRateLimited') {
+        setErrorMsg(t('search.rateLimited'));
       } else {
         setErrorMsg(t('deck.importError'));
       }
