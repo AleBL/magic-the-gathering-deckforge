@@ -408,7 +408,7 @@ function DeckPreview({
             </>
           ) : (
             <>
-              <h3 className="text-gray-900 dark:text-white text-xl font-semibold transition-colors duration-300 text-left">
+              <h3 className="text-gray-900 dark:text-white text-xl font-serif font-semibold transition-colors duration-300 text-left">
                 {t('deck.currentDeck')}
               </h3>
               {currentDeck.length > 0 ? (
