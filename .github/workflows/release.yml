@@ -139,6 +139,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Makes re-running this job for the same tag (e.g. after re-tagging to pick up
+      # a fix) idempotent. Without this, generate_release_notes can concatenate fresh
+      # notes onto an existing release's body instead of replacing it, producing
+      # duplicate "What's Changed" sections.
+      - name: Delete existing release for this tag, if any
+        continue-on-error: true
+        run: gh release delete "${{ github.ref_name }}" --yes --cleanup-tag=false --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
         with:
