@@ -36,7 +36,7 @@ export function TypesBreakdownPanel({ stats, activeFilter, setActiveFilter }: Ty
               } ${activeFilter?.type === 'type' && activeFilter.value !== typeKey ? 'opacity-40' : 'opacity-100'}`}
             >
               <span className="capitalize text-gray-600 dark:text-gray-400 font-medium">{t(`search.${typeKey}`)}</span>
-              <span className="font-bold text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full text-[10px]">
+              <span className="font-bold text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full text-[10px] tabular-nums">
                 {count}
               </span>
             </div>

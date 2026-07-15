@@ -21,7 +21,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.totalUsd')}
           </span>
-          <span className="text-base font-extrabold text-purple-600 dark:text-purple-400">
+          <span className="text-base font-extrabold text-purple-600 dark:text-purple-400 tabular-nums">
             ${stats.totalUsdPrice.toFixed(2)}
           </span>
         </div>
@@ -29,7 +29,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.totalEur')}
           </span>
-          <span className="text-base font-extrabold text-purple-600 dark:text-purple-400">
+          <span className="text-base font-extrabold text-purple-600 dark:text-purple-400 tabular-nums">
             €{stats.totalEurPrice.toFixed(2)}
           </span>
         </div>
@@ -50,7 +50,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
                 <span className="flex-1 min-w-0 truncate mr-2 text-gray-700 dark:text-gray-300 font-medium">
                   {card.printed_name || card.name}
                 </span>
-                <span className="font-extrabold text-purple-600 dark:text-purple-400">
+                <span className="font-extrabold text-purple-600 dark:text-purple-400 tabular-nums">
                   ${parseFloat(card.prices?.usd || '0').toFixed(2)}
                 </span>
               </div>
