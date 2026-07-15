@@ -73,10 +73,16 @@
   --radius-3xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* ── Elevation / Shadow Scale ──────────────────────────
+     Premium layered elevations: each rung stacks a tight contact
+     shadow with a softer ambient spread, tinted with slate-950
+     (15 23 42) instead of pure black for a cooler, less muddy feel.
+     These override Tailwind's built-in shadow-* utilities. */
+  --shadow-xs:   0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm:   0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 3px 0 rgb(15 23 42 / 0.06);
+  --shadow-base: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 2px 4px 0 rgb(15 23 42 / 0.06);
+  --shadow-md:   0 2px 4px -1px rgb(15 23 42 / 0.05), 0 4px 8px -1px rgb(15 23 42 / 0.07), 0 8px 16px -2px rgb(15 23 42 / 0.05);
+  --shadow-lg:   0 2px 4px -1px rgb(15 23 42 / 0.04), 0 8px 16px -3px rgb(15 23 42 / 0.08), 0 16px 32px -4px rgb(15 23 42 / 0.08);
+  --shadow-xl:   0 4px 8px -2px rgb(15 23 42 / 0.05), 0 12px 24px -4px rgb(15 23 42 / 0.09), 0 24px 48px -6px rgb(15 23 42 / 0.11);
+  --shadow-2xl:  0 8px 16px -4px rgb(15 23 42 / 0.07), 0 24px 48px -8px rgb(15 23 42 / 0.13), 0 40px 80px -12px rgb(15 23 42 / 0.15);
 }
