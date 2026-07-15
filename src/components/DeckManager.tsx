@@ -222,6 +222,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
       };
       setSelectedDeck(updatedDeck);
       onCancelEdit();
+    } else if (result.errorKey) {
+      showAlert(t('common.errorTitle'), t(result.errorKey), 'danger');
     }
   }, [
     editingDeckId,
@@ -292,11 +294,21 @@ function DeckManager({ showToast }: DeckManagerProps) {
     );
   };
 
-  const handleSaveDeckNotesDirectly = (deckId: string, notes: string) => {
+  const handleSaveDeckNotesDirectly = async (deckId: string, notes: string) => {
     const deckToUpdate = savedDecks.find((deck: Deck) => deck.id === deckId);
     if (!deckToUpdate) return;
 
-    saveEditedDeck(deckToUpdate.id, deckToUpdate.name, deckToUpdate.format, deckToUpdate.cards, notes);
+    const result = await saveEditedDeck(
+      deckToUpdate.id,
+      deckToUpdate.name,
+      deckToUpdate.format,
+      deckToUpdate.cards,
+      notes
+    );
+    if (!result.success) {
+      showAlert(t('common.errorTitle'), t(result.errorKey || 'deck.saveError'), 'danger');
+      return;
+    }
     setSelectedDeck((previousSelectedDeck: Deck | null) =>
       previousSelectedDeck && previousSelectedDeck.id === deckId
         ? { ...previousSelectedDeck, notes }

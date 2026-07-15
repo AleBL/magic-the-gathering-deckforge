@@ -64,7 +64,8 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
           });
         }
       }
-    } catch {
+    } catch (error) {
+      console.error('Failed to translate card batch:', error);
       dispatchToast(i18n.t('common.errorTranslatingBatch') as string, 'danger');
     }
   }

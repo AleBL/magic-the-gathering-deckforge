@@ -1,6 +1,36 @@
 import { Card } from '../types/Card';
 import { ScryfallCollectionResponse, ScryfallNotFoundIdentifier } from '../types/Scryfall';
 
+const MAX_RATE_LIMIT_RETRIES = 2;
+const DEFAULT_RETRY_DELAY_MS = 1000;
+const MAX_RETRY_DELAY_MS = 5000;
+
+/** POSTs to Scryfall's collection endpoint, retrying lightly on 429 (rate limit) before giving up. */
+const fetchCollectionWithRetry = async (
+  identifiers: Array<{ name?: string; set?: string; collector_number?: string }>
+): Promise<Response> => {
+  for (let attempt = 0; attempt <= MAX_RATE_LIMIT_RETRIES; attempt++) {
+    const response = await fetch('https://api.scryfall.com/cards/collection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifiers })
+    });
+
+    if (response.status !== 429 || attempt === MAX_RATE_LIMIT_RETRIES) {
+      return response;
+    }
+
+    const retryAfterHeader = Number(response.headers.get('Retry-After'));
+    const delayMs = Number.isFinite(retryAfterHeader)
+      ? Math.min(retryAfterHeader * 1000, MAX_RETRY_DELAY_MS)
+      : DEFAULT_RETRY_DELAY_MS;
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+  }
+
+  // Unreachable: the loop always returns within MAX_RATE_LIMIT_RETRIES + 1 iterations.
+  throw new Error('ScryfallRateLimited');
+};
+
 export interface ParseResult {
   name: string;
   quantity: number;
@@ -88,27 +118,24 @@ export const fetchCardsFromParsedList = async (
       });
     }
 
-    const body = {
-      identifiers: chunk.map((item) => {
-        if (item.set && item.collector_number) {
-          return { set: item.set, collector_number: item.collector_number };
-        }
-        if (item.set) {
-          return { name: item.name, set: item.set };
-        }
-        return { name: item.name };
-      })
-    };
-
-    const response = await fetch('https://api.scryfall.com/cards/collection', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+    const identifiers = chunk.map((item) => {
+      if (item.set && item.collector_number) {
+        return { set: item.set, collector_number: item.collector_number };
+      }
+      if (item.set) {
+        return { name: item.name, set: item.set };
+      }
+      return { name: item.name };
     });
+
+    const response = await fetchCollectionWithRetry(identifiers);
 
     if (!response.ok) {
       if (response.status === 503 || response.status === 504) {
         throw new Error('ScryfallOffline');
+      }
+      if (response.status === 429) {
+        throw new Error('ScryfallRateLimited');
       }
       throw new Error('Scryfall API error');
     }
@@ -166,13 +193,7 @@ export const fetchCardsFromParsedList = async (
     for (let chunkStartIndex = 0; chunkStartIndex < uniqueRetries.length; chunkStartIndex += CHUNK_SIZE) {
       const chunk = uniqueRetries.slice(chunkStartIndex, chunkStartIndex + CHUNK_SIZE);
 
-      const body = { identifiers: chunk };
-
-      const response = await fetch('https://api.scryfall.com/cards/collection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
+      const response = await fetchCollectionWithRetry(chunk);
 
       if (response.ok) {
         const json = (await response.json()) as ScryfallCollectionResponse;

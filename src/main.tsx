@@ -3,6 +3,7 @@ import './index.css';
 import './plugins/i18n';
 import { useEffect } from 'react';
 import App from './App';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function AppWithCallbackAfterRender() {
   useEffect(() => {
@@ -14,4 +15,8 @@ function AppWithCallbackAfterRender() {
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 
-root.render(<AppWithCallbackAfterRender />);
+root.render(
+  <ErrorBoundary>
+    <AppWithCallbackAfterRender />
+  </ErrorBoundary>
+);

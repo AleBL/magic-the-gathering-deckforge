@@ -139,6 +139,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Makes re-running this job for the same tag (e.g. after re-tagging to pick up
+      # a fix) idempotent. Without this, generate_release_notes can concatenate fresh
+      # notes onto an existing release's body instead of replacing it, producing
+      # duplicate "What's Changed" sections.
+      - name: Delete existing release for this tag, if any
+        continue-on-error: true
+        run: gh release delete "${{ github.ref_name }}" --yes --cleanup-tag=false --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -153,3 +163,55 @@ jobs:
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Keeps package.json on main in sync with the last published release, so a
+      # fresh checkout / local dev build shows the right version between releases
+      # too, without ever requiring a manual version bump. Goes through a normal
+      # PR rather than a direct push to main.
+      #
+      # Uses RELEASE_PAT (a fine-grained PAT from a repository admin) instead of
+      # the default GITHUB_TOKEN: PRs opened with GITHUB_TOKEN never trigger the
+      # ci.yml required status check (GitHub blocks Actions-triggered workflows
+      # from re-triggering other workflows), so the PR would sit stuck forever
+      # waiting on a check that can never run. Repository admins are on the
+      # branch ruleset's bypass list, so a PR/merge authored by this PAT skips
+      # the required-checks gate instead.
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-checkout
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - name: Bump package.json version
+        working-directory: main-checkout
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Open version bump PR
+        id: version-bump-pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          path: main-checkout
+          token: ${{ secrets.RELEASE_PAT }}
+          commit-message: "chore: bump version to ${{ github.ref_name }}"
+          title: "chore: bump version to ${{ github.ref_name }}"
+          body: |
+            Automated version bump to match the [`${{ github.ref_name }}`](https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}) release.
+          branch: chore/bump-version-${{ github.ref_name }}
+          base: main
+          delete-branch: true
+
+      # A direct merge (rather than queuing auto-merge) since the PAT's actor
+      # already bypasses the required-checks gate — nothing to wait on.
+      - name: Merge version bump PR
+        if: steps.version-bump-pr.outputs.pull-request-number
+        run: gh pr merge --squash "${{ steps.version-bump-pr.outputs.pull-request-number }}" --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}

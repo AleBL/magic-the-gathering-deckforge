@@ -65,8 +65,8 @@ export function useDeckActions(showToast: ShowToastFn) {
                       isActive: true
                     });
                   }
-                } catch {
-                  // Ignore
+                } catch (tokenFetchError) {
+                  console.error('Failed to fetch related token for deck card:', tokenFetchError);
                 }
               })
             );
@@ -80,8 +80,9 @@ export function useDeckActions(showToast: ShowToastFn) {
             }
           }
         }
-      } catch {
-        // Ignore
+      } catch (error) {
+        console.error('Failed to fetch related tokens for added card:', error);
+        showToast(t('common.relatedTokensLoadError'), 'error');
       }
     },
     [addCard, i18n.language, setCurrentDeckRelatedTokens, showToast, t]

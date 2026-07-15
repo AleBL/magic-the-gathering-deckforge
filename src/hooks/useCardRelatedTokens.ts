@@ -4,6 +4,7 @@ import * as Scry from 'scryfall-sdk';
 import { Card } from '../types/Card';
 import { CardWithScryfallMetadata, ScryfallCardPart } from '../types/Scryfall';
 import { translateCards } from '../utils/translationHelper';
+import { dispatchToast } from '../utils/toastHelper';
 
 export interface RelatedToken {
   tokenCard: Card;
@@ -16,7 +17,7 @@ export function useCardRelatedTokensForCard(card: Card | null) {
   const [tokens, setTokens] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!card) {
@@ -35,7 +36,8 @@ export function useCardRelatedTokensForCard(card: Card | null) {
             // Fetch by English name to ensure we get the English card which has all_parts
             const fullCard = (await Scry.Cards.byName(card.name)) as CardWithScryfallMetadata;
             allParts = fullCard.all_parts || [];
-          } catch {
+          } catch (fetchAllPartsError) {
+            console.error('Failed to fetch full card for related tokens:', fetchAllPartsError);
             allParts = [];
           }
         }
@@ -57,8 +59,8 @@ export function useCardRelatedTokensForCard(card: Card | null) {
               if (fetchedCard) {
                 fetched.push(fetchedCard as unknown as Card);
               }
-            } catch {
-              // Ignore isolated token fetch failures.
+            } catch (tokenFetchError) {
+              console.error('Failed to fetch related token:', tokenFetchError);
             }
           })
         );
@@ -68,8 +70,10 @@ export function useCardRelatedTokensForCard(card: Card | null) {
         const translated = await translateCards(fetched, currentLang);
         setTokens(translated);
       } catch (error) {
+        console.error('Failed to fetch related tokens:', error);
         const message = error instanceof Error ? error.message : 'Failed to fetch related tokens';
         setError(message);
+        dispatchToast(t('common.relatedTokensLoadError'), 'danger');
       } finally {
         setIsLoading(false);
       }

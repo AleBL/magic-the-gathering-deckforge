@@ -68,7 +68,12 @@ export default function useDeckManager(
       createdAt: new Date().toISOString()
     };
 
-    await db.decks.put(newDeck);
+    try {
+      await db.decks.put(newDeck);
+    } catch (error) {
+      console.error('Failed to save deck:', error);
+      return { success: false, errorKey: 'deck.saveError' };
+    }
     setDeckName('');
     setShowSaveDialog(false);
     return { success: true, createdDeck: newDeck };
@@ -81,41 +86,57 @@ export default function useDeckManager(
     cards: Card[],
     notes?: string,
     relatedTokens?: DeckRelatedToken[]
-  ): Promise<{ success: boolean }> => {
-    const existing = await db.decks.get(id);
-    if (existing) {
-      await db.decks.put({
-        ...existing,
-        name: name.trim(),
-        format,
-        cards,
-        notes,
-        relatedTokens: relatedTokens || existing.relatedTokens
-      });
+  ): Promise<{ success: boolean; errorKey?: string }> => {
+    try {
+      const existing = await db.decks.get(id);
+      if (existing) {
+        await db.decks.put({
+          ...existing,
+          name: name.trim(),
+          format,
+          cards,
+          notes,
+          relatedTokens: relatedTokens || existing.relatedTokens
+        });
+      }
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to save edited deck:', error);
+      return { success: false, errorKey: 'deck.saveError' };
     }
-    return { success: true };
   };
 
   const deleteDeck = async (deckId: string): Promise<Deck | undefined> => {
-    const deckToDelete = await db.decks.get(deckId);
-    if (!deckToDelete) return undefined;
+    try {
+      const deckToDelete = await db.decks.get(deckId);
+      if (!deckToDelete) return undefined;
 
-    await db.decks.delete(deckId);
+      await db.decks.delete(deckId);
 
-    if (selectedDeck?.id === deckId) {
-      setSelectedDeck(null);
+      if (selectedDeck?.id === deckId) {
+        setSelectedDeck(null);
+      }
+      if (editingDeckId === deckId) {
+        onCancelEdit();
+      }
+
+      return deckToDelete;
+    } catch (error) {
+      console.error('Failed to delete deck:', error);
+      dispatchToast(t('deck.deleteError'), 'danger');
+      return undefined;
     }
-    if (editingDeckId === deckId) {
-      onCancelEdit();
-    }
-
-    return deckToDelete;
   };
 
   const restoreDeck = async (deck: Deck) => {
-    const existing = await db.decks.get(deck.id);
-    if (existing) return;
-    await db.decks.put(deck);
+    try {
+      const existing = await db.decks.get(deck.id);
+      if (existing) return;
+      await db.decks.put(deck);
+    } catch (error) {
+      console.error('Failed to restore deck:', error);
+      dispatchToast(t('deck.restoreError'), 'danger');
+    }
   };
 
   const exportDeck = (deck: Deck) => {
@@ -123,32 +144,37 @@ export default function useDeckManager(
   };
 
   const exportDeckAsDec = (deck: Deck) => {
-    const cardCounts: Record<string, { count: number; name: string; set?: string; number?: string }> = {};
-    deck.cards.forEach((card) => {
-      const key = `${card.name}|${card.set || ''}|${card.collector_number || ''}`;
-      if (!cardCounts[key]) {
-        cardCounts[key] = { count: 0, name: card.name, set: card.set, number: card.collector_number };
-      }
-      cardCounts[key].count++;
-    });
+    try {
+      const cardCounts: Record<string, { count: number; name: string; set?: string; number?: string }> = {};
+      deck.cards.forEach((card) => {
+        const key = `${card.name}|${card.set || ''}|${card.collector_number || ''}`;
+        if (!cardCounts[key]) {
+          cardCounts[key] = { count: 0, name: card.name, set: card.set, number: card.collector_number };
+        }
+        cardCounts[key].count++;
+      });
 
-    let content = `// ${deck.name}\n// Format: ${deck.format}\n\n`;
-    for (const data of Object.values(cardCounts)) {
-      if (data.set && data.number) {
-        content += `${data.count} ${data.name} (${data.set.toUpperCase()}) ${data.number}\n`;
-      } else {
-        content += `${data.count} ${data.name}\n`;
+      let content = `// ${deck.name}\n// Format: ${deck.format}\n\n`;
+      for (const data of Object.values(cardCounts)) {
+        if (data.set && data.number) {
+          content += `${data.count} ${data.name} (${data.set.toUpperCase()}) ${data.number}\n`;
+        } else {
+          content += `${data.count} ${data.name}\n`;
+        }
       }
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${deck.name.replace(/\\s+/g, '_')}.dec`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Failed to export deck as .dec:', error);
+      dispatchToast(t('common.unexpectedError'), 'danger');
     }
-
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${deck.name.replace(/\\s+/g, '_')}.dec`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
 
   const exportAllDecks = () => {
@@ -156,9 +182,14 @@ export default function useDeckManager(
   };
 
   const saveTokensToDeck = async (deckId: string, tokens: DeckRelatedToken[]) => {
-    const existing = await db.decks.get(deckId);
-    if (existing) {
-      await db.decks.put({ ...existing, relatedTokens: tokens });
+    try {
+      const existing = await db.decks.get(deckId);
+      if (existing) {
+        await db.decks.put({ ...existing, relatedTokens: tokens });
+      }
+    } catch (error) {
+      console.error('Failed to save tokens to deck:', error);
+      dispatchToast(t('deck.saveError'), 'danger');
     }
   };
 
@@ -224,8 +255,15 @@ export default function useDeckManager(
               setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
               dispatchToast(t('deck.deckImported'));
               resolve();
-            } catch {
-              setFileImportError(t('deck.importError'));
+            } catch (error) {
+              console.error('Failed to import deck file (text list):', error);
+              if (error instanceof Error && error.message === 'ScryfallOffline') {
+                setFileImportError(t('search.scryfallOffline'));
+              } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
+                setFileImportError(t('search.rateLimited'));
+              } else {
+                setFileImportError(t('deck.importError'));
+              }
               setImportProgress((prev) => ({ ...prev, isImporting: false }));
               resolve();
             }
@@ -234,13 +272,15 @@ export default function useDeckManager(
             setImportProgress((prev) => ({ ...prev, isImporting: false }));
             resolve();
           }
-        } catch {
+        } catch (error) {
+          console.error('Failed to import deck file:', error);
           setFileImportError(t('deck.invalidFile'));
           setImportProgress((prev) => ({ ...prev, isImporting: false }));
           resolve();
         }
       };
       reader.onerror = () => {
+        console.error('Failed to read deck file:', reader.error);
         setFileImportError(t('deck.invalidFile'));
         setImportProgress((prev) => ({ ...prev, isImporting: false }));
         resolve();
