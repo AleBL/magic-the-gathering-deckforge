@@ -60,7 +60,7 @@ const DeckTextImportModal: React.FC<DeckTextImportModalProps> = ({
           />
 
           {errorMsg && (
-            <div className="text-xs text-red-600 bg-red-50 dark:bg-red-950/20 dark:text-red-400 p-3 rounded-lg border border-red-200 dark:border-red-900/50 flex items-center gap-1.5">
+            <div className="text-xs text-danger bg-red-50 dark:bg-red-950/20 dark:text-red-400 p-3 rounded-lg border border-red-200 dark:border-red-900/50 flex items-center gap-1.5">
               <FaExclamationTriangle className="text-red-500 shrink-0" />
               <span>{errorMsg}</span>
             </div>

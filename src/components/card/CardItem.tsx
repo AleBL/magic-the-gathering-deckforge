@@ -164,7 +164,7 @@ function CardItem({
       }
     >
       {card.isCommander && (
-        <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
+        <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
           <FaCrown className="text-amber-200 text-xs shrink-0 animate-pulse" />
           {t('cardDetails.commanderBadge')}
         </div>
@@ -178,7 +178,7 @@ function CardItem({
       )}
 
       {isRestricted && (
-        <div className="absolute top-2 right-2 z-10 bg-amber-500/90 dark:bg-amber-600/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 select-none">
+        <div className="absolute top-2 right-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 select-none">
           <FaExclamationTriangle className="text-white text-[9px] shrink-0" />
           {t('cardDetails.restricted')}
         </div>
@@ -244,7 +244,7 @@ function CardItem({
                 e.stopPropagation();
                 onRemoveFromDeck(card);
               }}
-              className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-red-600/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
+              className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
               title={t('cardDetails.remove')}
             >
               <FaMinus />
@@ -306,7 +306,7 @@ function CardItem({
                 e.stopPropagation();
                 onAddToDeck(card);
               }}
-              className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-blue-600/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-blue-500 hover:scale-110 transition-all pointer-events-auto"
+              className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-blue-500 hover:scale-110 transition-all pointer-events-auto"
               title={t('cardDetails.addCopy')}
             >
               <FaPlus />

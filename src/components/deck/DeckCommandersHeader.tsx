@@ -92,7 +92,7 @@ function DeckCommandersHeader({
                   <span className="quantity-badge bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-900">
                     {count}x
                   </span>
-                  <span className="font-semibold truncate text-sm text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  <span className="font-semibold truncate text-sm text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-blue-400 transition-colors">
                     {card.printed_name || card.name}
                   </span>
                   <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm animate-pulse">
@@ -123,7 +123,7 @@ function DeckCommandersHeader({
                       <button
                         type="button"
                         onClick={() => onAddToDeck(card)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-green-50 dark:bg-green-950/60 border border-green-300 dark:border-green-900/60 text-green-600 dark:text-green-400 hover:bg-green-500 hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-green-50 dark:bg-green-950/60 border border-green-300 dark:border-green-900/60 text-success dark:text-green-400 hover:bg-green-500 hover:text-white transition-all font-bold shadow-sm"
                         title={t('cardDetails.addCopy')}
                       >
                         <FaPlus className="text-[8px]" />
@@ -132,7 +132,7 @@ function DeckCommandersHeader({
                       <button
                         type="button"
                         onClick={() => onRemoveFromDeck(card)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-900/60 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-900/60 text-warning dark:text-amber-400 hover:bg-amber-500 hover:text-white transition-all font-bold shadow-sm"
                         title={t('cardDetails.removeCopy')}
                       >
                         <FaMinus className="text-[8px]" />
@@ -145,7 +145,7 @@ function DeckCommandersHeader({
                             onRemoveFromDeck(card);
                           }
                         }}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-red-600 dark:text-red-400 hover:bg-danger hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-danger dark:text-red-400 hover:bg-danger hover:text-white transition-all font-bold shadow-sm"
                         title={t('cardDetails.deleteCard')}
                       >
                         <FaTrash className="text-[8px]" />

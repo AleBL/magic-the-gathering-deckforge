@@ -51,7 +51,7 @@ export default function CardFilterBar({ filters, setFilters }: CardFilterBarProp
               onClick={() => toggleType(type.code)}
               className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-blue-600 border-transparent text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                  ? 'bg-primary border-transparent text-white shadow-md shadow-blue-500/25 scale-[1.02]'
                   : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm hover:text-gray-900 dark:hover:text-white'
               }`}
             >

@@ -122,7 +122,7 @@ const PlaytestSimulatorContent: React.FC<{
                     createRipple(event);
                     handleConfirmMulligan();
                   }}
-                  className="ripple-container bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
+                  className="ripple-container bg-amber-500 hover:bg-warning text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
                 >
                   <FaCheck />
                   {t('playtest.confirmMulligan')}

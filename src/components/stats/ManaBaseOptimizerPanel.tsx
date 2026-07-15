@@ -21,7 +21,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
       </p>
       {stats.neededBasicLands > 0 ? (
         <>
-          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
+          <p className="text-xs font-semibold text-primary dark:text-blue-400 mt-1">
             {t('stats.willAddLands').replace('{{count}}', String(stats.neededBasicLands))}
           </p>
 
@@ -48,7 +48,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
                   <span className="text-[10px] uppercase text-gray-400 dark:text-gray-500 font-bold">
                     {t(`land.${landName.toLowerCase()}`)}
                   </span>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">{count}</span>
+                  <span className="font-bold text-primary dark:text-blue-400">{count}</span>
                 </div>
               );
             })}
@@ -65,7 +65,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           ) : null}
         </>
       ) : (
-        <div className="flex items-center gap-2 mt-4 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
+        <div className="flex items-center gap-2 mt-4 text-success dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
           <FaTint className="shrink-0" />
           <p className="text-xs font-semibold">{t('stats.landsAlreadySufficient')}</p>
         </div>
