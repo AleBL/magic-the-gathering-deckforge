@@ -102,7 +102,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
                   setIsExpanded(false);
                 }}
                 disabled={!hasActiveFilters}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-red-50 dark:bg-slate-800/80 dark:hover:bg-red-500/10 text-gray-600 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400 border border-transparent hover:border-red-200 dark:hover:border-red-500/30 text-xs font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-red-50 dark:bg-slate-800/80 dark:hover:bg-red-500/10 text-gray-600 hover:text-danger dark:text-gray-300 dark:hover:text-red-400 border border-transparent hover:border-red-200 dark:hover:border-red-500/30 text-xs font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FaUndo className={hasActiveFilters ? 'animate-spin-slow once' : ''} />
                 {t('search.clearFilters')}

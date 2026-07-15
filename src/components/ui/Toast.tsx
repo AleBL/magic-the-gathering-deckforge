@@ -34,7 +34,7 @@ function Toast({ message, variant = 'success', action }: ToastProps) {
         {action ? (
           <button
             onClick={action.onClick}
-            className="shrink-0 px-3 py-1 text-xs font-bold rounded-md bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/40 text-blue-600 dark:text-blue-400 transition-colors"
+            className="shrink-0 px-3 py-1 text-xs font-bold rounded-md bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/40 text-primary dark:text-blue-400 transition-colors"
           >
             {action.label}
           </button>

@@ -101,7 +101,7 @@ export const PlaytestControlBarBottom: React.FC<{ deckCards: Card[] }> = ({ deck
             handleMulligan();
           }}
           disabled={deckCards.length === 0 || isMulliganPhase}
-          className="ripple-container bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-warning hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
           <FaUndo className="text-[10px] rotate-90" />
           {t('playtest.mulligan')}

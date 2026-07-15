@@ -140,7 +140,7 @@ function DeckProxyPrint({
                       boxSizing: 'border-box'
                     }}
                   >
-                    <span className="absolute -top-3 -left-3 bg-blue-600 text-white font-extrabold text-[10px] px-2.5 py-1 rounded-lg shadow-md z-10 select-none">
+                    <span className="absolute -top-3 -left-3 bg-primary text-white font-extrabold text-[10px] px-2.5 py-1 rounded-lg shadow-md z-10 select-none">
                       PÁG. {pageIndex + 1} / {estimatedPages}
                     </span>
 

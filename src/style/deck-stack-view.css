@@ -7,7 +7,7 @@
 }
 
 .deck-stack-zone-frontline {
-  @apply text-amber-600 dark:text-amber-400 border-amber-300/30 dark:border-amber-900/30;
+  @apply text-warning dark:text-amber-400 border-amber-300/30 dark:border-amber-900/30;
 }
 
 .deck-stack-zone-frontline svg {
@@ -43,7 +43,7 @@
 }
 
 .deck-stack-zone-frontline .deck-stack-zone-count {
-  @apply bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400;
+  @apply bg-amber-500/10 border-amber-500/20 text-warning dark:text-amber-400;
 }
 
 .deck-stack-zone-backline .deck-stack-zone-count {
@@ -134,5 +134,5 @@
 }
 
 .deck-stack-status-badge-restricted {
-  @apply bg-amber-500/90 dark:bg-amber-600/90 border border-amber-400;
+  @apply bg-amber-500/90 dark:bg-warning/90 border border-amber-400;
 }

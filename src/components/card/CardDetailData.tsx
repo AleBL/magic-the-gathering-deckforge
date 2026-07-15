@@ -52,7 +52,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
         </div>
       )}
       {((currentFace && currentFace.power && currentFace.toughness) || (card.power && card.toughness)) && (
-        <p className="text-green-600 dark:text-green-400 transition-colors duration-300">
+        <p className="text-success dark:text-green-400 transition-colors duration-300">
           {t('cardDetails.powerToughnessLabel')}: {currentFace ? currentFace.power : card.power}/
           {currentFace ? currentFace.toughness : card.toughness}
         </p>

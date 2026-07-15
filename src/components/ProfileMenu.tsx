@@ -276,7 +276,7 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   href={GITHUB_REPO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="flex items-center gap-2 text-xs font-semibold text-primary dark:text-blue-400 hover:underline"
                 >
                   <FaGithub />
                   {t('strategy.gitHub')}

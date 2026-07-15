@@ -34,7 +34,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, description, actio
       {action && (
         <button
           onClick={action.onClick}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition-all duration-300 active:scale-95 mb-8"
+          className="px-6 py-2.5 bg-primary hover:bg-blue-500 text-white rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition-all duration-300 active:scale-95 mb-8"
         >
           {action.label}
         </button>
@@ -50,7 +50,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, description, actio
               <button
                 key={idx}
                 onClick={suggestion.onClick}
-                className="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-mono font-bold text-gray-700 dark:text-gray-300 hover:border-blue-400 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md transition-all active:scale-95"
+                className="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-mono font-bold text-gray-700 dark:text-gray-300 hover:border-blue-400 dark:hover:border-blue-500 hover:text-primary dark:hover:text-blue-400 hover:shadow-md transition-all active:scale-95"
               >
                 {suggestion.label}
               </button>

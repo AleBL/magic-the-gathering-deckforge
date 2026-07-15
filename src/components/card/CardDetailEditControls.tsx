@@ -57,7 +57,7 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleDecrementCopies}
-              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors border border-red-100 dark:border-red-900/30"
+              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-danger dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors border border-red-100 dark:border-red-900/30"
             >
               {t('cardDetails.remove')}
             </button>

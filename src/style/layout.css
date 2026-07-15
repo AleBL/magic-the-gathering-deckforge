@@ -266,7 +266,7 @@ html.dark .deck-preview-section {
 }
 
 .mana-bar-column {
-  @apply w-full max-w-[2rem] mx-auto bg-gradient-to-t from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 rounded-t transition-all duration-500 ease-out origin-bottom hover:from-blue-400 hover:to-indigo-400;
+  @apply w-full max-w-[2rem] mx-auto bg-gradient-to-t from-blue-500 to-indigo-500 dark:from-primary dark:to-indigo-600 rounded-t transition-all duration-500 ease-out origin-bottom hover:from-blue-400 hover:to-indigo-400;
 }
 
 .mana-bar-tooltip {
@@ -368,7 +368,7 @@ html.dark .deck-preview-section {
 }
 
 .app-brand-logo-glow {
-  @apply absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse;
+  @apply absolute inset-0 bg-blue-500/20 dark:bg-primary/30 rounded-lg blur-xs animate-pulse;
 }
 
 .app-brand-logo-image {
@@ -376,7 +376,7 @@ html.dark .deck-preview-section {
 }
 
 .app-brand-title {
-  @apply text-xl font-serif font-extrabold tracking-widest transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
+  @apply text-xl font-serif font-extrabold tracking-widest transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-primary via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
 }
 
 .tab-button-icon {

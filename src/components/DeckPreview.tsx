@@ -258,7 +258,7 @@ function DeckPreview({
         <div className="panel-header relative z-50">
           <div>
             <h3 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 flex items-center gap-2">
-              <FaFileAlt className="text-blue-600 shrink-0" />
+              <FaFileAlt className="text-primary shrink-0" />
               {selectedDeck.name}
             </h3>
             <div className="flex items-center gap-2 mt-1">
