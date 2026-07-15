@@ -1,4 +1,10 @@
+import { version as packageVersion, productName as appName, author, repository } from '../../package.json';
 import { CardSize, SearchFilters } from '../types';
+
+export const APP_VERSION = packageVersion;
+export const APP_NAME = appName;
+export const AUTHOR_NAME = author.name;
+export const GITHUB_REPO_URL = repository.url;
 
 export const CARD_SIZES: readonly CardSize[] = ['small', 'medium', 'large', 'xlarge'] as const;
 
@@ -10,11 +16,6 @@ export const EMPTY_SEARCH_FILTERS: SearchFilters = {
 };
 
 export const TOAST_DURATION_MS = 2500;
-
-export const APP_VERSION = '0.1.0';
-export const AUTHOR_NAME = 'Alessandro Barros';
-export const APP_NAME = 'MTG Deck Forge';
-export const GITHUB_REPO_URL = 'https://github.com/AleBL/magic-the-gathering-search';
 
 export const SUPPORTED_LANGUAGES = ['en', 'pt', 'es'] as const;
 
