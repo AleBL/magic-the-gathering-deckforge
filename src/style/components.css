@@ -313,6 +313,22 @@ html.dark .import-export-dropdown {
   @apply p-6 overflow-y-auto space-y-6 max-h-[70vh];
 }
 
+/* ── Mobile sheet modals ────────────────────────────────────
+   Opt-in modifiers for the larger/denser modals in the mobile
+   pass (card detail, pile explorer, deck export/import, token
+   search): the panel anchors to the bottom edge and fills the
+   width below sm instead of floating as a cramped centered box;
+   the existing desktop dialog look returns at sm and up. Paired
+   with the modal's own base class(es) for extra specificity so
+   this reliably wins over the un-prefixed rule. */
+.modal-overlay.modal-overlay-sheet {
+  @apply p-0 sm:p-4 items-end sm:items-center;
+}
+
+.modal-sheet-panel {
+  @apply w-full mx-0 sm:mx-auto max-h-[92dvh] sm:max-h-[85vh] rounded-b-none sm:rounded-b-2xl;
+}
+
 /* ── Token Modal Specific ─────────────────────────────────────── */
 
 .token-card-wrapper {

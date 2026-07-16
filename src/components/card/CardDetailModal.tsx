@@ -215,7 +215,7 @@ function CardDetailModal({
     <>
       {/* Main modal */}
       <div
-        className={`modal-overlay z-[var(--z-overlay)] ${isClosing ? 'motion-overlay-closing' : ''}`}
+        className={`modal-overlay modal-overlay-sheet z-[var(--z-overlay)] ${isClosing ? 'motion-overlay-closing' : ''}`}
         style={{ zIndex }}
         onClick={requestClose}
         role="button"
@@ -224,7 +224,7 @@ function CardDetailModal({
       >
         <div
           ref={dialogRef}
-          className={`modal-container modal-container-large relative max-h-[95vh] flex flex-col overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
+          className={`modal-container modal-container-large modal-sheet-panel relative flex flex-col overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"

@@ -37,10 +37,10 @@ export function TokenSearchModal({
 
   return createPortal(
     <div
-      className="modal-overlay bg-slate-950/85 backdrop-blur-sm animate-fadeIn z-[var(--z-overlay)]"
+      className="modal-overlay modal-overlay-sheet bg-slate-950/85 backdrop-blur-sm animate-fadeIn z-[var(--z-overlay)]"
       style={{ zIndex: 'var(--z-overlay)' }}
     >
-      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh] transition-all">
+      <div className="modal-sheet-panel bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/40">
           <h3 className="text-base font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">

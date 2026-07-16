@@ -13,8 +13,8 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel }: 
   const { t } = useTranslation();
 
   return (
-    <div className="modal-overlay z-[var(--z-overlay)]">
-      <div className="modal-container w-full animate-fadeIn">
+    <div className="modal-overlay modal-overlay-sheet z-[var(--z-overlay)]">
+      <div className="modal-container modal-sheet-panel sm:max-w-md overflow-y-auto animate-fadeIn">
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
           {t('deck.export')} {deck.name}
         </h3>

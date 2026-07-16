@@ -28,8 +28,8 @@ export default function DeckImportProgressModal({
   const hasMissing = missingCards.length > 0;
 
   return (
-    <div className="modal-overlay z-[var(--z-overlay)]">
-      <div className="modal-container modal-container-small mx-auto p-6 animate-fadeIn">
+    <div className="modal-overlay modal-overlay-sheet z-[var(--z-overlay)]">
+      <div className="modal-container modal-container-small modal-sheet-panel sm:max-w-md overflow-y-auto p-6 animate-fadeIn">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
             {progress.isImporting ? (

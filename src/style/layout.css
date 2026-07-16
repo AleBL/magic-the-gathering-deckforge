@@ -283,7 +283,7 @@ html.dark .deck-preview-section {
 .modal-container-medium {
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  @apply bg-white/95 dark:bg-gray-800/95 w-[1000px];
+  @apply bg-white/95 dark:bg-gray-800/95 w-[calc(100%-2rem)] max-w-[1000px] mx-auto;
 }
 
 /* Dialog Buttons */
