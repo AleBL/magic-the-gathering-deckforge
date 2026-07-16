@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import CardSearch from './components/card/CardSearch';
 import DeckManager from './components/DeckManager';
@@ -10,13 +10,15 @@ import { useDeckStore } from './store/useDeckStore';
 import { useDeckActions } from './hooks/useDeckActions';
 import { useGlobalRipple } from './hooks/useGlobalRipple';
 import { useVisualEffects } from './hooks/useVisualEffects';
+import useOnlineStatus from './hooks/useOnlineStatus';
 
 function App() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { motionEnabled } = useVisualEffects();
   useGlobalRipple();
   const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
   const { toastMessage, toastVariant, toastAction, showToast } = useToast();
+  const isOnline = useOnlineStatus();
 
   const editingDeck = useDeckStore((state) => state.editingDeck);
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
@@ -70,6 +72,18 @@ function App() {
     document.documentElement.lang = i18n.language || 'en';
   }, [i18n.language]);
 
+  const wasOfflineRef = useRef(false);
+  useEffect(() => {
+    if (!isOnline) {
+      wasOfflineRef.current = true;
+      return;
+    }
+    if (wasOfflineRef.current) {
+      wasOfflineRef.current = false;
+      showToast(t('common.backOnline'), 'success');
+    }
+  }, [isOnline, showToast, t]);
+
   useEffect(() => {
     const safeWindow = window as unknown as {
       electronAPI?: {
@@ -94,6 +108,7 @@ function App() {
       toastMessage={toastMessage}
       toastVariant={toastVariant}
       toastAction={toastAction}
+      isOnline={isOnline}
     >
       <div key={activeTab} className={motionEnabled ? 'view-fade' : undefined}>
         {activeTab === 'search' ? (

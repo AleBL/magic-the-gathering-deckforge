@@ -11,7 +11,8 @@ import {
   FaSun,
   FaGlobeAmericas,
   FaCheck,
-  FaMagic
+  FaMagic,
+  FaDownload
 } from 'react-icons/fa';
 
 interface ProfileMenuProps {
@@ -21,10 +22,12 @@ interface ProfileMenuProps {
 
 import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../constants';
 import { useVisualEffects } from '../hooks/useVisualEffects';
+import useInstallPrompt from '../hooks/useInstallPrompt';
 
 function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
   const { t, i18n } = useTranslation();
   const { effectsEnabled, setEffectsEnabled } = useVisualEffects();
+  const { canInstall, promptInstall } = useInstallPrompt();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<'main' | 'about' | 'help' | 'language'>('main');
   const menuRef = useRef<HTMLDivElement>(null);
@@ -174,6 +177,23 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
                 </div>
               </button>
+
+              {canInstall ? (
+                <button
+                  type="button"
+                  className="profile-menu-item"
+                  onClick={() => {
+                    promptInstall();
+                    setIsOpen(false);
+                  }}
+                  role="menuitem"
+                >
+                  <div className="flex items-center gap-2">
+                    <FaDownload className="text-blue-500 text-sm shrink-0" />
+                    <span>{t('common.installApp')}</span>
+                  </div>
+                </button>
+              ) : null}
 
               <div className="profile-menu-divider" />
 
