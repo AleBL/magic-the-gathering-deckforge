@@ -1,6 +1,9 @@
 import { FaSpinner, FaExclamationTriangle, FaCheckCircle, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { ImportProgressData } from '../../services/deckImportService';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 
 interface DeckImportProgressModalProps {
   isOpen: boolean;
@@ -20,6 +23,10 @@ export default function DeckImportProgressModal({
   onFinish
 }: DeckImportProgressModalProps) {
   const { t } = useTranslation();
+  const dismissible = !progress.isImporting;
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
+  useEscapeKey(onClose, isOpen && dismissible);
+  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onClose);
 
   if (!isOpen) return null;
 
@@ -28,10 +35,36 @@ export default function DeckImportProgressModal({
   const hasMissing = missingCards.length > 0;
 
   return (
-    <div className="modal-overlay modal-overlay-sheet z-[var(--z-overlay)]">
-      <div className="modal-container modal-container-small modal-sheet-panel sm:max-w-md overflow-y-auto p-6 animate-fadeIn">
+    // Backdrop click is a mouse-only convenience; the close button provides the keyboard-equivalent action (when dismissible).
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+    <div
+      className="modal-overlay modal-overlay-sheet z-[var(--z-overlay)]"
+      onClick={(e) => {
+        if (dismissible && e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deck-import-progress-title"
+        className="modal-container modal-container-small modal-sheet-panel sm:max-w-md overflow-y-auto p-6 animate-fadeIn"
+      >
+        {/* Grab handle: swipe down to close (mobile bottom-sheet only), only while dismissible. */}
+        {dismissible && (
+          <div
+            className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1"
+            {...swipeHandlers}
+            aria-hidden="true"
+          >
+            <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+          </div>
+        )}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+          <h2
+            id="deck-import-progress-title"
+            className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2"
+          >
             {progress.isImporting ? (
               <FaSpinner className="animate-spin text-blue-500" />
             ) : errorMsg ? (

@@ -2,6 +2,7 @@ import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaSave, FaPlus, FaTrash, FaFileImport, FaTimes, FaLightbulb, FaBook, FaColumns } from 'react-icons/fa';
 import { Deck } from '../../types/Deck';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface DeckManagerToolbarProps {
   selectedDeck: Deck | null;
@@ -42,6 +43,7 @@ export function DeckManagerToolbar({
   onExportAll
 }: DeckManagerToolbarProps) {
   const { t } = useTranslation();
+  useEscapeKey(() => setShowImportExportDropdown(false), showImportExportDropdown);
 
   return (
     <div className="workspace-header">
@@ -133,9 +135,11 @@ export function DeckManagerToolbar({
               </button>
               {showImportExportDropdown ? (
                 <>
+                  {/* Backdrop click is a mouse-only convenience; Escape provides the keyboard-equivalent action. */}
                   <div
                     className="fixed inset-0 z-[var(--z-backdrop)]"
                     onClick={() => setShowImportExportDropdown(false)}
+                    aria-hidden="true"
                   />
                   <div className="import-export-dropdown">
                     <span className="import-export-dropdown-section">── {t('common.import')} ──</span>

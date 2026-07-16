@@ -7,6 +7,7 @@ import { PlaytestZone, LibraryPlacement } from '../types/enums';
 import { useDismissTransition } from '../hooks/useDismissTransition';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useSwipeToClose } from '../hooks/useSwipeToClose';
 
 export interface PileExplorerModalProps {
   title: string;
@@ -45,6 +46,9 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
   const { isClosing, requestClose } = useDismissTransition(onClose);
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(requestClose);
+  const contextMenuRef = useFocusTrap<HTMLDivElement>(!!contextMenu);
+  useEscapeKey(() => setContextMenu(null), !!contextMenu);
+  const swipeHandlers = useSwipeToClose<HTMLDivElement>(requestClose);
 
   return (
     <div
@@ -58,6 +62,14 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
         aria-label={title}
         className={`modal-sheet-panel sm:max-w-6xl bg-slate-900 rounded-t-2xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl border border-slate-800 flex flex-col h-[92dvh] sm:h-[80vh] relative ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
       >
+        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
+        <div
+          className="sm:hidden -mt-4 -mx-4 mb-2 flex justify-center pt-2.5 pb-1"
+          {...swipeHandlers}
+          aria-hidden="true"
+        >
+          <div className="w-10 h-1.5 rounded-full bg-slate-700" />
+        </div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 sm:mb-6">
           <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
             {title} <span className="text-slate-400 text-base sm:text-lg font-normal">({cards.length})</span>
@@ -107,7 +119,10 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
         </div>
 
         {contextMenu && (
+          // Only guards against bubbling to the outer close-on-click handler; the buttons inside are the real interactive surface.
+          // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
           <div
+            ref={contextMenuRef}
             className="fixed z-[var(--z-playtest-menu)] bg-slate-800 border border-slate-700 shadow-2xl rounded-xl py-1 w-48 animate-fadeIn"
             style={{ top: contextMenu.y, left: contextMenu.x }}
             onClick={(e) => e.stopPropagation()}

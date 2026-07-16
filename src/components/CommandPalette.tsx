@@ -165,16 +165,22 @@ export default function CommandPalette({
   };
 
   return createPortal(
+    // Backdrop click is a mouse-only convenience; Escape provides the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className={`fixed inset-0 z-[var(--z-toast)] flex items-start justify-center pt-[15vh] px-4 bg-slate-950/60 backdrop-blur-sm ${isClosing ? 'motion-overlay-closing' : 'animate-fadeIn'}`}
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
+      {/* Arrow-key navigation over the command list within this already keyboard-accessible dialog. */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
+        aria-label={t('commandPalette.title')}
         className={`w-full max-w-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dropdownEnter'}`}
-        onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-slate-800">
@@ -184,7 +190,7 @@ export default function CommandPalette({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('commandPalette.placeholder')}
-            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 outline-none"
+            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           />
           <kbd className="text-[10px] font-mono font-bold text-gray-400 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded px-1.5 py-0.5">
             ESC

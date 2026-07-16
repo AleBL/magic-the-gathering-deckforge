@@ -4,6 +4,8 @@ import { FaTimes, FaPlus, FaPalette } from 'react-icons/fa';
 import { getCardImageUrl } from '../utils/deckGrouping';
 import { Card } from '../types/Card';
 import { RelatedToken } from '../hooks/useCardRelatedTokens';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface PlaytestTokenModalProps {
   isOpen: boolean;
@@ -149,6 +151,8 @@ export function PlaytestTokenModal({
   deckRelatedTokens = []
 }: PlaytestTokenModalProps) {
   const { t } = useTranslation();
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
+  useEscapeKey(onClose, isOpen);
 
   const uniqueDeckTokens = useMemo(() => {
     const seen = new Set<string>();
@@ -181,15 +185,31 @@ export function PlaytestTokenModal({
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+    <div
+      className="modal-overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playtest-token-modal-title"
+        className="modal-content"
+      >
         {/* Header */}
         <div className="modal-header">
-          <h3 className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+          <h3
+            id="playtest-token-modal-title"
+            className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"
+          >
             <FaPlus className="text-indigo-500" />
             {t('tokens.tokenPool')}
           </h3>
-          <button onClick={onClose} className="modal-close-btn" aria-label="Close modal">
+          <button onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
             <FaTimes />
           </button>
         </div>
@@ -211,8 +231,18 @@ export function PlaytestTokenModal({
                   return (
                     <div
                       key={tokenCard.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={tokenCard.printed_name || tokenCard.name}
                       className={`token-card-wrapper group ${colorClass}`}
                       onClick={() => onSelectToken(tokenCard)}
+                      onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectToken(tokenCard);
+                        }
+                      }}
                     >
                       <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
@@ -247,7 +277,14 @@ export function PlaytestTokenModal({
                         </p>
                       </div>
 
-                      <button className="token-card-add-btn">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectToken(tokenCard);
+                        }}
+                        className="token-card-add-btn"
+                      >
                         <FaPlus className="text-[8px]" />
                         {t('tokens.create')}
                       </button>
