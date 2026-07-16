@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaInfoCircle, FaSkull } from 'react-icons/fa';
+import { FaInfoCircle, FaEllipsisH } from 'react-icons/fa';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
 import { PlaytestCard, PlaytestDragData } from '../../types/Playtest';
@@ -16,8 +16,7 @@ const PlaytestHandCard = memo(
     onPlayCard,
     onToggleSelection,
     onContextMenu,
-    onShowDetails,
-    onDiscard
+    onShowDetails
   }: {
     playtestCard: PlaytestCard;
     imageUrl: string;
@@ -27,7 +26,6 @@ const PlaytestHandCard = memo(
     onToggleSelection: (id: string) => void;
     onContextMenu: (e: React.MouseEvent, id: string) => void;
     onShowDetails: (card: Card) => void;
-    onDiscard: (id: string) => void;
   }) => {
     const { t } = useTranslation();
     const { playtestId, card } = playtestCard;
@@ -92,7 +90,7 @@ const PlaytestHandCard = memo(
                 onShowDetails(card);
               }}
               title={t('cardDetails.viewCardDetails')}
-              className="absolute -top-2.5 -left-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px] cursor-pointer"
+              className="absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
               <FaInfoCircle />
             </button>
@@ -100,12 +98,12 @@ const PlaytestHandCard = memo(
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
-                onDiscard(playtestId);
+                onContextMenu(event, playtestId);
               }}
-              title={t('playtest.discardCard')}
-              className="absolute -top-2.5 -right-2 w-5.5 h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-red-400 hover:border-red-500/30 opacity-0 group-hover:opacity-100 transition-opacity z-20 text-[8px] cursor-pointer"
+              title={t('playtest.moreActions')}
+              className="absolute -top-3 -right-2.5 sm:-top-2.5 sm:-right-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-slate-200 hover:border-slate-600 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
-              <FaSkull />
+              <FaEllipsisH />
             </button>
           </>
         ) : null}
@@ -125,7 +123,6 @@ export const PlaytestHand: React.FC = () => {
     handleReturnToHand,
     handlePlayCard,
     handleToggleCardSelection,
-    handleDiscardFromHand,
     setContextMenu,
     isMulliganPhase,
     selectedToBottom,
@@ -191,7 +188,6 @@ export const PlaytestHand: React.FC = () => {
                 onToggleSelection={handleToggleCardSelection}
                 onContextMenu={handleContextMenu}
                 onShowDetails={setSelectedDetailCard}
-                onDiscard={handleDiscardFromHand}
               />
             ))}
           </div>

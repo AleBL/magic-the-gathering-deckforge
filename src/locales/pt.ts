@@ -480,6 +480,7 @@ const pt = {
       moveToExile: 'Mover para o Exílio',
       moveToLibraryBottom: 'Fundo do Grimório',
       moveToLibraryTop: 'Topo do Grimório',
+      moreActions: 'Mais ações',
       movedFromPileLog: 'Moveu {{name}} de {{source}} para {{dest}}',
       movedToLibraryLog: 'Moveu {{name}} para o grimório',
       mulligan: 'Mulligan',

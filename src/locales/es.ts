@@ -486,6 +486,7 @@ const es = {
       moveToExile: 'Mover al Exilio',
       moveToLibraryBottom: 'Fondo de la Biblioteca',
       moveToLibraryTop: 'Cima de la Biblioteca',
+      moreActions: 'Más acciones',
       movedFromPileLog: 'Movió {{name}} de {{source}} a {{dest}}',
       movedToLibraryLog: 'Movió {{name}} a la biblioteca',
       mulligan: 'Mulligan',

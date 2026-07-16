@@ -479,6 +479,7 @@ const en = {
       moveToExile: 'Move to Exile',
       moveToLibraryBottom: 'Bottom of Library',
       moveToLibraryTop: 'Top of Library',
+      moreActions: 'More actions',
       movedFromPileLog: 'Moved {{name}} from {{source}} to {{dest}}',
       movedToLibraryLog: 'Moved {{name}} to library',
       mulligan: 'Mulligan',
