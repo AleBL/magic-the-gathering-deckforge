@@ -7,6 +7,7 @@ import { useDeckTokens } from '../../hooks/useDeckTokens';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import CardDetailModal from '../card/CardDetailModal';
 import { TokenSearchModal } from './TokenSearchModal';
+import EmptyState from '../ui/EmptyState';
 
 interface DeckTokensTabProps {
   cards: Card[];
@@ -89,26 +90,12 @@ function DeckTokensTab({
       )}
 
       {localTokens.length === 0 ? (
-        <div className="h-64 flex flex-col items-center justify-center gap-4 text-gray-450 dark:text-gray-500 text-center px-6">
-          <FaInfoCircle className="text-3xl text-slate-500/80" />
-          <div className="space-y-1.5">
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-350">{t('tokens.noTokensFound')}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-650">{t('tokens.noTokensExplanation')}</p>
-          </div>
-
-          {isEditMode && (
-            <div className="flex items-center gap-3 mt-2">
-              <button
-                type="button"
-                onClick={handleAnalyzeDeck}
-                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-4 rounded-xl shadow-md transition-all cursor-pointer"
-              >
-                <FaSync className="text-[10px]" />
-                {t('deck.analyzeDeck')}
-              </button>
-            </div>
-          )}
-        </div>
+        <EmptyState
+          icon={<FaInfoCircle />}
+          title={t('tokens.noTokensFound')}
+          description={t('tokens.noTokensExplanation')}
+          action={isEditMode ? { label: t('deck.analyzeDeck'), onClick: handleAnalyzeDeck } : undefined}
+        />
       ) : (
         !onlyHeader && (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">

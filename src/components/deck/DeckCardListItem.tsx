@@ -97,7 +97,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
               {count}
             </span>
             <span
-              className={`font-semibold truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors drop-shadow-sm ${isBanned ? 'text-red-800 dark:text-red-300 font-extrabold' : 'text-gray-900 dark:text-white'}`}
+              className={`font-semibold truncate text-sm hover:text-primary dark:hover:text-blue-400 transition-colors drop-shadow-sm ${isBanned ? 'text-red-800 dark:text-red-300 font-extrabold' : 'text-gray-900 dark:text-white'}`}
             >
               {card.printed_name || card.name}
             </span>

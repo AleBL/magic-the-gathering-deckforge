@@ -27,8 +27,15 @@
     @apply min-h-screen;
   }
 
+  /* Crisper glyph edges for the premium type treatment */
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
-    font-family: var(--font-family-sans);
+    font-family: var(--font-sans);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 

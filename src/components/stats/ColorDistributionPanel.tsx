@@ -5,6 +5,9 @@ import { FaPalette } from 'react-icons/fa';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DeckStatistics, StatFilter } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
+import { MANA_CHART_COLOR, ManaColorKey, CHART_SEGMENT_GAP } from './chartTheme';
+import { ChartFrame, ChartLegend, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
+import EmptyState from '../ui/EmptyState';
 
 interface ColorDistributionPanelProps {
   readonly stats: DeckStatistics;
@@ -39,24 +42,20 @@ export function ColorDistributionPanel({
       const meta = colorLabels[colorKey];
       const pct = count > 0 && totalValidColors > 0 ? ((count / totalValidColors) * 100).toFixed(0) : '0';
 
-      let hexColor = '#8b5cf6'; // default
-      if (colorKey === 'W') hexColor = '#f3f4f6'; // light gray/ivory
-      if (colorKey === 'U') hexColor = '#0ea5e9'; // sky blue
-      if (colorKey === 'B') hexColor = '#3f3f46'; // visible dark gray (zinc-700) instead of pitch black
-      if (colorKey === 'R') hexColor = '#ef4444'; // red
-      if (colorKey === 'G') hexColor = '#22c55e'; // green
-
       return {
         subject: meta.name,
         A: count,
-        pct: pct,
+        pct,
         fullMark: maxCount,
         colorKey,
         meta,
-        hexColor
+        hexColor: MANA_CHART_COLOR[colorKey as ManaColorKey]
       };
     });
   }, [stats, colorLabels]);
+
+  const ready = useChartReady([chartData]);
+  const hasData = chartData.some((d) => d.A > 0);
 
   return (
     <div className="space-y-4 relative z-10 min-w-0">
@@ -65,8 +64,10 @@ export function ColorDistributionPanel({
         {t('stats.colorsDistribution')}
       </h4>
 
-      {chartData.some((d) => d.A > 0) ? (
-        <div className="w-full h-64 sm:h-72 bg-white/50 dark:bg-slate-900/50 rounded-xl p-2 shadow-inner border border-slate-200 dark:border-slate-800 backdrop-blur-sm relative z-20">
+      {!ready ? (
+        <ChartSkeleton height="h-64 sm:h-72" />
+      ) : hasData ? (
+        <ChartFrame height="h-64 sm:h-72" className="z-20">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -97,9 +98,8 @@ export function ColorDistributionPanel({
                       key={`cell-${index}`}
                       fill={entry.hexColor}
                       fillOpacity={isOtherSelected ? 0.2 : 1}
-                      stroke={isSelected ? 'currentColor' : 'none'}
-                      strokeWidth={isSelected ? 3 : 0}
-                      className="dark:stroke-slate-900 stroke-white"
+                      stroke={isSelected ? 'var(--chart-text-primary)' : CHART_SEGMENT_GAP.stroke}
+                      strokeWidth={isSelected ? 3 : CHART_SEGMENT_GAP.strokeWidth}
                       style={{ outline: 'none', cursor: 'pointer', transition: 'all 0.3s ease' }}
                     />
                   );
@@ -107,59 +107,61 @@ export function ColorDistributionPanel({
               </Pie>
               <RechartsTooltip
                 content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload;
-                    return (
-                      <div className="bg-slate-900/90 backdrop-blur-md text-white text-xs p-3 rounded-lg shadow-xl border border-slate-700/50">
-                        <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-slate-700">
+                  const data = payload?.[0]?.payload;
+                  if (!data) return null;
+                  return (
+                    <ChartTooltip
+                      active={active}
+                      title={
+                        <>
                           <span className="flex items-center shadow-sm">
                             {parseTextWithSymbols(`{${data.colorKey}}`)}
                           </span>
-                          <span className="font-bold">{data.subject}</span>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="font-medium text-slate-300">
-                            {t('common.cards')}: <span className="text-white font-bold">{data.A}</span>
-                          </span>
-                          <span className="font-medium text-slate-300">
-                            {t('stats.percentage')}: <span className="text-white font-bold">{data.pct}%</span>
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
+                          {data.subject}
+                        </>
+                      }
+                      rows={[
+                        { key: 'cards', label: t('common.cards'), value: data.A },
+                        { key: 'pct', label: t('stats.percentage'), value: `${data.pct}%` }
+                      ]}
+                    />
+                  );
                 }}
               />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </ChartFrame>
       ) : (
-        <div className="text-sm text-slate-500 italic text-center p-4 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">
-          {t('export.noColorData')}
-        </div>
+        <ChartFrame height="h-64 sm:h-72" className="flex items-center justify-center">
+          <EmptyState icon={<FaPalette />} title={t('export.noColorData')} />
+        </ChartFrame>
       )}
 
-      <div className="flex flex-wrap gap-2 mt-4 relative z-20">
-        {chartData
-          .filter((d) => d.A > 0)
-          .map((data) => (
-            <button
-              key={data.colorKey}
-              onClick={() =>
+      {hasData ? (
+        <ChartLegend
+          items={chartData
+            .filter((d) => d.A > 0)
+            .map((data) => ({
+              key: data.colorKey,
+              swatch: data.hexColor,
+              label: (
+                <>
+                  <span className="flex items-center shadow-sm">{parseTextWithSymbols(`{${data.colorKey}}`)}</span>
+                  {data.subject}
+                </>
+              ),
+              value: data.A,
+              active: activeFilter?.type === 'color' && activeFilter.value === data.colorKey,
+              muted: activeFilter?.type === 'color' && activeFilter.value !== data.colorKey,
+              onClick: () =>
                 setActiveFilter((prev) =>
                   prev?.type === 'color' && prev.value === data.colorKey
                     ? null
                     : { type: 'color', value: data.colorKey }
                 )
-              }
-              className={`px-3 py-1 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${activeFilter?.type === 'color' && activeFilter.value === data.colorKey ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-slate-900 shadow-md scale-105' : 'opacity-80 hover:opacity-100 hover:scale-105'}`}
-            >
-              <span className="flex items-center shadow-sm">{parseTextWithSymbols(`{${data.colorKey}}`)}</span>
-              {data.subject} ({data.A})
-            </button>
-          ))}
-      </div>
+            }))}
+        />
+      ) : null}
     </div>
   );
 }

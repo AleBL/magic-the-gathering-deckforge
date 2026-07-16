@@ -46,8 +46,8 @@ export function DeckManagerToolbar({
   return (
     <div className="workspace-header">
       <div className="manager-title-row">
-        <h2 className="text-gray-900 dark:text-white text-2xl font-bold transition-colors duration-300 flex items-center gap-2 w-full">
-          <FaBook className="text-blue-600 text-xl" />
+        <h2 className="text-gray-900 dark:text-white text-2xl font-serif font-bold transition-colors duration-300 flex items-center gap-2 w-full">
+          <FaBook className="text-primary text-xl" />
           {t('deck.deckManager')}
           <div className="manager-info-tooltip-trigger group/tooltip">
             <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>

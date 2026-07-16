@@ -88,7 +88,7 @@ export default function DeckImportProgressModal({
                       ))}
                     </ul>
                   </div>
-                  <p className="text-xs text-amber-600 dark:text-amber-500 mt-3 font-medium">
+                  <p className="text-xs text-warning dark:text-amber-500 mt-3 font-medium">
                     {t('deck.importMissingExplanation')}
                   </p>
                 </div>

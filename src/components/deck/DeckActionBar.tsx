@@ -144,7 +144,7 @@ function DeckActionBar({
             </div>
 
             {showExportMenu && (
-              <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
+              <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/50 dark:border-white/10 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
                 <button
                   type="button"
                   onClick={() => {

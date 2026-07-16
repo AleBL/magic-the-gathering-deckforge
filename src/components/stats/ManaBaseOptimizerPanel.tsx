@@ -1,14 +1,40 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
 import { FaInfoCircle, FaExclamationTriangle, FaTint } from 'react-icons/fa';
 import { DeckStatistics } from '../../utils/deckStatistics';
+import { CHART_BAR_RADIUS_HORIZONTAL, CHART_TICK_STYLE, MANA_CHART_COLOR, ManaColorKey } from './chartTheme';
+import { ChartFrame, ChartTooltip } from './ChartPrimitives';
 
 interface ManaBaseOptimizerPanelProps {
   stats: DeckStatistics;
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
 }
 
+const LAND_TO_MANA_COLOR: Record<string, ManaColorKey> = {
+  Plains: 'W',
+  Island: 'U',
+  Swamp: 'B',
+  Mountain: 'R',
+  Forest: 'G'
+};
+
 export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBaseOptimizerPanelProps) {
   const { t } = useTranslation();
+
+  const chartData = useMemo(
+    () =>
+      Object.entries(stats.suggestedBasicLandCounts)
+        .filter(([, count]) => count > 0)
+        .map(([landName, count]) => ({
+          landName,
+          label: t(`land.${landName.toLowerCase()}`),
+          count,
+          color: MANA_CHART_COLOR[LAND_TO_MANA_COLOR[landName] ?? 'C']
+        })),
+    [stats.suggestedBasicLandCounts, t]
+  );
+  const rowHeight = Math.max(chartData.length, 1) * 32 + 16;
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-500/5 dark:bg-blue-950/10 transition-colors duration-300">
@@ -21,7 +47,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
       </p>
       {stats.neededBasicLands > 0 ? (
         <>
-          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">
+          <p className="text-xs font-semibold text-primary dark:text-blue-400 mt-1">
             {t('stats.willAddLands').replace('{{count}}', String(stats.neededBasicLands))}
           </p>
 
@@ -37,22 +63,47 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
             </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {Object.entries(stats.suggestedBasicLandCounts).map(([landName, count]) => {
-              if (count === 0) return null;
-              return (
-                <div
-                  key={landName}
-                  className="flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-200 shadow-sm"
+          {chartData.length > 0 ? (
+            <ChartFrame style={{ height: rowHeight }} className="mt-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  layout="vertical"
+                  margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
+                  barCategoryGap="24%"
                 >
-                  <span className="text-[10px] uppercase text-gray-400 dark:text-gray-500 font-bold">
-                    {t(`land.${landName.toLowerCase()}`)}
-                  </span>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">{count}</span>
-                </div>
-              );
-            })}
-          </div>
+                  <XAxis type="number" hide allowDecimals={false} />
+                  <YAxis
+                    type="category"
+                    dataKey="label"
+                    tick={CHART_TICK_STYLE}
+                    tickLine={false}
+                    axisLine={false}
+                    width={64}
+                  />
+                  <RechartsTooltip
+                    cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
+                    content={({ active, payload }) => {
+                      const d = payload?.[0]?.payload as { label: string; count: number; color: string } | undefined;
+                      if (!d) return null;
+                      return (
+                        <ChartTooltip
+                          active={active}
+                          title={d.label}
+                          rows={[{ key: 'count', label: t('common.cards'), value: d.count, swatch: d.color }]}
+                        />
+                      );
+                    }}
+                  />
+                  <Bar dataKey="count" radius={CHART_BAR_RADIUS_HORIZONTAL} maxBarSize={20}>
+                    {chartData.map((entry) => (
+                      <Cell key={entry.landName} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartFrame>
+          ) : null}
 
           {onApplySuggestedLands ? (
             <button
@@ -65,7 +116,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           ) : null}
         </>
       ) : (
-        <div className="flex items-center gap-2 mt-4 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
+        <div className="flex items-center gap-2 mt-4 text-success dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
           <FaTint className="shrink-0" />
           <p className="text-xs font-semibold">{t('stats.landsAlreadySufficient')}</p>
         </div>

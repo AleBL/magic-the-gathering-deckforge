@@ -169,7 +169,7 @@ export default function CommandPalette({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden animate-dropdownEnter"
+        className="w-full max-w-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-dropdownEnter"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >

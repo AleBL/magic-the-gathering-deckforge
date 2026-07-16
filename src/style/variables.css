@@ -1,8 +1,41 @@
 @theme {
   --color-slate-800: rgb(30 41 59);
   --color-slate-900: rgb(15 23 42);
-  --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-family-serif: 'Playfair Display', ui-serif, Georgia, serif;
+
+  /* Font families
+     Tailwind v4's font namespace is --font-*, NOT --font-family-*. Using the
+     v3-style --font-family-* keys silently left `font-serif` resolving to
+     Tailwind's built-in Georgia stack, so Playfair Display never propagated.
+     These keys generate the `font-sans` / `font-serif` utilities. */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+
+  /* ── Typographic Scale ─────────────────────────────────
+     Semantic display/heading/body/caption rungs. Tailwind v4 reads the
+     --text-* namespace, so each key generates a `text-<name>` utility with
+     its paired line-height and tracking. Adds to (does not replace) the
+     built-in text-xs…text-9xl scale. */
+  --text-display: 1.875rem;
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-heading: 1.25rem;
+  --text-heading--line-height: 1.3;
+  --text-heading--letter-spacing: -0.01em;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.02em;
+
+  /* ── Liquid-glass surface material ─────────────────────
+     Subtle glassmorphism: a translucent fill + hairline border designed to
+     sit over a backdrop-blur. Fills stay high-opacity (~0.8) so text keeps
+     AA contrast in both themes. Pair with a --shadow-* elevation. */
+  --glass-blur: 16px;
+  --glass-fill-light: rgb(255 255 255 / 0.8);
+  --glass-fill-dark: rgb(15 23 42 / 0.8);
+  --glass-border-light: rgb(255 255 255 / 0.55);
+  --glass-border-dark: rgb(255 255 255 / 0.08);
 
   /* Harmonious and Theme Colors */
   --color-primary: var(--color-blue-600);
@@ -67,10 +100,106 @@
   --radius-3xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* ── Elevation / Shadow Scale ──────────────────────────
+     Premium layered elevations: each rung stacks a tight contact
+     shadow with a softer ambient spread, tinted with slate-950
+     (15 23 42) instead of pure black for a cooler, less muddy feel.
+     These override Tailwind's built-in shadow-* utilities. */
+  --shadow-xs:   0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm:   0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 3px 0 rgb(15 23 42 / 0.06);
+  --shadow-base: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 2px 4px 0 rgb(15 23 42 / 0.06);
+  --shadow-md:   0 2px 4px -1px rgb(15 23 42 / 0.05), 0 4px 8px -1px rgb(15 23 42 / 0.07), 0 8px 16px -2px rgb(15 23 42 / 0.05);
+  --shadow-lg:   0 2px 4px -1px rgb(15 23 42 / 0.04), 0 8px 16px -3px rgb(15 23 42 / 0.08), 0 16px 32px -4px rgb(15 23 42 / 0.08);
+  --shadow-xl:   0 4px 8px -2px rgb(15 23 42 / 0.05), 0 12px 24px -4px rgb(15 23 42 / 0.09), 0 24px 48px -6px rgb(15 23 42 / 0.11);
+  --shadow-2xl:  0 8px 16px -4px rgb(15 23 42 / 0.07), 0 24px 48px -8px rgb(15 23 42 / 0.13), 0 40px 80px -12px rgb(15 23 42 / 0.15);
+}
+
+/* ── Data-viz chart tokens ──────────────────────────────────
+   Consumed by src/components/stats/chartTheme.ts as var(--chart-*)
+   strings, passed straight into Recharts fill/stroke props (SVG
+   presentation attributes resolve CSS custom properties, so charts
+   re-theme automatically with the html.dark toggle — no JS branching
+   needed). Values follow the dataviz skill's reference palette;
+   see docs/DESIGN_TOKENS.md for the categorical/sequential/mana
+   assignment rationale. Kept outside @theme since these aren't
+   Tailwind utility namespaces, just runtime custom properties. */
+:root {
+  --chart-surface: #fcfcfb;
+  --chart-text-primary: #0b0b0b;
+  --chart-text-secondary: #52514e;
+  --chart-text-muted: #898781;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+
+  /* Fixed-order categorical series (never cycled/reassigned by rank) */
+  --chart-series-1: #2a78d6; /* blue */
+  --chart-series-2: #1baf7a; /* aqua */
+  --chart-series-3: #eda100; /* yellow */
+  --chart-series-4: #008300; /* green */
+  --chart-series-5: #4a3aa7; /* violet */
+  --chart-series-6: #e34948; /* red */
+  --chart-series-7: #e87ba4; /* magenta */
+  --chart-series-8: #eb6834; /* orange */
+
+  /* Sequential/ordinal blue ramp — low -> high magnitude */
+  --chart-sequential-1: #86b6ef;
+  --chart-sequential-2: #3987e5;
+  --chart-sequential-3: #1c5cab;
+  --chart-sequential-4: #0d366b;
+
+  /* Status palette — reserved, never reused as a generic series */
+  --chart-status-good: #0ca30c;
+  --chart-status-warning: #fab219;
+  --chart-status-serious: #ec835a;
+  --chart-status-critical: #d03b3b;
+
+  /* MTG mana-color identity — fixed W/U/B/R/G/C mapping, always
+     paired with the mana-symbol icon so identity never rests on
+     hue alone (colorblind-safe by construction). */
+  --chart-mana-w: #eda100;
+  --chart-mana-u: #2a78d6;
+  --chart-mana-b: #4a3aa7;
+  --chart-mana-r: #e34948;
+  --chart-mana-g: #008300;
+  --chart-mana-c: #898781;
+}
+
+html.dark {
+  --chart-surface: #1a1a19;
+  --chart-text-primary: #ffffff;
+  --chart-text-secondary: #c3c2b7;
+  --chart-text-muted: #898781;
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+
+  --chart-series-1: #3987e5;
+  --chart-series-2: #199e70;
+  --chart-series-3: #c98500;
+  --chart-series-4: #008300;
+  --chart-series-5: #9085e9;
+  --chart-series-6: #e66767;
+  --chart-series-7: #d55181;
+  --chart-series-8: #d95926;
+
+  --chart-sequential-1: #184f95;
+  --chart-sequential-2: #2a78d6;
+  --chart-sequential-3: #6da7ec;
+  --chart-sequential-4: #b7d3f6;
+
+  --chart-status-good: #0ca30c;
+  --chart-status-warning: #fab219;
+  --chart-status-serious: #ec835a;
+  --chart-status-critical: #d03b3b;
+
+  /* --chart-mana-b uses #7c3aed here, not the light mode's #4a3aa7:
+     the palette's stock dark violet (#9085e9) sits at ΔE 2.5 from
+     dark blue under protanopia simulation (validate_palette.js),
+     well under the CVD floor since W/U/B/R/G are always adjacent in
+     Magic's canonical color-wheel order. #7c3aed clears ΔE 23.6. */
+  --chart-mana-w: #c98500;
+  --chart-mana-u: #3987e5;
+  --chart-mana-b: #7c3aed;
+  --chart-mana-r: #e66767;
+  --chart-mana-g: #008300;
+  --chart-mana-c: #898781;
 }

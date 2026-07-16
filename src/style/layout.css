@@ -1,5 +1,22 @@
 /* Reusable structural layouts and containers */
 
+/* ── Liquid-glass surface ───────────────────────────────────
+   Subtle glassmorphism material — translucent fill + hairline
+   border + backdrop blur — driven by the --glass-* / --shadow-*
+   tokens. Reused by modals, menus, and floating panels. */
+.surface-glass {
+  background-color: var(--glass-fill-light);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-lg);
+}
+
+html.dark .surface-glass {
+  background-color: var(--glass-fill-dark);
+  border-color: var(--glass-border-dark);
+}
+
 .page-container {
   @apply flex flex-col h-screen bg-white dark:bg-gray-900 transition-colors duration-300;
 }
@@ -27,11 +44,21 @@ html.dark .header-container {
 
 /* Modals (canonical .modal-overlay lives in components.css) */
 .modal-container {
-  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-2xl transition-colors duration-300 mx-4 border border-gray-300 dark:border-gray-700;
+  @apply rounded-lg p-6 transition-colors duration-300 mx-4;
+  background-color: var(--glass-fill-light);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-2xl);
+}
+
+html.dark .modal-container {
+  background-color: var(--glass-fill-dark);
+  border-color: var(--glass-border-dark);
 }
 
 .modal-title {
-  @apply text-gray-900 dark:text-white text-xl font-bold font-serif mb-4 transition-colors duration-300;
+  @apply text-gray-900 dark:text-white text-heading text-balance font-bold font-serif mb-4 transition-colors duration-300;
 }
 
 .modal-actions {
@@ -170,6 +197,14 @@ html.dark .deck-preview-section {
   transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.5s ease;
 }
 
+/* Elegant keyboard focus for the card hero — a token-colored ring that
+   sits just off the artwork instead of the generic global outline. */
+.card-image-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-lg);
+}
+
 .card-image-content {
   @apply w-full h-full object-contain;
 }
@@ -259,6 +294,7 @@ html.dark .deck-preview-section {
 /* Mana Curve & Stats styles */
 .deck-stats-container {
   @apply mt-6 p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-md transition-colors duration-300;
+  box-shadow: var(--shadow-md);
 }
 
 .mana-bar-group {
@@ -266,7 +302,7 @@ html.dark .deck-preview-section {
 }
 
 .mana-bar-column {
-  @apply w-full max-w-[2rem] mx-auto bg-gradient-to-t from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 rounded-t transition-all duration-500 ease-out origin-bottom hover:from-blue-400 hover:to-indigo-400;
+  @apply w-full max-w-[2rem] mx-auto bg-gradient-to-t from-blue-500 to-indigo-500 dark:from-primary dark:to-indigo-600 rounded-t transition-all duration-500 ease-out origin-bottom hover:from-blue-400 hover:to-indigo-400;
 }
 
 .mana-bar-tooltip {
@@ -368,7 +404,7 @@ html.dark .deck-preview-section {
 }
 
 .app-brand-logo-glow {
-  @apply absolute inset-0 bg-blue-500/20 dark:bg-blue-600/30 rounded-lg blur-xs animate-pulse;
+  @apply absolute inset-0 bg-blue-500/20 dark:bg-primary/30 rounded-lg blur-xs animate-pulse;
 }
 
 .app-brand-logo-image {
@@ -376,7 +412,7 @@ html.dark .deck-preview-section {
 }
 
 .app-brand-title {
-  @apply text-xl font-serif font-extrabold tracking-widest transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
+  @apply text-xl font-serif font-extrabold tracking-[0.18em] leading-none transition-colors duration-300 hidden md:block select-none bg-gradient-to-r from-primary via-indigo-500 to-indigo-600 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-500 bg-clip-text text-transparent uppercase;
 }
 
 .tab-button-icon {
@@ -446,8 +482,15 @@ html.dark .deck-preview-section {
 }
 
 .profile-menu-panel {
-  @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden shadow-2xl border border-gray-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900 z-[var(--z-modal)] origin-top-right;
-  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden border border-gray-200/80 dark:border-slate-700/80 z-[var(--z-modal)] origin-top-right;
+  background-color: var(--glass-fill-light);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-2xl);
+}
+
+html.dark .profile-menu-panel {
+  background-color: var(--glass-fill-dark);
 }
 
 .profile-menu-divider {

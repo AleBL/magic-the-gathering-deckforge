@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
 import { FaDiceD20 } from 'react-icons/fa';
 import { DeckStatistics, landDrawProbabilities } from '../../utils/deckStatistics';
+import { CHART_BAR_RADIUS_VERTICAL, CHART_STATUS, CHART_TEXT_MUTED, CHART_TICK_STYLE } from './chartTheme';
+import { ChartFrame, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
+import EmptyState from '../ui/EmptyState';
 
 interface ConsistencyPanelProps {
   stats: DeckStatistics;
@@ -12,6 +16,9 @@ const HAND_SIZE = 7;
 const KEEPABLE_MIN = 2;
 const KEEPABLE_MAX = 5;
 
+const KEEPABLE_COLOR = CHART_STATUS.good;
+const OTHER_COLOR = CHART_TEXT_MUTED;
+
 /** Hypergeometric probability of drawing each land count in the opening hand. */
 export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
   const { t } = useTranslation();
@@ -19,14 +26,13 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
   const landCount = stats.cardTypeCounts.land;
 
   const distribution = useMemo(() => landDrawProbabilities(deckSize, landCount, HAND_SIZE), [deckSize, landCount]);
+  const ready = useChartReady([distribution]);
+  const hasData = distribution.length > 0 && landCount > 0;
 
-  if (distribution.length === 0 || landCount === 0) return null;
-
-  const maxProb = Math.max(...distribution.map((d) => d.prob), 0.0001);
   const keepable = distribution
     .filter((d) => d.lands >= KEEPABLE_MIN && d.lands <= KEEPABLE_MAX)
     .reduce((sum, d) => sum + d.prob, 0);
-  const expectedLands = (HAND_SIZE * landCount) / deckSize;
+  const expectedLands = hasData ? (HAND_SIZE * landCount) / deckSize : 0;
 
   return (
     <div className="md:col-span-2 space-y-4 p-4 rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-500/5 dark:bg-indigo-950/10 transition-colors duration-300">
@@ -36,50 +42,81 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
       </h4>
       <p className="text-xs text-gray-500 dark:text-gray-400">{t('stats.consistencyDesc')}</p>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-          <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
-            {t('stats.keepableHands')}
-          </span>
-          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
-            {(keepable * 100).toFixed(0)}%
-          </span>
-        </div>
-        <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-          <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
-            {t('stats.avgLandsInHand')}
-          </span>
-          <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
-            {expectedLands.toFixed(1)}
-          </span>
-        </div>
-      </div>
-
-      <div className="space-y-1.5 pt-1">
-        {distribution.map(({ lands, prob }) => {
-          const isKeepable = lands >= KEEPABLE_MIN && lands <= KEEPABLE_MAX;
-          return (
-            <div key={lands} className="flex items-center gap-2 text-xs">
-              <span className="w-16 shrink-0 text-gray-600 dark:text-gray-400 font-medium tabular-nums">
-                {t('stats.nLands', { count: lands })}
+      {!ready ? (
+        <ChartSkeleton height="h-40" />
+      ) : !hasData ? (
+        <ChartFrame height="h-32" className="flex items-center justify-center">
+          <EmptyState icon={<FaDiceD20 />} title={t('stats.noConsistencyData')} />
+        </ChartFrame>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.keepableHands')}
               </span>
-              <div className="flex-1 h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${isKeepable ? 'bg-indigo-500' : 'bg-slate-400 dark:bg-slate-600'}`}
-                  style={{ width: `${(prob / maxProb) * 100}%` }}
-                />
-              </div>
-              <span className="w-9 shrink-0 text-right font-bold text-gray-800 dark:text-gray-200 tabular-nums">
-                {(prob * 100).toFixed(0)}%
+              <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 tabular-nums">
+                {(keepable * 100).toFixed(0)}%
               </span>
             </div>
-          );
-        })}
-      </div>
+            <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.avgLandsInHand')}
+              </span>
+              <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 tabular-nums">
+                {expectedLands.toFixed(1)}
+              </span>
+            </div>
+          </div>
 
-      <p className="text-[10px] text-gray-400 dark:text-gray-500">
-        {t('stats.consistencyBasis', { lands: landCount, total: deckSize })}
-      </p>
+          <ChartFrame height="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={distribution} margin={{ top: 8, right: 4, left: 4, bottom: 0 }} barCategoryGap="20%">
+                <XAxis
+                  dataKey="lands"
+                  tick={CHART_TICK_STYLE}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(lands: number) => t('stats.nLands', { count: lands })}
+                />
+                <YAxis hide />
+                <RechartsTooltip
+                  cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
+                  content={({ active, payload }) => {
+                    const d = payload?.[0]?.payload as { lands: number; prob: number } | undefined;
+                    if (!d) return null;
+                    const isKeepable = d.lands >= KEEPABLE_MIN && d.lands <= KEEPABLE_MAX;
+                    return (
+                      <ChartTooltip
+                        active={active}
+                        title={t('stats.nLands', { count: d.lands })}
+                        rows={[
+                          {
+                            key: 'prob',
+                            label: t('stats.percentage'),
+                            value: `${(d.prob * 100).toFixed(0)}%`,
+                            swatch: isKeepable ? KEEPABLE_COLOR : OTHER_COLOR
+                          }
+                        ]}
+                      />
+                    );
+                  }}
+                />
+                <Bar dataKey="prob" radius={CHART_BAR_RADIUS_VERTICAL} maxBarSize={28}>
+                  {distribution.map((d) => {
+                    const isKeepable = d.lands >= KEEPABLE_MIN && d.lands <= KEEPABLE_MAX;
+                    return <Cell key={d.lands} fill={isKeepable ? KEEPABLE_COLOR : OTHER_COLOR} />;
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartFrame>
+
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">
+            {t('stats.consistencyBasis', { lands: landCount, total: deckSize })}
+          </p>
+        </>
+      )}
     </div>
   );
 }
