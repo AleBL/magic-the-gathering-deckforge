@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 const srcRoot = join(__dirname, 'src');
 
@@ -89,6 +89,10 @@ export default defineConfig({
     })
   ],
   root: srcRoot,
+  build: {
+    outDir: resolve(__dirname, 'dist'),
+    emptyOutDir: true
+  },
   base: '/',
   // Serves the generated manifest icons (src/assets/icons/pwa-*.png) at the site
   // root, e.g. /pwa-192.png, which is where the manifest above expects to find them.
