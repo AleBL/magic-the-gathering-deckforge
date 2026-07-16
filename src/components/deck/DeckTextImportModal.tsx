@@ -40,7 +40,7 @@ const DeckTextImportModal: React.FC<DeckTextImportModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all focus:outline-none"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
           >
             <FaTimes />
           </button>

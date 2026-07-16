@@ -187,7 +187,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all focus:outline-none cursor-pointer z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow"
+        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow"
       >
         <FaTimes />
       </button>
