@@ -9,7 +9,16 @@ import globals from 'globals';
 export default tseslint.config(
   // Ignored paths
   {
-    ignores: ['node_modules/**', 'dist/**', 'dist-electron/**', 'dist-vite/**', 'src/dist/**', 'main/**', 'src/out/**']
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'dist-electron/**',
+      'dist-vite/**',
+      'src/dist/**',
+      'src/dev-dist/**',
+      'main/**',
+      'src/out/**'
+    ]
   },
 
   // Base JS recommended

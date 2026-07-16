@@ -18,7 +18,11 @@ html.dark .surface-glass {
 }
 
 .page-container {
-  @apply flex flex-col h-screen bg-white dark:bg-gray-900 transition-colors duration-300;
+  @apply flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300;
+  /* dvh tracks the *visible* mobile viewport (URL bar shown/hidden), so the
+     bottom tab bar is never pushed off-screen; vh first as the fallback. */
+  height: 100vh;
+  height: 100dvh;
 }
 
 .header-container {
@@ -111,6 +115,29 @@ html.dark .modal-container {
   gap: 2rem;
 }
 
+/* On phones the desktop minmax floors produce a single near-full-width
+   column (e.g. 180px min → 1×358px at 390px viewport). Lower the floors so
+   each size keeps a sensible density: P≈3 cols, M/G≈2 cols, GG stays 1. */
+@media (max-width: 639px) {
+  .card-grid-small {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .card-grid-medium {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .card-grid-large {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .card-grid-xlarge {
+    gap: 1rem;
+  }
+}
+
 /* Custom Modals modifiers */
 .modal-container-large {
   @apply w-[calc(100%-2rem)] max-w-4xl max-h-[90vh] overflow-auto mx-auto;
@@ -137,6 +164,7 @@ html.dark .modal-container {
 
 .workspace-body {
   @apply flex-1 overflow-auto bg-white dark:bg-gray-900 transition-colors duration-300 w-full;
+  -webkit-overflow-scrolling: touch;
 }
 
 .workspace-body>* {
@@ -398,7 +426,10 @@ html.dark .deck-preview-section {
    instead of squeezing into the top header row. */
 .bottom-tab-bar {
   @apply sm:hidden flex items-stretch shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-gray-200/70 dark:border-slate-800/70;
-  z-index: var(--z-header);
+  /* Above page content but BELOW modal overlays (--z-overlay): bottom sheets
+     anchor to the viewport's bottom edge, and a higher bar would sit on top
+     of them and swallow taps on their footer buttons. */
+  z-index: var(--z-sticky);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -411,7 +442,8 @@ html.dark .deck-preview-section {
 }
 
 .bottom-tab-button-icon {
-  @apply text-base;
+  /* ~20px visual glyph; the 56px button provides the ≥44px touch target */
+  @apply text-xl;
 }
 
 .header-actions {

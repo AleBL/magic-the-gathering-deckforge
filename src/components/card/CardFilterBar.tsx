@@ -23,7 +23,7 @@ export default function CardFilterBar({ filters, setFilters }: CardFilterBarProp
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 py-4 w-full">
+    <div className="flex flex-wrap items-center gap-3 sm:gap-4 py-2 sm:py-4 w-full">
       {/* Colors */}
       <div className="flex items-center gap-2">
         {colors.map((color: { code: string; name: string }) => (

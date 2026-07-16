@@ -80,10 +80,10 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
 
   return (
     <div className="flex flex-col h-full bg-gray-50/30 dark:bg-slate-900/30">
-      <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-slate-800 sticky top-0 z-10 px-4 sm:px-6 py-4 shadow-sm transition-all duration-300">
+      <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-slate-800 sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4 shadow-sm transition-all duration-300">
         <div className="w-full space-y-2 sm:space-y-4">
           {/* Main Search Input */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-row gap-2 sm:gap-3">
             <div className="relative flex-1 group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                 <FaSearch className="text-lg" />
@@ -105,7 +105,7 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
             </div>
             <button
               onClick={() => loadFirstPage(buildQuery(searchQuery))}
-              className="px-8 py-3.5 bg-primary hover:bg-blue-500 text-white rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 whitespace-nowrap"
+              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-blue-500 text-white rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 whitespace-nowrap"
             >
               {t('search.searchButton')}
             </button>
@@ -116,7 +116,7 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
             <div className="flex-1 overflow-hidden">
               <CardFilterBar filters={filters} setFilters={setFilters} />
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 pb-3 xl:pb-0 w-full xl:w-auto">
+            <div className="flex flex-row flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-3 shrink-0 pb-1 sm:pb-3 xl:pb-0 w-full xl:w-auto">
               <SearchFilters filters={filters} setFilters={setFilters} />
               <div className="w-px h-6 bg-gray-200 dark:bg-slate-700 hidden sm:block"></div>
               <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />

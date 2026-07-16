@@ -126,7 +126,7 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={() => setShowExportMenu(!showExportMenu)}
-                className={`flex items-center justify-center gap-1 px-3 h-8 rounded-lg text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${
+                className={`flex items-center justify-center gap-1 px-3 h-11 sm:h-8 rounded-lg text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${
                   showExportMenu ? 'bg-purple-700' : 'bg-purple-600 hover:bg-purple-700'
                 }`}
                 aria-label={t('deck.export')}
@@ -199,7 +199,7 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={onPrintProxies}
-                className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-500/50 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-emerald-500/20 active:scale-95"
+                className="flex items-center justify-center w-11 h-11 sm:w-8 sm:h-8 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-500/50 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-emerald-500/20 active:scale-95"
                 aria-label={t('print.printProxies')}
               >
                 <FaPrint className="text-sm shrink-0" />
@@ -216,7 +216,7 @@ function DeckActionBar({
               id="playtest-btn"
               type="button"
               onClick={onPlaytest}
-              className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white transition-all duration-300 shadow-md hover:shadow-orange-500/40 active:scale-95 relative overflow-hidden group/playbtn"
+              className="flex items-center justify-center w-11 h-11 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white transition-all duration-300 shadow-md hover:shadow-orange-500/40 active:scale-95 relative overflow-hidden group/playbtn"
               aria-label={t('playtest.playtest')}
             >
               <div className="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover/playbtn:scale-x-100 origin-left transition-transform duration-500 ease-out" />
@@ -234,7 +234,7 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onLoadDeckToEdit}
-            className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary hover:bg-primary-hover text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className="flex items-center justify-center w-11 h-11 sm:w-8 sm:h-8 rounded-lg bg-primary hover:bg-primary-hover text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
             aria-label={t('common.edit')}
           >
             <FaEdit className="text-sm shrink-0" />
@@ -250,7 +250,7 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onDeselectDeck}
-            className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className="flex items-center justify-center w-11 h-11 sm:w-8 sm:h-8 rounded-lg bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
             aria-label={t('common.cancel')}
           >
             <FaTimes className="text-sm shrink-0" />

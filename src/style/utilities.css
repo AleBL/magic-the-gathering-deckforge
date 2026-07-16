@@ -170,3 +170,27 @@
     display: none;
   }
 }
+
+/* ── Invisible touch-target extension (mobile only) ──────────
+   For small floating icon buttons (card-corner chips, battlefield
+   action rows) where growing the visual circle would cover the art:
+   a centered pseudo-element widens the *tappable* box to ≥44px while
+   the glyph stays small. Requires the element to be positioned
+   (relative/absolute). Disabled at sm+, where a pointer is precise. */
+@utility touch-hitarea {
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+
+  @media (min-width: 640px) {
+    &::after {
+      content: none;
+    }
+  }
+}

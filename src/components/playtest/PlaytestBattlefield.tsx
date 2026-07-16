@@ -98,7 +98,7 @@ const PlaytestBattlefieldCard = memo(
               onShowDetails(card);
             }}
             title={t('cardDetails.viewCardDetails')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaInfoCircle />
           </button>
@@ -109,7 +109,7 @@ const PlaytestBattlefieldCard = memo(
               onTap(playtestId);
             }}
             title={t('playtest.tapUntap')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaSync />
           </button>
@@ -120,7 +120,7 @@ const PlaytestBattlefieldCard = memo(
               onReturnToHand(playtestId, 'battlefield');
             }}
             title={t('playtest.returnToHand')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaInbox />
           </button>
@@ -131,7 +131,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToGraveyard(playtestId);
             }}
             title={t('playtest.sendToGraveyard')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaSkull />
           </button>
@@ -142,7 +142,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToExile(playtestId);
             }}
             title={t('playtest.moveToExile')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaBan />
           </button>
@@ -153,7 +153,7 @@ const PlaytestBattlefieldCard = memo(
               onContextMenu(event, playtestId);
             }}
             title={t('playtest.moreActions')}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaEllipsisH />
           </button>

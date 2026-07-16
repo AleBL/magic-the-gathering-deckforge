@@ -110,7 +110,11 @@ function App() {
       toastAction={toastAction}
       isOnline={isOnline}
     >
-      <div key={activeTab} className={motionEnabled ? 'view-fade' : undefined}>
+      {/* h-full keeps the h-full/flex chain from .page-container intact so each
+          view's own body (workspace-body / results area) is the scroll container;
+          without it this wrapper grows to content height and .main-content
+          (overflow-hidden) clips everything below the fold. */}
+      <div key={activeTab} className={motionEnabled ? 'view-fade h-full' : 'h-full'}>
         {activeTab === 'search' ? (
           <CardSearch
             onAddToDeck={handleAddToDeck}

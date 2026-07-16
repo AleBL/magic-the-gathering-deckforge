@@ -127,7 +127,9 @@ html.dark .display-settings-dropdown {
 }
 
 .manager-info-tooltip-btn {
-  @apply text-gray-400 hover:text-yellow-500 transition-colors p-1 cursor-pointer;
+  /* relative + .touch-hitarea (utilities.css) widen the tap box to 44px on
+     touch layouts without growing the small inline glyph */
+  @apply relative touch-hitarea text-gray-400 hover:text-yellow-500 transition-colors p-1 cursor-pointer;
 }
 
 .manager-info-tooltip-panel {
