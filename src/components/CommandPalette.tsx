@@ -1,9 +1,12 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaSearch, FaBook, FaSave, FaFlask, FaTrash, FaSun, FaMoon, FaKeyboard, FaGlobe } from 'react-icons/fa';
 import { useDeckStore } from '../store/useDeckStore';
 import { SUPPORTED_LANGUAGES } from '../constants';
+import { useMountTransition } from '../hooks/useMountTransition';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Command {
   id: string;
@@ -38,7 +41,6 @@ export default function CommandPalette({
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const run = (action: () => void) => {
     action();
@@ -135,8 +137,6 @@ export default function CommandPalette({
     if (isOpen) {
       setQuery('');
       setSelectedIndex(0);
-      // Focus after the portal mounts.
-      requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [isOpen]);
 
@@ -144,7 +144,11 @@ export default function CommandPalette({
     setSelectedIndex(0);
   }, [query]);
 
-  if (!isOpen) return null;
+  const { shouldRender, isClosing } = useMountTransition(isOpen);
+  const dialogRef = useFocusTrap<HTMLDivElement>(shouldRender);
+  useEscapeKey(onClose, shouldRender);
+
+  if (!shouldRender) return null;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -157,26 +161,25 @@ export default function CommandPalette({
       e.preventDefault();
       const command = filtered[selectedIndex];
       if (command) run(command.run);
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      onClose();
     }
   };
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[var(--z-toast)] flex items-start justify-center pt-[15vh] px-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn"
+      className={`fixed inset-0 z-[var(--z-toast)] flex items-start justify-center pt-[15vh] px-4 bg-slate-950/60 backdrop-blur-sm ${isClosing ? 'motion-overlay-closing' : 'animate-fadeIn'}`}
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-dropdownEnter"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        className={`w-full max-w-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dropdownEnter'}`}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-slate-800">
           <FaSearch className="text-gray-400 shrink-0 text-sm" />
           <input
-            ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

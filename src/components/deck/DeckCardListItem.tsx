@@ -13,6 +13,7 @@ interface DeckCardListItemProps {
   activeFormat?: DeckFormat;
   isRemovable: boolean;
   isTokenZone: boolean;
+  isLeaving?: boolean;
   onToggleCommander: (card: Card) => void;
   onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
   onUpdateCard?: (card: Card) => void;
@@ -30,6 +31,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
   activeFormat,
   isRemovable,
   isTokenZone,
+  isLeaving = false,
   onToggleCommander,
   onUpdateCardZone,
   onUpdateCard,
@@ -54,7 +56,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
   const artCropUrl = getCardArtCropUrl(card);
 
   return (
-    <div className="animate-fadeIn">
+    <div className={isLeaving ? 'motion-row-leaving' : 'animate-fadeIn'}>
       <div
         className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-gray-300 dark:border-gray-800 cursor-pointer ${
           isBanned ? 'ring-1 ring-inset ring-red-500' : isRestricted ? 'ring-1 ring-inset ring-amber-500' : ''
