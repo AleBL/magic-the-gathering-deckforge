@@ -171,6 +171,7 @@ const DeckCardList = memo(function DeckCardList({
             isToken={isTokenZone}
             isEditMode={isRemovable}
             onUpdateCardZone={onUpdateCardZone}
+            stackDuplicates={true}
           />
         </div>
       );
@@ -202,6 +203,7 @@ const DeckCardList = memo(function DeckCardList({
                   isToken={isTokenZone}
                   isEditMode={isRemovable}
                   onUpdateCardZone={onUpdateCardZone}
+                  stackDuplicates={true}
                 />
               </div>
             );
