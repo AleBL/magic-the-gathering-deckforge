@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync, FaInbox, FaSkull, FaInfoCircle, FaBan } from 'react-icons/fa';
+import { FaSync, FaInbox, FaSkull, FaInfoCircle, FaBan, FaEllipsisH } from 'react-icons/fa';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
@@ -81,7 +81,7 @@ const PlaytestBattlefieldCard = memo(
           </div>
         </div>
 
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-2 py-1 shadow-2xl backdrop-blur-sm no-active-scale">
+        <div className="absolute -top-5 sm:-top-4 left-1/2 -translate-x-1/2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-1.5 sm:px-2 py-1 shadow-2xl backdrop-blur-sm no-active-scale">
           <button
             type="button"
             onClick={(event) => {
@@ -89,7 +89,7 @@ const PlaytestBattlefieldCard = memo(
               onShowDetails(card);
             }}
             title={t('cardDetails.viewCardDetails')}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[9px] cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-blue-400 border border-slate-700 hover:bg-blue-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaInfoCircle />
           </button>
@@ -100,7 +100,7 @@ const PlaytestBattlefieldCard = memo(
               onTap(playtestId);
             }}
             title={t('playtest.tapUntap')}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[9px] cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-amber-400 border border-slate-700 hover:bg-amber-500 hover:text-slate-950 transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaSync />
           </button>
@@ -111,7 +111,7 @@ const PlaytestBattlefieldCard = memo(
               onReturnToHand(playtestId, 'battlefield');
             }}
             title={t('playtest.returnToHand')}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[9px] cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-indigo-400 border border-slate-700 hover:bg-indigo-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaInbox />
           </button>
@@ -122,7 +122,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToGraveyard(playtestId);
             }}
             title={t('playtest.sendToGraveyard')}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[9px] cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-red-400 border border-slate-700 hover:bg-red-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaSkull />
           </button>
@@ -133,9 +133,20 @@ const PlaytestBattlefieldCard = memo(
               onSendToExile(playtestId);
             }}
             title={t('playtest.moveToExile')}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[9px] cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaBan />
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onContextMenu(event, playtestId);
+            }}
+            title={t('playtest.moreActions')}
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+          >
+            <FaEllipsisH />
           </button>
         </div>
       </div>
