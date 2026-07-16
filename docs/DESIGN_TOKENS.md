@@ -124,6 +124,43 @@ built-in size scale and break `max-w-sm`/`max-w-lg`).
 | `--transition-base` | `300ms cubic-bezier(0.4, 0, 0.2, 1)` |
 | `--transition-slow` | `500ms cubic-bezier(0.4, 0, 0.2, 1)` |
 
+## Data visualization (charts)
+
+Recharts-based panels (`src/components/stats/*Panel.tsx`) share one visual system,
+defined in [`src/components/stats/chartTheme.ts`](../src/components/stats/chartTheme.ts)
+and [`ChartPrimitives.tsx`](../src/components/stats/ChartPrimitives.tsx). Colors are
+runtime CSS custom properties (`--chart-*`, defined in `variables.css` under `:root`
+and `html.dark`, **not** inside `@theme`) referenced as `var(--chart-*)` strings —
+SVG `fill`/`stroke` presentation attributes resolve custom properties live, so every
+chart re-themes with the dark-mode toggle automatically, no JS branching needed.
+Palette derived from the dataviz skill's reference instance; run
+`validate_palette.js` again before changing any hue.
+
+| Token group | Purpose |
+|-------|-------|
+| `--chart-surface` / `--chart-grid` / `--chart-axis` | Chart chrome (frame bg, gridlines, axis line) |
+| `--chart-text-primary` / `-secondary` / `-muted` | Tick labels, tooltip/legend ink |
+| `--chart-series-1..8` | Fixed-order categorical palette — assign by entity identity, never by rank (e.g. card type in `TypesBreakdownPanel`) |
+| `--chart-sequential-1..4` | Single-hue blue ramp, low→high magnitude — ordinal ranks (`RarityPanel`) or plain magnitude (`ManaCurvePanel`, `ConsistencyPanel`, `BudgetEstimatorPanel`) |
+| `--chart-status-good/-warning/-serious/-critical` | Reserved status meaning (e.g. "keepable hand" in `ConsistencyPanel`, "lands available" in `ManaPipAnalysisPanel`) — never reused as a generic series |
+| `--chart-mana-w/-u/-b/-r/-g/-c` | Fixed MTG mana-color identity, always paired with the mana-symbol icon (`parseTextWithSymbols`) so identity never rests on hue alone |
+
+**Mana-color mapping** (`MANA_CHART_COLOR` in `chartTheme.ts`): W→yellow slot,
+U→blue slot, R→red slot, G→green slot (all reused from the categorical set), B→a
+dedicated violet **not shared with the light-mode value** — the palette's stock dark
+violet (`#9085e9`) sits at ΔE 2.5 from dark-mode blue under protanopia simulation
+(below the CVD floor), which matters here because W/U/B/R/G are always adjacent in
+Magic's canonical color-wheel order; `#7c3aed` clears ΔE 23.6 and is used instead for
+`--chart-mana-b` in `html.dark` only. C (colorless) uses the plain muted-gray token,
+outside the hue set entirely.
+
+Shared chrome primitives (`ChartFrame`, `ChartTooltip`, `ChartLegend`,
+`ChartSkeleton`, `useChartReady`) give every panel the same radius (`rounded-xl`),
+border/surface treatment, tabular-numeral tooltip typography, and a loading skeleton
+for the one real async boundary Recharts has (`ResponsiveContainer`'s first
+measured-layout frame) — deck statistics themselves are computed synchronously, so
+this is not a data-fetch spinner.
+
 ## Z-index
 
 Named stacking layers — always reference a token, never a raw number.
