@@ -1,6 +1,6 @@
 {
   "name": "magic-the-gathering-deckforge",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "main": "dist-electron/index.js",
   "author": {
