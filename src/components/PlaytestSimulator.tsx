@@ -15,6 +15,7 @@ import { PlaytestLog } from './playtest/PlaytestLog';
 import { PlaytestModals } from './playtest/PlaytestModals';
 import { PlaytestShortcutsOverlay } from './playtest/PlaytestShortcutsOverlay';
 import { PlaytestParticles } from './PlaytestParticles';
+import AmbientGlow from './ui/AmbientGlow';
 import { useRipple } from '../hooks/useRipple';
 
 interface PlaytestSimulatorProps {
@@ -43,7 +44,8 @@ const PlaytestSimulatorContent: React.FC<{
     handleNextTurn,
     handleUndo,
     handleRedo,
-    setIsShortcutsOpen
+    setIsShortcutsOpen,
+    lifeTotal
   } = usePlaytestContext();
 
   const remainingToSelect = mulligans - selectedToBottom.size;
@@ -144,6 +146,7 @@ const PlaytestSimulatorContent: React.FC<{
 
         <div className="flex-1 flex flex-row overflow-hidden min-h-0 sm:min-h-[480px]">
           <div className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-4 sm:gap-6 relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] bg-slate-50 dark:bg-slate-950">
+            <AmbientGlow lowLife={lifeTotal <= 5} intensity={1.4} positionClassName="absolute inset-0 z-0" />
             <PlaytestParticles />
 
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-200/20 dark:to-slate-900/40 pointer-events-none" />

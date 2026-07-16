@@ -50,6 +50,7 @@ const es = {
       unexpectedError: 'Ocurrió un error inesperado. Inténtalo de nuevo.',
       usd: 'USD',
       viewMode: 'Visualización',
+      visualEffects: 'Efectos Visuales',
       continue: 'Continuar'
     },
     search: {

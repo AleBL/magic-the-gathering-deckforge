@@ -1,11 +1,14 @@
 import { useState, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaBan, FaExclamationTriangle, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaCrown, FaBan, FaExclamationTriangle, FaPlus, FaMinus, FaSync } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
 import { DeckFormatType, DeckZone } from '../../types/enums';
 import CardDetailModal from './CardDetailModal';
+import FlipCard from './FlipCard';
+import { getCardFaceImages } from '../../utils/cardFaces';
+import { useVisualEffects } from '../../hooks/useVisualEffects';
 import locales from '../../locales';
 
 const getGlowColor = (rarity: string | undefined): string => {
@@ -104,9 +107,14 @@ function CardItem({
   onUpdateCardZone
 }: CardItemProps) {
   const { t } = useTranslation();
+  const { motionEnabled } = useVisualEffects();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+
+  const faceImages = useMemo(() => getCardFaceImages(card), [card]);
+  const canFlip = faceImages !== null;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -141,6 +149,23 @@ function CardItem({
   }, [card, activeFormat]);
 
   const isDraggable = isDeckCard && isEditMode && !isToken;
+
+  const imageClassName = `card-image-content transition-all duration-300 ${
+    isToken && card.isActive === false
+      ? 'opacity-40 grayscale-[40%] brightness-[75%] shadow-[0_0_10px_rgba(30,41,59,0.3)] rounded-[4.5%]'
+      : isBanned
+        ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
+        : isRestricted
+          ? 'border-2 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
+          : 'rounded-[4.5%]'
+  }`;
+
+  const imageStyle = {
+    boxShadow:
+      glare.opacity > 0
+        ? `0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 0 20px 2px ${getGlowColor(card.rarity)}`
+        : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+  };
 
   return (
     <div
@@ -204,26 +229,19 @@ function CardItem({
         }}
         aria-label={card.name}
       >
-        <img
-          src={imageUrl}
-          alt={card.name}
-          className={`card-image-content transition-all duration-300 ${
-            isToken && card.isActive === false
-              ? 'opacity-40 grayscale-[40%] brightness-[75%] shadow-[0_0_10px_rgba(30,41,59,0.3)] rounded-[4.5%]'
-              : isBanned
-                ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
-                : isRestricted
-                  ? 'border-2 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
-                  : 'rounded-[4.5%]'
-          }`}
-          style={{
-            boxShadow:
-              glare.opacity > 0
-                ? `0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 0 20px 2px ${getGlowColor(card.rarity)}`
-                : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-          }}
-          loading="lazy"
-        />
+        {canFlip && faceImages ? (
+          <FlipCard
+            frontSrc={faceImages.front}
+            backSrc={faceImages.back}
+            isFlipped={isFlipped}
+            alt={card.name}
+            animated={motionEnabled}
+            imgClassName={imageClassName}
+            imgStyle={imageStyle}
+          />
+        ) : (
+          <img src={imageUrl} alt={card.name} className={imageClassName} style={imageStyle} loading="lazy" />
+        )}
         {/* 3D Glare Overlay */}
         <div
           className="absolute inset-0 pointer-events-none rounded-lg mix-blend-overlay transition-opacity duration-300 z-10"
@@ -233,6 +251,23 @@ function CardItem({
           }}
         />
       </button>
+
+      {/* Flip button for double-faced cards */}
+      {canFlip && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFlipped((prev) => !prev);
+          }}
+          className={`flip-toggle-btn absolute bottom-2 left-2 z-30 w-9 h-9 sm:w-7 sm:h-7 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 ${isFlipped ? 'is-flipped' : ''}`}
+          title={t('cardDetails.flipAction')}
+          aria-label={t('cardDetails.flipAction')}
+          aria-pressed={isFlipped}
+        >
+          <FaSync className="text-xs" />
+        </button>
+      )}
 
       {/* Fast circular Add/Remove buttons on hover */}
       {(onAddToDeck || onRemoveFromDeck || onUpdateCardZone) && (

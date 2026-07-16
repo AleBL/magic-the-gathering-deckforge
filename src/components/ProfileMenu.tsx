@@ -10,7 +10,8 @@ import {
   FaMoon,
   FaSun,
   FaGlobeAmericas,
-  FaCheck
+  FaCheck,
+  FaMagic
 } from 'react-icons/fa';
 
 interface ProfileMenuProps {
@@ -19,9 +20,11 @@ interface ProfileMenuProps {
 }
 
 import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../constants';
+import { useVisualEffects } from '../hooks/useVisualEffects';
 
 function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
   const { t, i18n } = useTranslation();
+  const { effectsEnabled, setEffectsEnabled } = useVisualEffects();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<'main' | 'about' | 'help' | 'language'>('main');
   const menuRef = useRef<HTMLDivElement>(null);
@@ -132,6 +135,22 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                   aria-label={isDarkMode ? t('common.lightMode') : t('common.darkMode')}
                 >
                   <span className={`profile-toggle-thumb ${isDarkMode ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+
+              <div className="profile-menu-row">
+                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                  <FaMagic className={`text-sm ${effectsEnabled ? 'text-fuchsia-400' : 'text-gray-400'}`} />
+                  <span className="text-sm font-medium">{t('common.visualEffects')}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEffectsEnabled(!effectsEnabled)}
+                  className={`profile-toggle ${effectsEnabled ? 'profile-toggle-on' : 'profile-toggle-off'}`}
+                  aria-label={t('common.visualEffects')}
+                  aria-pressed={effectsEnabled}
+                >
+                  <span className={`profile-toggle-thumb ${effectsEnabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </button>
               </div>
 
