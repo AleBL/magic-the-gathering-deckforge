@@ -7,6 +7,9 @@ import { useCardPrints } from '../../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../../hooks/useCardRelatedTokens';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { DeckRelatedToken } from '../../types/Deck';
+import { useDismissTransition } from '../../hooks/useDismissTransition';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface CardDetailModalProps {
   card: Card;
@@ -179,22 +182,24 @@ function CardDetailModal({
     onRemoveFromDeck?.(initialCard);
   };
 
+  const { isClosing, requestClose } = useDismissTransition(onClose);
+  const dialogRef = useFocusTrap<HTMLDivElement>(true);
+  useEscapeKey(requestClose);
+
   return createPortal(
     <>
       {/* Main modal */}
       <div
-        className="modal-overlay z-[var(--z-overlay)]"
+        className={`modal-overlay z-[var(--z-overlay)] ${isClosing ? 'motion-overlay-closing' : ''}`}
         style={{ zIndex }}
-        onClick={onClose}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') onClose();
-        }}
+        onClick={requestClose}
         role="button"
         tabIndex={-1}
         aria-label={t('common.close')}
       >
         <div
-          className="modal-container modal-container-large relative max-h-[95vh] flex flex-col overflow-hidden"
+          ref={dialogRef}
+          className={`modal-container modal-container-large relative max-h-[95vh] flex flex-col overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
@@ -203,7 +208,7 @@ function CardDetailModal({
           {/* × Close button — top right corner */}
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
             className="absolute top-3 right-3 z-10 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60"
             aria-label={t('common.close')}
           >
@@ -293,7 +298,7 @@ function CardDetailModal({
                           } else if (onAddToDeck) {
                             onAddToDeck(card);
                           }
-                          onClose();
+                          requestClose();
                         }
                       : undefined
                   }
