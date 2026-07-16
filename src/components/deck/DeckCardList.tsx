@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
@@ -12,7 +12,7 @@ import { DeckCardListItem } from './DeckCardListItem';
 import { useAnimatedList } from '../../hooks/useAnimatedList';
 
 interface AnimatedDeckCardGroupProps {
-  uniqueCards: DeckCardGrouped[];
+  cards: Card[];
   activeFormat?: DeckFormat;
   isRemovable: boolean;
   isTokenZone: boolean;
@@ -27,13 +27,17 @@ interface AnimatedDeckCardGroupProps {
   onHoverLeave: () => void;
 }
 
+/** Stable key extractor — an inline arrow here would change identity every render. */
+const getGroupedCardKey = (entry: DeckCardGrouped) => entry.name;
+
 /**
  * A dedicated component (not inlined in the groups.map below) because
  * useAnimatedList must run once per rendered group — calling a hook inside
  * a variable-length .map() would break the Rules of Hooks.
  */
-function AnimatedDeckCardGroup({ uniqueCards, ...itemProps }: AnimatedDeckCardGroupProps) {
-  const animatedCards = useAnimatedList(uniqueCards, (entry) => entry.name, 200);
+function AnimatedDeckCardGroup({ cards, ...itemProps }: AnimatedDeckCardGroupProps) {
+  const uniqueCards = useMemo(() => groupCardsByUnique(cards), [cards]);
+  const animatedCards = useAnimatedList(uniqueCards, getGroupedCardKey, 200);
 
   return (
     <div className="deck-list-compact">
@@ -214,7 +218,6 @@ const DeckCardList = memo(function DeckCardList({
       <div className="space-y-6">
         {groups.map((group) => {
           const title = TRANSLATABLE_TITLES.includes(group.title) ? t(`search.${group.title}`) : group.title;
-          const uniqueCards = groupCardsByUnique(group.cards);
 
           return (
             <div key={group.title} className="space-y-2">
@@ -227,7 +230,7 @@ const DeckCardList = memo(function DeckCardList({
                 </h4>
               )}
               <AnimatedDeckCardGroup
-                uniqueCards={uniqueCards}
+                cards={group.cards}
                 activeFormat={activeFormat}
                 isRemovable={isRemovable}
                 isTokenZone={isTokenZone}

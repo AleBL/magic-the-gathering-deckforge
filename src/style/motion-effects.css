@@ -96,7 +96,13 @@
 
 /* ── View (tab) crossfade ─────────────────────────────────── */
 .view-fade {
-  animation: viewFade 320ms var(--ease-out) both;
+  /* fill-mode must NOT be `both`/`forwards`: retaining the end-state
+     transform (even identity translateY(0)) makes this wrapper a
+     containing block for position:fixed descendants, so full-screen
+     overlays (e.g. the proxy-print modal) get anchored to it and
+     clipped instead of covering the viewport. The `to` keyframe equals
+     the natural style, so dropping the fill is visually seamless. */
+  animation: viewFade 320ms var(--ease-out) backwards;
 }
 
 @keyframes viewFade {

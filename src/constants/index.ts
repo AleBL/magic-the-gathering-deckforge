@@ -47,4 +47,4 @@ export const PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX = 10;
 export const PLAYTEST_CARD_SIZE_CLASSES = 'w-28 sm:w-32 md:w-36 lg:w-40 xl:w-48 aspect-[5/7]';
 
 // Shared responsive size for the library/graveyard/exile pile stacks.
-export const PLAYTEST_PILE_SIZE_CLASSES = 'w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 2xl:w-48 aspect-[5/7]';
+export const PLAYTEST_PILE_SIZE_CLASSES = 'w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 2xl:w-40 aspect-[5/7]';
