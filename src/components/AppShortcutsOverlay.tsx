@@ -1,6 +1,8 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaKeyboard, FaTimes } from 'react-icons/fa';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface AppShortcutsOverlayProps {
   isOpen: boolean;
@@ -24,20 +26,32 @@ const SHORTCUTS: ShortcutRow[] = [
 /** Global keyboard-shortcut reference, toggled with the "?" key. */
 export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOverlayProps) {
   const { t } = useTranslation();
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
+  useEscapeKey(onClose, isOpen);
 
   if (!isOpen) return null;
 
   return createPortal(
+    // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className="fixed inset-0 z-[var(--z-toast)] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="app-shortcuts-title"
         className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-dropdownEnter"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-slate-800">
-          <h3 className="text-sm font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+          <h3
+            id="app-shortcuts-title"
+            className="text-sm font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"
+          >
             <FaKeyboard className="text-indigo-500 dark:text-indigo-400" />
             {t('commandPalette.shortcutsTitle')}
           </h3>

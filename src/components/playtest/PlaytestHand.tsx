@@ -33,7 +33,19 @@ const PlaytestHandCard = memo(
     return (
       <div className="group relative">
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={card.printed_name || card.name}
           onClick={() => {
+            if (isMulliganPhase) {
+              onToggleSelection(playtestId);
+            } else {
+              onPlayCard(playtestId);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.preventDefault();
             if (isMulliganPhase) {
               onToggleSelection(playtestId);
             } else {

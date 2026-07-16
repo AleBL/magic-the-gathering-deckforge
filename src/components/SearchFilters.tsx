@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaFilter, FaTimes, FaUndo } from 'react-icons/fa';
 import { SearchFilters as SearchFiltersType } from '../types';
 import { useSearchFilters } from '../hooks/useSearchFilters';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface SearchFiltersProps {
   filters: SearchFiltersType;
@@ -13,6 +14,7 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const { rarities, clearFilters, setRarity, setCmc } = useSearchFilters(filters, setFilters);
+  useEscapeKey(() => setIsExpanded(false), isExpanded);
 
   const hasActiveFilters =
     filters.rarity !== '' || filters.cmc !== '' || filters.colors.length > 0 || filters.types.length > 0;
@@ -40,7 +42,8 @@ function SearchFilters({ filters, setFilters }: SearchFiltersProps) {
 
       {isExpanded ? (
         <>
-          <div className="fixed inset-0 z-30" onClick={() => setIsExpanded(false)} />
+          {/* Backdrop click is a mouse-only convenience; Escape provides the keyboard-equivalent action. */}
+          <div className="fixed inset-0 z-30" onClick={() => setIsExpanded(false)} aria-hidden="true" />
           <div className="absolute left-0 mt-2 w-72 rounded-2xl shadow-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-gray-200/80 dark:border-slate-700/80 p-5 z-40 space-y-5 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-extrabold text-gray-800 dark:text-gray-200 uppercase tracking-wider block">

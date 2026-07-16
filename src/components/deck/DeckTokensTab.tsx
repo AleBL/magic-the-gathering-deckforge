@@ -121,7 +121,16 @@ function DeckTokensTab({
 
                   {/* Token Miniature Image */}
                   <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label={tokenCard.printed_name || tokenCard.name}
                     onClick={() => onTokenClick?.(tokenCard)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onTokenClick?.(tokenCard);
+                      }
+                    }}
                     className="relative w-full h-34 rounded-lg overflow-hidden border border-gray-150 dark:border-gray-800 bg-slate-950 flex items-center justify-center mb-2 cursor-pointer group/img shrink-0"
                   >
                     {imgUrl ? (

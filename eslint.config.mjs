@@ -29,12 +29,17 @@ export default tseslint.config(
   // JSX runtime (React 17+ - no need to import React in every file)
   pluginReact.configs.flat['jsx-runtime'],
 
+  // jsx-a11y recommended (flat config)
+  {
+    ...pluginJsxA11y.flatConfigs.recommended,
+    files: ['**/*.{jsx,tsx}']
+  },
+
   // Main config for all TS/TSX/JS files
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
-      'react-hooks': pluginReactHooks,
-      'jsx-a11y': pluginJsxA11y
+      'react-hooks': pluginReactHooks
     },
     languageOptions: {
       globals: {

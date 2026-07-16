@@ -82,8 +82,18 @@ function DeckCommandersHeader({
           return (
             <div key={card.id} className="animate-fadeIn">
               <div
+                role="button"
+                tabIndex={0}
+                aria-label={card.printed_name || card.name}
                 className="deck-list-row border-l-2 border-amber-400 group bg-amber-500/5 dark:bg-amber-950/5 hover:bg-amber-500/10 dark:hover:bg-amber-950/15"
                 onClick={() => onCardSelect(card)}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget) return;
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onCardSelect(card);
+                  }
+                }}
                 onMouseEnter={(e) => onHoverEnter(card, e)}
                 onMouseMove={onHoverMove}
                 onMouseLeave={onHoverLeave}
@@ -107,6 +117,8 @@ function DeckCommandersHeader({
 
                   {/* Quick Edit Buttons on Hover */}
                   {isRemovable && (
+                    // Only guards against triggering the row's onCardSelect; the buttons inside are the real interactive surface.
+                    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
                     <div
                       className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                       onClick={(e) => e.stopPropagation()}

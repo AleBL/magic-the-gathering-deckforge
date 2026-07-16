@@ -127,7 +127,7 @@ html.dark .display-settings-dropdown {
 }
 
 .manager-info-tooltip-btn {
-  @apply text-gray-400 hover:text-yellow-500 transition-colors p-1 focus:outline-none cursor-pointer;
+  @apply text-gray-400 hover:text-yellow-500 transition-colors p-1 cursor-pointer;
 }
 
 .manager-info-tooltip-panel {

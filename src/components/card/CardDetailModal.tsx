@@ -10,6 +10,7 @@ import { DeckRelatedToken } from '../../types/Deck';
 import { useDismissTransition } from '../../hooks/useDismissTransition';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 import { useVisualEffects } from '../../hooks/useVisualEffects';
 import { getCardFaceImages } from '../../utils/cardFaces';
 import FlipCard from './FlipCard';
@@ -210,26 +211,31 @@ function CardDetailModal({
   const { isClosing, requestClose } = useDismissTransition(onClose);
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(requestClose);
+  const swipeHandlers = useSwipeToClose<HTMLDivElement>(requestClose);
 
   return createPortal(
     <>
       {/* Main modal */}
+      {/* Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action. */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
         className={`modal-overlay modal-overlay-sheet z-[var(--z-overlay)] ${isClosing ? 'motion-overlay-closing' : ''}`}
         style={{ zIndex }}
-        onClick={requestClose}
-        role="button"
-        tabIndex={-1}
-        aria-label={t('common.close')}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) requestClose();
+        }}
       >
         <div
           ref={dialogRef}
           className={`modal-container modal-container-large modal-sheet-panel relative flex flex-col overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
-          onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-card-title"
         >
+          {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
+          <div className="sm:hidden -mt-6 -mx-6 flex justify-center pt-2.5 pb-1" {...swipeHandlers} aria-hidden="true">
+            <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
+          </div>
           {/* × Close button — top right corner */}
           <button
             type="button"

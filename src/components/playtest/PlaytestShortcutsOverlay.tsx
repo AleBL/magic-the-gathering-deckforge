@@ -2,6 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaKeyboard, FaTimes } from 'react-icons/fa';
 import { usePlaytestContext } from './PlaytestContext';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface ShortcutRow {
   keys: string[];
@@ -21,20 +23,33 @@ const SHORTCUTS: ShortcutRow[] = [
 export const PlaytestShortcutsOverlay: React.FC = () => {
   const { t } = useTranslation();
   const { isShortcutsOpen, setIsShortcutsOpen } = usePlaytestContext();
+  const closeOverlay = () => setIsShortcutsOpen(false);
+  const dialogRef = useFocusTrap<HTMLDivElement>(isShortcutsOpen);
+  useEscapeKey(closeOverlay, isShortcutsOpen);
 
   if (!isShortcutsOpen) return null;
 
   return (
+    // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className="fixed inset-0 z-[var(--z-playtest-dialog)] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn"
-      onClick={() => setIsShortcutsOpen(false)}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) closeOverlay();
+      }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playtest-shortcuts-title"
         className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-slate-950/40">
-          <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+          <h3
+            id="playtest-shortcuts-title"
+            className="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"
+          >
             <FaKeyboard className="text-indigo-400" />
             {t('playtest.shortcutsTitle')}
           </h3>
