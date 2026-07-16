@@ -1,0 +1,160 @@
+/* ──────────────────────────────────────────────────────────
+   Advanced motion effects (opt-in "Visual Effects" layer)
+   Every effect here animates only transform / opacity, and is
+   neutralised by the global prefers-reduced-motion rule in
+   index.css. Components additionally gate rendering on the
+   `motionEnabled` flag from useVisualEffects.
+   ────────────────────────────────────────────────────────── */
+
+/* ── 3D double-face flip ──────────────────────────────────── */
+.flip-card {
+  position: relative;
+  perspective: 1200px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 600ms var(--ease-out);
+}
+
+.flip-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Effects off / reduced motion: swap faces instantly, no spin. */
+.flip-card-static .flip-card-inner {
+  transition: none;
+}
+
+.flip-card-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Front face stays in flow so it sizes the container to the image. */
+.flip-card-face--front {
+  position: relative;
+}
+
+.flip-card-face--back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(180deg);
+}
+
+.flip-card-face--back img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Flip toggle button that sits over the card image. */
+.flip-toggle-btn {
+  transition:
+    transform 200ms var(--ease-out),
+    opacity 200ms var(--ease-out),
+    background-color 200ms var(--ease-out);
+}
+
+.flip-toggle-btn svg {
+  transition: transform 500ms var(--ease-out);
+}
+
+.flip-toggle-btn.is-flipped svg {
+  transform: rotateY(180deg);
+}
+
+/* ── Holographic / foil sheen (rare & mythic) ─────────────── */
+.holo-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--holo-opacity, 0);
+  transition: opacity 220ms var(--ease-out);
+  background:
+    radial-gradient(
+      circle at var(--holo-x, 50%) var(--holo-y, 50%),
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0) 42%
+    ),
+    conic-gradient(
+      from 90deg at var(--holo-x, 50%) var(--holo-y, 50%),
+      rgba(255, 0, 128, 0.35),
+      rgba(255, 214, 0, 0.35),
+      rgba(0, 255, 153, 0.35),
+      rgba(0, 179, 255, 0.35),
+      rgba(163, 0, 255, 0.35),
+      rgba(255, 0, 128, 0.35)
+    );
+  mix-blend-mode: color-dodge;
+}
+
+/* ── View (tab) crossfade ─────────────────────────────────── */
+.view-fade {
+  /* fill-mode must NOT be `both`/`forwards`: retaining the end-state
+     transform (even identity translateY(0)) makes this wrapper a
+     containing block for position:fixed descendants, so full-screen
+     overlays (e.g. the proxy-print modal) get anchored to it and
+     clipped instead of covering the viewport. The `to` keyframe equals
+     the natural style, so dropping the fill is visually seamless. */
+  animation: viewFade 320ms var(--ease-out) backwards;
+}
+
+@keyframes viewFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Ambient glow ─────────────────────────────────────────── */
+.ambient-glow-layer {
+  transition: opacity 2000ms var(--ease-out);
+}
+
+.ambient-glow-pulse {
+  animation: ambientPulse 3.4s ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* ── Playtest event particle burst ────────────────────────── */
+.particle-burst {
+  position: absolute;
+  left: var(--bx);
+  top: var(--by);
+  width: var(--bs);
+  height: var(--bs);
+  border-radius: 9999px;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: particleBurst var(--bd, 1100ms) var(--ease-out) forwards;
+}
+
+@keyframes particleBurst {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: translate3d(var(--btx), var(--bty), 0) scale(0.2);
+    opacity: 0;
+  }
+}

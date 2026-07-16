@@ -1,4 +1,4 @@
-import { ReactNode, useState, useMemo, useEffect } from 'react';
+import { ReactNode, useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaTimes, FaSync } from 'react-icons/fa';
@@ -7,6 +7,12 @@ import { useCardPrints } from '../../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../../hooks/useCardRelatedTokens';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { DeckRelatedToken } from '../../types/Deck';
+import { useDismissTransition } from '../../hooks/useDismissTransition';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useVisualEffects } from '../../hooks/useVisualEffects';
+import { getCardFaceImages } from '../../utils/cardFaces';
+import FlipCard from './FlipCard';
 
 interface CardDetailModalProps {
   card: Card;
@@ -52,6 +58,7 @@ function CardDetailModal({
   zIndex = 250
 }: CardDetailModalProps) {
   const { t } = useTranslation();
+  const { motionEnabled } = useVisualEffects();
   const [card, setCard] = useState<Card>(initialCard);
   const [currentImageUrl, setCurrentImageUrl] = useState<string>(imageUrl);
   const { prints, isLoading: isPrintsLoading } = useCardPrints(card, undefined, isToken);
@@ -84,7 +91,28 @@ function CardDetailModal({
   const { tokens: relatedTokens } = useCardRelatedTokensForCard(isToken ? null : card);
 
   const hasMultipleFaces = !!card.card_faces && card.card_faces.length > 1;
+  const faceImages = useMemo(() => getCardFaceImages(card), [card]);
   const [showBackFace, setShowBackFace] = useState(false);
+
+  // Holographic foil sheen that tracks the cursor on rare & mythic cards.
+  // CSS custom props are written straight to the DOM node so the pointer move
+  // never triggers a React re-render of the modal.
+  const foilRef = useRef<HTMLDivElement>(null);
+  const isFoil = ['rare', 'mythic'].includes((card.rarity || '').toLowerCase());
+  const foilEnabled = isFoil && motionEnabled;
+
+  const handleFoilMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = foilRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--holo-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+    el.style.setProperty('--holo-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+    el.style.setProperty('--holo-opacity', '0.5');
+  };
+
+  const handleFoilLeave = () => {
+    foilRef.current?.style.setProperty('--holo-opacity', '0');
+  };
 
   const currentFace = hasMultipleFaces ? card.card_faces?.[showBackFace ? 1 : 0] : null;
 
@@ -179,22 +207,24 @@ function CardDetailModal({
     onRemoveFromDeck?.(initialCard);
   };
 
+  const { isClosing, requestClose } = useDismissTransition(onClose);
+  const dialogRef = useFocusTrap<HTMLDivElement>(true);
+  useEscapeKey(requestClose);
+
   return createPortal(
     <>
       {/* Main modal */}
       <div
-        className="modal-overlay z-[var(--z-overlay)]"
+        className={`modal-overlay z-[var(--z-overlay)] ${isClosing ? 'motion-overlay-closing' : ''}`}
         style={{ zIndex }}
-        onClick={onClose}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') onClose();
-        }}
+        onClick={requestClose}
         role="button"
         tabIndex={-1}
         aria-label={t('common.close')}
       >
         <div
-          className="modal-container modal-container-large relative max-h-[95vh] flex flex-col overflow-hidden"
+          ref={dialogRef}
+          className={`modal-container modal-container-large relative max-h-[95vh] flex flex-col overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
@@ -203,7 +233,7 @@ function CardDetailModal({
           {/* × Close button — top right corner */}
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
             className="absolute top-3 right-3 z-10 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60"
             aria-label={t('common.close')}
           >
@@ -225,13 +255,33 @@ function CardDetailModal({
 
               {/* Card image */}
               <div className="card-detail-image-wrapper flex flex-col items-center gap-3 shrink-0 relative group/image">
-                <img
-                  src={visibleImageUrl}
-                  alt={currentFace ? currentFace.name : card.name}
-                  className={`card-detail-image transition-all duration-200 ${
-                    isPreloading ? 'opacity-70 scale-[0.98] brightness-90' : 'opacity-100 scale-100'
-                  }`}
-                />
+                <div
+                  ref={foilRef}
+                  className="relative rounded-[4.5%]"
+                  onMouseMove={foilEnabled ? handleFoilMove : undefined}
+                  onMouseLeave={foilEnabled ? handleFoilLeave : undefined}
+                >
+                  {faceImages && !hoveredImageUrl ? (
+                    <FlipCard
+                      frontSrc={faceImages.front}
+                      backSrc={faceImages.back}
+                      isFlipped={showBackFace}
+                      alt={currentFace ? currentFace.name : card.name}
+                      animated={motionEnabled}
+                      imgClassName="card-detail-image"
+                      loading="eager"
+                    />
+                  ) : (
+                    <img
+                      src={visibleImageUrl}
+                      alt={currentFace ? currentFace.name : card.name}
+                      className={`card-detail-image transition-all duration-200 ${
+                        isPreloading ? 'opacity-70 scale-[0.98] brightness-90' : 'opacity-100 scale-100'
+                      }`}
+                    />
+                  )}
+                  {foilEnabled && <div className="holo-foil" aria-hidden="true" />}
+                </div>
                 {hasMultipleFaces && (
                   <button
                     type="button"
@@ -293,7 +343,7 @@ function CardDetailModal({
                           } else if (onAddToDeck) {
                             onAddToDeck(card);
                           }
-                          onClose();
+                          requestClose();
                         }
                       : undefined
                   }

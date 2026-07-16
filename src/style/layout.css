@@ -483,14 +483,16 @@ html.dark .deck-preview-section {
 
 .profile-menu-panel {
   @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden border border-gray-200/80 dark:border-slate-700/80 z-[var(--z-modal)] origin-top-right;
-  background-color: var(--glass-fill-light);
+  /* More opaque than the shared --glass-fill-* tokens: the dropdown sits
+     over busy card art, so a stronger fill keeps its content readable. */
+  background-color: rgb(255 255 255 / 0.96);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--shadow-2xl);
 }
 
 html.dark .profile-menu-panel {
-  background-color: var(--glass-fill-dark);
+  background-color: rgb(15 23 42 / 0.96);
 }
 
 .profile-menu-divider {

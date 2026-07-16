@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { FaFileAlt, FaTimes, FaCopy } from 'react-icons/fa';
 import { usePlaytestContext } from './PlaytestContext';
 import { dispatchToast } from '../../utils/toastHelper';
+import { useMountTransition } from '../../hooks/useMountTransition';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 export const PlaytestLog: React.FC = () => {
   const { t } = useTranslation();
@@ -21,7 +23,13 @@ export const PlaytestLog: React.FC = () => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, [gameLog.length]);
 
-  if (!isLogOpen) return null;
+  const { shouldRender, isClosing } = useMountTransition(isLogOpen);
+  // No focus trap here on purpose: isLogOpen defaults to true on desktop
+  // (persistent sidebar, not a true modal), so autofocus-on-open would
+  // steal focus from the game board every time the simulator mounts.
+  useEscapeKey(() => setIsLogOpen(false), shouldRender);
+
+  if (!shouldRender) return null;
 
   return (
     <>
@@ -30,9 +38,11 @@ export const PlaytestLog: React.FC = () => {
         type="button"
         aria-label={t('playtest.toggleLogPanel')}
         onClick={() => setIsLogOpen(false)}
-        className="lg:hidden fixed inset-0 z-[var(--z-playtest-dialog)] bg-slate-950/50 backdrop-blur-sm animate-fadeIn cursor-default"
+        className={`lg:hidden fixed inset-0 z-[var(--z-playtest-dialog)] bg-slate-950/50 backdrop-blur-sm cursor-default ${isClosing ? 'motion-overlay-closing' : 'animate-fadeIn'}`}
       />
-      <div className="fixed inset-y-0 right-0 z-[var(--z-playtest-dialog)] w-80 max-w-[85vw] bg-white dark:bg-slate-950 shadow-2xl lg:static lg:inset-auto lg:z-auto lg:w-72 lg:max-w-none lg:shadow-none lg:bg-slate-50 lg:dark:bg-slate-950/30 border-l border-slate-200 dark:border-slate-800/80 flex flex-col h-full shrink-0 animate-slide-in no-active-scale">
+      <div
+        className={`fixed inset-y-0 right-0 z-[var(--z-playtest-dialog)] w-80 max-w-[85vw] bg-white dark:bg-slate-950 shadow-2xl lg:static lg:inset-auto lg:z-auto lg:w-72 lg:max-w-none lg:shadow-none lg:bg-slate-50 lg:dark:bg-slate-950/30 border-l border-slate-200 dark:border-slate-800/80 flex flex-col h-full shrink-0 no-active-scale ${isClosing ? 'motion-drawer-closing' : 'animate-drawerEnter'}`}
+      >
         <div className="p-3 border-b border-slate-200 dark:border-slate-850 flex justify-between items-center bg-white dark:bg-slate-950/50">
           <h4 className="font-extrabold text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 select-none">
             <FaFileAlt className="text-indigo-500 dark:text-indigo-400 text-xs" />

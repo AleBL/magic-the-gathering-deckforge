@@ -46,10 +46,10 @@ interface PlaymatSection {
 }
 
 const CARD_DIMENSIONS_BY_SIZE: Record<CardSize, { width: string; height: string }> = {
-  small: { width: '84px', height: '118px' },
-  medium: { width: '112px', height: '157px' },
-  large: { width: '140px', height: '196px' },
-  xlarge: { width: '168px', height: '235px' }
+  small: { width: '140px', height: '196px' },
+  medium: { width: '180px', height: '251px' },
+  large: { width: '220px', height: '307px' },
+  xlarge: { width: '260px', height: '363px' }
 };
 
 const DeckStackView = memo(function DeckStackView({

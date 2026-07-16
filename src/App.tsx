@@ -8,9 +8,13 @@ import { useShortcuts } from './hooks/useShortcuts';
 import RootLayout from './components/layout/RootLayout';
 import { useDeckStore } from './store/useDeckStore';
 import { useDeckActions } from './hooks/useDeckActions';
+import { useGlobalRipple } from './hooks/useGlobalRipple';
+import { useVisualEffects } from './hooks/useVisualEffects';
 
 function App() {
   const { i18n } = useTranslation();
+  const { motionEnabled } = useVisualEffects();
+  useGlobalRipple();
   const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
   const { toastMessage, toastVariant, toastAction, showToast } = useToast();
 
@@ -91,15 +95,17 @@ function App() {
       toastVariant={toastVariant}
       toastAction={toastAction}
     >
-      {activeTab === 'search' ? (
-        <CardSearch
-          onAddToDeck={handleAddToDeck}
-          onAddTokenToDeck={handleAddTokenToDeck}
-          activeFormat={editingDeck.deckFormat}
-        />
-      ) : (
-        <DeckManager showToast={showToast} />
-      )}
+      <div key={activeTab} className={motionEnabled ? 'view-fade' : undefined}>
+        {activeTab === 'search' ? (
+          <CardSearch
+            onAddToDeck={handleAddToDeck}
+            onAddTokenToDeck={handleAddTokenToDeck}
+            activeFormat={editingDeck.deckFormat}
+          />
+        ) : (
+          <DeckManager showToast={showToast} />
+        )}
+      </div>
     </RootLayout>
   );
 }

@@ -136,3 +136,45 @@
 .deck-stack-status-badge-restricted {
   @apply bg-amber-500/90 dark:bg-warning/90 border border-amber-400;
 }
+
+.card-grid-stack-wrapper {
+  --grid-stack-trim: 10px;
+  @apply relative;
+  padding-right: var(--grid-stack-trim);
+  padding-bottom: var(--grid-stack-trim);
+}
+
+.card-grid-stack-top {
+  @apply relative z-[3];
+}
+
+.card-grid-stack-shadow {
+  top: 0;
+  left: 0;
+  width: calc(100% - var(--grid-stack-trim));
+  height: calc(100% - var(--grid-stack-trim));
+  @apply absolute rounded-[4.5%] shadow-sm pointer-events-none transition-all duration-300 bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80;
+}
+
+.card-grid-stack-shadow-one {
+  transform: translate(4px, 4px);
+  z-index: 2;
+}
+
+.card-grid-stack-wrapper:hover .card-grid-stack-shadow-one {
+  transform: translate(6px, 6px);
+}
+
+.card-grid-stack-shadow-two {
+  transform: translate(8px, 8px);
+  z-index: 1;
+  @apply opacity-70;
+}
+
+.card-grid-stack-wrapper:hover .card-grid-stack-shadow-two {
+  transform: translate(10px, 10px);
+}
+
+.card-grid-stack-top .deck-stack-count-badge {
+  @apply text-xs px-2 z-10;
+}

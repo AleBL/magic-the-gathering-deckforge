@@ -1,9 +1,10 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import CardItem from './CardItem';
 import { DeckZone } from '../../types/enums';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
+import { groupCardsByUnique } from '../../utils/deckGrouping';
 
 interface CardGridProps {
   cards: Card[];
@@ -19,6 +20,7 @@ interface CardGridProps {
   isToken?: boolean;
   isEditMode?: boolean;
   onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
+  stackDuplicates?: boolean;
 }
 
 const GRID_CLASSES: Record<CardSize, string> = {
@@ -41,27 +43,45 @@ function CardGrid({
   onSelectPrint,
   isToken,
   isEditMode,
-  onUpdateCardZone
+  onUpdateCardZone,
+  stackDuplicates = false
 }: CardGridProps) {
+  const entries = useMemo(
+    () =>
+      stackDuplicates
+        ? groupCardsByUnique(cards).map(({ name, count, card }) => ({ key: name, count, card }))
+        : cards.map((card, index) => ({ key: `${card.id}-${index}`, count: 1, card })),
+    [cards, stackDuplicates]
+  );
+
   return (
     <div className={GRID_CLASSES[size]}>
-      {cards.map((card) => (
-        <div key={card.id} className="animate-fadeIn">
-          <CardItem
-            card={card}
-            size={size}
-            onAddToDeck={onAddToDeck}
-            onAddTokenToDeck={onAddTokenToDeck}
-            onRemoveFromDeck={onRemoveFromDeck}
-            showRemoveButton={showRemoveButton}
-            activeFormat={activeFormat}
-            isDeckCard={isDeckCard}
-            deckCards={deckCards}
-            onSelectPrint={onSelectPrint}
-            isToken={isToken}
-            isEditMode={isEditMode}
-            onUpdateCardZone={onUpdateCardZone}
-          />
+      {entries.map(({ key, count, card }) => (
+        <div
+          key={key}
+          className={`animate-fadeIn ${count > 1 ? 'card-grid-stack-wrapper' : ''}`}
+          data-stack-depth={count > 2 ? '3' : count > 1 ? '2' : '1'}
+        >
+          {count > 2 ? <div className="card-grid-stack-shadow card-grid-stack-shadow-two" /> : null}
+          {count > 1 ? <div className="card-grid-stack-shadow card-grid-stack-shadow-one" /> : null}
+          <div className={count > 1 ? 'card-grid-stack-top' : undefined}>
+            <CardItem
+              card={card}
+              size={size}
+              onAddToDeck={onAddToDeck}
+              onAddTokenToDeck={onAddTokenToDeck}
+              onRemoveFromDeck={onRemoveFromDeck}
+              showRemoveButton={showRemoveButton}
+              activeFormat={activeFormat}
+              isDeckCard={isDeckCard}
+              deckCards={deckCards}
+              onSelectPrint={onSelectPrint}
+              isToken={isToken}
+              isEditMode={isEditMode}
+              onUpdateCardZone={onUpdateCardZone}
+            />
+            {count > 1 ? <span className="deck-stack-count-badge">{count}x</span> : null}
+          </div>
         </div>
       ))}
     </div>

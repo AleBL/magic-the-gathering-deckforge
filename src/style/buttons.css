@@ -1,23 +1,39 @@
 /* Standard and reusable button classes */
 
+/* ── Interaction states, standardized ───────────────────────
+   Every solid button below shares one timing curve (--ease-out, see
+   variables.css) across hover/press so lift and sink feel like one
+   system instead of five one-off tweaks:
+   - hover:  lifts (-translate-y) + brightens (glow) + deeper shadow
+   - active: an explicit Tailwind `active:` variant (not just the
+     global `button:active` rule in index.css) so it wins the cascade
+     over the `hover:-translate-y` utility while the pointer is still
+     down — settles back to baseline and dims slightly ("afundar")
+   - focus-visible: the app-wide ring in index.css already covers
+     these; no per-button override needed. */
 .primary-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-primary text-white rounded-lg hover:bg-primary-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  /* position+overflow (not part of the @apply list below) let the
+     app-wide ripple (useGlobalRipple) clip its expanding circle to the
+     button's rounded corners, same as the .ripple-container recipe. */
+  position: relative;
+  overflow: hidden;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-primary text-white rounded-lg hover:bg-primary-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
 }
 
 .secondary-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 hover:-translate-y-px transition-all duration-300 shadow-sm hover:shadow-md font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-sm hover:shadow-md active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
 }
 
 .danger-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-danger text-white rounded-lg hover:bg-danger-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-danger text-white rounded-lg hover:bg-danger-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
 }
 
 .success-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-success text-white rounded-lg hover:bg-success-hover hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-success text-white rounded-lg hover:bg-success-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
 }
 
 .purple-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-purple-600 text-white rounded-lg hover:bg-purple-700 hover:-translate-y-px transition-all duration-300 shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-purple-600 text-white rounded-lg hover:bg-purple-700 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
 }
 
 /* Modifiers using class composition */

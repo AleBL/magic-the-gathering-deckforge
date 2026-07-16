@@ -1,14 +1,52 @@
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
 import { DeckZone } from '../../types/enums';
-import { GroupedCards, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
+import { GroupedCards, DeckCardGrouped, groupCardsByUnique, getCardImageUrl } from '../../utils/deckGrouping';
 import CardGrid from '../card/CardGrid';
 import CardDetailModal from '../card/CardDetailModal';
 import DeckCommandersHeader from './DeckCommandersHeader';
 import { DeckCardListItem } from './DeckCardListItem';
+import { useAnimatedList } from '../../hooks/useAnimatedList';
+
+interface AnimatedDeckCardGroupProps {
+  cards: Card[];
+  activeFormat?: DeckFormat;
+  isRemovable: boolean;
+  isTokenZone: boolean;
+  onToggleCommander: (card: Card) => void;
+  onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
+  onUpdateCard: (card: Card) => void;
+  onAddToDeck: (card: Card) => void;
+  onRemoveFromDeck: (card: Card) => void;
+  onSelectCard: (card: Card) => void;
+  onHoverEnter: (card: Card, e: React.MouseEvent) => void;
+  onHoverMove: (e: React.MouseEvent) => void;
+  onHoverLeave: () => void;
+}
+
+/** Stable key extractor — an inline arrow here would change identity every render. */
+const getGroupedCardKey = (entry: DeckCardGrouped) => entry.name;
+
+/**
+ * A dedicated component (not inlined in the groups.map below) because
+ * useAnimatedList must run once per rendered group — calling a hook inside
+ * a variable-length .map() would break the Rules of Hooks.
+ */
+function AnimatedDeckCardGroup({ cards, ...itemProps }: AnimatedDeckCardGroupProps) {
+  const uniqueCards = useMemo(() => groupCardsByUnique(cards), [cards]);
+  const animatedCards = useAnimatedList(uniqueCards, getGroupedCardKey, 200);
+
+  return (
+    <div className="deck-list-compact">
+      {animatedCards.map(({ key, item: { count, card }, isLeaving }) => (
+        <DeckCardListItem key={key} card={card} count={count} isLeaving={isLeaving} {...itemProps} />
+      ))}
+    </div>
+  );
+}
 
 interface DeckCardListProps {
   groups: GroupedCards[];
@@ -133,6 +171,7 @@ const DeckCardList = memo(function DeckCardList({
             isToken={isTokenZone}
             isEditMode={isRemovable}
             onUpdateCardZone={onUpdateCardZone}
+            stackDuplicates={true}
           />
         </div>
       );
@@ -164,6 +203,7 @@ const DeckCardList = memo(function DeckCardList({
                   isToken={isTokenZone}
                   isEditMode={isRemovable}
                   onUpdateCardZone={onUpdateCardZone}
+                  stackDuplicates={true}
                 />
               </div>
             );
@@ -180,7 +220,6 @@ const DeckCardList = memo(function DeckCardList({
       <div className="space-y-6">
         {groups.map((group) => {
           const title = TRANSLATABLE_TITLES.includes(group.title) ? t(`search.${group.title}`) : group.title;
-          const uniqueCards = groupCardsByUnique(group.cards);
 
           return (
             <div key={group.title} className="space-y-2">
@@ -192,29 +231,21 @@ const DeckCardList = memo(function DeckCardList({
                   </span>
                 </h4>
               )}
-              <div className="deck-list-compact">
-                {uniqueCards.map(({ count, card }) => {
-                  return (
-                    <DeckCardListItem
-                      key={card.id}
-                      card={card}
-                      count={count}
-                      activeFormat={activeFormat}
-                      isRemovable={isRemovable}
-                      isTokenZone={isTokenZone}
-                      onToggleCommander={onToggleCommander}
-                      onUpdateCardZone={onUpdateCardZone}
-                      onUpdateCard={handleUpdateCardPrint}
-                      onAddToDeck={onAddToDeck}
-                      onRemoveFromDeck={onRemoveFromDeck}
-                      onSelectCard={handleSelectCardModal}
-                      onHoverEnter={onHoverEnter}
-                      onHoverMove={onHoverMove}
-                      onHoverLeave={onHoverLeave}
-                    />
-                  );
-                })}
-              </div>
+              <AnimatedDeckCardGroup
+                cards={group.cards}
+                activeFormat={activeFormat}
+                isRemovable={isRemovable}
+                isTokenZone={isTokenZone}
+                onToggleCommander={onToggleCommander}
+                onUpdateCardZone={onUpdateCardZone}
+                onUpdateCard={handleUpdateCardPrint}
+                onAddToDeck={onAddToDeck}
+                onRemoveFromDeck={onRemoveFromDeck}
+                onSelectCard={handleSelectCardModal}
+                onHoverEnter={onHoverEnter}
+                onHoverMove={onHoverMove}
+                onHoverLeave={onHoverLeave}
+              />
             </div>
           );
         })}

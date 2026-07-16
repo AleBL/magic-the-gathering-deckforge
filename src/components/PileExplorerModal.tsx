@@ -4,6 +4,9 @@ import { PlaytestCard } from '../types/Playtest';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 
 import { PlaytestZone, LibraryPlacement } from '../types/enums';
+import { useDismissTransition } from '../hooks/useDismissTransition';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 export interface PileExplorerModalProps {
   title: string;
@@ -39,9 +42,22 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
+  const { isClosing, requestClose } = useDismissTransition(onClose);
+  const dialogRef = useFocusTrap<HTMLDivElement>(true);
+  useEscapeKey(requestClose);
+
   return (
-    <div className="modal-overlay" style={{ zIndex: 'var(--z-playtest-dialog)' }}>
-      <div className="w-full max-w-6xl mx-4 bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-800 flex flex-col h-[80vh] animate-fadeIn relative">
+    <div
+      className={`modal-overlay ${isClosing ? 'motion-overlay-closing' : ''}`}
+      style={{ zIndex: 'var(--z-playtest-dialog)' }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className={`w-full max-w-6xl mx-4 bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-800 flex flex-col h-[80vh] relative ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             {title} <span className="text-slate-400 text-lg font-normal">({cards.length})</span>
@@ -58,7 +74,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
               />
             </div>
             <button
-              onClick={onClose}
+              onClick={requestClose}
               className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
             >
               <FaTimes className="w-5 h-5" />

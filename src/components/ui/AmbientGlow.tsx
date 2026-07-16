@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { useDeckStore } from '../../store/useDeckStore';
+import { useVisualEffects } from '../../hooks/useVisualEffects';
 
 const COLOR_MAP: Record<string, string> = {
   W: '255, 249, 196', // warm white/gold
@@ -10,8 +11,19 @@ const COLOR_MAP: Record<string, string> = {
   G: '34, 197, 94' // green
 };
 
-function AmbientGlow() {
+interface AmbientGlowProps {
+  /** In the playtest, a critical life total floods the scene red and pulses. */
+  lowLife?: boolean;
+  /** Opacity multiplier for the glow — >1 for the premium playtest ambience. */
+  intensity?: number;
+  /** Override positioning (default is a fixed full-viewport layer). */
+  positionClassName?: string;
+}
+
+function AmbientGlow({ lowLife = false, intensity = 1, positionClassName = 'fixed inset-0 z-0' }: AmbientGlowProps) {
+  const { effectsEnabled, motionEnabled } = useVisualEffects();
   const cards = useDeckStore((state) => state.currentDeck);
+
   const glowColors = useMemo(() => {
     const counts: Record<string, number> = { W: 0, U: 0, B: 0, R: 0, G: 0 };
 
@@ -42,18 +54,24 @@ function AmbientGlow() {
       }));
   }, [cards]);
 
-  if (glowColors.length === 0) return null;
+  // The whole ambient layer is part of the opt-in visual-effects package.
+  if (!effectsEnabled) return null;
+  if (glowColors.length === 0 && !lowLife) return null;
 
-  // Build radial gradient stops from the dominant colors
-  const gradientStops = glowColors.map((glowColor, i) => {
-    const opacity = Math.max(0.06, glowColor.weight * 0.18);
-    const position = i === 0 ? '20%' : i === 1 ? '50%' : '80%';
-    return `rgba(${glowColor.rgb}, ${opacity}) ${position}`;
-  });
+  // Low life overrides the deck-identity palette with an urgent red wash.
+  const gradientStops = lowLife
+    ? [`rgba(239, 68, 68, ${0.24 * intensity})`, `rgba(220, 38, 38, ${0.14 * intensity}) 55%`, 'transparent 100%']
+    : glowColors.map((glowColor, i) => {
+        const opacity = Math.max(0.06, glowColor.weight * 0.18 * intensity);
+        const position = i === 0 ? '20%' : i === 1 ? '50%' : '80%';
+        return `rgba(${glowColor.rgb}, ${opacity}) ${position}`;
+      });
+
+  const pulse = lowLife && motionEnabled ? 'ambient-glow-pulse' : '';
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-[2000ms] opacity-80"
+      className={`ambient-glow-layer pointer-events-none opacity-80 ${positionClassName} ${pulse}`}
       style={{
         background: `radial-gradient(ellipse at 50% 0%, ${gradientStops.join(', ')}, transparent 100%)`
       }}
