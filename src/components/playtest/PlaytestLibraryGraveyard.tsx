@@ -29,7 +29,16 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
     <div className="flex flex-row lg:flex-col gap-4 items-center justify-center p-3 sm:p-4 border-2 border-dashed border-slate-300 dark:border-slate-700/60 rounded-xl bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm w-full lg:w-48 shrink-0">
       {/* Library Pile */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={t('playtest.draw')}
         onClick={handleDrawCard}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleDrawCard();
+          }
+        }}
         onDragOver={(event) => {
           event.preventDefault();
           event.dataTransfer.dropEffect = 'move';
@@ -82,7 +91,16 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
 
       {/* Graveyard Pile */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={t('playtest.graveyard')}
         onClick={() => setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' })}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' });
+          }
+        }}
         className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'graveyard'
             ? 'border-dashed border-red-400 bg-red-500/10 shadow-lg shadow-red-500/10 ring-2 ring-red-400/30 scale-105'
@@ -139,7 +157,16 @@ export const PlaytestLibraryGraveyard: React.FC = () => {
       </div>
       {/* Exile Pile */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={t('playtest.exile')}
         onClick={() => setPileExplorerConfig({ title: t('playtest.exile'), pile: 'exile' })}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setPileExplorerConfig({ title: t('playtest.exile'), pile: 'exile' });
+          }
+        }}
         className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'exile'
             ? 'border-dashed border-gray-400 bg-gray-500/10 shadow-lg shadow-gray-500/10 ring-2 ring-gray-400/30 scale-105'

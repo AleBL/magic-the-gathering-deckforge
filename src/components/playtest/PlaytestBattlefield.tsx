@@ -46,7 +46,16 @@ const PlaytestBattlefieldCard = memo(
       >
         <div className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} flex items-center justify-center`}>
           <div
+            role="button"
+            tabIndex={0}
+            aria-label={card.printed_name || card.name}
             onClick={() => onTap(playtestId)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onTap(playtestId);
+              }
+            }}
             onContextMenu={(event) => onContextMenu(event, playtestId)}
             className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition-all duration-300 ${isTapped ? 'border-amber-500/80 ring-2 ring-amber-500/30 rotate-90 scale-90' : 'border-slate-800 hover:scale-105 hover:border-indigo-500'}`}
           >
