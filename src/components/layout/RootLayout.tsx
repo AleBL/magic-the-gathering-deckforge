@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch, FaLayerGroup } from 'react-icons/fa';
 import Header from '../Header';
 import AmbientGlow from '../ui/AmbientGlow';
+import OfflineIndicator from '../ui/OfflineIndicator';
 import Toast from '../ui/Toast';
 import CustomDialog from '../ui/CustomDialog';
 import CommandPalette from '../CommandPalette';
@@ -19,6 +20,7 @@ interface RootLayoutProps {
   toastMessage: string | null;
   toastVariant: ToastVariant;
   toastAction: ToastAction | undefined;
+  isOnline: boolean;
 }
 
 export default function RootLayout({
@@ -27,7 +29,8 @@ export default function RootLayout({
   setActiveTab,
   toastMessage,
   toastVariant,
-  toastAction
+  toastAction,
+  isOnline
 }: RootLayoutProps) {
   const { t } = useTranslation();
   const [isDarkMode, setIsDarkMode] = useDarkMode();
@@ -61,6 +64,7 @@ export default function RootLayout({
   return (
     <div className="page-container">
       <AmbientGlow />
+      {!isOnline && <OfflineIndicator />}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
