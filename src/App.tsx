@@ -8,9 +8,11 @@ import { useShortcuts } from './hooks/useShortcuts';
 import RootLayout from './components/layout/RootLayout';
 import { useDeckStore } from './store/useDeckStore';
 import { useDeckActions } from './hooks/useDeckActions';
+import { useGlobalRipple } from './hooks/useGlobalRipple';
 
 function App() {
   const { i18n } = useTranslation();
+  useGlobalRipple();
   const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
   const { toastMessage, toastVariant, toastAction, showToast } = useToast();
 
