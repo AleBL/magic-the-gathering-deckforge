@@ -2,6 +2,7 @@ const pt = {
   translations: {
     common: {
       appTitle: 'MTG Deck Forge',
+      backOnline: 'Conexão restabelecida',
       cancel: 'Cancelar',
       cardNotFound: 'Carta não encontrada',
       cards: 'cartas',
@@ -25,6 +26,7 @@ const pt = {
       import: 'Importar',
       inactive: 'Inativo',
       info: 'Informação',
+      installApp: 'Instalar app',
       language: 'Idioma',
       lightMode: 'Modo Claro',
       listView: 'Lista',
@@ -32,6 +34,7 @@ const pt = {
       mainNavigation: 'Navegação principal',
       manualAddition: 'Adicionado Manualmente',
       noCardsFound: 'Nenhuma carta encontrada.',
+      offlineIndicator: 'Você está offline',
       ok: 'OK',
       priceNotAvailable: 'N/A',
       printsLoadError: 'Falha ao carregar outras edições.',

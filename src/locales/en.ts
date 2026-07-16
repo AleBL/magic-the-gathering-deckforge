@@ -2,6 +2,7 @@ const en = {
   translations: {
     common: {
       appTitle: 'MTG Deck Forge',
+      backOnline: 'Back online',
       cancel: 'Cancel',
       cardNotFound: 'Card not found',
       cards: 'Cards',
@@ -25,6 +26,7 @@ const en = {
       import: 'Import',
       inactive: 'Inactive',
       info: 'Info',
+      installApp: 'Install App',
       language: 'Language',
       lightMode: 'Light Mode',
       listView: 'List',
@@ -32,6 +34,7 @@ const en = {
       mainNavigation: 'Main navigation',
       manualAddition: 'Manually Added',
       noCardsFound: 'No cards found.',
+      offlineIndicator: "You're offline",
       ok: 'OK',
       priceNotAvailable: 'N/A',
       printsLoadError: 'Failed to load other printings.',
