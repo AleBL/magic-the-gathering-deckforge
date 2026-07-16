@@ -29,6 +29,7 @@ const en = {
       lightMode: 'Light Mode',
       listView: 'List',
       loading: 'Loading...',
+      mainNavigation: 'Main navigation',
       manualAddition: 'Manually Added',
       noCardsFound: 'No cards found.',
       ok: 'OK',

@@ -29,6 +29,7 @@ const es = {
       lightMode: 'Modo Claro',
       listView: 'Lista',
       loading: 'Cargando...',
+      mainNavigation: 'Navegación principal',
       manualAddition: 'Agregado Manualmente',
       noCardsFound: 'No se encontraron cartas.',
       ok: 'OK',
