@@ -155,33 +155,36 @@ const DeckStackView = memo(function DeckStackView({
       >
         {count > 1 ? (
           <div
-            className={`deck-stack-shadow deck-stack-shadow-level-one ${isBanned
+            className={`deck-stack-shadow deck-stack-shadow-level-one ${
+              isBanned
                 ? 'bg-red-950/60 border border-red-900/60'
                 : isRestricted
                   ? 'bg-amber-100/60 dark:bg-amber-950/60 border border-amber-300/60 dark:border-amber-900/60'
                   : 'bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80'
-              }`}
+            }`}
           />
         ) : null}
 
         {count > 2 ? (
           <div
-            className={`deck-stack-shadow deck-stack-shadow-level-two ${isBanned
+            className={`deck-stack-shadow deck-stack-shadow-level-two ${
+              isBanned
                 ? 'bg-red-950/40 border border-red-900/40'
                 : isRestricted
                   ? 'bg-amber-100/40 dark:bg-amber-950/40 border border-amber-300/40 dark:border-amber-900/40'
                   : 'bg-gray-200 dark:bg-slate-950 border border-gray-300/80 dark:border-slate-800/80'
-              }`}
+            }`}
           />
         ) : null}
 
         <div
-          className={`deck-stack-main-card ${isBanned
+          className={`deck-stack-main-card ${
+            isBanned
               ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
               : isRestricted
                 ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
                 : 'border-gray-300 dark:border-slate-800/50 hover:border-blue-500/80'
-            }`}
+          }`}
           data-has-stack={count > 1 ? 'true' : 'false'}
           onClick={() => setSelectedModalCard(card)}
           onMouseEnter={(e) => onHoverEnter(card, e)}
@@ -192,8 +195,9 @@ const DeckStackView = memo(function DeckStackView({
             <img
               src={imageUrl}
               alt={card.name}
-              className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${isBanned ? 'opacity-50 grayscale-[40%] brightness-[75%]' : ''
-                }`}
+              className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${
+                isBanned ? 'opacity-50 grayscale-[40%] brightness-[75%]' : ''
+              }`}
             />
           ) : (
             <div
@@ -259,10 +263,11 @@ const DeckStackView = memo(function DeckStackView({
                       e.stopPropagation();
                       onUpdateCardZone(card.id, DeckZone.MAIN);
                     }}
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${card.zone === DeckZone.MAIN
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.MAIN
                         ? 'bg-primary text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
-                      }`}
+                    }`}
                     title={t('deck.printFilters.main')}
                   >
                     M
@@ -273,10 +278,11 @@ const DeckStackView = memo(function DeckStackView({
                       e.stopPropagation();
                       onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
                     }}
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${card.zone === DeckZone.SIDEBOARD
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.SIDEBOARD
                         ? 'bg-purple-600 text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
-                      }`}
+                    }`}
                     title={t('deck.printFilters.sideboard')}
                   >
                     S
@@ -287,10 +293,11 @@ const DeckStackView = memo(function DeckStackView({
                       e.stopPropagation();
                       onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
                     }}
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${card.zone === DeckZone.MAYBEBOARD
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                      card.zone === DeckZone.MAYBEBOARD
                         ? 'bg-warning text-white ring-1 ring-white/50'
                         : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
-                      }`}
+                    }`}
                     title={t('deck.printFilters.maybeboard')}
                   >
                     ?
