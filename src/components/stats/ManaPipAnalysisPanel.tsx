@@ -1,15 +1,53 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip as RechartsTooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import { FaTint } from 'react-icons/fa';
+import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DeckStatistics } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
+import {
+  CHART_BAR_RADIUS_HORIZONTAL,
+  CHART_GRID_PROPS,
+  CHART_STATUS,
+  CHART_TICK_STYLE,
+  MANA_CHART_COLOR,
+  ManaColorKey
+} from './chartTheme';
+import { ChartFrame, ChartLegend, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
+import EmptyState from '../ui/EmptyState';
 
 interface ManaPipAnalysisPanelProps {
   stats: DeckStatistics;
   colorLabels: Record<string, ColorLabel>;
 }
 
+type CastableManaColor = 'W' | 'U' | 'B' | 'R' | 'G';
+const MANA_COLOR_ORDER: CastableManaColor[] = ['W', 'U', 'B', 'R', 'G'];
+const LANDS_COLOR = CHART_STATUS.good;
+
 export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPanelProps) {
   const { t } = useTranslation();
+
+  const chartData = useMemo(
+    () =>
+      MANA_COLOR_ORDER.map((color) => ({
+        color,
+        pips: stats.manaColorSymbolCounts[color] || 0,
+        lands: stats.landColorCounts[color] || 0
+      })).filter((d) => d.pips > 0 || d.lands > 0),
+    [stats.manaColorSymbolCounts, stats.landColorCounts]
+  );
+  const ready = useChartReady([chartData]);
+  const rowHeight = Math.max(chartData.length, 1) * 44 + 24;
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-500/5 dark:bg-amber-950/10 transition-colors duration-300">
@@ -19,52 +57,81 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
       </h4>
       <p className="text-xs text-gray-500 dark:text-gray-400">{t('stats.manaPipAnalysisDesc')}</p>
 
-      <div className="space-y-3 pt-1">
-        {['W', 'U', 'B', 'R', 'G'].map((color) => {
-          const pipsCount = stats.manaColorSymbolCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
-          const landsCount = stats.landColorCounts[color as 'W' | 'U' | 'B' | 'R' | 'G'] || 0;
-
-          if (pipsCount === 0 && landsCount === 0) return null;
-
-          const meta = colorLabels[color];
-          const total = Math.max(pipsCount + landsCount, 1);
-          const pipsPct = Math.round((pipsCount / total) * 100);
-          const landsPct = Math.round((landsCount / total) * 100);
-
-          return (
-            <div key={color} className="space-y-1">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
-                  <span className={`w-2.5 h-2.5 rounded-full inline-block ${meta.fill}`} />
-                  {meta.name}
-                </span>
-                <div className="flex flex-col sm:flex-row sm:justify-between text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1 gap-1">
-                  <span>
-                    {t('stats.pipsNeeded')}:{' '}
-                    <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums">{pipsCount}</span>
-                  </span>
-                  <span>
-                    {t('stats.landsAvailable')}:{' '}
-                    <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums">{landsCount}</span>
-                  </span>
-                </div>
-              </div>
-              <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex shadow-inner">
-                <div
-                  className={`h-full opacity-90 transition-all duration-500 ${meta.fill}`}
-                  style={{ width: `${pipsPct}%` }}
-                  title={`${t('stats.pipsNeeded')}: ${pipsCount}`}
+      {!ready ? (
+        <ChartSkeleton height="h-40" />
+      ) : chartData.length === 0 ? (
+        <ChartFrame height="h-32" className="flex items-center justify-center">
+          <EmptyState icon={<FaTint />} title={t('stats.noPipData')} />
+        </ChartFrame>
+      ) : (
+        <>
+          <ChartFrame style={{ height: rowHeight }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={chartData}
+                layout="vertical"
+                margin={{ top: 8, right: 12, left: 4, bottom: 8 }}
+                barCategoryGap="28%"
+                barGap={2}
+              >
+                <CartesianGrid {...CHART_GRID_PROPS} horizontal={false} />
+                <XAxis type="number" tick={CHART_TICK_STYLE} tickLine={false} axisLine={false} allowDecimals={false} />
+                <YAxis
+                  type="category"
+                  dataKey="color"
+                  tick={CHART_TICK_STYLE}
+                  tickLine={false}
+                  axisLine={false}
+                  width={28}
                 />
-                <div
-                  className="h-full bg-emerald-500 opacity-60 transition-all duration-500"
-                  style={{ width: `${landsPct}%` }}
-                  title={`${t('stats.landsAvailable')}: ${landsCount}`}
+                <RechartsTooltip
+                  cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
+                  content={({ active, payload, label }) => {
+                    if (!payload || payload.length === 0) return null;
+                    return (
+                      <ChartTooltip
+                        active={active}
+                        title={
+                          <>
+                            <span className="flex items-center">{parseTextWithSymbols(`{${label}}`)}</span>
+                            {colorLabels[label as string]?.name}
+                          </>
+                        }
+                        rows={[
+                          {
+                            key: 'pips',
+                            label: t('stats.pipsNeeded'),
+                            value: payload.find((p) => p.dataKey === 'pips')?.value as number,
+                            swatch: MANA_CHART_COLOR[label as ManaColorKey]
+                          },
+                          {
+                            key: 'lands',
+                            label: t('stats.landsAvailable'),
+                            value: payload.find((p) => p.dataKey === 'lands')?.value as number,
+                            swatch: LANDS_COLOR
+                          }
+                        ]}
+                      />
+                    );
+                  }}
                 />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                <Bar dataKey="pips" radius={CHART_BAR_RADIUS_HORIZONTAL} maxBarSize={16} isAnimationActive={false}>
+                  {chartData.map((entry) => (
+                    <Cell key={entry.color} fill={MANA_CHART_COLOR[entry.color]} />
+                  ))}
+                </Bar>
+                <Bar dataKey="lands" radius={CHART_BAR_RADIUS_HORIZONTAL} maxBarSize={16} fill={LANDS_COLOR} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartFrame>
+          <ChartLegend
+            items={[
+              { key: 'pips', label: t('stats.pipsNeeded'), swatch: 'var(--chart-mana-u)' },
+              { key: 'lands', label: t('stats.landsAvailable'), swatch: LANDS_COLOR }
+            ]}
+          />
+        </>
+      )}
     </div>
   );
 }
