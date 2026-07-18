@@ -96,8 +96,9 @@
   }
 
   /* ── Smooth focus rings for keyboard navigation ── */
+  /* Opaque blue-500: 3.68:1 on white / 4.85:1 on slate-900, both pass WCAG 2.2 SC 1.4.11 (3:1 min for UI/focus indicators). */
   :focus-visible {
-    outline: 2px solid rgb(59 130 246 / 0.7);
+    outline: 2px solid rgb(59 130 246);
     outline-offset: 2px;
     border-radius: 4px;
     transition: outline-offset 150ms var(--ease-out);
@@ -206,6 +207,13 @@
       transform 200ms var(--ease-out);
     pointer-events: none;
   }
+}
+
+/* Recharts renders tooltips inside the chart container with no z-index of
+   its own, so panels/buttons later in the DOM paint on top of them. Lift
+   every chart tooltip to the shared dropdown/tooltip layer. */
+.recharts-tooltip-wrapper {
+  z-index: var(--z-dropdown);
 }
 
 /* ──────────────────────────────────────────────────────── */
@@ -366,7 +374,11 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   overflow: hidden;
 }
 
-.ripple-container .ripple-effect {
+/* NOT scoped under .ripple-container: useGlobalRipple spawns this span into
+   any .primary-button (which provides its own relative/overflow clip). If the
+   selector doesn't match, the span stays a static ~200px block that inflates
+   the button and never fires animationend, so it is never cleaned up. */
+.ripple-effect {
   position: absolute;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.35);

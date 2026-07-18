@@ -43,7 +43,10 @@
 
 /* Navigation Tabs */
 .tab-group {
-  @apply flex gap-1 p-1 bg-gray-200/50 dark:bg-slate-800/60 backdrop-blur-md rounded-xl border border-gray-300/40 dark:border-slate-700/50 justify-center w-full sm:w-auto;
+  /* hidden below sm: this rule loads after layout.css's .tab-group (hidden
+     sm:flex), so restating `flex` here would resurrect the header pills on
+     mobile and duplicate the bottom tab bar. Keep both display values in sync. */
+  @apply hidden sm:flex gap-1 p-1 bg-gray-200/50 dark:bg-slate-800/60 backdrop-blur-md rounded-xl border border-gray-300/40 dark:border-slate-700/50 justify-center w-full sm:w-auto;
 }
 
 .tab-button {

@@ -33,8 +33,9 @@ export function ColorDistributionPanel({
   const chartData = useMemo(() => {
     if (stats.totalColorsOccurrenceCount === 0) return [];
 
-    // Filter out 'C' (Colorless)
-    const validColors = Object.entries(stats.colorDistributionCounts).filter(([colorKey]) => colorKey !== 'C');
+    // All six mana kinds, including true colorless ({C}) — a colorless deck's
+    // identity must show up here, not vanish from the chart.
+    const validColors = Object.entries(stats.colorDistributionCounts);
     const maxCount = Math.max(...validColors.map(([, count]) => count), 1);
     const totalValidColors = validColors.reduce((sum, [, count]) => sum + count, 0);
 

@@ -58,6 +58,9 @@ export const DeckCardListItem = memo(function DeckCardListItem({
   return (
     <div className={isLeaving ? 'motion-row-leaving' : 'animate-fadeIn'}>
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={card.printed_name || card.name}
         className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-gray-300 dark:border-gray-800 cursor-pointer ${
           isBanned ? 'ring-1 ring-inset ring-red-500' : isRestricted ? 'ring-1 ring-inset ring-amber-500' : ''
         }`}
@@ -69,6 +72,13 @@ export const DeckCardListItem = memo(function DeckCardListItem({
           }
         }}
         onClick={() => onSelectCard(card)}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSelectCard(card);
+          }
+        }}
         onMouseEnter={(e) => onHoverEnter(card, e)}
         onMouseMove={onHoverMove}
         onMouseLeave={onHoverLeave}
@@ -136,6 +146,8 @@ export const DeckCardListItem = memo(function DeckCardListItem({
 
             {/* Quick Edit Buttons on Hover */}
             {isRemovable && (
+              // Only guards against triggering the row's onSelectCard; the buttons/select inside are the real interactive surface.
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
               <div
                 className="flex items-center gap-1 transition-opacity duration-200"
                 onClick={(e) => e.stopPropagation()}

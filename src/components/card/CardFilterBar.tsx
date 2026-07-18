@@ -17,24 +17,26 @@ export default function CardFilterBar({ filters, setFilters }: CardFilterBarProp
       'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm cursor-pointer transition-all duration-300 transform';
 
     if (!isActive)
-      return `${base} bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-500 border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:scale-110`;
+      return `${base} bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-400 border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:scale-110`;
 
     return `${base} ${MANA_COLOR_GRADIENTS[code] ?? ''}`;
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 py-4 w-full">
+    <div className="flex flex-wrap items-center gap-3 sm:gap-4 py-2 sm:py-4 w-full">
       {/* Colors */}
       <div className="flex items-center gap-2">
         {colors.map((color: { code: string; name: string }) => (
-          <div
+          <button
             key={color.code}
+            type="button"
             onClick={() => toggleColor(color.code)}
             className={getManaColorClass(color.code, filters.colors.includes(color.code))}
             title={color.name}
+            aria-pressed={filters.colors.includes(color.code)}
           >
             {color.code}
-          </div>
+          </button>
         ))}
       </div>
 

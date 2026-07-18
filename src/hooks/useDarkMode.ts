@@ -3,7 +3,12 @@ import { useState, useEffect } from 'react';
 export default function useDarkMode() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const savedDarkMode = localStorage.getItem('darkMode');
-    return savedDarkMode !== null ? savedDarkMode === 'true' : true;
+    if (savedDarkMode !== null) return savedDarkMode === 'true';
+    // No saved preference yet — respect the OS-level prefers-color-scheme instead of forcing dark.
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return true;
   });
 
   useEffect(() => {

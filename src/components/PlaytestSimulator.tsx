@@ -13,6 +13,7 @@ import { PlaytestBattlefield } from './playtest/PlaytestBattlefield';
 import { PlaytestHand } from './playtest/PlaytestHand';
 import { PlaytestLog } from './playtest/PlaytestLog';
 import { PlaytestModals } from './playtest/PlaytestModals';
+import { PlaytestFaceChoiceModal } from './playtest/PlaytestFaceChoiceModal';
 import { PlaytestShortcutsOverlay } from './playtest/PlaytestShortcutsOverlay';
 import { PlaytestParticles } from './PlaytestParticles';
 import AmbientGlow from './ui/AmbientGlow';
@@ -166,6 +167,7 @@ const PlaytestSimulatorContent: React.FC<{
       </div>
 
       <PlaytestModals deckRelatedTokens={deckRelatedTokens} />
+      <PlaytestFaceChoiceModal />
       <PlaytestShortcutsOverlay />
     </div>
   );

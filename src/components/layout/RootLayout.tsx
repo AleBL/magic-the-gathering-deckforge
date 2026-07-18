@@ -1,6 +1,9 @@
 import { ReactNode, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FaSearch, FaLayerGroup } from 'react-icons/fa';
 import Header from '../Header';
 import AmbientGlow from '../ui/AmbientGlow';
+import OfflineIndicator from '../ui/OfflineIndicator';
 import Toast from '../ui/Toast';
 import CustomDialog from '../ui/CustomDialog';
 import CommandPalette from '../CommandPalette';
@@ -17,6 +20,7 @@ interface RootLayoutProps {
   toastMessage: string | null;
   toastVariant: ToastVariant;
   toastAction: ToastAction | undefined;
+  isOnline: boolean;
 }
 
 export default function RootLayout({
@@ -25,8 +29,10 @@ export default function RootLayout({
   setActiveTab,
   toastMessage,
   toastVariant,
-  toastAction
+  toastAction,
+  isOnline
 }: RootLayoutProps) {
+  const { t } = useTranslation();
   const [isDarkMode, setIsDarkMode] = useDarkMode();
   const { dialogState, closeDialog } = useDialog();
 
@@ -58,6 +64,7 @@ export default function RootLayout({
   return (
     <div className="page-container">
       <AmbientGlow />
+      {!isOnline && <OfflineIndicator />}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -69,6 +76,32 @@ export default function RootLayout({
       />
 
       <main className="main-content">{children}</main>
+
+      <nav className="bottom-tab-bar" aria-label={t('common.mainNavigation')}>
+        <button
+          type="button"
+          onClick={() => setActiveTab('search')}
+          className={`bottom-tab-button ${activeTab === 'search' ? 'bottom-tab-button-active' : ''}`}
+          aria-label={t('common.searchTab')}
+          aria-current={activeTab === 'search' ? 'page' : undefined}
+        >
+          <FaSearch className="bottom-tab-button-icon" />
+          <span>{t('common.searchTab')}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('deck')}
+          className={`bottom-tab-button ${activeTab === 'deck' ? 'bottom-tab-button-active' : ''}`}
+          aria-label={t('common.decksTab')}
+          aria-current={activeTab === 'deck' ? 'page' : undefined}
+        >
+          <FaLayerGroup className="bottom-tab-button-icon" />
+          <span>{t('common.decksTab')}</span>
+          {currentDeckLength > 0 && (
+            <span className="count-badge absolute top-1 right-[calc(50%-22px)]">{currentDeckLength}</span>
+          )}
+        </button>
+      </nav>
 
       {toastMessage && <Toast message={toastMessage} variant={toastVariant} action={toastAction} />}
       <CustomDialog

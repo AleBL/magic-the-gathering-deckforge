@@ -178,6 +178,9 @@ const DeckStackView = memo(function DeckStackView({
         ) : null}
 
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={card.printed_name || card.name}
           className={`deck-stack-main-card ${
             isBanned
               ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
@@ -187,6 +190,13 @@ const DeckStackView = memo(function DeckStackView({
           }`}
           data-has-stack={count > 1 ? 'true' : 'false'}
           onClick={() => setSelectedModalCard(card)}
+          onKeyDown={(e) => {
+            if (e.target !== e.currentTarget) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setSelectedModalCard(card);
+            }
+          }}
           onMouseEnter={(e) => onHoverEnter(card, e)}
           onMouseMove={onHoverMove}
           onMouseLeave={onHoverLeave}

@@ -18,7 +18,11 @@ html.dark .surface-glass {
 }
 
 .page-container {
-  @apply flex flex-col h-screen bg-white dark:bg-gray-900 transition-colors duration-300;
+  @apply flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300;
+  /* dvh tracks the *visible* mobile viewport (URL bar shown/hidden), so the
+     bottom tab bar is never pushed off-screen; vh first as the fallback. */
+  height: 100vh;
+  height: 100dvh;
 }
 
 .header-container {
@@ -111,6 +115,29 @@ html.dark .modal-container {
   gap: 2rem;
 }
 
+/* On phones the desktop minmax floors produce a single near-full-width
+   column (e.g. 180px min → 1×358px at 390px viewport). Lower the floors so
+   each size keeps a sensible density: P≈3 cols, M/G≈2 cols, GG stays 1. */
+@media (max-width: 639px) {
+  .card-grid-small {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .card-grid-medium {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .card-grid-large {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .card-grid-xlarge {
+    gap: 1rem;
+  }
+}
+
 /* Custom Modals modifiers */
 .modal-container-large {
   @apply w-[calc(100%-2rem)] max-w-4xl max-h-[90vh] overflow-auto mx-auto;
@@ -137,6 +164,7 @@ html.dark .modal-container {
 
 .workspace-body {
   @apply flex-1 overflow-auto bg-white dark:bg-gray-900 transition-colors duration-300 w-full;
+  -webkit-overflow-scrolling: touch;
 }
 
 .workspace-body>* {
@@ -180,7 +208,7 @@ html.dark .deck-preview-section {
 }
 
 .deck-list-item-button {
-  @apply flex-1 min-w-0 pr-2 text-left focus:outline-none rounded cursor-pointer;
+  @apply flex-1 min-w-0 pr-2 text-left rounded cursor-pointer;
 }
 
 /* Card layout details */
@@ -283,7 +311,7 @@ html.dark .deck-preview-section {
 .modal-container-medium {
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  @apply bg-white/95 dark:bg-gray-800/95 w-[1000px];
+  @apply bg-white/95 dark:bg-gray-800/95 w-[calc(100%-2rem)] max-w-[1000px] mx-auto;
 }
 
 /* Dialog Buttons */
@@ -372,9 +400,7 @@ html.dark .deck-preview-section {
 .header-toolbar {
   @apply grid gap-3 sm:gap-6 px-4 sm:px-6 py-3 w-full items-center;
   grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "brand actions"
-    "tabs tabs";
+  grid-template-areas: "brand actions";
 }
 
 @media (min-width: 640px) {
@@ -391,7 +417,33 @@ html.dark .deck-preview-section {
 
 .tab-group {
   grid-area: tabs;
-  @apply flex items-center gap-2 justify-self-center overflow-x-auto pb-1 sm:pb-0 scrollbar-hide;
+  @apply hidden sm:flex items-center gap-2 justify-self-center overflow-x-auto pb-1 sm:pb-0 scrollbar-hide;
+}
+
+/* ─── Mobile bottom tab bar ────────────────────────────────
+   Below sm, the primary search/deck navigation moves to a
+   thumb-reachable bar anchored to the bottom of the viewport
+   instead of squeezing into the top header row. */
+.bottom-tab-bar {
+  @apply sm:hidden flex items-stretch shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-gray-200/70 dark:border-slate-800/70;
+  /* Above page content but BELOW modal overlays (--z-overlay): bottom sheets
+     anchor to the viewport's bottom edge, and a higher bar would sit on top
+     of them and swallow taps on their footer buttons. */
+  z-index: var(--z-sticky);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bottom-tab-button {
+  @apply relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[56px] py-1.5 text-[11px] font-semibold text-gray-500 dark:text-gray-400 transition-colors active:scale-95;
+}
+
+.bottom-tab-button-active {
+  @apply text-primary dark:text-blue-400;
+}
+
+.bottom-tab-button-icon {
+  /* ~20px visual glyph; the 56px button provides the ≥44px touch target */
+  @apply text-xl;
 }
 
 .header-actions {
@@ -517,7 +569,7 @@ html.dark .profile-menu-panel {
 
 /* Dark mode toggle pill */
 .profile-toggle {
-  @apply relative inline-flex w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none cursor-pointer flex-shrink-0;
+  @apply relative inline-flex w-11 h-6 rounded-full transition-colors duration-200 cursor-pointer flex-shrink-0;
 }
 
 .profile-toggle-on {

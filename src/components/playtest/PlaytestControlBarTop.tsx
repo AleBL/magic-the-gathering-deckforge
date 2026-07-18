@@ -45,14 +45,14 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
           <button
             type="button"
             onClick={handleUntapAll}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.untapAll')}
           </button>
           <button
             type="button"
             onClick={handleNextTurn}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.nextTurn')}
           </button>
@@ -63,7 +63,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
               onClick={handleUndo}
               disabled={!canUndo}
               title={`${t('playtest.undo')} (Ctrl+Z)`}
-              className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
               <FaUndo />
             </button>
@@ -72,7 +72,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
               onClick={handleRedo}
               disabled={!canRedo}
               title={`${t('playtest.redo')} (Ctrl+Y)`}
-              className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
               <FaRedo />
             </button>
@@ -85,9 +85,9 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev - 1)}
-              className="w-5 h-5 rounded bg-red-500/20 text-red-400 border border-red-500/30 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-red-500/20 text-red-400 border border-red-500/30 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
             >
-              <FaMinus className="text-[8px]" />
+              <FaMinus className="text-[11px] sm:text-[8px]" />
             </button>
             <span className="text-sm font-extrabold text-gray-900 dark:text-white w-6 text-center select-none font-mono drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]">
               {lifeTotal}
@@ -95,9 +95,9 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev + 1)}
-              className="w-5 h-5 rounded bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
             >
-              <FaPlus className="text-[8px]" />
+              <FaPlus className="text-[11px] sm:text-[8px]" />
             </button>
           </div>
 
@@ -146,7 +146,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             type="button"
             onClick={() => setIsLogOpen((prev: boolean) => !prev)}
             title={t('playtest.toggleLogPanel')}
-            className={`p-1.5 rounded-lg border transition-all text-xs flex items-center gap-1.5 cursor-pointer ${
+            className={`p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer ${
               isLogOpen
                 ? 'bg-indigo-100 border-indigo-200 text-indigo-600 dark:bg-indigo-600/20 dark:border-indigo-500/40 dark:text-indigo-400'
                 : 'bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
@@ -160,7 +160,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             type="button"
             onClick={() => setIsShortcutsOpen((prev: boolean) => !prev)}
             title={`${t('playtest.shortcuts')} (?)`}
-            className="p-1.5 rounded-lg border bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all text-xs flex items-center cursor-pointer"
+            className="p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all text-xs flex items-center justify-center cursor-pointer"
           >
             <FaKeyboard className="text-xs shrink-0" />
           </button>
@@ -169,14 +169,14 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
             <button
               type="button"
               onClick={() => setScrySurveilPrompt({ type: 'scry' })}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 rounded transition-colors cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
             >
               {t('playtest.scry')}
             </button>
             <button
               type="button"
               onClick={() => setScrySurveilPrompt({ type: 'surveil' })}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 rounded transition-colors cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
             >
               {t('playtest.surveil')}
             </button>
@@ -187,7 +187,7 @@ export const PlaytestControlBarTop: React.FC<{ onClose: () => void }> = ({ onClo
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all focus:outline-none cursor-pointer z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow"
+        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200 p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow"
       >
         <FaTimes />
       </button>

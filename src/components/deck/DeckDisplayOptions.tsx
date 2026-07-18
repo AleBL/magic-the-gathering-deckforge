@@ -3,6 +3,7 @@ import { FaSlidersH, FaList, FaTh, FaLayerGroup } from 'react-icons/fa';
 import { CardSize } from '../../types';
 import { GroupCriteria, SortCriteria } from '../../types/enums';
 import { ViewMode } from '../../hooks/useDeckPreviewState';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface DeckDisplayOptionsProps {
   viewMode: ViewMode;
@@ -31,6 +32,7 @@ export function DeckDisplayOptions({
   setIsOpen
 }: DeckDisplayOptionsProps) {
   const { t } = useTranslation();
+  useEscapeKey(() => setIsOpen(false), isOpen);
 
   return (
     <div className="relative inline-block text-left">
@@ -51,7 +53,8 @@ export function DeckDisplayOptions({
       </button>
       {isOpen ? (
         <>
-          <div className="fixed inset-0 z-[var(--z-backdrop)]" onClick={() => setIsOpen(false)} />
+          {/* Backdrop click is a mouse-only convenience; Escape provides the keyboard-equivalent action. */}
+          <div className="fixed inset-0 z-[var(--z-backdrop)]" onClick={() => setIsOpen(false)} aria-hidden="true" />
           <div className="display-settings-dropdown">
             <div className="space-y-2">
               <span className="display-settings-section-label">{t('common.viewMode')}</span>

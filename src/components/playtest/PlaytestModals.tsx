@@ -10,6 +10,8 @@ import { PlaytestCard } from '../../types/Playtest';
 import { DeckRelatedToken } from '../../types/Deck';
 import { PlaytestZone } from '../../types/enums';
 import { PLAYTEST_CARD_DETAIL_Z_INDEX } from '../../constants';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }> = ({ deckRelatedTokens }) => {
   const { t } = useTranslation();
@@ -50,11 +52,26 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
     getCardImageUrl
   } = usePlaytestContext();
 
+  const scrySurveilDialogRef = useFocusTrap<HTMLDivElement>(!!scrySurveilPrompt);
+  useEscapeKey(() => setScrySurveilPrompt(null), !!scrySurveilPrompt);
+
+  const positionDialogRef = useFocusTrap<HTMLDivElement>(!!positionPrompt);
+  useEscapeKey(() => setPositionPrompt(null), !!positionPrompt);
+
+  const contextMenuRef = useFocusTrap<HTMLDivElement>(!!contextMenu);
+  useEscapeKey(() => setContextMenu(null), !!contextMenu);
+
+  const libraryContextMenuRef = useFocusTrap<HTMLDivElement>(!!libraryContextMenu);
+  useEscapeKey(() => setLibraryContextMenu(null), !!libraryContextMenu);
+
   return (
     <>
       {/* Context Menu Overlay */}
       {contextMenu && (
+        // Only guards against bubbling to the outer close-on-click handler; the buttons inside are the real interactive surface.
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         <div
+          ref={contextMenuRef}
           className="fixed z-[var(--z-playtest-menu)] bg-slate-900 border border-slate-700 shadow-2xl rounded-xl py-1 w-48 animate-fadeIn"
           style={{ top: contextMenu.y, left: contextMenu.x }}
           onClick={(event) => event.stopPropagation()}
@@ -190,7 +207,10 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
 
       {/* Library Context Menu */}
       {libraryContextMenu && (
+        // Only guards against bubbling to the outer close-on-click handler; the buttons inside are the real interactive surface.
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         <div
+          ref={libraryContextMenuRef}
           className="fixed z-[var(--z-playtest-menu)] bg-slate-800 border border-slate-700 shadow-2xl rounded-xl py-1 w-48 animate-fadeIn"
           style={{ top: libraryContextMenu.y, left: libraryContextMenu.x }}
           onClick={(e) => e.stopPropagation()}
@@ -228,8 +248,14 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
       {/* Scry/Surveil Prompt */}
       {scrySurveilPrompt && (
         <div className="fixed inset-0 z-[var(--z-playtest-dialog)] flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-slate-200">
+          <div
+            ref={scrySurveilDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="scry-surveil-prompt-title"
+            className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
+          >
+            <h3 id="scry-surveil-prompt-title" className="text-lg font-bold text-slate-200">
               {t('playtest.promptAmount', { action: t(`playtest.${scrySurveilPrompt.type}`) })}
             </h3>
             <form
@@ -249,7 +275,6 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
                 type="number"
                 min="1"
                 defaultValue="1"
-                autoFocus
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               />
               <div className="flex gap-3 justify-end mt-2">
@@ -275,8 +300,16 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
       {/* Position Prompt */}
       {positionPrompt && (
         <div className="fixed inset-0 z-[var(--z-playtest-dialog)] flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-slate-200">{t('playtest.toLibraryPosition')}</h3>
+          <div
+            ref={positionDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="position-prompt-title"
+            className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
+          >
+            <h3 id="position-prompt-title" className="text-lg font-bold text-slate-200">
+              {t('playtest.toLibraryPosition')}
+            </h3>
             <p className="text-sm text-slate-400">{t('export.positionPrompt')}</p>
             <form
               onSubmit={(e) => {
@@ -295,7 +328,6 @@ export const PlaytestModals: React.FC<{ deckRelatedTokens: DeckRelatedToken[] }>
                 type="number"
                 min="1"
                 defaultValue="1"
-                autoFocus
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               />
               <div className="flex gap-3 justify-end mt-2">

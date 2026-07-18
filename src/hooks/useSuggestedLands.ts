@@ -1,6 +1,6 @@
 import { Card } from '../types/Card';
 import { DeckFormat } from '../types/Deck';
-import { BASIC_LAND_NAMES } from '../constants';
+import { MANA_COLOR_TO_BASIC_LAND } from '../utils/deckStatistics';
 
 export function useSuggestedLands(
   currentDeck: Card[],
@@ -13,41 +13,19 @@ export function useSuggestedLands(
   t: (key: string) => string
 ) {
   const handleApplySuggestedLands = (landCounts: Record<string, number>) => {
-    const nonBasicLands = currentDeck.filter((card) => {
-      const isBasic = card.type_line?.toLowerCase().includes('basic land') || BASIC_LAND_NAMES.includes(card.name);
-      return !isBasic;
-    });
-
     const createBasicLandCard = (name: string): Card => {
-      const ids: Record<string, string> = {
-        Plains: 'plains-basic-land',
-        Island: 'island-basic-land',
-        Swamp: 'swamp-basic-land',
-        Mountain: 'mountain-basic-land',
-        Forest: 'forest-basic-land',
-        Wastes: 'wastes-basic-land'
-      };
+      // Derived from the canonical color→land map (deckStatistics) so land
+      // names and colors can never drift from the suggestion math. Wastes
+      // produces {C}, which is not a color — hence the empty array.
+      const colorsMap: Record<string, string[]> = Object.fromEntries(
+        Object.entries(MANA_COLOR_TO_BASIC_LAND).map(([color, landName]) => [landName, color === 'C' ? [] : [color]])
+      );
 
-      const colorsMap: Record<string, string[]> = {
-        Plains: ['W'],
-        Island: ['U'],
-        Swamp: ['B'],
-        Mountain: ['R'],
-        Forest: ['G'],
-        Wastes: []
-      };
-
-      const imagesMap: Record<string, string> = {
-        Plains: 'https://cards.scryfall.io/normal/front/a/e/ae53a152-4043-424d-9050-8b186f982829.jpg',
-        Island: 'https://cards.scryfall.io/normal/front/1/c/1c84cb13-43ef-4d37-84ec-86cffcd14984.jpg',
-        Swamp: 'https://cards.scryfall.io/normal/front/2/a/2ae68e9f-7df8-43d9-a78b-49ef4599c9c8.jpg',
-        Mountain: 'https://cards.scryfall.io/normal/front/0/e/0efad862-2ee7-4a0b-93ff-1830491fb342.jpg',
-        Forest: 'https://cards.scryfall.io/normal/front/5/4/5446059d-47fe-493e-8120-cfbc11d29377.jpg',
-        Wastes: 'https://cards.scryfall.io/normal/front/0/3/036c84c1-6b45-4424-aa61-5991d7c35fa9.jpg'
-      };
+      const imageUrlFor = (landName: string) =>
+        `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(landName)}&format=image`;
 
       return {
-        id: ids[name] || `basic-land-${name.toLowerCase()}`,
+        id: `${name.toLowerCase()}-basic-land`,
         oracle_id: `basic-land-oracle-${name.toLowerCase()}`,
         name: name,
         printed_name: name,
@@ -60,10 +38,10 @@ export function useSuggestedLands(
         colors: colorsMap[name] || [],
         color_identity: colorsMap[name] || [],
         image_uris: {
-          small: imagesMap[name] || '',
-          normal: imagesMap[name] || '',
-          large: imagesMap[name] || '',
-          png: imagesMap[name] || ''
+          small: imageUrlFor(name),
+          normal: imageUrlFor(name),
+          large: imageUrlFor(name),
+          png: imageUrlFor(name)
         }
       };
     };
@@ -75,7 +53,7 @@ export function useSuggestedLands(
       }
     });
 
-    const newDeckCards = [...nonBasicLands, ...newBasicLands];
+    const newDeckCards = [...currentDeck, ...newBasicLands];
     // Preserve the current editing state — never use '' as deckId if we're genuinely editing
     onLoadDeckToEdit(editingDeckId ?? '', editingDeckName || '', activeFormat, newDeckCards, editingDeckNotes);
     showToast(t('deck.deckSaved'));

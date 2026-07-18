@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaTimes } from 'react-icons/fa';
 import { AlertVariant } from '../../types';
 import { WindowWithElectronAPI } from '../../types/electron';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface CustomDialogProps {
   isOpen: boolean;
@@ -26,12 +28,13 @@ function CustomDialog({
 }: CustomDialogProps) {
   const { t } = useTranslation();
 
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
   const confirmBtnRef = useRef<HTMLButtonElement>(null);
   const alertBtnRef = useRef<HTMLButtonElement>(null);
+  useEscapeKey(onCancel, isOpen);
 
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen) return;
 
     // Show native OS notification
     if (typeof window !== 'undefined') {
@@ -51,45 +54,13 @@ function CustomDialog({
       }
     }
 
-    // Focus primary button on mount
+    // Focus the primary button (overrides useFocusTrap's default first-element focus)
     if (type === 'confirm') {
       confirmBtnRef.current?.focus();
     } else {
       alertBtnRef.current?.focus();
     }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onCancel();
-      }
-
-      // Focus trap
-      if (e.key === 'Tab' && dialogRef.current) {
-        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-        if (focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            lastElement.focus();
-            e.preventDefault();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            firstElement.focus();
-            e.preventDefault();
-          }
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onCancel, type]);
+  }, [isOpen, title, message, type]);
 
   if (!isOpen) return null;
 
@@ -101,17 +72,17 @@ function CustomDialog({
   };
 
   return createPortal(
+    // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className="modal-overlay animate-fadeIn"
-      onClick={onCancel}
-      role="button"
-      tabIndex={-1}
-      aria-label={t('common.close')}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
     >
       <div
         ref={dialogRef}
         className="modal-container modal-container-small animate-slide-in relative overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"

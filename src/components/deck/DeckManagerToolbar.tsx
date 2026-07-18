@@ -2,12 +2,16 @@ import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaSave, FaPlus, FaTrash, FaFileImport, FaTimes, FaLightbulb, FaBook, FaColumns } from 'react-icons/fa';
 import { Deck } from '../../types/Deck';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { deckActionLabels } from '../../utils/deckActionLabels';
 
 interface DeckManagerToolbarProps {
   selectedDeck: Deck | null;
   showDeckList: boolean;
   onToggleDeckList: () => void;
   editingDeckId: string | null;
+  /** Name of the deck being edited — used to make save/clear targets explicit. */
+  editingDeckName: string;
   currentDeckCount: number;
   hasSavedDecks: boolean;
   showImportExportDropdown: boolean;
@@ -28,6 +32,7 @@ export function DeckManagerToolbar({
   showDeckList,
   onToggleDeckList,
   editingDeckId,
+  editingDeckName,
   currentDeckCount,
   hasSavedDecks,
   showImportExportDropdown,
@@ -42,6 +47,15 @@ export function DeckManagerToolbar({
   onExportAll
 }: DeckManagerToolbarProps) {
   const { t } = useTranslation();
+  useEscapeKey(() => setShowImportExportDropdown(false), showImportExportDropdown);
+
+  // Make the save/clear targets explicit: name the deck being edited, or call
+  // out that the unsaved deck is temporary. On small screens the buttons
+  // collapse to icons and these strings become their accessible names.
+  const { saveLabel, clearLabel } = deckActionLabels(t, editingDeckId, editingDeckName);
+  // Icon-only on small screens, but keep a >=44px hit area.
+  const responsiveActionClasses = 'max-sm:w-11 max-sm:h-11 max-sm:p-0 max-sm:justify-center';
+  const labelClasses = 'hidden sm:inline-block sm:max-w-56 truncate';
 
   return (
     <div className="workspace-header">
@@ -73,118 +87,147 @@ export function DeckManagerToolbar({
       </div>
 
       {!selectedDeck ? (
-        <div className="manager-toolbar">
-          <div className="toolbar-group">
-            {editingDeckId ? (
-              <div className="toolbar-group-responsive">
+        // Hidden below `sm` (wrapper div: .manager-toolbar is unlayered CSS,
+        // so a utility on the same element could not override its display).
+        // The navbar's MobilePageMenu — visible at the same breakpoint —
+        // covers save/save-as-new/clear, text/file import and export-all;
+        // cancel-edit stays reachable via the EditingDeckBanner.
+        <div className="max-sm:hidden">
+          <div className="manager-toolbar">
+            <div className="toolbar-group">
+              {editingDeckId ? (
+                <div className="toolbar-group-responsive">
+                  <button
+                    id="save-changes-btn"
+                    type="button"
+                    onClick={onSaveChanges}
+                    className={`primary-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    aria-label={saveLabel}
+                    title={saveLabel}
+                  >
+                    <FaSave className="text-xs shrink-0" />
+                    <span className={labelClasses}>{saveLabel}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onSaveAsNew}
+                    className={`success-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    aria-label={t('deck.saveAsNew')}
+                    title={t('deck.saveAsNew')}
+                  >
+                    <FaPlus className="text-xs shrink-0" />
+                    <span className={labelClasses}>{t('deck.saveAsNew')}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onCancelEdit}
+                    className={`danger-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    aria-label={t('common.cancel')}
+                    title={t('common.cancel')}
+                  >
+                    <FaTimes className="text-xs shrink-0" />
+                    <span className={labelClasses}>{t('common.cancel')}</span>
+                  </button>
+                </div>
+              ) : (
                 <button
-                  id="save-changes-btn"
+                  id="save-deck-btn"
                   type="button"
-                  onClick={onSaveChanges}
-                  className="primary-button text-xs py-1.5 px-3"
+                  onClick={onOpenSaveDialog}
+                  disabled={currentDeckCount === 0}
+                  className={`success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                  aria-label={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
+                  title={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
                 >
                   <FaSave className="text-xs shrink-0" />
-                  {t('deck.saveChanges')}
+                  <span className={labelClasses}>
+                    {saveLabel} ({currentDeckCount} {t('common.cards')})
+                  </span>
                 </button>
-                <button type="button" onClick={onSaveAsNew} className="success-button text-xs py-1.5 px-3">
-                  <FaPlus className="text-xs shrink-0" />
-                  {t('deck.saveAsNew')}
-                </button>
-                <button type="button" onClick={onCancelEdit} className="danger-button text-xs py-1.5 px-3">
-                  <FaTimes className="text-xs shrink-0" />
-                  {t('common.cancel')}
-                </button>
-              </div>
-            ) : (
+              )}
+
               <button
-                id="save-deck-btn"
+                id="clear-deck-btn"
                 type="button"
-                onClick={onOpenSaveDialog}
+                onClick={onClearDeck}
                 disabled={currentDeckCount === 0}
-                className="success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                aria-label={clearLabel}
+                title={clearLabel}
               >
-                <FaSave className="text-xs shrink-0" />
-                {t('deck.saveCurrentDeck')} ({currentDeckCount} {t('common.cards')})
+                <FaTrash className="text-xs shrink-0" />
+                <span className={labelClasses}>{clearLabel}</span>
               </button>
-            )}
+            </div>
 
-            <button
-              id="clear-deck-btn"
-              type="button"
-              onClick={onClearDeck}
-              disabled={currentDeckCount === 0}
-              className="danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <FaTrash className="text-xs shrink-0" />
-              {t('deck.clearCurrentDeck')}
-            </button>
-          </div>
-
-          <div className="toolbar-actions">
-            <div className="relative inline-block text-left">
-              <button
-                type="button"
-                onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
-                className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
-              >
-                <FaFileImport className="text-xs shrink-0" />
-                {t('deck.importExport')}
-                <span className="text-[10px] opacity-75">▼</span>
-              </button>
-              {showImportExportDropdown ? (
-                <>
-                  <div
-                    className="fixed inset-0 z-[var(--z-backdrop)]"
-                    onClick={() => setShowImportExportDropdown(false)}
-                  />
-                  <div className="import-export-dropdown">
-                    <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowImportExportDropdown(false);
-                        onOpenTextImport();
-                      }}
-                      className="import-export-dropdown-item"
-                    >
-                      <FaFileImport className="text-gray-400 shrink-0" />
-                      {t('deck.importTextList')}
-                    </button>
-                    <label className="import-export-dropdown-item">
-                      <FaFileImport className="text-gray-400 shrink-0" />
-                      {t('deck.importDeck')}{' '}
-                      <span className="text-[10px] text-gray-400 font-mono ml-auto">.json / .dec</span>
-                      <input
-                        id="deck-import-file-input"
-                        type="file"
-                        accept=".json,.dec,.txt"
-                        onChange={(e) => {
+            <div className="toolbar-actions">
+              <div className="relative inline-block text-left">
+                <button
+                  type="button"
+                  onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
+                  className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FaFileImport className="text-xs shrink-0" />
+                  {t('deck.importExport')}
+                  <span className="text-[10px] opacity-75">▼</span>
+                </button>
+                {showImportExportDropdown ? (
+                  <>
+                    {/* Backdrop click is a mouse-only convenience; Escape provides the keyboard-equivalent action. */}
+                    <div
+                      className="fixed inset-0 z-[var(--z-backdrop)]"
+                      onClick={() => setShowImportExportDropdown(false)}
+                      aria-hidden="true"
+                    />
+                    <div className="import-export-dropdown">
+                      <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
+                      <button
+                        type="button"
+                        onClick={() => {
                           setShowImportExportDropdown(false);
-                          onImportFile(e);
+                          onOpenTextImport();
                         }}
-                        className="hidden"
-                      />
-                    </label>
-                    {hasSavedDecks ? (
-                      <>
-                        <div className="import-export-dropdown-divider" />
-                        <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
-                        <button
-                          type="button"
-                          onClick={() => {
+                        className="import-export-dropdown-item"
+                      >
+                        <FaFileImport className="text-gray-400 shrink-0" />
+                        {t('deck.importTextList')}
+                      </button>
+                      <label className="import-export-dropdown-item">
+                        <FaFileImport className="text-gray-400 shrink-0" />
+                        {t('deck.importDeck')}{' '}
+                        <span className="text-[10px] text-gray-400 font-mono ml-auto">.json / .dec</span>
+                        <input
+                          id="deck-import-file-input"
+                          type="file"
+                          accept=".json,.dec,.txt"
+                          onChange={(e) => {
                             setShowImportExportDropdown(false);
-                            onExportAll();
+                            onImportFile(e);
                           }}
-                          className="import-export-dropdown-item"
-                        >
-                          {t('deck.exportAllDecks')}{' '}
-                          <span className="text-[10px] text-gray-400 font-mono ml-auto">.json</span>
-                        </button>
-                      </>
-                    ) : null}
-                  </div>
-                </>
-              ) : null}
+                          className="hidden"
+                        />
+                      </label>
+                      {hasSavedDecks ? (
+                        <>
+                          <div className="import-export-dropdown-divider" />
+                          <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowImportExportDropdown(false);
+                              onExportAll();
+                            }}
+                            className="import-export-dropdown-item"
+                          >
+                            {t('deck.exportAllDecks')}{' '}
+                            <span className="text-[10px] text-gray-400 font-mono ml-auto">.json</span>
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  </>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

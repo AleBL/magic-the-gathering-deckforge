@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBolt, FaTimes } from 'react-icons/fa';
 import { useDeckStore } from '../store/useDeckStore';
@@ -16,9 +16,19 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
   const { t } = useTranslation();
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingFormat, setIsEditingFormat] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const formatSelectRef = useRef<HTMLSelectElement>(null);
 
   const updateDeckName = useDeckStore((state) => state.updateDeckName);
   const updateDeckFormat = useDeckStore((state) => state.updateDeckFormat);
+
+  useEffect(() => {
+    if (isEditingName) nameInputRef.current?.focus();
+  }, [isEditingName]);
+
+  useEffect(() => {
+    if (isEditingFormat) formatSelectRef.current?.focus();
+  }, [isEditingFormat]);
 
   return (
     <div className="editing-banner">
@@ -33,6 +43,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
           <div className="flex items-center gap-2 w-full min-w-0">
             {isEditingName ? (
               <input
+                ref={nameInputRef}
                 type="text"
                 value={deckName}
                 onChange={(e) => updateDeckName(e.target.value)}
@@ -46,20 +57,21 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                   }
                 }}
                 className="bg-slate-800/80 text-white text-sm font-bold border border-slate-500 rounded px-2 py-0.5 w-1/3 min-w-[120px] focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                autoFocus
               />
             ) : (
-              <span
-                className="font-bold text-sm text-white flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-amber-300 transition-colors"
+              <button
+                type="button"
+                className="font-bold text-sm text-white flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-amber-300 transition-colors text-left"
                 onClick={() => setIsEditingName(true)}
                 title={t('deck.editDeckInfo')}
               >
                 {deckName}
-              </span>
+              </button>
             )}
 
             {isEditingFormat ? (
               <select
+                ref={formatSelectRef}
                 value={deckFormat}
                 onChange={(e) => {
                   updateDeckFormat(e.target.value as DeckFormat);
@@ -72,7 +84,6 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                   }
                 }}
                 className="bg-slate-800 text-amber-200 text-xs font-bold border border-amber-500/50 rounded px-1 py-0.5 uppercase focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 cursor-pointer shadow-lg"
-                autoFocus
               >
                 <option value="standard" className="bg-slate-800 text-amber-200">
                   {t('validation.standard')}
@@ -94,13 +105,14 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                 </option>
               </select>
             ) : (
-              <span
+              <button
+                type="button"
                 className="text-[10px] bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 px-1.5 py-0.5 rounded uppercase font-bold shrink-0 border border-amber-500/30 cursor-pointer transition-colors"
                 onClick={() => setIsEditingFormat(true)}
                 title={t('deck.editDeckInfo')}
               >
                 {t(formatLabelKey(deckFormat))}
-              </span>
+              </button>
             )}
           </div>
         </div>

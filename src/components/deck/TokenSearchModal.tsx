@@ -4,6 +4,9 @@ import { FaPalette, FaTimes, FaSearch, FaSpinner, FaPlus } from 'react-icons/fa'
 import { Card } from '../../types/Card';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { TokenPreset } from '../PlaytestTokenModal';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 
 interface TokenSearchModalProps {
   onClose: () => void;
@@ -34,16 +37,37 @@ export function TokenSearchModal({
   onConfirmAdd
 }: TokenSearchModalProps) {
   const { t } = useTranslation();
+  const dialogRef = useFocusTrap<HTMLDivElement>(true);
+  useEscapeKey(onClose);
+  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onClose);
 
   return createPortal(
+    // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
-      className="modal-overlay bg-slate-950/85 backdrop-blur-sm animate-fadeIn z-[var(--z-overlay)]"
+      className="modal-overlay modal-overlay-sheet bg-slate-950/85 backdrop-blur-sm animate-fadeIn z-[var(--z-overlay)]"
       style={{ zIndex: 'var(--z-overlay)' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col overflow-hidden max-h-[85vh] transition-all">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="token-search-modal-title"
+        className="modal-sheet-panel bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all"
+      >
+        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1" {...swipeHandlers} aria-hidden="true">
+          <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
+        </div>
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/40">
-          <h3 className="text-base font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+          <h3
+            id="token-search-modal-title"
+            className="text-base font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"
+          >
             <FaPalette className="text-indigo-500" />
             {t('tokens.searchTokensTitle')}
           </h3>
@@ -67,7 +91,6 @@ export function TokenSearchModal({
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('tokens.searchTokenPlaceholder')}
                 className="w-full text-sm py-2 px-3 pl-9 bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-slate-100 border border-gray-300 dark:border-slate-850 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                autoFocus
               />
               <FaSearch className="absolute left-3 top-3 text-xs text-gray-400" />
             </div>
@@ -140,7 +163,17 @@ export function TokenSearchModal({
                   return (
                     <div
                       key={token.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={token.name}
                       onClick={() => onSelectToken(token)}
+                      onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectToken(token);
+                        }
+                      }}
                       className="border border-gray-200 dark:border-slate-850 bg-gray-50/50 dark:bg-slate-900/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-indigo-500/50 group"
                     >
                       <div className="w-20 h-28 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 bg-slate-950 mb-2 shadow-md flex items-center justify-center relative shrink-0">

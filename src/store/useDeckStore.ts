@@ -40,9 +40,48 @@ interface DeckStoreState {
     relatedTokens?: DeckRelatedToken[]
   ) => void;
 
-  pendingAction: string | null;
-  setPendingAction: (action: string | null) => void;
+  pendingAction: PendingAction | null;
+  setPendingAction: (action: PendingAction | null) => void;
+
+  /**
+   * Read-only snapshot of the saved deck currently open for viewing in the
+   * deck manager (null when browsing/editing). Published by DeckManager so
+   * detached UI (the navbar's mobile page menu) can offer the right actions.
+   */
+  selectedDeckSummary: SelectedDeckSummary | null;
+  setSelectedDeckSummary: (summary: SelectedDeckSummary | null) => void;
+
+  /** Saved-decks count, published by DeckManager for the mobile page menu. */
+  savedDeckCount: number;
+  setSavedDeckCount: (count: number) => void;
 }
+
+export interface SelectedDeckSummary {
+  id: string;
+  name: string;
+  cardCount: number;
+}
+
+/**
+ * Cross-component command channel: emitters (shortcuts, command palette,
+ * mobile page menu) set one of these and the owning component's effect
+ * executes it. A union — not string — so a typo'd dispatch or handler
+ * comparison fails to compile instead of silently no-opping.
+ */
+export type PendingAction =
+  | 'focus-search'
+  | 'open-search-filters'
+  | 'save-deck'
+  | 'save-deck-as-new'
+  | 'clear-deck'
+  | 'playtest-deck'
+  | 'print-proxies'
+  | 'export-deck'
+  | 'export-all-decks'
+  | 'import-deck-text'
+  | 'import-deck-file'
+  | 'edit-selected-deck'
+  | 'show-saved-decks';
 
 const INITIAL_EDITING_STATE: EditingDeckState = {
   deckId: null,
@@ -56,8 +95,14 @@ export const useDeckStore = create<DeckStoreState>((set) => ({
   currentDeckRelatedTokens: [],
   editingDeck: INITIAL_EDITING_STATE,
   pendingAction: null,
+  selectedDeckSummary: null,
+  savedDeckCount: 0,
 
   setPendingAction: (action) => set({ pendingAction: action }),
+
+  setSelectedDeckSummary: (summary) => set({ selectedDeckSummary: summary }),
+
+  setSavedDeckCount: (count) => set({ savedDeckCount: count }),
 
   setCurrentDeck: (cards) => set({ currentDeck: cards }),
 
