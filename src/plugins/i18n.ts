@@ -13,7 +13,12 @@ i18n
     lng: savedLanguage,
     fallbackLng: 'en',
     resources: translations,
-    defaultNS: 'translations'
+    defaultNS: 'translations',
+    interpolation: {
+      // React already escapes rendered strings; i18next's own HTML-escaping
+      // would show card/deck names like "A // B" as "A &#x2F;&#x2F; B".
+      escapeValue: false
+    }
   });
 
 i18n.on('languageChanged', (lng) => {
