@@ -23,7 +23,9 @@ const OTHER_COLOR = CHART_TEXT_MUTED;
 export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
   const { t } = useTranslation();
   const deckSize = stats.totalCards;
-  const landCount = stats.cardTypeCounts.land;
+  // totalLands (type_line based) rather than cardTypeCounts.land, which files
+  // "Artifact Land"/"Creature — Land" under other types and undercounts.
+  const landCount = stats.totalLands;
 
   const distribution = useMemo(() => landDrawProbabilities(deckSize, landCount, HAND_SIZE), [deckSize, landCount]);
   const ready = useChartReady([distribution]);
@@ -45,13 +47,13 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
       {!ready ? (
         <ChartSkeleton height="h-40" />
       ) : !hasData ? (
-        <ChartFrame height="h-32" className="flex items-center justify-center">
-          <EmptyState icon={<FaDiceD20 />} title={t('stats.noConsistencyData')} />
+        <ChartFrame height="h-32" className="flex items-center justify-center overflow-hidden">
+          <EmptyState compact icon={<FaDiceD20 />} title={t('stats.noConsistencyData')} />
         </ChartFrame>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
                 {t('stats.keepableHands')}
               </span>
@@ -59,7 +61,7 @@ export function ConsistencyPanel({ stats }: ConsistencyPanelProps) {
                 {(keepable * 100).toFixed(0)}%
               </span>
             </div>
-            <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
                 {t('stats.avgLandsInHand')}
               </span>

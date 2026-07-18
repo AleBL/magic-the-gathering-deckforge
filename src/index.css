@@ -209,6 +209,13 @@
   }
 }
 
+/* Recharts renders tooltips inside the chart container with no z-index of
+   its own, so panels/buttons later in the DOM paint on top of them. Lift
+   every chart tooltip to the shared dropdown/tooltip layer. */
+.recharts-tooltip-wrapper {
+  z-index: var(--z-dropdown);
+}
+
 /* ──────────────────────────────────────────────────────── */
 /* Global Scrollbar Styling (Webkit / Chromium / Electron)  */
 /* ──────────────────────────────────────────────────────── */

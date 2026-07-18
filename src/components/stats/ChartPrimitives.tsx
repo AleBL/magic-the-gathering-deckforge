@@ -21,7 +21,7 @@ export function ChartFrame({
 }) {
   return (
     <div
-      className={`w-full ${height} rounded-xl border border-gray-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-slate-900/40 backdrop-blur-sm shadow-inner p-2 relative ${className}`}
+      className={`w-full ${height} rounded-xl border border-gray-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-slate-900/40 shadow-inner p-2 relative ${className}`}
       style={style}
     >
       {children}
@@ -85,7 +85,7 @@ export function ChartTooltip({ active, title, rows }: ChartTooltipProps) {
   return (
     <div
       role="tooltip"
-      className="bg-white/95 dark:bg-slate-900/95 text-gray-800 dark:text-gray-100 text-xs p-3 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700/60 backdrop-blur-md min-w-[9rem]"
+      className="bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 text-xs p-3 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700/60 min-w-[9rem]"
     >
       {title ? (
         <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-gray-200 dark:border-slate-700 font-bold text-gray-900 dark:text-white">

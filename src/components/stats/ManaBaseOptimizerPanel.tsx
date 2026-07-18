@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
 import { FaInfoCircle, FaExclamationTriangle, FaTint } from 'react-icons/fa';
-import { DeckStatistics } from '../../utils/deckStatistics';
+import { DeckStatistics, MANA_COLOR_TO_BASIC_LAND } from '../../utils/deckStatistics';
 import { CHART_BAR_RADIUS_HORIZONTAL, CHART_TICK_STYLE, MANA_CHART_COLOR, ManaColorKey } from './chartTheme';
 import { ChartFrame, ChartTooltip } from './ChartPrimitives';
 
@@ -11,13 +11,11 @@ interface ManaBaseOptimizerPanelProps {
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
 }
 
-const LAND_TO_MANA_COLOR: Record<string, ManaColorKey> = {
-  Plains: 'W',
-  Island: 'U',
-  Swamp: 'B',
-  Mountain: 'R',
-  Forest: 'G'
-};
+// Inverse of the canonical color→land map, so a new basic land kind only ever
+// needs to be added in deckStatistics.
+const LAND_TO_MANA_COLOR: Record<string, ManaColorKey> = Object.fromEntries(
+  Object.entries(MANA_COLOR_TO_BASIC_LAND).map(([color, landName]) => [landName, color as ManaColorKey])
+);
 
 export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBaseOptimizerPanelProps) {
   const { t } = useTranslation();
@@ -47,9 +45,34 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
       </p>
       {stats.neededBasicLands > 0 ? (
         <>
-          <p className="text-xs font-semibold text-primary dark:text-blue-400 mt-1">
-            {t('stats.willAddLands').replace('{{count}}', String(stats.neededBasicLands))}
-          </p>
+          {/* Current → target → delta at a glance; the chart below only shows
+              HOW the added basics are split across colors. */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.currentLands')}
+              </span>
+              <span className="text-base font-extrabold text-gray-700 dark:text-gray-200 tabular-nums">
+                {stats.totalLands}
+              </span>
+            </div>
+            <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.targetLands')}
+              </span>
+              <span className="text-base font-extrabold text-gray-700 dark:text-gray-200 tabular-nums">
+                {stats.targetTotalLands}
+              </span>
+            </div>
+            <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.landsToAdd')}
+              </span>
+              <span className="text-base font-extrabold text-primary dark:text-blue-400 tabular-nums">
+                +{stats.neededBasicLands}
+              </span>
+            </div>
+          </div>
 
           {stats.removeCount > 0 ? (
             <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
@@ -64,45 +87,50 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           ) : null}
 
           {chartData.length > 0 ? (
-            <ChartFrame style={{ height: rowHeight }} className="mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={chartData}
-                  layout="vertical"
-                  margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
-                  barCategoryGap="24%"
-                >
-                  <XAxis type="number" hide allowDecimals={false} />
-                  <YAxis
-                    type="category"
-                    dataKey="label"
-                    tick={CHART_TICK_STYLE}
-                    tickLine={false}
-                    axisLine={false}
-                    width={64}
-                  />
-                  <RechartsTooltip
-                    cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
-                    content={({ active, payload }) => {
-                      const d = payload?.[0]?.payload as { label: string; count: number; color: string } | undefined;
-                      if (!d) return null;
-                      return (
-                        <ChartTooltip
-                          active={active}
-                          title={d.label}
-                          rows={[{ key: 'count', label: t('common.cards'), value: d.count, swatch: d.color }]}
-                        />
-                      );
-                    }}
-                  />
-                  <Bar dataKey="count" radius={CHART_BAR_RADIUS_HORIZONTAL} maxBarSize={20}>
-                    {chartData.map((entry) => (
-                      <Cell key={entry.landName} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartFrame>
+            <>
+              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
+                {t('stats.suggestedDistribution')}
+              </span>
+              <ChartFrame style={{ height: rowHeight }} className="mt-1">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={chartData}
+                    layout="vertical"
+                    margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
+                    barCategoryGap="24%"
+                  >
+                    <XAxis type="number" hide allowDecimals={false} />
+                    <YAxis
+                      type="category"
+                      dataKey="label"
+                      tick={CHART_TICK_STYLE}
+                      tickLine={false}
+                      axisLine={false}
+                      width={64}
+                    />
+                    <RechartsTooltip
+                      cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
+                      content={({ active, payload }) => {
+                        const d = payload?.[0]?.payload as { label: string; count: number; color: string } | undefined;
+                        if (!d) return null;
+                        return (
+                          <ChartTooltip
+                            active={active}
+                            title={d.label}
+                            rows={[{ key: 'count', label: t('common.cards'), value: d.count, swatch: d.color }]}
+                          />
+                        );
+                      }}
+                    />
+                    <Bar dataKey="count" radius={CHART_BAR_RADIUS_HORIZONTAL} maxBarSize={20}>
+                      {chartData.map((entry) => (
+                        <Cell key={entry.landName} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartFrame>
+            </>
           ) : null}
 
           {onApplySuggestedLands ? (

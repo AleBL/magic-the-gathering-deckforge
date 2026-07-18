@@ -46,17 +46,22 @@ export function RarityPanel({ stats }: RarityPanelProps) {
       {!ready ? (
         <ChartSkeleton height="h-8" />
       ) : total === 0 ? (
-        <ChartFrame height="h-16" className="flex items-center justify-center">
-          <EmptyState icon={<FaGem />} title={t('stats.noRarityData')} />
+        <ChartFrame height="h-16" className="flex items-center justify-center overflow-hidden">
+          <EmptyState compact icon={<FaGem />} title={t('stats.noRarityData')} />
         </ChartFrame>
       ) : (
-        <ChartFrame height="h-8" className="p-0 overflow-hidden">
+        // No overflow-hidden on this frame: the hover tooltip renders inside it
+        // and is much taller than the 2rem strip — clipping would cut it off.
+        // Segment corners are rounded via per-Bar radius instead.
+        <ChartFrame height="h-8" className="p-0">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
               <XAxis type="number" hide domain={[0, total]} />
               <YAxis type="category" dataKey="name" hide />
               <RechartsTooltip
                 cursor={false}
+                allowEscapeViewBox={{ x: false, y: true }}
+                position={{ y: -78 }}
                 content={({ active }) => (
                   <ChartTooltip
                     active={active}
@@ -69,16 +74,21 @@ export function RarityPanel({ stats }: RarityPanelProps) {
                   />
                 )}
               />
-              {entries.map((d) => (
-                <Bar
-                  key={d.key}
-                  dataKey={d.key}
-                  stackId="rarity"
-                  fill={CHART_SEQUENTIAL[d.step]}
-                  stroke={CHART_SEGMENT_GAP.stroke}
-                  strokeWidth={CHART_SEGMENT_GAP.strokeWidth}
-                />
-              ))}
+              {entries.map((d, i) => {
+                const first = i === 0;
+                const last = i === entries.length - 1;
+                return (
+                  <Bar
+                    key={d.key}
+                    dataKey={d.key}
+                    stackId="rarity"
+                    fill={CHART_SEQUENTIAL[d.step]}
+                    stroke={CHART_SEGMENT_GAP.stroke}
+                    strokeWidth={CHART_SEGMENT_GAP.strokeWidth}
+                    radius={[first ? 10 : 0, last ? 10 : 0, last ? 10 : 0, first ? 10 : 0]}
+                  />
+                );
+              })}
             </BarChart>
           </ResponsiveContainer>
         </ChartFrame>

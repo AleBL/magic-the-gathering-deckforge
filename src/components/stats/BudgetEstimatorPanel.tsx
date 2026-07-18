@@ -35,7 +35,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
       </h4>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.totalUsd')}
           </span>
@@ -43,7 +43,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
             ${stats.totalUsdPrice.toFixed(2)}
           </span>
         </div>
-        <div className="bg-white/80 dark:bg-gray-850/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
           <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">
             {t('stats.totalEur')}
           </span>

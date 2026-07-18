@@ -11,8 +11,8 @@ import {
   YAxis
 } from 'recharts';
 import { FaTint } from 'react-icons/fa';
-import { parseTextWithSymbols } from '../../utils/symbolHelper';
-import { DeckStatistics } from '../../utils/deckStatistics';
+import { getSymbolUrl, parseTextWithSymbols } from '../../utils/symbolHelper';
+import { DeckStatistics, MANA_COLORS } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
 import {
   CHART_BAR_RADIUS_HORIZONTAL,
@@ -30,9 +30,25 @@ interface ManaPipAnalysisPanelProps {
   colorLabels: Record<string, ColorLabel>;
 }
 
-type CastableManaColor = 'W' | 'U' | 'B' | 'R' | 'G';
-const MANA_COLOR_ORDER: CastableManaColor[] = ['W', 'U', 'B', 'R', 'G'];
+// WUBRG plus true colorless ({C}) — rows only render for colors present in the deck.
+const MANA_COLOR_ORDER = MANA_COLORS;
 const LANDS_COLOR = CHART_STATUS.good;
+
+interface ManaTickProps {
+  x?: string | number;
+  y?: string | number;
+  payload?: { value: string };
+}
+
+function ManaSvgTick({ x = 0, y = 0, payload }: ManaTickProps) {
+  if (!payload?.value) return null;
+  const symbol = `{${payload.value}}`;
+  const url = getSymbolUrl(symbol);
+  const size = 20;
+  const nx = Number(x);
+  const ny = Number(y);
+  return <image href={url} x={nx - size} y={ny - size / 2} width={size} height={size} aria-label={symbol} />;
+}
 
 export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPanelProps) {
   const { t } = useTranslation();
@@ -79,7 +95,7 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
                 <YAxis
                   type="category"
                   dataKey="color"
-                  tick={CHART_TICK_STYLE}
+                  tick={(props) => <ManaSvgTick {...props} />}
                   tickLine={false}
                   axisLine={false}
                   width={28}

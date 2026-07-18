@@ -300,7 +300,8 @@ const pt = {
       consistencyDesc: 'Chance de comprar esta quantidade de terrenos na mão inicial (7 cartas).',
       keepableHands: 'Mãos jogáveis (2–5 terrenos)',
       avgLandsInHand: 'Média de terrenos na mão',
-      nLands: '{{count}} terrenos',
+      nLands_one: '{{count}} terreno',
+      nLands_other: '{{count}} terrenos',
       consistencyBasis: 'Baseado em {{lands}} terrenos em {{total}} cartas',
       noConsistencyData: 'Terrenos insuficientes para estimar as chances de compra.',
       noCurveData: 'Ainda não há mágicas para exibir no gráfico.',
@@ -336,7 +337,11 @@ const pt = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Divisão por Tipo',
-      willAddLands: '{{count}} terrenos básicos serão adicionados'
+      willAddLands: '{{count}} terrenos básicos serão adicionados',
+      currentLands: 'Terrenos atuais',
+      targetLands: 'Alvo de terrenos',
+      landsToAdd: 'A adicionar',
+      suggestedDistribution: 'Distribuição sugerida'
     },
     print: {
       cardsPerPageSimple: 'cartas por folha',

@@ -305,7 +305,8 @@ const es = {
       consistencyDesc: 'Probabilidad de robar esta cantidad de tierras en tu mano inicial (7 cartas).',
       keepableHands: 'Manos jugables (2–5 tierras)',
       avgLandsInHand: 'Prom. de tierras en mano',
-      nLands: '{{count}} tierras',
+      nLands_one: '{{count}} tierra',
+      nLands_other: '{{count}} tierras',
       consistencyBasis: 'Basado en {{lands}} tierras en {{total}} cartas',
       noConsistencyData: 'No hay suficientes tierras para estimar las probabilidades.',
       noCurveData: 'Aún no hay hechizos para graficar.',
@@ -341,7 +342,11 @@ const es = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Desglose de Tipos',
-      willAddLands: 'Se agregarán {{count}} tierras básicas'
+      willAddLands: 'Se agregarán {{count}} tierras básicas',
+      currentLands: 'Tierras actuales',
+      targetLands: 'Objetivo de tierras',
+      landsToAdd: 'Por agregar',
+      suggestedDistribution: 'Distribución sugerida'
     },
     print: {
       cardsPerPageSimple: 'cartas por página',

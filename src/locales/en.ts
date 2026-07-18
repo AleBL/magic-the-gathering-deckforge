@@ -300,7 +300,8 @@ const en = {
       consistencyDesc: 'Chance of drawing this many lands in your opening hand (7 cards).',
       keepableHands: 'Keepable (2–5 lands)',
       avgLandsInHand: 'Avg. lands in hand',
-      nLands: '{{count}} lands',
+      nLands_one: '{{count}} land',
+      nLands_other: '{{count}} lands',
       consistencyBasis: 'Based on {{lands}} lands in {{total}} cards',
       noConsistencyData: 'Not enough lands to estimate draw odds.',
       noCurveData: 'No spells to chart yet.',
@@ -336,7 +337,11 @@ const en = {
       totalEur: 'Total EUR',
       totalUsd: 'Total USD',
       typesBreakdown: 'Card Types Breakdown',
-      willAddLands: '{{count}} basic lands will be added'
+      willAddLands: '{{count}} basic lands will be added',
+      currentLands: 'Current lands',
+      targetLands: 'Land target',
+      landsToAdd: 'To add',
+      suggestedDistribution: 'Suggested distribution'
     },
     print: {
       cardsPerPageSimple: 'cards per page',

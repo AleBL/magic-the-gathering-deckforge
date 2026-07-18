@@ -31,7 +31,9 @@ export const BASIC_LAND_NAMES: readonly string[] = [
   'Pântano',
   'Montanha',
   'Floresta',
-  'Deserto'
+  // pt-BR prints of Wastes ("Deserto" was wrong — that's Desert, a non-basic land)
+  'Ermo',
+  'Ermos'
 ] as const;
 
 export const MIN_DECK_SIZE = 60;
