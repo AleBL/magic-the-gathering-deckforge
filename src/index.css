@@ -367,7 +367,11 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   overflow: hidden;
 }
 
-.ripple-container .ripple-effect {
+/* NOT scoped under .ripple-container: useGlobalRipple spawns this span into
+   any .primary-button (which provides its own relative/overflow clip). If the
+   selector doesn't match, the span stays a static ~200px block that inflates
+   the button and never fires animationend, so it is never cleaned up. */
+.ripple-effect {
   position: absolute;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.35);
