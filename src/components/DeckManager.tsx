@@ -1,7 +1,9 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaLayerGroup, FaChevronDown } from 'react-icons/fa';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
+import { DeckFormatType } from '../types/enums';
 import { CardSize } from '../types';
 import { ShowToastFn } from '../types/Toast';
 import { CARD_SIZES } from '../constants';
@@ -35,6 +37,9 @@ function DeckManager({ showToast }: DeckManagerProps) {
     localStorage.setItem('deckforge_card_size', cardSize);
   }, [cardSize]);
   const [showDeckList, setShowDeckList] = useState(true);
+  // Below lg the saved-decks list is collapsed by default so the main deck
+  // area gets the whole viewport; the toggle (or the navbar page menu) opens it.
+  const [isMobileDeckListOpen, setIsMobileDeckListOpen] = useState(false);
   const [showImportExportDropdown, setShowImportExportDropdown] = useState(false);
 
   const currentDeck = useDeckStore((state) => state.currentDeck);
@@ -89,8 +94,28 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const pendingAction = useDeckStore((state) => state.pendingAction);
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
+  const setSelectedDeckSummary = useDeckStore((state) => state.setSelectedDeckSummary);
+  const setSavedDeckCount = useDeckStore((state) => state.setSavedDeckCount);
 
   const [deckToExport, setDeckToExport] = useState<Deck | null>(null);
+
+  // Always-mounted file input for the mobile page menu's "import deck" item:
+  // the toolbar's own input lives inside a dropdown that is hidden below `sm`.
+  const menuImportFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Publish what the mobile page menu needs to build its item list: whether a
+  // saved deck is open for viewing (and its card count) plus how many decks
+  // exist. Cleared on unmount — selectedDeck is local state and dies with us.
+  useEffect(() => {
+    setSelectedDeckSummary(
+      selectedDeck ? { id: selectedDeck.id, name: selectedDeck.name, cardCount: selectedDeck.cards.length } : null
+    );
+    return () => setSelectedDeckSummary(null);
+  }, [selectedDeck, setSelectedDeckSummary]);
+
+  useEffect(() => {
+    setSavedDeckCount(savedDecks.length);
+  }, [savedDecks.length, setSavedDeckCount]);
 
   useEffect(() => {
     if (editingDeckId) {
@@ -252,29 +277,6 @@ function DeckManager({ showToast }: DeckManagerProps) {
     );
   }, [showConfirm, t, onClearDeck, showToast]);
 
-  useEffect(() => {
-    if (pendingAction === 'save-deck') {
-      if (editingDeckId) {
-        handleSaveEditedDeck();
-      } else {
-        setDeckName('');
-        setShowSaveDialog(true);
-      }
-      setPendingAction(null);
-    } else if (pendingAction === 'clear-deck') {
-      clearDeckWithConfirm();
-      setPendingAction(null);
-    }
-  }, [
-    pendingAction,
-    editingDeckId,
-    handleSaveEditedDeck,
-    setDeckName,
-    setShowSaveDialog,
-    setPendingAction,
-    clearDeckWithConfirm
-  ]);
-
   const confirmDeleteDeck = (deck: Deck) => {
     showConfirm(
       t('deck.confirmDelete'),
@@ -361,6 +363,95 @@ function DeckManager({ showToast }: DeckManagerProps) {
     setShowDeckList(true);
   }, [setSelectedDeck, setShowDeckList]);
 
+  // Executes commands dispatched through the store's pendingAction channel
+  // (keyboard shortcuts, command palette and the navbar's mobile page menu —
+  // which below `sm` replaces the on-screen toolbars entirely).
+  useEffect(() => {
+    if (!pendingAction) return;
+    if (pendingAction === 'save-deck') {
+      if (editingDeckId) {
+        handleSaveEditedDeck();
+      } else {
+        setDeckName('');
+        setShowSaveDialog(true);
+      }
+      setPendingAction(null);
+    } else if (pendingAction === 'save-deck-as-new') {
+      setDeckName(`${editingDeckName} (${t('common.copy')})`);
+      setDeckFormat(editingDeckFormat);
+      setShowSaveDialog(true);
+      setPendingAction(null);
+    } else if (pendingAction === 'clear-deck') {
+      clearDeckWithConfirm();
+      setPendingAction(null);
+    } else if (pendingAction === 'export-deck') {
+      // Export the deck on screen: the saved deck being viewed, else the
+      // deck being worked on (saved deck when editing / temporary snapshot).
+      if (selectedDeck) {
+        setDeckToExport(selectedDeck);
+      } else if (currentDeck.length > 0) {
+        setDeckToExport({
+          id: editingDeckId ?? '',
+          name: editingDeckName || t('deck.unnamedDeck'),
+          format: activeFormat,
+          cards: currentDeck,
+          notes: editingDeckNotes,
+          relatedTokens: deckRelatedTokens,
+          createdAt: new Date().toISOString()
+        });
+      }
+      setPendingAction(null);
+    } else if (pendingAction === 'export-all-decks') {
+      exportAllDecks();
+      setPendingAction(null);
+    } else if (pendingAction === 'import-deck-text') {
+      setTextErrorMsg(null);
+      setIsTextImportOpen(true);
+      setPendingAction(null);
+    } else if (pendingAction === 'import-deck-file') {
+      menuImportFileInputRef.current?.click();
+      setPendingAction(null);
+    } else if (pendingAction === 'edit-selected-deck') {
+      if (selectedDeck) {
+        handleLoadDeckToEdit(
+          selectedDeck.id,
+          selectedDeck.name,
+          selectedDeck.format || DeckFormatType.FREEFORM,
+          selectedDeck.cards,
+          selectedDeck.notes,
+          selectedDeck.relatedTokens
+        );
+      }
+      setPendingAction(null);
+    } else if (pendingAction === 'show-saved-decks') {
+      setShowDeckList(true);
+      setIsMobileDeckListOpen(true);
+      setSelectedDeck(null);
+      setPendingAction(null);
+    }
+  }, [
+    pendingAction,
+    editingDeckId,
+    editingDeckName,
+    editingDeckNotes,
+    editingDeckFormat,
+    activeFormat,
+    currentDeck,
+    deckRelatedTokens,
+    selectedDeck,
+    handleSaveEditedDeck,
+    handleLoadDeckToEdit,
+    exportAllDecks,
+    setDeckName,
+    setDeckFormat,
+    setShowSaveDialog,
+    setPendingAction,
+    setSelectedDeck,
+    setTextErrorMsg,
+    clearDeckWithConfirm,
+    t
+  ]);
+
   const handleSaveTokens = useCallback(
     (deckId: string, tokens: DeckRelatedToken[]) => {
       onUpdateTokens(tokens);
@@ -383,6 +474,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
         showDeckList={showDeckList}
         onToggleDeckList={() => setShowDeckList(!showDeckList)}
         editingDeckId={editingDeckId}
+        editingDeckName={editingDeckName}
         currentDeckCount={currentDeck.length}
         hasSavedDecks={savedDecks.length > 0}
         showImportExportDropdown={showImportExportDropdown}
@@ -407,21 +499,53 @@ function DeckManager({ showToast }: DeckManagerProps) {
         onExportAll={exportAllDecks}
       />
 
+      {/* Hidden, always-mounted twin of the toolbar's file input: the mobile
+          page menu's "import deck" action clicks it programmatically. */}
+      <input
+        ref={menuImportFileInputRef}
+        type="file"
+        accept=".json,.dec,.txt"
+        onChange={handleImportDeck}
+        className="hidden"
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+
       <div className="workspace-body">
         <div
           className={`grid grid-cols-1 ${showDeckList ? 'lg:grid-cols-[300px_1fr] xl:grid-cols-[320px_1fr]' : 'lg:grid-cols-1'} gap-4 p-4`}
         >
           {showDeckList ? (
             <div className="col-span-1">
-              <DeckList
-                decks={displayDecks}
-                selectedDeckId={selectedDeck?.id ?? null}
-                editingDeckId={editingDeckId}
-                onSelectDeck={setSelectedDeck}
-                onEditDeck={handleEditDeck}
-                onExportDeck={(deck) => setDeckToExport(deck)}
-                onDeleteDeck={confirmDeleteDeck}
-              />
+              {/* Below lg the saved-decks list collapses behind this toggle so it
+                  stops permanently eating vertical space on phones. */}
+              <button
+                type="button"
+                onClick={() => setIsMobileDeckListOpen((open) => !open)}
+                aria-expanded={isMobileDeckListOpen}
+                aria-controls="saved-decks-panel"
+                className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <FaLayerGroup className="text-primary shrink-0" />
+                  {t('deck.savedDecks')}
+                  <span className="count-badge">{savedDecks.length}</span>
+                </span>
+                <FaChevronDown
+                  className={`text-xs text-gray-400 transition-transform duration-200 ${isMobileDeckListOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+              <div id="saved-decks-panel" className={`${isMobileDeckListOpen ? 'block' : 'hidden'} lg:block`}>
+                <DeckList
+                  decks={displayDecks}
+                  selectedDeckId={selectedDeck?.id ?? null}
+                  editingDeckId={editingDeckId}
+                  onSelectDeck={setSelectedDeck}
+                  onEditDeck={handleEditDeck}
+                  onExportDeck={(deck) => setDeckToExport(deck)}
+                  onDeleteDeck={confirmDeleteDeck}
+                />
+              </div>
             </div>
           ) : null}
           <div className="col-span-1 min-w-0">

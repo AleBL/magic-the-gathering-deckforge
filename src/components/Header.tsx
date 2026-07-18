@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch, FaLayerGroup } from 'react-icons/fa';
 import pwLogo from '../assets/pw-logo.svg';
 import ProfileMenu from './ProfileMenu';
+import MobilePageMenu from './MobilePageMenu';
 import EditingDeckBanner from './EditingDeckBanner';
 
 interface HeaderProps {
@@ -71,6 +72,7 @@ const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
         <div className="header-actions">
+          <MobilePageMenu activeTab={activeTab} />
           <ProfileMenu isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         </div>
       </div>

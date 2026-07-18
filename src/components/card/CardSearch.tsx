@@ -111,13 +111,33 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
             </button>
           </div>
 
-          {/* Secondary Controls: Filters & View Options */}
-          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 xl:gap-4">
+          {/* Secondary Controls: Filters & View Options. Hidden below `sm` —
+              the same breakpoint that shows the navbar page-menu button —
+              where all of these controls live inside the filters bottom
+              sheet instead (see mobileExtras). SearchFilters stays mounted
+              (not conditionally rendered) so its pendingAction listener keeps
+              working; its BottomSheet portals to <body>, escaping this
+              hidden container. */}
+          <div className="hidden sm:flex flex-col xl:flex-row xl:items-center justify-between gap-2 xl:gap-4">
             <div className="flex-1 overflow-hidden">
               <CardFilterBar filters={filters} setFilters={setFilters} />
             </div>
             <div className="flex flex-row flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-3 shrink-0 pb-1 sm:pb-3 xl:pb-0 w-full xl:w-auto">
-              <SearchFilters filters={filters} setFilters={setFilters} />
+              <SearchFilters
+                filters={filters}
+                setFilters={setFilters}
+                mobileExtras={
+                  <div className="space-y-3">
+                    <CardFilterBar filters={filters} setFilters={setFilters} />
+                    <div className="pt-2 border-t border-gray-100 dark:border-slate-800">
+                      <span className="block text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                        {t('search.cardSize')}
+                      </span>
+                      <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />
+                    </div>
+                  </div>
+                }
+              />
               <div className="w-px h-6 bg-gray-200 dark:bg-slate-700 hidden sm:block"></div>
               <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />
             </div>

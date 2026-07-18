@@ -145,8 +145,11 @@ function DeckPreview({
     if (pendingAction === 'playtest-deck') {
       setIsPlaytestOpen(true);
       setPendingAction(null);
+    } else if (pendingAction === 'print-proxies') {
+      setIsProxyPrintOpen(true);
+      setPendingAction(null);
     }
-  }, [pendingAction, setIsPlaytestOpen, setPendingAction]);
+  }, [pendingAction, setIsPlaytestOpen, setIsProxyPrintOpen, setPendingAction]);
 
   const handleLoadSelectedDeckToEdit = useCallback(() => {
     if (selectedDeck) {

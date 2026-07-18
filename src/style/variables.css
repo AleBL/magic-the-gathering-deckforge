@@ -62,7 +62,7 @@
   --z-overlay:  250;   /* Modal overlays (dim bg)           */
   --z-dialog:   300;   /* Alert/Confirm dialogs             */
   --z-toast:    400;   /* Toast notifications (always on top) */
-  --z-header:   2000;  /* Sticky app header (above page & modals) */
+  --z-header:   150;   /* Sticky app header (above page content/dropdowns, BELOW modal overlays so backdrops dim it; its own dropdowns stack inside the header's context) */
   --z-preview:  9999;  /* Floating card preview             */
 
   /* The playtest simulator is a full-screen takeover that opens its
