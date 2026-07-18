@@ -454,6 +454,8 @@ const pt = {
       shortcuts: 'Atalhos',
       shortcutsTitle: 'Atalhos de teclado',
       clickCardHint: 'Clique nas cartas para jogá-las na mesa.',
+      chooseFaceTitle: 'Escolha uma Face',
+      chooseFaceDescription: '"{{name}}" tem duas faces. Escolha qual lado será colocado no campo de batalha.',
       confirmMulligan: 'Confirmar Mulligan',
       createdTokenLog: 'Criou a ficha {{name}}',
       currentPhaseLabel: 'Fase',

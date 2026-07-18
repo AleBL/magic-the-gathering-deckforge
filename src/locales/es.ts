@@ -460,6 +460,8 @@ const es = {
       shortcuts: 'Atajos',
       shortcutsTitle: 'Atajos de teclado',
       clickCardHint: 'Haz clic en las cartas para jugarlas en la mesa.',
+      chooseFaceTitle: 'Elige una Cara',
+      chooseFaceDescription: '"{{name}}" tiene dos caras. Elige qué lado pondrás en el campo de batalla.',
       confirmMulligan: 'Confirmar Mulligan',
       createdTokenLog: 'Creó la ficha {{name}}',
       currentPhaseLabel: 'Fase',

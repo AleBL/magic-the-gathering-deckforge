@@ -453,6 +453,8 @@ const en = {
       shortcuts: 'Shortcuts',
       shortcutsTitle: 'Keyboard shortcuts',
       clickCardHint: 'Click cards to play them on the board.',
+      chooseFaceTitle: 'Choose a Face',
+      chooseFaceDescription: '"{{name}}" has two faces. Choose which side you are playing onto the battlefield.',
       confirmMulligan: 'Confirm Mulligan',
       createdTokenLog: 'Created token {{name}}',
       currentPhaseLabel: 'Phase',

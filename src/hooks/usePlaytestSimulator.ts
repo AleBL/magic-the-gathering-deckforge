@@ -3,6 +3,7 @@ import { Card } from '../types/Card';
 import { PlaytestCard, LogEntry } from '../types/Playtest';
 import { useTranslation } from 'react-i18next';
 import { PlaytestZone, LibraryPlacement } from '../types/enums';
+import { cardWithFace, isDoubleFaced } from '../utils/cardFaces';
 
 const getCardName = (item: PlaytestCard): string => item.card.printed_name || item.card.name;
 
@@ -21,10 +22,14 @@ const MAX_HISTORY = 60;
 
 /** Normalizes a card's tap/face state as it enters a zone (library cards are hidden). */
 function applyZoneTransform(card: PlaytestCard, to: PlaytestZone): PlaytestCard {
+  // Outside the battlefield a double-faced card is always its full physical
+  // card again — drop the single-face representation chosen when it was played.
+  const normalized =
+    to !== PlaytestZone.BATTLEFIELD && card.baseCard ? { ...card, card: card.baseCard, baseCard: undefined } : card;
   if (to === PlaytestZone.LIBRARY) {
-    return { ...card, isTapped: false, isFaceDown: true };
+    return { ...normalized, isTapped: false, isFaceDown: true };
   }
-  return { ...card, isTapped: false, isFaceDown: false };
+  return { ...normalized, isTapped: false, isFaceDown: false };
 }
 
 export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isOpen?: boolean) {
@@ -38,6 +43,9 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
   const [mulligans, setMulligans] = useState(0);
   const [isMulliganPhase, setIsMulliganPhase] = useState(false);
   const [selectedToBottom, setSelectedToBottom] = useState<Set<string>>(new Set());
+
+  // Double-faced card from the hand awaiting a face choice before entering play.
+  const [pendingFaceChoice, setPendingFaceChoice] = useState<PlaytestCard | null>(null);
 
   const [turn, setTurn] = useState(1);
   const [gameLog, setGameLog] = useState<LogEntry[]>([]);
@@ -107,6 +115,7 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     setMulligans(0);
     setIsMulliganPhase(false);
     setSelectedToBottom(new Set());
+    setPendingFaceChoice(null);
 
     setTurn(1);
     setGameLog([
@@ -299,11 +308,48 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
 
   const handlePlayCard = useCallback(
     (playtestId: string) => {
+      // Genuinely double-faced cards (transform/MDFC) must declare which face
+      // is being played — hold the card in hand and ask first.
+      const inHand = hand.find((item) => item.playtestId === playtestId);
+      if (inHand && isDoubleFaced(inHand.card)) {
+        setPendingFaceChoice(inHand);
+        return;
+      }
       const moved = moveCard(playtestId, PlaytestZone.HAND, PlaytestZone.BATTLEFIELD);
       if (moved) logAction(t('playtest.playedCardLog', { name: getCardName(moved) }));
     },
-    [moveCard, logAction, t]
+    [hand, moveCard, logAction, t]
   );
+
+  /** Resolves a pending face choice: the selected face enters the battlefield. */
+  const handleChooseFace = useCallback(
+    (faceIndex: number) => {
+      if (!pendingFaceChoice) return;
+      const pending = pendingFaceChoice;
+      setPendingFaceChoice(null);
+
+      // The card may have left the hand meanwhile (e.g. undo); bail out safely.
+      const stillInHand = hand.some((item) => item.playtestId === pending.playtestId);
+      if (!stillInHand) return;
+
+      const playedCard = cardWithFace(pending.card, faceIndex);
+      // Route battlefield entry through the same normalization every other
+      // zone move uses, so DFCs can't drift from regular cards.
+      const entering = applyZoneTransform(
+        { ...pending, card: playedCard, baseCard: pending.card },
+        PlaytestZone.BATTLEFIELD
+      );
+      setHand((prev) => prev.filter((item) => item.playtestId !== pending.playtestId));
+      setBattlefield((prev) => [...prev, entering]);
+      logAction(t('playtest.playedCardLog', { name: playedCard.printed_name || playedCard.name }));
+    },
+    [pendingFaceChoice, hand, logAction, t]
+  );
+
+  /** Dismisses the face-choice prompt, leaving the card in hand. */
+  const handleCancelFaceChoice = useCallback(() => {
+    setPendingFaceChoice(null);
+  }, []);
 
   const handleToggleTapCard = useCallback(
     (playtestId: string) => {
@@ -541,6 +587,9 @@ export function usePlaytestSimulator(deckCards: Card[], deckFormat?: string, isO
     handleDrawCard,
     handleShuffleLibrary,
     handlePlayCard,
+    pendingFaceChoice,
+    handleChooseFace,
+    handleCancelFaceChoice,
     handleToggleTapCard,
     handleAddCounter,
     handleRemoveCounter,
