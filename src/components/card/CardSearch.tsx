@@ -128,7 +128,7 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
                 setFilters={setFilters}
                 mobileExtras={
                   <div className="space-y-3">
-                    <CardFilterBar filters={filters} setFilters={setFilters} />
+                    <CardFilterBar filters={filters} setFilters={setFilters} mobileLayout />
                     <div className="pt-2 border-t border-gray-100 dark:border-slate-800">
                       <span className="block text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                         {t('search.cardSize')}
