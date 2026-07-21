@@ -347,6 +347,49 @@ const pt = {
       landsToAdd: 'A adicionar',
       suggestedDistribution: 'Distribuição sugerida'
     },
+    deckDoctor: {
+      title: 'Deck Doctor',
+      desc: 'Um diagnóstico completo da consistência do seu deck, com conselhos práticos.',
+      noData: 'Adicione mais cartas para rodar um diagnóstico completo.',
+      consistencyScore: 'Nota de consistência',
+      rating: {
+        excellent: 'Excelente',
+        good: 'Sólido',
+        fair: 'Instável',
+        poor: 'Inconsistente'
+      },
+      component: {
+        manaRatio: 'Proporção de terrenos',
+        keepableHands: 'Mãos jogáveis',
+        colorSources: 'Fontes de cor'
+      },
+      note: {
+        manaRatio: 'O quão perto sua contagem de terrenos está do ideal para esta curva.',
+        keepableHands: '{{percent}} das mãos iniciais têm de 2 a 5 terrenos.',
+        colorSources: 'Chance média de {{percent}} de ver cada cor necessária cedo.'
+      },
+      goldfish: 'Simulação de mãos',
+      handsSimulated: '{{count}} mãos iniciais simuladas',
+      playableHands: 'Jogáveis',
+      avgCurve: 'Curva média',
+      noLander: 'Sem terreno',
+      floodRisk: 'Afogamento',
+      landOdds: 'Chances de terreno (jogando primeiro)',
+      keepable: 'Jogável',
+      byTurnLabel: '≥{{lands}} no T{{turn}}',
+      colorSources: 'Fontes de cor',
+      sourcesOfIdeal: '{{sources}}/{{ideal}} fontes',
+      recommendations: 'Recomendações',
+      rec: {
+        addLands: 'Adicione ~{{count}} terrenos — sua base de mana está fraca para esta curva.',
+        cutLands: 'Corte ~{{count}} terrenos — você tem mais do que esta curva precisa.',
+        addSource: 'Adicione ~{{low}}–{{high}} fontes de {{color}} para os pips que suas mágicas exigem.',
+        curveHeavy: 'Sua curva está pesada no {{cmc}} — reduza o topo ou adicione jogadas mais baratas.',
+        screwRisk: 'Risco de mana screw: {{percent}}% das mãos iniciais têm menos de 2 terrenos.',
+        floodRisk: 'Risco de afogamento: {{percent}}% das mãos iniciais têm 6 ou mais terrenos.',
+        balanced: 'Este deck parece bem ajustado — nenhum problema grave de mana encontrado.'
+      }
+    },
     print: {
       cardsPerPageSimple: 'cartas por folha',
       cardsPerPageText: 'Cabem exatamente',

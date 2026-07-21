@@ -13,6 +13,7 @@ import { ManaPipAnalysisPanel } from './stats/ManaPipAnalysisPanel';
 import { BudgetEstimatorPanel } from './stats/BudgetEstimatorPanel';
 import { ConsistencyPanel } from './stats/ConsistencyPanel';
 import { RarityPanel } from './stats/RarityPanel';
+import { DeckDoctorPanel } from './stats/DeckDoctorPanel';
 
 interface DeckStatsProps {
   currentDeck: Card[];
@@ -32,6 +33,10 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
 
   return (
     <div className="deck-stats-container">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <DeckDoctorPanel currentDeck={currentDeck} />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <ManaCurvePanel stats={stats} activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
         <ColorDistributionPanel
