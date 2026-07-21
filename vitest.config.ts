@@ -23,6 +23,8 @@ export default defineConfig({
         'src/utils/translationHelper.ts',
         'src/utils/deckDoctor.ts',
         'src/utils/deckStatistics.ts',
+        'src/utils/collectionMath.ts',
+        'src/services/collectionCsv.ts',
         'src/store/useDeckStore.ts',
         'src/hooks/usePlaytestSimulator.ts',
         'src/hooks/useInstallPrompt.ts',
