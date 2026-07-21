@@ -179,6 +179,11 @@ function CollectionManager() {
               icon={view === 'wishlist' ? <FaHeart /> : <FaBoxOpen />}
               title={view === 'wishlist' ? t('collection.emptyWishlist') : t('collection.empty')}
               description={t('collection.emptyHint')}
+              action={{
+                label: t('collection.goToSearch'),
+                // App listens for this and switches to the search tab.
+                onClick: () => window.dispatchEvent(new CustomEvent('mtg-navigate-tab', { detail: 'search' }))
+              }}
             />
           )}
         </div>

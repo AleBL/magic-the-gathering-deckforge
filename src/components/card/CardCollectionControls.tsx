@@ -66,9 +66,11 @@ export function CardCollectionControls({ card, variant = 'overlay' }: CardCollec
   const isActive = quantity > 0 || wishlist;
 
   return (
+    // Inactive controls stay faintly visible on touch devices (no hover to
+    // reveal them) and only fully hide on viewports that can hover.
     <div
       className={`absolute top-2 left-2 z-30 flex flex-col items-start gap-1.5 transition-opacity ${
-        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        isActive ? 'opacity-100' : 'opacity-70 sm:opacity-0 group-hover:opacity-100 sm:group-hover:opacity-100'
       }`}
     >
       <button

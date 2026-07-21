@@ -84,6 +84,20 @@ function App() {
     return () => window.removeEventListener('global-toast', handleGlobalToast);
   }, [showToast]);
 
+  // Detached views (e.g. the collection's empty state) can request a tab
+  // switch without receiving the setter through props.
+  useEffect(() => {
+    const handleNavigateTab = (e: Event) => {
+      const tab = (e as CustomEvent).detail as AppTab;
+      if (tab === 'search' || tab === 'deck' || tab === 'collection') {
+        setActiveTab(tab);
+        if (tab === 'search') setPendingAction('focus-search');
+      }
+    };
+    window.addEventListener('mtg-navigate-tab', handleNavigateTab);
+    return () => window.removeEventListener('mtg-navigate-tab', handleNavigateTab);
+  }, [setPendingAction]);
+
   useEffect(() => {
     document.documentElement.lang = i18n.language || 'en';
   }, [i18n.language]);
