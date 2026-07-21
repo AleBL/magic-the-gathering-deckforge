@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { computeDeckStatistics } from './deckStatistics';
+import {
+  computeDeckStatistics,
+  landDrawProbabilities,
+  hypergeometricExactly,
+  hypergeometricAtLeast,
+  cardsSeenByTurn
+} from './deckStatistics';
 import { makeCard } from '../test/factories';
 import { Card } from '../types/Card';
 
@@ -208,5 +214,64 @@ describe('computeDeckStatistics — mana base optimizer floors and rounding', ()
     const stats = computeDeckStatistics(deck);
     expect(stats.suggestedBasicLandCounts.Mountain).toBe(stats.neededBasicLands);
     expect(stats.neededBasicLands).toBe(20);
+  });
+});
+
+describe('hypergeometric helpers', () => {
+  // Reference value: P(exactly 3 lands in an opening 7 from a 60-card / 24-land
+  // deck) = C(24,3)·C(36,4)/C(60,7) ≈ 0.3087.
+  it('landDrawProbabilities matches the known 60/24 opening-hand distribution', () => {
+    const distribution = landDrawProbabilities(60, 24, 7);
+    const at3 = distribution.find((d) => d.lands === 3);
+    expect(at3?.prob).toBeCloseTo(0.3087, 3);
+    const total = distribution.reduce((sum, d) => sum + d.prob, 0);
+    expect(total).toBeCloseTo(1, 6);
+  });
+
+  it('hypergeometricExactly agrees with landDrawProbabilities term by term', () => {
+    for (let k = 0; k <= 7; k++) {
+      const fromArray = landDrawProbabilities(60, 24, 7).find((d) => d.lands === k)?.prob ?? 0;
+      expect(hypergeometricExactly(60, 24, 7, k)).toBeCloseTo(fromArray, 10);
+    }
+  });
+
+  it('hypergeometricExactly returns 0 for impossible draws', () => {
+    expect(hypergeometricExactly(60, 24, 7, 8)).toBe(0); // more successes than cards drawn
+    expect(hypergeometricExactly(60, 24, 7, 25)).toBe(0); // more than exist
+    expect(hypergeometricExactly(60, 24, 7, -1)).toBe(0);
+    expect(hypergeometricExactly(0, 0, 7, 0)).toBe(0);
+  });
+
+  it('hypergeometricAtLeast equals the summed tail of the exact distribution', () => {
+    // P(≥1 source of a color with 14 sources in a 60-card deck, opening 7).
+    const tail =
+      hypergeometricExactly(60, 14, 7, 1) +
+      Array.from({ length: 6 }, (_, i) => hypergeometricExactly(60, 14, 7, i + 2)).reduce((a, b) => a + b, 0);
+    expect(hypergeometricAtLeast(60, 14, 7, 1)).toBeCloseTo(tail, 10);
+  });
+
+  it('hypergeometricAtLeast(≥1) is the complement of drawing none', () => {
+    const none = hypergeometricExactly(60, 14, 7, 0);
+    expect(hypergeometricAtLeast(60, 14, 7, 1)).toBeCloseTo(1 - none, 10);
+  });
+
+  it('hypergeometricAtLeast handles the k=0 and impossible edges', () => {
+    expect(hypergeometricAtLeast(60, 14, 7, 0)).toBe(1);
+    expect(hypergeometricAtLeast(0, 0, 7, 1)).toBe(0);
+    expect(hypergeometricAtLeast(60, 0, 7, 1)).toBe(0); // no sources ⇒ never draw one
+  });
+
+  it('more sources strictly increase the odds of seeing at least one', () => {
+    const odds = [8, 12, 16, 20].map((sources) => hypergeometricAtLeast(60, sources, 7, 1));
+    for (let i = 1; i < odds.length; i++) {
+      expect(odds[i]).toBeGreaterThan(odds[i - 1]);
+    }
+  });
+
+  it('cardsSeenByTurn counts the opening 7 plus draws (on the play vs. draw)', () => {
+    expect(cardsSeenByTurn(1)).toBe(7); // on the play, no turn-1 draw
+    expect(cardsSeenByTurn(3)).toBe(9);
+    expect(cardsSeenByTurn(1, false)).toBe(8); // on the draw
+    expect(cardsSeenByTurn(3, false)).toBe(10);
   });
 });
