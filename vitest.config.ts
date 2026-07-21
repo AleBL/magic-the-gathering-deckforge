@@ -25,7 +25,6 @@ export default defineConfig({
         'src/utils/deckStatistics.ts',
         'src/utils/collectionMath.ts',
         'src/utils/deckText.ts',
-        'src/utils/qrCode.ts',
         'src/services/collectionCsv.ts',
         'src/services/deckShare.ts',
         'src/store/useDeckStore.ts',

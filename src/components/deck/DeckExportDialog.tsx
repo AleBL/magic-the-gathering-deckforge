@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCopy, FaLink, FaFileCode, FaQrcode } from 'react-icons/fa';
+import { FaCopy, FaLink, FaFileCode } from 'react-icons/fa';
 import { Deck } from '../../types/Deck';
 import { ShowToastFn } from '../../types/Toast';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -9,7 +9,6 @@ import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 import { buildDeckFileContent, buildShareUrl } from '../../services/deckShare';
 import { deckToArenaText } from '../../utils/deckText';
 import { downloadAsText } from '../../services/fileDownload';
-import { DeckQrCode } from './DeckQrCode';
 
 interface DeckExportDialogProps {
   deck: Deck;
@@ -19,13 +18,12 @@ interface DeckExportDialogProps {
   showToast: ShowToastFn;
 }
 
-/** Prompt offering every way to export/share a deck: link, QR, text, files. */
+/** Prompt offering every way to export/share a deck: link, text, files. */
 export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, showToast }: DeckExportDialogProps) {
   const { t } = useTranslation();
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(onCancel);
   const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(onCancel);
-  const [showQr, setShowQr] = useState(false);
 
   const shareUrl = useMemo(() => buildShareUrl(deck), [deck]);
 
@@ -99,41 +97,15 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
               <span className="text-xs font-bold">{t('common.copy')}</span>
             </button>
           </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setShowQr((v) => !v)}
-              aria-expanded={showQr}
-              className="flex-1 secondary-button py-2 flex items-center justify-center gap-2 text-sm"
-            >
-              <FaQrcode className="text-xs" />
-              {showQr ? t('export.hideQr') : t('export.showQr')}
-            </button>
-            <button
-              type="button"
-              onClick={handleDownloadDeckFile}
-              className="flex-1 secondary-button py-2 flex items-center justify-center gap-2 text-sm"
-              title={t('export.downloadDeckFile')}
-            >
-              <FaFileCode className="text-xs" />
-              .deck
-            </button>
-          </div>
-          {showQr ? (
-            <div className="mt-3 flex flex-col items-center">
-              <DeckQrCode
-                value={shareUrl}
-                size={220}
-                className="rounded-lg bg-white p-2"
-                fallback={
-                  <p className="text-xs text-amber-600 dark:text-amber-400 text-center py-4">
-                    {t('export.qrTooLarge')}
-                  </p>
-                }
-              />
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 text-center">{t('export.scanHint')}</p>
-            </div>
-          ) : null}
+          <button
+            type="button"
+            onClick={handleDownloadDeckFile}
+            className="w-full secondary-button py-2 flex items-center justify-center gap-2 text-sm"
+            title={t('export.downloadDeckFile')}
+          >
+            <FaFileCode className="text-xs" />
+            {t('export.downloadDeckFile')}
+          </button>
         </div>
 
         {/* Copy as plain decklist text (MTG Arena / MTGO). */}
