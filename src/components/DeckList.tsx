@@ -17,6 +17,8 @@ interface DeckListProps {
     relatedTokens?: Deck['relatedTokens']
   ) => void;
   onExportDeck: (deck: Deck) => void;
+  onDuplicateDeck: (deck: Deck) => void;
+  onNewFromDeck: (deck: Deck) => void;
   onDeleteDeck: (deck: Deck) => void;
 }
 
@@ -27,6 +29,8 @@ function DeckList({
   onSelectDeck,
   onEditDeck,
   onExportDeck,
+  onDuplicateDeck,
+  onNewFromDeck,
   onDeleteDeck
 }: DeckListProps) {
   const { t } = useTranslation();
@@ -56,6 +60,8 @@ function DeckList({
               onSelect={onSelectDeck}
               onEdit={onEditDeck}
               onExport={onExportDeck}
+              onDuplicate={onDuplicateDeck}
+              onNewFrom={onNewFromDeck}
               onDelete={onDeleteDeck}
             />
           ))

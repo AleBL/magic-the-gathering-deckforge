@@ -9,6 +9,7 @@ import useToast from './hooks/useToast';
 import { useShortcuts } from './hooks/useShortcuts';
 import RootLayout from './components/layout/RootLayout';
 import { useDeckStore } from './store/useDeckStore';
+import { extractShareParam, SHARE_PARAM } from './services/deckShare';
 import { useDeckActions } from './hooks/useDeckActions';
 import { useGlobalRipple } from './hooks/useGlobalRipple';
 import { useVisualEffects } from './hooks/useVisualEffects';
@@ -24,6 +25,7 @@ function App() {
 
   const editingDeck = useDeckStore((state) => state.editingDeck);
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
+  const setPendingSharedDeck = useDeckStore((state) => state.setPendingSharedDeck);
 
   const { handleAddToDeck, handleAddTokenToDeck } = useDeckActions(showToast);
 
@@ -58,6 +60,18 @@ function App() {
     onPlaytest: handlePlaytest,
     onClearDeck: handleClearDeck
   });
+
+  // On startup, a `?deck=` share link hands its payload to the deck manager and
+  // is stripped from the address bar so a refresh doesn't re-import it.
+  useEffect(() => {
+    const encoded = extractShareParam(window.location.search);
+    if (!encoded) return;
+    setPendingSharedDeck(encoded);
+    setActiveTab('deck');
+    const url = new URL(window.location.href);
+    url.searchParams.delete(SHARE_PARAM);
+    window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+  }, [setPendingSharedDeck]);
 
   useEffect(() => {
     fetchSymbols();

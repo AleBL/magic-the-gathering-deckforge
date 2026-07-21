@@ -54,6 +54,14 @@ interface DeckStoreState {
   /** Saved-decks count, published by DeckManager for the mobile page menu. */
   savedDeckCount: number;
   setSavedDeckCount: (count: number) => void;
+
+  /**
+   * Encoded deck lifted from a `?deck=` share link on startup. App detects it,
+   * switches to the deck tab and parks it here; DeckManager consumes it once
+   * mounted (importing the deck) and clears it.
+   */
+  pendingSharedDeck: string | null;
+  setPendingSharedDeck: (encoded: string | null) => void;
 }
 
 export interface SelectedDeckSummary {
@@ -97,8 +105,11 @@ export const useDeckStore = create<DeckStoreState>((set) => ({
   pendingAction: null,
   selectedDeckSummary: null,
   savedDeckCount: 0,
+  pendingSharedDeck: null,
 
   setPendingAction: (action) => set({ pendingAction: action }),
+
+  setPendingSharedDeck: (encoded) => set({ pendingSharedDeck: encoded }),
 
   setSelectedDeckSummary: (summary) => set({ selectedDeckSummary: summary }),
 

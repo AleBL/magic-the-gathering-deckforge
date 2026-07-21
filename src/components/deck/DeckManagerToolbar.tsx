@@ -199,7 +199,7 @@ export function DeckManagerToolbar({
                         <input
                           id="deck-import-file-input"
                           type="file"
-                          accept=".json,.dec,.txt"
+                          accept=".json,.dec,.txt,.deck"
                           onChange={(e) => {
                             setShowImportExportDropdown(false);
                             onImportFile(e);
