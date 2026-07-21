@@ -1,9 +1,21 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaBook, FaSave, FaFlask, FaTrash, FaSun, FaMoon, FaKeyboard, FaGlobe } from 'react-icons/fa';
+import {
+  FaSearch,
+  FaBook,
+  FaBoxOpen,
+  FaSave,
+  FaFlask,
+  FaTrash,
+  FaSun,
+  FaMoon,
+  FaKeyboard,
+  FaGlobe
+} from 'react-icons/fa';
 import { useDeckStore } from '../store/useDeckStore';
 import { SUPPORTED_LANGUAGES } from '../constants';
+import { AppTab } from '../types';
 import { useMountTransition } from '../hooks/useMountTransition';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -20,7 +32,7 @@ interface Command {
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  setActiveTab: (tab: 'search' | 'deck') => void;
+  setActiveTab: (tab: AppTab) => void;
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   onShowShortcuts: () => void;
@@ -65,6 +77,13 @@ export default function CommandPalette({
         icon: <FaBook />,
         keywords: 'deck decks mazo manager',
         run: () => setActiveTab('deck')
+      },
+      {
+        id: 'collection',
+        label: t('commandPalette.goToCollection'),
+        icon: <FaBoxOpen />,
+        keywords: 'collection coleccion coleção owned wishlist have',
+        run: () => setActiveTab('collection')
       },
       {
         id: 'save',

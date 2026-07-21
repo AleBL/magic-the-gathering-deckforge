@@ -7,6 +7,7 @@ import { DeckFormat } from '../../types/Deck';
 import { DeckFormatType, DeckZone } from '../../types/enums';
 import CardDetailModal from './CardDetailModal';
 import FlipCard from './FlipCard';
+import { CardCollectionControls } from './CardCollectionControls';
 import { getCardFaceImages } from '../../utils/cardFaces';
 import { useVisualEffects } from '../../hooks/useVisualEffects';
 import locales from '../../locales';
@@ -64,6 +65,8 @@ interface CardItemProps {
   isToken?: boolean;
   onUpdateCardZone?: (cardId: string, zone: DeckZone) => void;
   isEditMode?: boolean;
+  /** Shows the own/wishlist overlay controls (search results & collection view). */
+  showCollectionControls?: boolean;
 }
 
 function getCardImageUrl(card: Card, size: CardSize): string {
@@ -104,7 +107,8 @@ function CardItem({
   onSelectPrint,
   isToken = false,
   isEditMode = false,
-  onUpdateCardZone
+  onUpdateCardZone,
+  showCollectionControls = false
 }: CardItemProps) {
   const { t } = useTranslation();
   const { motionEnabled } = useVisualEffects();
@@ -269,6 +273,8 @@ function CardItem({
         </button>
       )}
 
+      {showCollectionControls && !isToken && <CardCollectionControls card={card} variant="overlay" />}
+
       {/* Fast circular Add/Remove buttons on hover */}
       {(onAddToDeck || onRemoveFromDeck || onUpdateCardZone) && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-30 pointer-events-none items-center justify-center bg-black/40 backdrop-blur-md p-1.5 rounded-full shadow-lg border border-white/10">
@@ -363,6 +369,7 @@ function CardItem({
           deckCards={deckCards}
           onRemoveFromDeck={onRemoveFromDeck}
           isEditMode={isEditMode}
+          showCollectionControls={showCollectionControls}
           deckRelatedTokens={isToken ? deckCards.map((c) => ({ tokenCard: c, generatorCardName: '' })) : undefined}
         />
       )}

@@ -205,6 +205,7 @@ function CardSearch({ onAddToDeck, onAddTokenToDeck, activeFormat }: CardSearchP
                 onAddToDeck={onAddToDeck}
                 onAddTokenToDeck={onAddTokenToDeck}
                 activeFormat={activeFormat}
+                showCollectionControls
               />
             </div>
           )}

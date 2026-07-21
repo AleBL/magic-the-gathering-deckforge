@@ -32,6 +32,8 @@ interface CardDetailModalProps {
   deckRelatedTokens?: DeckRelatedToken[];
   defaultShowPrints?: boolean;
   zIndex?: number;
+  /** Shows the own/wishlist collection panel (search results & collection view). */
+  showCollectionControls?: boolean;
 }
 
 import { CardDetailActions } from './CardDetailActions';
@@ -39,6 +41,7 @@ import { CardDetailData } from './CardDetailData';
 import { CardDetailEditControls } from './CardDetailEditControls';
 import { CardDetailPrintsSidebar } from './CardDetailPrintsSidebar';
 import { CardDetailRelatedTokens } from './CardDetailRelatedTokens';
+import { CardCollectionControls } from './CardCollectionControls';
 
 function CardDetailModal({
   card: initialCard,
@@ -56,7 +59,8 @@ function CardDetailModal({
   hidePriceAndLegality = false,
   deckRelatedTokens = [],
   defaultShowPrints,
-  zIndex = 250
+  zIndex = 250,
+  showCollectionControls = false
 }: CardDetailModalProps) {
   const { t } = useTranslation();
   const { motionEnabled } = useVisualEffects();
@@ -323,6 +327,8 @@ function CardDetailModal({
 
               {/* Related tokens section */}
               <CardDetailRelatedTokens relatedTokens={relatedTokens} onCardClick={setSelectedToken} />
+
+              {showCollectionControls && !isToken && <CardCollectionControls card={card} variant="panel" />}
 
               {/* Edit and Copy controls for Deck Cards */}
               <div className="w-full mt-auto">

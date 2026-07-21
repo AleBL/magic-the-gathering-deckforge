@@ -21,6 +21,7 @@ import DeckStackView from './deck/DeckStackView';
 import DeckTokensTab from './deck/DeckTokensTab';
 import { DeckDisplayOptions } from './deck/DeckDisplayOptions';
 import { DeckStatsFilteredCards } from './deck/DeckStatsFilteredCards';
+import { DeckCollectionSummary } from './deck/DeckCollectionSummary';
 import CardDetailModal from './card/CardDetailModal';
 
 const PlaytestSimulator = lazy(() => import('./PlaytestSimulator'));
@@ -302,8 +303,9 @@ function DeckPreview({
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col gap-3">
           <DeckValidationBadge validation={validation} formatKey={selectedDeck.format || DeckFormatType.FREEFORM} />
+          <DeckCollectionSummary cards={selectedDeck.cards} />
         </div>
 
         {noteTabHeader}
@@ -448,11 +450,12 @@ function DeckPreview({
       </div>
 
       {currentDeck.length > 0 ? (
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col gap-3">
           <DeckValidationBadge
             validation={validateDeck(currentDeck, activeFormat || DeckFormatType.FREEFORM)}
             formatKey={activeFormat || DeckFormatType.FREEFORM}
           />
+          <DeckCollectionSummary cards={currentDeck} />
         </div>
       ) : null}
 
