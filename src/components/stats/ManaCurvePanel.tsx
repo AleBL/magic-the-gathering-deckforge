@@ -45,7 +45,7 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
       {!ready ? (
         <ChartSkeleton height="h-40" />
       ) : totalSpells === 0 ? (
-        <ChartFrame height="h-40" className="flex items-center justify-center">
+        <ChartFrame height="h-64 sm:h-72" className="flex items-center justify-center">
           <EmptyState icon={<FaChartBar />} title={t('stats.noCurveData')} />
         </ChartFrame>
       ) : (
