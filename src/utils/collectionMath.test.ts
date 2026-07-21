@@ -7,6 +7,7 @@ import {
   computeDeckCollectionGap,
   formatCurrency,
   getCardPrice,
+  getEntryPrice,
   isBasicLand
 } from './collectionMath';
 
@@ -38,6 +39,35 @@ describe('getCardPrice', () => {
     expect(getCardPrice(makeCard({ prices: { usd: null } }), 'usd')).toBeNull();
     expect(getCardPrice(makeCard({ prices: undefined }), 'usd')).toBeNull();
     expect(getCardPrice(makeCard({ prices: { usd: 'nan' } }), 'usd')).toBeNull();
+  });
+});
+
+describe('getEntryPrice', () => {
+  it("prefers the printing's own price", () => {
+    const e = entry(makeCard({ prices: { usd: '3.00' } }), { fallbackPrices: { usd: '9.99', eur: null } });
+    expect(getEntryPrice(e, 'usd')).toEqual({ price: 3, isFallback: false });
+  });
+
+  it('falls back to the stored English-printing price and flags it', () => {
+    const e = entry(makeCard({ prices: { usd: null, eur: null } }), { fallbackPrices: { usd: '9.99', eur: null } });
+    expect(getEntryPrice(e, 'usd')).toEqual({ price: 9.99, isFallback: true });
+    expect(getEntryPrice(e, 'eur')).toBeNull();
+  });
+
+  it('returns null when neither price exists', () => {
+    expect(getEntryPrice(entry(makeCard({ prices: undefined })), 'usd')).toBeNull();
+  });
+
+  it('feeds fallback values (and their count) into the summary', () => {
+    const summary = computeCollectionSummary(
+      [
+        entry(makeCard({ id: 'a', prices: { usd: '2.00' } }), { quantity: 2 }),
+        entry(makeCard({ id: 'b', prices: { usd: null } }), { quantity: 1, fallbackPrices: { usd: '5.00', eur: null } })
+      ],
+      'usd'
+    );
+    expect(summary.totalValue).toBe(9);
+    expect(summary.fallbackPricedCount).toBe(1);
   });
 });
 

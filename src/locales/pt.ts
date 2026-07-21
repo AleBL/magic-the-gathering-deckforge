@@ -217,6 +217,8 @@ const pt = {
       empty: 'Sua coleção está vazia',
       emptyWishlist: 'Sua lista de desejos está vazia',
       emptyHint: 'Marque cartas como adquiridas ou desejadas nos resultados da busca ou nos detalhes da carta.',
+      priceFallbackNote:
+        'O Scryfall não tem preços para cartas em outros idiomas — {{count}} carta(s) usam o preço da edição em inglês como estimativa.',
       exported: 'Coleção exportada com sucesso!',
       imported: '{{count}} cartas importadas para a sua coleção.',
       importedWithMissing: '{{count}} cartas importadas. {{missing}} não foram encontradas.',

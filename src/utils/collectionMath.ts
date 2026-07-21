@@ -9,6 +9,23 @@ export function getCardPrice(card: Card, currency: Currency): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Price for a collection entry: the printing's own price when available,
+ * otherwise the stored English-printing fallback (marked as an estimate).
+ */
+export function getEntryPrice(
+  entry: CollectionEntry,
+  currency: Currency
+): { price: number; isFallback: boolean } | null {
+  const own = getCardPrice(entry.card, currency);
+  if (own !== null) return { price: own, isFallback: false };
+
+  const raw = currency === 'eur' ? entry.fallbackPrices?.eur : entry.fallbackPrices?.usd;
+  if (raw == null) return null;
+  const value = parseFloat(raw);
+  return Number.isFinite(value) ? { price: value, isFallback: true } : null;
+}
+
 /** Formats a numeric value with the currency's symbol and two decimals. */
 export function formatCurrency(value: number, currency: Currency): string {
   const symbol = currency === 'eur' ? '€' : '$';
@@ -31,6 +48,8 @@ export interface CollectionSummary {
   wishlistCount: number;
   /** Estimated value of owned copies in the chosen currency. */
   totalValue: number;
+  /** Owned entries whose value came from the English-printing fallback price. */
+  fallbackPricedCount: number;
   currency: Currency;
 }
 
@@ -39,18 +58,22 @@ export function computeCollectionSummary(entries: CollectionEntry[], currency: C
   let uniquePrintings = 0;
   let wishlistCount = 0;
   let totalValue = 0;
+  let fallbackPricedCount = 0;
 
   for (const entry of entries) {
     if (entry.wishlist) wishlistCount += 1;
     if (entry.quantity > 0) {
       totalCopies += entry.quantity;
       uniquePrintings += 1;
-      const price = getCardPrice(entry.card, currency);
-      if (price !== null) totalValue += price * entry.quantity;
+      const priced = getEntryPrice(entry, currency);
+      if (priced !== null) {
+        totalValue += priced.price * entry.quantity;
+        if (priced.isFallback) fallbackPricedCount += 1;
+      }
     }
   }
 
-  return { totalCopies, uniquePrintings, wishlistCount, totalValue, currency };
+  return { totalCopies, uniquePrintings, wishlistCount, totalValue, fallbackPricedCount, currency };
 }
 
 export interface DeckGapCardRow {

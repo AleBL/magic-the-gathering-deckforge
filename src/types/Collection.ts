@@ -24,5 +24,11 @@ export interface CollectionEntry {
   wishlist: boolean;
   /** Full card snapshot for display and pricing. */
   card: Card;
+  /**
+   * Prices borrowed from the same printing's English version, used when the
+   * stored card (e.g. a Portuguese printing) has no Scryfall prices of its own.
+   * `undefined` = not looked up yet; `null` = looked up, nothing found.
+   */
+  fallbackPrices?: { usd: string | null; eur: string | null } | null;
   updatedAt: string;
 }
