@@ -219,6 +219,11 @@ const pt = {
       emptyHint: 'Marque cartas como adquiridas ou desejadas nos resultados da busca ou nos detalhes da carta.',
       priceFallbackNote:
         'O Scryfall não tem preços para cartas em outros idiomas — {{count}} carta(s) usam o preço da edição em inglês como estimativa.',
+      addedToCollection: '{{name}} adicionada à sua coleção!',
+      removedFromCollection: '{{name}} removida da sua coleção.',
+      copiesUpdated: '{{name}}: {{count}} cópias na sua coleção.',
+      addedToWishlist: '{{name}} adicionada à lista de desejos!',
+      removedFromWishlist: '{{name}} removida da lista de desejos.',
       exported: 'Coleção exportada com sucesso!',
       imported: '{{count}} cartas importadas para a sua coleção.',
       importedWithMissing: '{{count}} cartas importadas. {{missing}} não foram encontradas.',

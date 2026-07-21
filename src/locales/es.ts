@@ -219,6 +219,11 @@ const es = {
       emptyHint: 'Marca cartas como adquiridas o deseadas desde los resultados de búsqueda o los detalles de la carta.',
       priceFallbackNote:
         'Scryfall no tiene precios para impresiones en otros idiomas — {{count}} carta(s) usan el precio de la edición en inglés como estimación.',
+      addedToCollection: '{{name}} añadida a tu colección!',
+      removedFromCollection: '{{name}} eliminada de tu colección.',
+      copiesUpdated: '{{name}}: {{count}} copias en tu colección.',
+      addedToWishlist: '{{name}} añadida a tu lista de deseos!',
+      removedFromWishlist: '{{name}} eliminada de tu lista de deseos.',
       exported: '¡Colección exportada con éxito!',
       imported: '{{count}} cartas importadas a tu colección.',
       importedWithMissing: '{{count}} cartas importadas. {{missing}} no se encontraron.',

@@ -1,24 +1,55 @@
 import { useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useTranslation } from 'react-i18next';
 import { db } from '../db/database';
 import { Card } from '../types/Card';
 import { decrementOwned, incrementOwned, setOwnedQuantity, toggleWishlist } from '../services/collectionService';
+import { dispatchToast } from '../utils/toastHelper';
 
 /**
  * Scoped collection state for a single card/printing. Uses a targeted live
  * query so each card only re-renders when its own entry changes, not on every
- * collection mutation.
+ * collection mutation. Every mutation confirms itself with a toast so the
+ * (small, overlay-style) controls always give visible feedback.
  */
 export function useCardCollection(card: Card) {
+  const { t } = useTranslation();
   const entry = useLiveQuery(() => db.collection.get(card.id), [card.id]);
 
   const quantity = entry?.quantity ?? 0;
   const wishlist = entry?.wishlist ?? false;
+  const displayName = card.printed_name || card.name;
 
-  const increment = useCallback(() => incrementOwned(card), [card]);
-  const decrement = useCallback(() => decrementOwned(card), [card]);
+  const increment = useCallback(async () => {
+    await incrementOwned(card);
+    if (quantity === 0) {
+      dispatchToast(t('collection.addedToCollection', { name: displayName }));
+    } else {
+      dispatchToast(t('collection.copiesUpdated', { name: displayName, count: quantity + 1 }), 'info');
+    }
+  }, [card, quantity, displayName, t]);
+
+  const decrement = useCallback(async () => {
+    if (quantity === 0) return;
+    await decrementOwned(card);
+    if (quantity === 1) {
+      dispatchToast(t('collection.removedFromCollection', { name: displayName }), 'info');
+    } else {
+      dispatchToast(t('collection.copiesUpdated', { name: displayName, count: quantity - 1 }), 'info');
+    }
+  }, [card, quantity, displayName, t]);
+
   const setQuantity = useCallback((next: number) => setOwnedQuantity(card, next), [card]);
-  const toggleWish = useCallback(() => toggleWishlist(card), [card]);
+
+  const toggleWish = useCallback(async () => {
+    await toggleWishlist(card);
+    dispatchToast(
+      wishlist
+        ? t('collection.removedFromWishlist', { name: displayName })
+        : t('collection.addedToWishlist', { name: displayName }),
+      wishlist ? 'info' : 'success'
+    );
+  }, [card, wishlist, displayName, t]);
 
   return { quantity, wishlist, increment, decrement, setQuantity, toggleWishlist: toggleWish };
 }

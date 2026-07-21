@@ -218,6 +218,11 @@ const en = {
       emptyHint: 'Mark cards as owned or wishlisted from the search results or card details.',
       priceFallbackNote:
         'Scryfall has no prices for non-English printings — {{count}} card(s) use the English printing price as an estimate.',
+      addedToCollection: '{{name}} added to your collection!',
+      removedFromCollection: '{{name}} removed from your collection.',
+      copiesUpdated: '{{name}}: {{count}} copies in your collection.',
+      addedToWishlist: '{{name}} added to your wishlist!',
+      removedFromWishlist: '{{name}} removed from your wishlist.',
       exported: 'Collection exported successfully!',
       imported: '{{count}} cards imported into your collection.',
       importedWithMissing: '{{count}} cards imported. {{missing}} could not be found.',
