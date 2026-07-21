@@ -15,7 +15,8 @@ export function useSearchFilters(
       { code: 'U', name: t('search.blue') },
       { code: 'B', name: t('search.black') },
       { code: 'R', name: t('search.red') },
-      { code: 'G', name: t('search.green') }
+      { code: 'G', name: t('search.green') },
+      { code: 'C', name: t('search.colorless') }
     ],
     [t]
   );
@@ -46,12 +47,20 @@ export function useSearchFilters(
 
   const toggleColor = useCallback(
     (colorCode: string) => {
-      setFilters((prev) => ({
-        ...prev,
-        colors: prev.colors.includes(colorCode)
-          ? prev.colors.filter((color) => color !== colorCode)
-          : [...prev.colors, colorCode]
-      }));
+      setFilters((prev) => {
+        // Colorless is mutually exclusive with WUBRG — no card is both colored
+        // and colorless, so combining them in the query would match nothing.
+        if (colorCode === 'C') {
+          return { ...prev, colors: prev.colors.includes('C') ? [] : ['C'] };
+        }
+        const withoutColorless = prev.colors.filter((color) => color !== 'C');
+        return {
+          ...prev,
+          colors: withoutColorless.includes(colorCode)
+            ? withoutColorless.filter((color) => color !== colorCode)
+            : [...withoutColorless, colorCode]
+        };
+      });
     },
     [setFilters]
   );

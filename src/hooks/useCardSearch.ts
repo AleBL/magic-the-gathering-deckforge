@@ -64,7 +64,11 @@ export function useCardSearch(language: string) {
       }
 
       if (filters.colors.length > 0) {
-        query += `${query ? ' ' : ''}c:${filters.colors.join('')}`;
+        // 'C' (colorless) is Scryfall's dedicated colorless keyword, not a
+        // color letter to combine with WUBRG — useSearchFilters keeps the two
+        // mutually exclusive, so seeing 'C' here means it's the only entry.
+        const colorQuery = filters.colors.includes('C') ? 'c:c' : `c:${filters.colors.join('')}`;
+        query += `${query ? ' ' : ''}${colorQuery}`;
       }
       if (filters.types.length > 0) {
         query += `${query ? ' ' : ''}t:${filters.types.join(' ')}`;

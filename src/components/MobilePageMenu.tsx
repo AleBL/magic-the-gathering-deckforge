@@ -10,7 +10,6 @@ import {
   FaFileExport,
   FaFileImport,
   FaFilter,
-  FaSearch,
   FaLayerGroup,
   FaEdit
 } from 'react-icons/fa';
@@ -53,22 +52,13 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
   const isEditing = editingDeck.deckId !== null;
   const { saveLabel, clearLabel } = deckActionLabels(t, editingDeck.deckId, editingDeck.deckName);
 
-  // The on-screen toolbars (DeckManagerToolbar, DeckActionBar, the search
-  // filter row) are hidden below `sm`, so every action they offer must be
-  // reachable from here. Items mirror the deck screen's three states:
-  // viewing a saved deck, editing a deck, or building the temporary deck.
+  // The on-screen toolbars (DeckManagerToolbar, DeckActionBar) are hidden
+  // below `sm`, so every action they offer must be reachable from here. Items
+  // mirror the deck screen's three states: viewing a saved deck, editing a
+  // deck, or building the temporary deck. The search tab has no item list of
+  // its own — see handleButtonClick below.
   let items: PageMenuItem[];
-  if (activeTab === 'search') {
-    items = [
-      { key: 'focus-search', label: t('search.searchButton'), icon: <FaSearch />, action: 'focus-search' },
-      {
-        key: 'filters',
-        label: t('search.advancedFilters'),
-        icon: <FaFilter />,
-        action: 'open-search-filters'
-      }
-    ];
-  } else if (selectedDeckSummary) {
+  if (selectedDeckSummary) {
     const hasSelectedCards = selectedDeckSummary.cardCount > 0;
     items = [
       { key: 'edit', label: t('common.edit'), icon: <FaEdit />, action: 'edit-selected-deck' },
@@ -149,41 +139,55 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
     setPendingAction(action);
   };
 
+  // The search tab only ever offered two items here (focus search — redundant
+  // since the search bar is already on screen — and advanced filters), so the
+  // extra "open a menu to pick the one useful item" step just got in the way.
+  // Go straight to the filters sheet instead.
+  const handleButtonClick = () => {
+    if (activeTab === 'search') {
+      setPendingAction('open-search-filters');
+      return;
+    }
+    setIsOpen(true);
+  };
+
   return (
     <>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={handleButtonClick}
         className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 active:scale-95 transition-all duration-200 cursor-pointer"
-        aria-label={t('common.pageMenu')}
+        aria-label={activeTab === 'search' ? t('search.advancedFilters') : t('common.pageMenu')}
         aria-haspopup="dialog"
-        aria-expanded={isOpen}
+        aria-expanded={activeTab === 'deck' ? isOpen : undefined}
       >
-        <FaBars className="text-base" />
+        {activeTab === 'search' ? <FaFilter className="text-base" /> : <FaBars className="text-base" />}
       </button>
 
-      <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
-        <h3
-          id="page-menu-title"
-          className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3"
-        >
-          {t('common.pageMenu')} — {activeTab === 'search' ? t('common.searchTab') : t('common.decksTab')}
-        </h3>
-        <div className="flex flex-col gap-1 pb-2">
-          {items.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              disabled={item.disabled}
-              onClick={() => handleItemClick(item.action)}
-              className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-            >
-              <span className="text-slate-400 dark:text-slate-500 shrink-0 w-5 flex justify-center">{item.icon}</span>
-              <span className="truncate">{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </BottomSheet>
+      {activeTab === 'deck' && (
+        <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
+          <h3
+            id="page-menu-title"
+            className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3"
+          >
+            {t('common.pageMenu')} — {t('common.decksTab')}
+          </h3>
+          <div className="flex flex-col gap-1 pb-2">
+            {items.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                disabled={item.disabled}
+                onClick={() => handleItemClick(item.action)}
+                className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <span className="text-slate-400 dark:text-slate-500 shrink-0 w-5 flex justify-center">{item.icon}</span>
+                <span className="truncate">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </BottomSheet>
+      )}
     </>
   );
 }

@@ -26,7 +26,7 @@ export default function DeckImportProgressModal({
   const dismissible = !progress.isImporting;
   const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
   useEscapeKey(onClose, isOpen && dismissible);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onClose);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(onClose);
 
   if (!isOpen) return null;
 
@@ -49,14 +49,15 @@ export default function DeckImportProgressModal({
         aria-modal="true"
         aria-labelledby="deck-import-progress-title"
         className="modal-container modal-container-small modal-sheet-panel sm:max-w-md overflow-y-auto p-6 animate-fadeIn"
+        style={dismissible ? panelStyle : undefined}
+        onTouchStart={dismissible ? onTouchStart : undefined}
+        onTouchMove={dismissible ? onTouchMove : undefined}
+        onTouchEnd={dismissible ? onTouchEnd : undefined}
       >
-        {/* Grab handle: swipe down to close (mobile bottom-sheet only), only while dismissible. */}
+        {/* Grab handle: purely a visual affordance now — drag-to-close works
+            from anywhere on the sheet (see useSwipeToClose), only while dismissible. */}
         {dismissible && (
-          <div
-            className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1"
-            {...swipeHandlers}
-            aria-hidden="true"
-          >
+          <div className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1" aria-hidden="true">
             <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
           </div>
         )}

@@ -23,7 +23,7 @@ interface BottomSheetProps {
 export default function BottomSheet({ isOpen, onClose, labelledBy, className = '', children }: BottomSheetProps) {
   const sheetRef = useFocusTrap<HTMLDivElement>(isOpen);
   useEscapeKey(onClose, isOpen);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onClose);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(onClose);
 
   if (!isOpen) return null;
 
@@ -42,13 +42,14 @@ export default function BottomSheet({ isOpen, onClose, labelledBy, className = '
         aria-modal="true"
         aria-labelledby={labelledBy}
         className={`modal-container modal-sheet-panel sm:max-w-md overflow-y-auto animate-fadeIn ${className}`}
+        style={panelStyle}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
-        <div
-          className="sm:hidden -mt-6 -mx-6 mb-3 flex justify-center pt-2.5 pb-1"
-          {...swipeHandlers}
-          aria-hidden="true"
-        >
+        {/* Grab handle: purely a visual affordance now — drag-to-close works
+            from anywhere on the sheet (see useSwipeToClose), not just here. */}
+        <div className="sm:hidden -mt-6 -mx-6 mb-3 flex justify-center pt-2.5 pb-1" aria-hidden="true">
           <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
         </div>
         {children}

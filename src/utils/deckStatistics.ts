@@ -22,6 +22,37 @@ export interface StatFilter {
   value: string | number;
 }
 
+/**
+ * Whether a card counts as a land for stats purposes. Scryfall's top-level
+ * `type_line` for a double-faced card (transform, modal DFC, ...) joins both
+ * faces with "//", so a card that transforms into a land — e.g. a creature
+ * god whose back face is a Temple — would read as "Creature ... // Land" and
+ * match `includes('land')` even though it sits in hand and gets cast as a
+ * plain nonland creature. Only the front face is what's actually cast, so
+ * that's the face that determines land-ness here.
+ */
+function isLandCard(card: Card): boolean {
+  const typeLine = (card.card_faces?.[0]?.type_line ?? card.type_line ?? '').toLowerCase();
+  return typeLine.includes('land');
+}
+
+/**
+ * Every non-land face's mana cost, combined into one string. Scryfall leaves
+ * the top-level `mana_cost` empty for double-faced cards — it only lives per
+ * face — so color/pip requirements have to be read from `card_faces`. Both
+ * castable faces are included (e.g. a split card's two halves), but a face
+ * that's actually a land (a transform card's back side) never contributes:
+ * lands don't have color requirements, they produce mana.
+ */
+function combinedNonLandManaCost(card: Card): string {
+  if (card.mana_cost) return card.mana_cost;
+  if (!card.card_faces?.length) return '';
+  return card.card_faces
+    .filter((face) => !face.type_line?.toLowerCase().includes('land'))
+    .map((face) => face.mana_cost || '')
+    .join(' ');
+}
+
 export interface DeckStatistics {
   averageConvertedManaCost: string;
   convertedManaCostCounts: Record<number | string, number>;
@@ -58,14 +89,14 @@ export function filterCardsByStat(currentDeck: Card[], activeFilter: StatFilter 
   return currentDeck
     .filter((card) => {
       if (activeFilter.type === 'cmc') {
-        if (card.type_line?.toLowerCase().includes('land')) return false;
+        if (isLandCard(card)) return false;
         const cmc = Math.floor(card.cmc || 0);
         if (activeFilter.value === '7+') return cmc >= 7;
         return cmc.toString() === activeFilter.value.toString();
       }
       if (activeFilter.type === 'color') {
         if (activeFilter.value === 'C') {
-          if (card.type_line?.toLowerCase().includes('land')) return false;
+          if (isLandCard(card)) return false;
           const hasColor = ['W', 'U', 'B', 'R', 'G'].some(
             (c) => card.colors?.includes(c) || card.mana_cost?.includes(c)
           );
@@ -146,9 +177,7 @@ function allocateLandsByPips(
 /** Computes the full statistics summary (mana curve, colors, types, mana base, prices) for a deck. */
 export function computeDeckStatistics(currentDeck: Card[]): DeckStatistics {
   // 1. Filter out land cards and commanders to analyze non-land spells in the 99
-  const nonLandCards = currentDeck.filter(
-    (card) => !card.type_line?.toLowerCase().includes('land') && !card.isCommander
-  );
+  const nonLandCards = currentDeck.filter((card) => !isLandCard(card) && !card.isCommander);
 
   // 2. Average Converted Mana Cost (CMC)
   const totalConvertedManaCost = nonLandCards.reduce((sum, card) => sum + (card.cmc || 0), 0);
@@ -198,18 +227,24 @@ export function computeDeckStatistics(currentDeck: Card[]): DeckStatistics {
           colorDistributionCounts[colorSymbol] += 1;
         }
       });
-    } else if (card.mana_cost) {
+      return;
+    }
+
+    // Double-faced cards don't set top-level `colors` either — combine every
+    // non-land face's cost, same as the mana base calculation below.
+    const manaCostForColors = combinedNonLandManaCost(card);
+    if (manaCostForColors) {
       let hasColorSymbol = false;
       ['W', 'U', 'B', 'R', 'G'].forEach((colorSymbol) => {
-        if (card.mana_cost?.includes(colorSymbol)) {
+        if (manaCostForColors.includes(colorSymbol)) {
           colorDistributionCounts[colorSymbol] += 1;
           hasColorSymbol = true;
         }
       });
-      if (!hasColorSymbol && !card.type_line?.toLowerCase().includes('land')) {
+      if (!hasColorSymbol && !isLandCard(card)) {
         colorDistributionCounts.C += 1;
       }
-    } else if (!card.type_line?.toLowerCase().includes('land')) {
+    } else if (!isLandCard(card)) {
       colorDistributionCounts.C += 1;
     }
   });
@@ -251,8 +286,7 @@ export function computeDeckStatistics(currentDeck: Card[]): DeckStatistics {
   // intentionally excluded: any land pays them.
   const manaColorSymbolCounts: Record<ManaColor, number> = { W: 0, U: 0, B: 0, R: 0, G: 0, C: 0 };
   nonLandCards.forEach((card) => {
-    const manaCostString = card.mana_cost || '';
-    const manaCostSymbolMatches = manaCostString.match(/\{[WUBRGC](\/[WUBRGC])?\}/g) || [];
+    const manaCostSymbolMatches = combinedNonLandManaCost(card).match(/\{[WUBRGC](\/[WUBRGC])?\}/g) || [];
     manaCostSymbolMatches.forEach((manaSymbol) => {
       MANA_COLORS.forEach((manaColor) => {
         if (manaSymbol.includes(manaColor)) {
@@ -273,9 +307,8 @@ export function computeDeckStatistics(currentDeck: Card[]): DeckStatistics {
   // Count existing non-basic lands (don't replace them, only add basics)
   const existingNonBasicLandCount = currentDeck.filter((card) => {
     const typeLine = card.type_line?.toLowerCase() || '';
-    const isLand = typeLine.includes('land');
     const isBasic = typeLine.includes('basic land') || BASIC_LAND_NAMES.includes(card.name);
-    return isLand && !isBasic;
+    return isLandCard(card) && !isBasic;
   }).length;
 
   const existingBasicLandCount = currentDeck.filter((card) => {
@@ -325,8 +358,7 @@ export function computeDeckStatistics(currentDeck: Card[]): DeckStatistics {
   // 7. Land Color Counter for Mana Pip Analysis
   const landColorCounts: Record<ManaColor, number> = { W: 0, U: 0, B: 0, R: 0, G: 0, C: 0 };
   currentDeck.forEach((card) => {
-    const isLand = card.type_line?.toLowerCase().includes('land');
-    if (!isLand) return;
+    if (!isLandCard(card)) return;
 
     const name = card.name.toLowerCase();
     const oracleText = card.oracle_text?.toLowerCase() || '';
