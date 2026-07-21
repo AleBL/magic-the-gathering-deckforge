@@ -24,7 +24,13 @@ function Toast({ message, variant = 'success', action }: ToastProps) {
 
   return (
     <div
-      className={`fixed bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 animate-toast-enter transition-all duration-300 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-white/5 border-l-4 ${borderMap[variant]}`}
+      // z-[var(--z-toast)]: without an explicit z-index this sits in default
+      // paint order, which puts it BEHIND the mobile bottom-tab-bar
+      // (--z-sticky) and any open sheet/dialog — invisible exactly when a
+      // save/error toast is most likely to fire. The bottom offset clears
+      // the tab bar's own height (~56px) plus the safe-area inset below `sm`,
+      // where that bar exists; sm: and up it's hidden, so bottom-5 is enough.
+      className={`fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] sm:bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 animate-toast-enter transition-all duration-300 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-white/5 border-l-4 z-[var(--z-toast)] ${borderMap[variant]}`}
     >
       <div className="p-4 flex items-center justify-between gap-3" role="alert" aria-live="assertive">
         <div className="flex items-center gap-3">
