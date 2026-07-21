@@ -39,7 +39,7 @@ export function TokenSearchModal({
   const { t } = useTranslation();
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(onClose);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onClose);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(onClose);
 
   return createPortal(
     // Backdrop click is a mouse-only convenience; Escape and the close button provide the keyboard-equivalent action.
@@ -57,9 +57,14 @@ export function TokenSearchModal({
         aria-modal="true"
         aria-labelledby="token-search-modal-title"
         className="modal-sheet-panel bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all"
+        style={panelStyle}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
-        <div className="sm:hidden flex justify-center pt-2.5 pb-1" {...swipeHandlers} aria-hidden="true">
+        {/* Grab handle: purely a visual affordance now — drag-to-close works
+            from anywhere on the sheet (see useSwipeToClose), not just here. */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1" aria-hidden="true">
           <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
         </div>
         {/* Modal Header */}

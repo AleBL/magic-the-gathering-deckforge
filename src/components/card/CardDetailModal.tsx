@@ -211,7 +211,7 @@ function CardDetailModal({
   const { isClosing, requestClose } = useDismissTransition(onClose);
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(requestClose);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(requestClose);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(requestClose);
 
   return createPortal(
     <>
@@ -231,9 +231,14 @@ function CardDetailModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-card-title"
+          style={panelStyle}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
-          {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
-          <div className="sm:hidden -mt-6 -mx-6 flex justify-center pt-2.5 pb-1" {...swipeHandlers} aria-hidden="true">
+          {/* Grab handle: purely a visual affordance now — drag-to-close works
+              from anywhere on the sheet (see useSwipeToClose), not just here. */}
+          <div className="sm:hidden -mt-6 -mx-6 flex justify-center pt-2.5 pb-1" aria-hidden="true">
             <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
           </div>
           {/* × Close button — top right corner */}

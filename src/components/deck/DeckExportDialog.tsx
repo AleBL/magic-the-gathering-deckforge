@@ -16,7 +16,7 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel }: 
   const { t } = useTranslation();
   const dialogRef = useFocusTrap<HTMLDivElement>(true);
   useEscapeKey(onCancel);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(onCancel);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(onCancel);
 
   return (
     // Backdrop click is a mouse-only convenience; Escape and the cancel button provide the keyboard-equivalent action.
@@ -33,13 +33,14 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel }: 
         aria-modal="true"
         aria-labelledby="deck-export-dialog-title"
         className="modal-container modal-sheet-panel sm:max-w-md overflow-y-auto animate-fadeIn"
+        style={panelStyle}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
-        <div
-          className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1"
-          {...swipeHandlers}
-          aria-hidden="true"
-        >
+        {/* Grab handle: purely a visual affordance now — drag-to-close works
+            from anywhere on the sheet (see useSwipeToClose), not just here. */}
+        <div className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1" aria-hidden="true">
           <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
         </div>
         <h3 id="deck-export-dialog-title" className="text-xl font-bold text-slate-900 dark:text-white mb-4">

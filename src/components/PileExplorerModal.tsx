@@ -48,7 +48,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
   useEscapeKey(requestClose);
   const contextMenuRef = useFocusTrap<HTMLDivElement>(!!contextMenu);
   useEscapeKey(() => setContextMenu(null), !!contextMenu);
-  const swipeHandlers = useSwipeToClose<HTMLDivElement>(requestClose);
+  const { onTouchStart, onTouchMove, onTouchEnd, panelStyle } = useSwipeToClose<HTMLDivElement>(requestClose);
 
   return (
     <div
@@ -61,13 +61,14 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
         aria-modal="true"
         aria-label={title}
         className={`modal-sheet-panel sm:max-w-6xl bg-slate-900 rounded-t-2xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl border border-slate-800 flex flex-col h-[92dvh] sm:h-[80vh] relative ${isClosing ? 'motion-dialog-closing' : 'animate-dialogEnter'}`}
+        style={panelStyle}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        {/* Grab handle: swipe down to close (mobile bottom-sheet only). */}
-        <div
-          className="sm:hidden -mt-4 -mx-4 mb-2 flex justify-center pt-2.5 pb-1"
-          {...swipeHandlers}
-          aria-hidden="true"
-        >
+        {/* Grab handle: purely a visual affordance now — drag-to-close works
+            from anywhere on the sheet (see useSwipeToClose), not just here. */}
+        <div className="sm:hidden -mt-4 -mx-4 mb-2 flex justify-center pt-2.5 pb-1" aria-hidden="true">
           <div className="w-10 h-1.5 rounded-full bg-slate-700" />
         </div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 sm:mb-6">
