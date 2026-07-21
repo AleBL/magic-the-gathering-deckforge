@@ -352,6 +352,49 @@ const es = {
       landsToAdd: 'Por agregar',
       suggestedDistribution: 'Distribución sugerida'
     },
+    deckDoctor: {
+      title: 'Deck Doctor',
+      desc: 'Un diagnóstico completo de la consistencia de tu mazo, con consejos prácticos.',
+      noData: 'Añade más cartas para ejecutar un diagnóstico completo.',
+      consistencyScore: 'Puntuación de consistencia',
+      rating: {
+        excellent: 'Excelente',
+        good: 'Sólido',
+        fair: 'Inestable',
+        poor: 'Inconsistente'
+      },
+      component: {
+        manaRatio: 'Proporción de tierras',
+        keepableHands: 'Manos jugables',
+        colorSources: 'Fuentes de color'
+      },
+      note: {
+        manaRatio: 'Qué tan cerca está tu cantidad de tierras del ideal para esta curva.',
+        keepableHands: '{{percent}} de las manos iniciales tienen de 2 a 5 tierras.',
+        colorSources: 'Probabilidad media del {{percent}} de ver cada color necesario pronto.'
+      },
+      goldfish: 'Simulación de manos',
+      handsSimulated: '{{count}} manos iniciales simuladas',
+      playableHands: 'Jugables',
+      avgCurve: 'Curva media',
+      noLander: 'Sin tierra',
+      floodRisk: 'Inundación',
+      landOdds: 'Probabilidad de tierras (jugando primero)',
+      keepable: 'Jugable',
+      byTurnLabel: '≥{{lands}} en T{{turn}}',
+      colorSources: 'Fuentes de color',
+      sourcesOfIdeal: '{{sources}}/{{ideal}} fuentes',
+      recommendations: 'Recomendaciones',
+      rec: {
+        addLands: 'Añade ~{{count}} tierras más — tu base de maná es escasa para esta curva.',
+        cutLands: 'Quita ~{{count}} tierras — tienes más de las que esta curva necesita.',
+        addSource: 'Añade ~{{low}}–{{high}} fuentes de {{color}} para los pips que exigen tus hechizos.',
+        curveHeavy: 'Tu curva está cargada en {{cmc}} — recorta la parte alta o añade jugadas más baratas.',
+        screwRisk: 'Riesgo de escasez de maná: {{percent}}% de las manos iniciales tienen menos de 2 tierras.',
+        floodRisk: 'Riesgo de inundación: {{percent}}% de las manos iniciales tienen 6 o más tierras.',
+        balanced: 'Este mazo parece bien ajustado — no se encontraron problemas graves de maná.'
+      }
+    },
     print: {
       cardsPerPageSimple: 'cartas por página',
       cardsPerPageText: 'Caben exactamente',
