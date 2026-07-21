@@ -31,7 +31,7 @@ export interface StatFilter {
  * plain nonland creature. Only the front face is what's actually cast, so
  * that's the face that determines land-ness here.
  */
-export function isLandCard(card: Card): boolean {
+function isLandCard(card: Card): boolean {
   const typeLine = (card.card_faces?.[0]?.type_line ?? card.type_line ?? '').toLowerCase();
   return typeLine.includes('land');
 }
@@ -464,42 +464,4 @@ export function landDrawProbabilities(
     distribution.push({ lands: k, prob });
   }
   return distribution;
-}
-
-/**
- * Hypergeometric P(exactly k successes) when drawing `draws` cards from a
- * `population` of which `successes` are the sought-after kind (e.g. lands, or
- * sources of one color). Returns 0 for impossible / degenerate inputs.
- */
-export function hypergeometricExactly(population: number, successes: number, draws: number, k: number): number {
-  if (population <= 0 || draws <= 0 || draws > population) return 0;
-  if (successes < 0 || successes > population) return 0;
-  if (k < 0 || k > successes || k > draws) return 0;
-  const denominator = combinations(population, draws);
-  if (denominator === 0) return 0;
-  return (combinations(successes, k) * combinations(population - successes, draws - k)) / denominator;
-}
-
-/**
- * Hypergeometric P(at least k successes) — the complement-friendly cumulative
- * used for "chance of drawing ≥1 source of color X" and "≥N lands by turn T".
- */
-export function hypergeometricAtLeast(population: number, successes: number, draws: number, k: number): number {
-  if (k <= 0) return population > 0 && draws > 0 && draws <= population ? 1 : 0;
-  const upper = Math.min(draws, successes);
-  let cumulative = 0;
-  for (let i = k; i <= upper; i++) {
-    cumulative += hypergeometricExactly(population, successes, draws, i);
-  }
-  return Math.min(1, cumulative);
-}
-
-/**
- * How many cards a player has seen by the start of turn `turn`. On the play the
- * opening 7 gains one card per turn after the first (no turn-1 draw); on the
- * draw every turn including the first draws, so one extra card overall.
- */
-export function cardsSeenByTurn(turn: number, onPlay = true): number {
-  const safeTurn = Math.max(1, Math.floor(turn));
-  return 7 + (onPlay ? safeTurn - 1 : safeTurn);
 }
