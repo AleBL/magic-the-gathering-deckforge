@@ -153,7 +153,7 @@ function SearchFilters({ filters, setFilters, mobileExtras }: SearchFiltersProps
         isOpen={isExpanded && isMobile}
         onClose={() => setIsExpanded(false)}
         labelledBy="search-filters-sheet-title"
-        className="space-y-5"
+        className="search-filters-sheet space-y-5"
       >
         <div className="flex items-center justify-between">
           <span

@@ -294,6 +294,15 @@ html.dark .import-export-dropdown {
   @apply w-full mx-0 sm:mx-auto max-h-[92dvh] sm:max-h-[85vh] rounded-b-none sm:rounded-b-2xl;
 }
 
+/* SearchFilters' mobile sheet holds two full stacked columns (colors + types)
+   plus rarity/CMC fields — taller content than most sheets, so 92dvh clipped
+   the last row/button even on phones with room to spare. Only opens below
+   `sm` (see SearchFilters.tsx), so no sm: variant is needed. Two classes for
+   specificity: must reliably beat .modal-sheet-panel's own max-height. */
+.modal-sheet-panel.search-filters-sheet {
+  max-height: 97dvh;
+}
+
 /* ── Token Modal Specific ─────────────────────────────────────── */
 
 .token-card-wrapper {
