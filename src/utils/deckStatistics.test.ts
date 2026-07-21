@@ -42,6 +42,41 @@ describe('computeDeckStatistics — colorless ({C}) and Wastes support', () => {
     expect(stats.manaColorSymbolCounts.C).toBe(0);
   });
 
+  it('reads pips from card_faces for double-faced cards with no top-level mana_cost', () => {
+    // Transform/modal DFCs carry mana_cost per face on Scryfall — the
+    // top-level field is '' — so a plain card.mana_cost read misses the pips.
+    const dfc = spell('', {
+      card_faces: [
+        { name: 'Front', mana_cost: '{3}{B}{B}', type_line: 'Creature' },
+        { name: 'Back', mana_cost: '', type_line: 'Creature' }
+      ]
+    });
+    const stats = computeDeckStatistics([dfc]);
+    expect(stats.manaColorSymbolCounts.B).toBe(2);
+  });
+
+  it('counts pips for a transform card whose back face is a Land (e.g. Aclazotz, Deepest Betrayal)', () => {
+    // Scryfall's top-level type_line joins both faces with "//", so this
+    // reads as "Legendary Creature — Bat God // Land" — a naive
+    // type_line.includes('land') check would wrongly treat the whole card as
+    // a land and drop it out of nonLandCards before its pips are ever read.
+    const dfc = spell('', {
+      type_line: 'Legendary Creature — Bat God // Land',
+      card_faces: [
+        { name: 'Aclazotz, Deepest Betrayal', mana_cost: '{3}{B}{B}', type_line: 'Legendary Creature — Bat God' },
+        { name: 'Temple of the Dead', mana_cost: '', type_line: 'Land' }
+      ]
+    });
+    const stats = computeDeckStatistics([dfc]);
+    expect(stats.manaColorSymbolCounts.B).toBe(2);
+    expect(stats.totalLands).toBe(0);
+    expect(stats.cardTypeCounts.creature).toBe(1);
+    // The front face's color must show up in the distribution chart, and the
+    // land back face must not make the whole card register as colorless.
+    expect(stats.colorDistributionCounts.B).toBe(1);
+    expect(stats.colorDistributionCounts.C).toBe(0);
+  });
+
   it('treats Wastes as a basic land when counting the existing mana base', () => {
     // 6 spells → target lands = floor(6 * 2/3) = 4; 4 Wastes already fully cover it.
     const deck = [
