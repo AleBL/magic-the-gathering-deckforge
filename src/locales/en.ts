@@ -347,6 +347,49 @@ const en = {
       landsToAdd: 'To add',
       suggestedDistribution: 'Suggested distribution'
     },
+    deckDoctor: {
+      title: 'Deck Doctor',
+      desc: "A full diagnosis of your deck's consistency, with actionable advice.",
+      noData: 'Add more cards to run a full diagnosis.',
+      consistencyScore: 'Consistency score',
+      rating: {
+        excellent: 'Excellent',
+        good: 'Solid',
+        fair: 'Shaky',
+        poor: 'Inconsistent'
+      },
+      component: {
+        manaRatio: 'Land ratio',
+        keepableHands: 'Keepable openers',
+        colorSources: 'Color sources'
+      },
+      note: {
+        manaRatio: 'How close your land count sits to the ideal for this curve.',
+        keepableHands: '{{percent}} of opening hands hold 2–5 lands.',
+        colorSources: 'Avg. {{percent}} chance to see each needed color early.'
+      },
+      goldfish: 'Goldfish simulation',
+      handsSimulated: '{{count}} simulated opening hands',
+      playableHands: 'Playable',
+      avgCurve: 'Avg. curve',
+      noLander: 'No-lander',
+      floodRisk: 'Flood',
+      landOdds: 'Land odds (on the play)',
+      keepable: 'Keepable',
+      byTurnLabel: '≥{{lands}} by T{{turn}}',
+      colorSources: 'Color sources',
+      sourcesOfIdeal: '{{sources}}/{{ideal}} sources',
+      recommendations: 'Recommendations',
+      rec: {
+        addLands: 'Add ~{{count}} more lands — your mana base is light for this curve.',
+        cutLands: "Cut ~{{count}} lands — you're running more than this curve needs.",
+        addSource: 'Add ~{{low}}–{{high}} {{color}} sources for the pips your spells demand.',
+        curveHeavy: 'Your curve is heavy at {{cmc}} — trim the top end or add cheaper plays.',
+        screwRisk: 'Mana screw risk: {{percent}}% of opening hands have fewer than 2 lands.',
+        floodRisk: 'Flood risk: {{percent}}% of opening hands have 6 or more lands.',
+        balanced: 'This deck looks well-tuned — no major mana issues found.'
+      }
+    },
     print: {
       cardsPerPageSimple: 'cards per page',
       cardsPerPageText: 'Fits exactly',
