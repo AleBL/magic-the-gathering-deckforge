@@ -16,9 +16,10 @@ import {
 import { PendingAction, useDeckStore } from '../store/useDeckStore';
 import { deckActionLabels } from '../utils/deckActionLabels';
 import BottomSheet from './ui/BottomSheet';
+import { AppTab } from '../types';
 
 interface MobilePageMenuProps {
-  activeTab: 'search' | 'deck';
+  activeTab: AppTab;
 }
 
 interface PageMenuItem {
@@ -150,6 +151,10 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
     }
     setIsOpen(true);
   };
+
+  // The collection screen keeps its own always-visible toolbar, so there is no
+  // navbar page menu for it.
+  if (activeTab === 'collection') return null;
 
   return (
     <>

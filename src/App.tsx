@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import CardSearch from './components/card/CardSearch';
 import DeckManager from './components/DeckManager';
+import CollectionManager from './components/collection/CollectionManager';
+import { AppTab } from './types';
 import { fetchSymbols } from './utils/symbolHelper';
 import useToast from './hooks/useToast';
 import { useShortcuts } from './hooks/useShortcuts';
@@ -16,7 +18,7 @@ function App() {
   const { t, i18n } = useTranslation();
   const { motionEnabled } = useVisualEffects();
   useGlobalRipple();
-  const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
+  const [activeTab, setActiveTab] = useState<AppTab>('search');
   const { toastMessage, toastVariant, toastAction, showToast } = useToast();
   const isOnline = useOnlineStatus();
 
@@ -121,6 +123,8 @@ function App() {
             onAddTokenToDeck={handleAddTokenToDeck}
             activeFormat={editingDeck.deckFormat}
           />
+        ) : activeTab === 'collection' ? (
+          <CollectionManager />
         ) : (
           <DeckManager showToast={showToast} />
         )}
