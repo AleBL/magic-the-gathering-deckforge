@@ -87,32 +87,33 @@ function CollectionManager() {
               <FaBoxOpen className="text-primary shrink-0" />
               {t('collection.title')}
             </h2>
-            <div className="flex flex-wrap items-center gap-2 md:ml-auto">
+            {/* Below md: three equal compact buttons filling the row. */}
+            <div className="grid grid-cols-3 gap-2 w-full md:w-auto md:flex md:items-center md:ml-auto">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isImporting}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
               >
-                <FaFileImport className="text-xs" />
-                {isImporting ? t('collection.importing') : t('collection.importCsv')}
+                <FaFileImport className="text-xs shrink-0" />
+                <span className="truncate">{isImporting ? t('collection.importing') : t('collection.importCsv')}</span>
               </button>
               <button
                 type="button"
                 onClick={exportCsv}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
               >
-                <FaFileExport className="text-xs" />
-                {t('collection.exportCsv')}
+                <FaFileExport className="text-xs shrink-0" />
+                <span className="truncate">{t('collection.exportCsv')}</span>
               </button>
               <button
                 type="button"
                 onClick={handleClear}
                 disabled={entries.length === 0}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-gray-200 dark:border-slate-700 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-gray-200 dark:border-slate-700 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors disabled:opacity-50"
               >
-                <FaTrashAlt className="text-xs" />
-                {t('collection.clear')}
+                <FaTrashAlt className="text-xs shrink-0" />
+                <span className="truncate">{t('collection.clear')}</span>
               </button>
             </div>
           </div>
@@ -136,13 +137,14 @@ function CollectionManager() {
 
           <div className="flex flex-col gap-3 p-3 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-gray-100 dark:border-slate-700">
             <CardFilterBar filters={filters} setFilters={setFilters} />
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
+            {/* Below sm the selects stack full-width for comfortable tapping. */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+              <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
                 {t('search.rarity')}
                 <select
                   value={filters.rarity}
                   onChange={(e) => setFilters((prev) => ({ ...prev, rarity: e.target.value }))}
-                  className="rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100"
+                  className="flex-1 sm:flex-none max-w-[60%] sm:max-w-none rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100"
                 >
                   {rarities.map((rarity) => (
                     <option key={rarity.value} value={rarity.value}>
@@ -151,12 +153,12 @@ function CollectionManager() {
                   ))}
                 </select>
               </label>
-              <label className="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
+              <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
                 {t('collection.set')}
                 <select
                   value={setFilter}
                   onChange={(e) => setSetFilter(e.target.value)}
-                  className="rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100 max-w-[220px]"
+                  className="flex-1 sm:flex-none max-w-[60%] sm:max-w-[220px] rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100"
                 >
                   <option value="">{t('search.all')}</option>
                   {availableSets.map((set) => (
@@ -180,7 +182,7 @@ function CollectionManager() {
               title={view === 'wishlist' ? t('collection.emptyWishlist') : t('collection.empty')}
               description={t('collection.emptyHint')}
               action={{
-                label: t('collection.goToSearch'),
+                label: t('commandPalette.goToSearch'),
                 // App listens for this and switches to the search tab.
                 onClick: () => window.dispatchEvent(new CustomEvent('mtg-navigate-tab', { detail: 'search' }))
               }}

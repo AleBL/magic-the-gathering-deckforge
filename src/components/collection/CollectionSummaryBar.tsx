@@ -25,7 +25,9 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange }: Co
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex flex-wrap items-center gap-2.5">
+      {/* Below sm: 2×2 grid of stat chips (a wrap-line of four uneven chips
+          reads poorly on phones); the currency toggle takes its own row. */}
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">
         {stat(<FaBoxOpen className="text-base" />, t('collection.totalCards'), String(summary.totalCopies))}
         {stat(<FaLayerGroup className="text-base" />, t('collection.uniquePrintings'), String(summary.uniquePrintings))}
         {stat(<FaHeart className="text-base" />, t('collection.wishlist'), String(summary.wishlistCount))}
@@ -35,7 +37,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange }: Co
           formatCurrency(summary.totalValue, currency)
         )}
 
-        <div className="flex items-center rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 p-0.5 shadow-sm">
+        <div className="col-span-2 w-fit sm:col-span-1 flex items-center rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 p-0.5 shadow-sm">
           {(['usd', 'eur'] as const).map((code) => (
             <button
               key={code}
