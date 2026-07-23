@@ -1,5 +1,21 @@
 const en = {
   translations: {
+    mana: {
+      white: 'White mana',
+      blue: 'Blue mana',
+      black: 'Black mana',
+      red: 'Red mana',
+      green: 'Green mana',
+      colorless: 'Colorless mana',
+      generic: '{{amount}} generic mana',
+      variable: 'Variable mana',
+      tap: 'Tap',
+      untap: 'Untap',
+      snow: 'Snow mana',
+      energy: 'Energy counter',
+      hybrid: 'Hybrid mana',
+      phyrexian: 'Phyrexian mana'
+    },
     common: {
       appTitle: 'MTG Deck Forge',
       backOnline: 'Back online',

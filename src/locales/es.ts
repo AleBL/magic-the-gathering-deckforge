@@ -1,5 +1,21 @@
 const es = {
   translations: {
+    mana: {
+      white: 'Maná blanco',
+      blue: 'Maná azul',
+      black: 'Maná negro',
+      red: 'Maná rojo',
+      green: 'Maná verde',
+      colorless: 'Maná incoloro',
+      generic: '{{amount}} de maná genérico',
+      variable: 'Maná variable',
+      tap: 'Girar',
+      untap: 'Enderezar',
+      snow: 'Maná nieve',
+      energy: 'Contador de energía',
+      hybrid: 'Maná híbrido',
+      phyrexian: 'Maná fírexiano'
+    },
     common: {
       appTitle: 'MTG Deck Forge',
       backOnline: 'Conexión restablecida',

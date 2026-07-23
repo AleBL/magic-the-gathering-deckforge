@@ -1,5 +1,21 @@
 const pt = {
   translations: {
+    mana: {
+      white: 'Mana branco',
+      blue: 'Mana azul',
+      black: 'Mana preto',
+      red: 'Mana vermelho',
+      green: 'Mana verde',
+      colorless: 'Mana incolor',
+      generic: '{{amount}} de mana genérico',
+      variable: 'Mana variável',
+      tap: 'Virar',
+      untap: 'Desvirar',
+      snow: 'Mana neve',
+      energy: 'Contador de energia',
+      hybrid: 'Mana híbrido',
+      phyrexian: 'Mana fírexiano'
+    },
     common: {
       appTitle: 'MTG Deck Forge',
       backOnline: 'Conexão restabelecida',
