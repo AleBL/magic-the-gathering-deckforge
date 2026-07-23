@@ -23,9 +23,8 @@ import { DeckDisplayOptions } from '../deck/DeckDisplayOptions';
 import { DeckStatsFilteredCards } from '../deck/DeckStatsFilteredCards';
 import { DeckCollectionSummary } from '../deck/DeckCollectionSummary';
 import CardDetailModal from '../card/CardDetailModal';
+import DeckPreviewOverlays from './DeckPreviewOverlays';
 
-const PlaytestSimulator = lazy(() => import('../playtest/PlaytestSimulator'));
-const DeckProxyPrint = lazy(() => import('./DeckProxyPrint'));
 const DeckStats = lazy(() => import('../stats/DeckStats'));
 
 interface DeckPreviewProps {
@@ -355,25 +354,16 @@ function DeckPreview({
           <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
         ) : null}
 
-        <Suspense fallback={null}>
-          <PlaytestSimulator
-            isOpen={isPlaytestOpen}
-            onClose={handleClosePlaytest}
-            deckCards={activeCards}
-            deckFormat={selectedDeck.format || DeckFormatType.FREEFORM}
-            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-          />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <DeckProxyPrint
-            isOpen={isProxyPrintOpen}
-            onClose={handleCloseProxyPrint}
-            cards={activeCards}
-            deckName={selectedDeck.name}
-            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-          />
-        </Suspense>
+        <DeckPreviewOverlays
+          cards={activeCards}
+          isPlaytestOpen={isPlaytestOpen}
+          onClosePlaytest={handleClosePlaytest}
+          isProxyPrintOpen={isProxyPrintOpen}
+          onCloseProxyPrint={handleCloseProxyPrint}
+          deckFormat={selectedDeck.format || DeckFormatType.FREEFORM}
+          deckName={selectedDeck.name}
+          deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
+        />
 
         {selectedTokenForView ? (
           <CardDetailModal
@@ -519,24 +509,15 @@ function DeckPreview({
         <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
       ) : null}
 
-      <Suspense fallback={null}>
-        <PlaytestSimulator
-          isOpen={isPlaytestOpen}
-          onClose={handleClosePlaytest}
-          deckCards={activeCards}
-          deckFormat={activeFormat}
-          deckRelatedTokens={deckRelatedTokens}
-        />
-      </Suspense>
-
-      <Suspense fallback={null}>
-        <DeckProxyPrint
-          isOpen={isProxyPrintOpen}
-          onClose={handleCloseProxyPrint}
-          cards={activeCards}
-          deckRelatedTokens={deckRelatedTokens}
-        />
-      </Suspense>
+      <DeckPreviewOverlays
+        cards={activeCards}
+        isPlaytestOpen={isPlaytestOpen}
+        onClosePlaytest={handleClosePlaytest}
+        isProxyPrintOpen={isProxyPrintOpen}
+        onCloseProxyPrint={handleCloseProxyPrint}
+        deckFormat={activeFormat}
+        deckRelatedTokens={deckRelatedTokens}
+      />
 
       {selectedTokenForView ? (
         <CardDetailModal
