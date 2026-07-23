@@ -210,9 +210,11 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
                 <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
               </button>
 
+              {/* Keyboard-shortcuts reference — hidden below sm: no physical
+                  keyboard on phone-width screens, so the shortcuts are unusable there. */}
               <button
                 type="button"
-                className="profile-menu-item"
+                className="profile-menu-item hidden sm:flex"
                 onClick={() => setActiveSection('help')}
                 role="menuitem"
               >
