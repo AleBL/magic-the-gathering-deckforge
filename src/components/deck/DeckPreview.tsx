@@ -1,32 +1,31 @@
 import { lazy, Suspense, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFileAlt, FaLayerGroup, FaPencilAlt, FaBolt, FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
-import { Card } from '../types/Card';
-import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
-import { CardSize } from '../types';
-import { validateDeck } from '../utils/deckValidator';
-import { useDeckPreviewState } from '../hooks/useDeckPreviewState';
-import { DeckFormatType, DeckZone } from '../types/enums';
-import { formatLabelKey } from '../utils/formatLabel';
-import { useTokenHandlers } from '../hooks/useTokenHandlers';
-import { useDeckStore } from '../store/useDeckStore';
-import EmptyState from './ui/EmptyState';
+import { Card } from '../../types/Card';
+import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
+import { CardSize } from '../../types';
+import { validateDeck } from '../../utils/deckValidator';
+import { useDeckPreviewState } from '../../hooks/useDeckPreviewState';
+import { DeckFormatType, DeckZone } from '../../types/enums';
+import { formatLabelKey } from '../../utils/formatLabel';
+import { useTokenHandlers } from '../../hooks/useTokenHandlers';
+import { useDeckStore } from '../../store/useDeckStore';
+import EmptyState from '../ui/EmptyState';
 import DeckValidationBadge from './DeckValidationBadge';
-import DeckFloatingPreview from './deck/DeckFloatingPreview';
-import DeckZoneTabs from './deck/DeckZoneTabs';
-import DeckActionBar from './deck/DeckActionBar';
-import DeckNotesEditor from './deck/DeckNotesEditor';
-import DeckCardList from './deck/DeckCardList';
-import DeckStackView from './deck/DeckStackView';
-import DeckTokensTab from './deck/DeckTokensTab';
-import { DeckDisplayOptions } from './deck/DeckDisplayOptions';
-import { DeckStatsFilteredCards } from './deck/DeckStatsFilteredCards';
-import { DeckCollectionSummary } from './deck/DeckCollectionSummary';
-import CardDetailModal from './card/CardDetailModal';
+import DeckFloatingPreview from '../deck/DeckFloatingPreview';
+import DeckZoneTabs from '../deck/DeckZoneTabs';
+import DeckActionBar from '../deck/DeckActionBar';
+import DeckNotesEditor from '../deck/DeckNotesEditor';
+import DeckCardList from '../deck/DeckCardList';
+import DeckStackView from '../deck/DeckStackView';
+import DeckTokensTab from '../deck/DeckTokensTab';
+import { DeckDisplayOptions } from '../deck/DeckDisplayOptions';
+import { DeckStatsFilteredCards } from '../deck/DeckStatsFilteredCards';
+import { DeckCollectionSummary } from '../deck/DeckCollectionSummary';
+import CardDetailModal from '../card/CardDetailModal';
+import DeckPreviewOverlays from './DeckPreviewOverlays';
 
-const PlaytestSimulator = lazy(() => import('./PlaytestSimulator'));
-const DeckProxyPrint = lazy(() => import('./DeckProxyPrint'));
-const DeckStats = lazy(() => import('./DeckStats'));
+const DeckStats = lazy(() => import('../stats/DeckStats'));
 
 interface DeckPreviewProps {
   selectedDeck: Deck | null;
@@ -355,25 +354,16 @@ function DeckPreview({
           <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
         ) : null}
 
-        <Suspense fallback={null}>
-          <PlaytestSimulator
-            isOpen={isPlaytestOpen}
-            onClose={handleClosePlaytest}
-            deckCards={activeCards}
-            deckFormat={selectedDeck.format || DeckFormatType.FREEFORM}
-            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-          />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <DeckProxyPrint
-            isOpen={isProxyPrintOpen}
-            onClose={handleCloseProxyPrint}
-            cards={activeCards}
-            deckName={selectedDeck.name}
-            deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
-          />
-        </Suspense>
+        <DeckPreviewOverlays
+          cards={activeCards}
+          isPlaytestOpen={isPlaytestOpen}
+          onClosePlaytest={handleClosePlaytest}
+          isProxyPrintOpen={isProxyPrintOpen}
+          onCloseProxyPrint={handleCloseProxyPrint}
+          deckFormat={selectedDeck.format || DeckFormatType.FREEFORM}
+          deckName={selectedDeck.name}
+          deckRelatedTokens={deckRelatedTokens || selectedDeck?.relatedTokens}
+        />
 
         {selectedTokenForView ? (
           <CardDetailModal
@@ -519,24 +509,15 @@ function DeckPreview({
         <DeckFloatingPreview card={hoveredCard} mousePos={mousePos} />
       ) : null}
 
-      <Suspense fallback={null}>
-        <PlaytestSimulator
-          isOpen={isPlaytestOpen}
-          onClose={handleClosePlaytest}
-          deckCards={activeCards}
-          deckFormat={activeFormat}
-          deckRelatedTokens={deckRelatedTokens}
-        />
-      </Suspense>
-
-      <Suspense fallback={null}>
-        <DeckProxyPrint
-          isOpen={isProxyPrintOpen}
-          onClose={handleCloseProxyPrint}
-          cards={activeCards}
-          deckRelatedTokens={deckRelatedTokens}
-        />
-      </Suspense>
+      <DeckPreviewOverlays
+        cards={activeCards}
+        isPlaytestOpen={isPlaytestOpen}
+        onClosePlaytest={handleClosePlaytest}
+        isProxyPrintOpen={isProxyPrintOpen}
+        onCloseProxyPrint={handleCloseProxyPrint}
+        deckFormat={activeFormat}
+        deckRelatedTokens={deckRelatedTokens}
+      />
 
       {selectedTokenForView ? (
         <CardDetailModal

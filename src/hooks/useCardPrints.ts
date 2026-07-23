@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Scry from 'scryfall-sdk';
@@ -114,7 +115,7 @@ export function useCardPrints(cardOrName: Card | string | undefined, oracleId?: 
       if (err.message?.includes('404') || err.message?.includes('not found')) {
         setPrints([]);
       } else {
-        console.error('Failed to fetch card prints:', err);
+        logger.error('Failed to fetch card prints:', err);
         setError(err.message);
         dispatchToast(t('common.printsLoadError'), 'danger');
       }

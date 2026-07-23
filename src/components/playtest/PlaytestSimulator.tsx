@@ -3,21 +3,21 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationTriangle, FaCheck } from 'react-icons/fa';
 
-import { Card } from '../types/Card';
-import { DeckRelatedToken } from '../types/Deck';
-import { PlaytestProvider, usePlaytestContext } from './playtest/PlaytestContext';
-import { PlaytestControlBarTop } from './playtest/PlaytestControlBarTop';
-import { PlaytestControlBarBottom } from './playtest/PlaytestControlBarBottom';
-import { PlaytestLibraryGraveyard } from './playtest/PlaytestLibraryGraveyard';
-import { PlaytestBattlefield } from './playtest/PlaytestBattlefield';
-import { PlaytestHand } from './playtest/PlaytestHand';
-import { PlaytestLog } from './playtest/PlaytestLog';
-import { PlaytestModals } from './playtest/PlaytestModals';
-import { PlaytestFaceChoiceModal } from './playtest/PlaytestFaceChoiceModal';
-import { PlaytestShortcutsOverlay } from './playtest/PlaytestShortcutsOverlay';
+import { Card } from '../../types/Card';
+import { DeckRelatedToken } from '../../types/Deck';
+import { PlaytestProvider, usePlaytestContext } from '../playtest/PlaytestContext';
+import { PlaytestControlBarTop } from '../playtest/PlaytestControlBarTop';
+import { PlaytestControlBarBottom } from '../playtest/PlaytestControlBarBottom';
+import { PlaytestLibraryGraveyard } from '../playtest/PlaytestLibraryGraveyard';
+import { PlaytestBattlefield } from '../playtest/PlaytestBattlefield';
+import { PlaytestHand } from '../playtest/PlaytestHand';
+import { PlaytestLog } from '../playtest/PlaytestLog';
+import { PlaytestModals } from '../playtest/PlaytestModals';
+import { PlaytestFaceChoiceModal } from '../playtest/PlaytestFaceChoiceModal';
+import { PlaytestShortcutsOverlay } from '../playtest/PlaytestShortcutsOverlay';
 import { PlaytestParticles } from './PlaytestParticles';
-import AmbientGlow from './ui/AmbientGlow';
-import { useRipple } from '../hooks/useRipple';
+import AmbientGlow from '../ui/AmbientGlow';
+import { useRipple } from '../../hooks/useRipple';
 
 interface PlaytestSimulatorProps {
   isOpen: boolean;

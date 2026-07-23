@@ -1,8 +1,8 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaKeyboard, FaTimes } from 'react-icons/fa';
-import { useFocusTrap } from '../hooks/useFocusTrap';
-import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface AppShortcutsOverlayProps {
   isOpen: boolean;

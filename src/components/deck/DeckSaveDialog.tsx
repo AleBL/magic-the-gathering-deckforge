@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaTimes, FaInfoCircle } from 'react-icons/fa';
-import { DeckFormat } from '../types/Deck';
-import { DeckFormatType } from '../types/enums';
+import { DeckFormat } from '../../types/Deck';
+import { DeckFormatType } from '../../types/enums';
 
 interface DeckSaveDialogProps {
   deckName: string;

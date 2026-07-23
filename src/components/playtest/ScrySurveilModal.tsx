@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PlaytestCard } from '../types/Playtest';
+import { PlaytestCard } from '../../types/Playtest';
 import { FaTimes, FaArrowLeft, FaArrowRight, FaArrowDown, FaArrowUp } from 'react-icons/fa';
 
 export interface ScrySurveilModalProps {

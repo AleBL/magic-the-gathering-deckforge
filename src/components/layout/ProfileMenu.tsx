@@ -20,9 +20,9 @@ interface ProfileMenuProps {
   setIsDarkMode: (value: boolean) => void;
 }
 
-import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../constants';
-import { useVisualEffects } from '../hooks/useVisualEffects';
-import useInstallPrompt from '../hooks/useInstallPrompt';
+import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../../constants';
+import { useVisualEffects } from '../../hooks/useVisualEffects';
+import useInstallPrompt from '../../hooks/useInstallPrompt';
 
 function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
   const { t, i18n } = useTranslation();

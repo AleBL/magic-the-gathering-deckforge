@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import CardSearch from './components/card/CardSearch';
-import DeckManager from './components/DeckManager';
+import DeckManager from './components/deck/DeckManager';
 import CollectionManager from './components/collection/CollectionManager';
 import { AppTab } from './types';
 import { fetchSymbols } from './utils/symbolHelper';

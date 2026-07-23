@@ -1,3 +1,4 @@
+import { logger } from './logger';
 import { Card } from '../types/Card';
 import i18n from '../plugins/i18n';
 import { dispatchToast } from './toastHelper';
@@ -68,7 +69,7 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
         }
       }
     } catch (error) {
-      console.error('Failed to translate card batch:', error);
+      logger.error('Failed to translate card batch:', error);
       dispatchToast(i18n.t('common.errorTranslatingBatch') as string, 'danger');
     }
   }

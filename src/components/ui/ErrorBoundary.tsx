@@ -1,6 +1,7 @@
+import { logger } from '../../utils/logger';
 import { Component, ErrorInfo, ReactNode } from 'react';
-import i18n from '../plugins/i18n';
-import ErrorState from './ui/ErrorState';
+import i18n from '../../plugins/i18n';
+import ErrorState from '../ui/ErrorState';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -18,7 +19,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Unhandled React error:', error, info.componentStack);
+    logger.error('Unhandled React error:', error, info.componentStack);
   }
 
   handleReload = () => {

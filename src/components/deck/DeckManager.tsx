@@ -1,26 +1,25 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaLayerGroup, FaChevronDown } from 'react-icons/fa';
-import { Card } from '../types/Card';
-import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
-import { DeckFormatType } from '../types/enums';
-import { CardSize } from '../types';
-import { ShowToastFn } from '../types/Toast';
-import { CARD_SIZES } from '../constants';
-import DeckList from './DeckList';
+import { Card } from '../../types/Card';
+import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
+import { DeckFormatType } from '../../types/enums';
+import { CardSize } from '../../types';
+import { ShowToastFn } from '../../types/Toast';
+import { CARD_SIZES } from '../../constants';
+import SavedDecksPanel from './SavedDecksPanel';
 import DeckPreview from './DeckPreview';
 import DeckSaveDialog from './DeckSaveDialog';
-import CustomDialog from './ui/CustomDialog';
-import { useDeckStore } from '../store/useDeckStore';
-import { useDeckActions } from '../hooks/useDeckActions';
-import useDeckManager from '../hooks/useDeckManager';
-import useDialog from '../hooks/useDialog';
-import DeckTextImportModal from './deck/DeckTextImportModal';
-import DeckImportProgressModal from './deck/DeckImportProgressModal';
-import { DeckManagerToolbar } from './deck/DeckManagerToolbar';
-import { DeckExportDialog } from './deck/DeckExportDialog';
-import { useDeckTextImport } from '../hooks/useDeckTextImport';
-import { useSuggestedLands } from '../hooks/useSuggestedLands';
+import CustomDialog from '../ui/CustomDialog';
+import { useDeckStore } from '../../store/useDeckStore';
+import { useDeckActions } from '../../hooks/useDeckActions';
+import useDeckManager from '../../hooks/useDeckManager';
+import useDialog from '../../hooks/useDialog';
+import DeckTextImportModal from '../deck/DeckTextImportModal';
+import DeckImportProgressModal from '../deck/DeckImportProgressModal';
+import { DeckManagerToolbar } from '../deck/DeckManagerToolbar';
+import { DeckExportDialog } from '../deck/DeckExportDialog';
+import { useDeckTextImport } from '../../hooks/useDeckTextImport';
+import { useSuggestedLands } from '../../hooks/useSuggestedLands';
 
 interface DeckManagerProps {
   readonly showToast: ShowToastFn;
@@ -554,39 +553,20 @@ function DeckManager({ showToast }: DeckManagerProps) {
           className={`grid grid-cols-1 ${showDeckList ? 'lg:grid-cols-[300px_1fr] xl:grid-cols-[320px_1fr]' : 'lg:grid-cols-1'} gap-4 p-4`}
         >
           {showDeckList ? (
-            <div className="col-span-1">
-              {/* Below lg the saved-decks list collapses behind this toggle so it
-                  stops permanently eating vertical space on phones. */}
-              <button
-                type="button"
-                onClick={() => setIsMobileDeckListOpen((open) => !open)}
-                aria-expanded={isMobileDeckListOpen}
-                aria-controls="saved-decks-panel"
-                className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
-              >
-                <span className="flex items-center gap-2">
-                  <FaLayerGroup className="text-primary shrink-0" />
-                  {t('deck.savedDecks')}
-                  <span className="count-badge">{savedDecks.length}</span>
-                </span>
-                <FaChevronDown
-                  className={`text-xs text-gray-400 transition-transform duration-200 ${isMobileDeckListOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-              <div id="saved-decks-panel" className={`${isMobileDeckListOpen ? 'block' : 'hidden'} lg:block`}>
-                <DeckList
-                  decks={displayDecks}
-                  selectedDeckId={selectedDeck?.id ?? null}
-                  editingDeckId={editingDeckId}
-                  onSelectDeck={setSelectedDeck}
-                  onEditDeck={handleEditDeck}
-                  onExportDeck={(deck) => setDeckToExport(deck)}
-                  onDuplicateDeck={handleDuplicateDeck}
-                  onNewFromDeck={handleNewDeckFromThis}
-                  onDeleteDeck={confirmDeleteDeck}
-                />
-              </div>
-            </div>
+            <SavedDecksPanel
+              decks={displayDecks}
+              savedDeckCount={savedDecks.length}
+              selectedDeckId={selectedDeck?.id ?? null}
+              editingDeckId={editingDeckId}
+              isMobileOpen={isMobileDeckListOpen}
+              onToggleMobileOpen={() => setIsMobileDeckListOpen((open) => !open)}
+              onSelectDeck={setSelectedDeck}
+              onEditDeck={handleEditDeck}
+              onExportDeck={(deck) => setDeckToExport(deck)}
+              onDuplicateDeck={handleDuplicateDeck}
+              onNewFromDeck={handleNewDeckFromThis}
+              onDeleteDeck={confirmDeleteDeck}
+            />
           ) : null}
           <div className="col-span-1 min-w-0">
             <DeckPreview

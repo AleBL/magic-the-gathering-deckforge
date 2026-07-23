@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch } from 'react-icons/fa';
 import CardGrid from './CardGrid';
 import CardSizeSelector from './CardSizeSelector';
-import SearchFilters from '../SearchFilters';
+import SearchFilters from './SearchFilters';
 import CardFilterBar from './CardFilterBar';
 import CardSkeleton from './CardSkeleton';
 import { Card } from '../../types/Card';

@@ -13,12 +13,12 @@ import {
   FaKeyboard,
   FaGlobe
 } from 'react-icons/fa';
-import { useDeckStore } from '../store/useDeckStore';
-import { SUPPORTED_LANGUAGES } from '../constants';
-import { AppTab } from '../types';
-import { useMountTransition } from '../hooks/useMountTransition';
-import { useFocusTrap } from '../hooks/useFocusTrap';
-import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useDeckStore } from '../../store/useDeckStore';
+import { SUPPORTED_LANGUAGES } from '../../constants';
+import { AppTab } from '../../types';
+import { useMountTransition } from '../../hooks/useMountTransition';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface Command {
   id: string;

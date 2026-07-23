@@ -5,7 +5,7 @@ import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
 import { formatLabelKey } from '../../utils/formatLabel';
-import DeckValidationBadge from '../DeckValidationBadge';
+import DeckValidationBadge from './DeckValidationBadge';
 
 interface DeckListItemProps {
   deck: Deck;

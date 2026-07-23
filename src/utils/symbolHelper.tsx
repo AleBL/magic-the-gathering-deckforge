@@ -1,3 +1,4 @@
+import { logger } from './logger';
 import { ReactNode } from 'react';
 import i18n from '../plugins/i18n';
 import { dispatchToast } from './toastHelper';
@@ -25,7 +26,7 @@ export async function fetchSymbols() {
       symbolMap = map;
     }
   } catch (error) {
-    console.error('Failed to fetch Scryfall symbology:', error);
+    logger.error('Failed to fetch Scryfall symbology:', error);
     dispatchToast(i18n.t('common.errorFetchingSymbology') as string, 'danger');
   } finally {
     isFetching = false;

@@ -1,10 +1,11 @@
+import { logger } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import * as Scry from 'scryfall-sdk';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
 import { DeckRelatedToken } from '../types/Deck';
 import { RelatedToken } from './useCardRelatedTokens';
-import { tokenPresets, TokenPreset } from '../components/PlaytestTokenModal';
+import { tokenPresets, TokenPreset } from '../components/playtest/PlaytestTokenModal';
 import { translateCards } from '../utils/translationHelper';
 import { getCardImageUrl } from '../utils/deckGrouping';
 import { CardWithScryfallMetadata, ScryfallCardPart, ScryfallSearchResponse } from '../types/Scryfall';
@@ -47,7 +48,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
         }
       } catch (error) {
         // Keep default preset images when dynamic fetch fails.
-        console.error('Failed to fetch preset token images:', error);
+        logger.error('Failed to fetch preset token images:', error);
       }
     };
     fetchPresetImages();
@@ -174,7 +175,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
         setSearchResults([]);
       }
     } catch (err: unknown) {
-      console.error('Failed to search tokens:', err);
+      logger.error('Failed to search tokens:', err);
       if (err instanceof Error && err.message === 'ScryfallOffline') {
         setSearchError(t('search.scryfallOffline'));
       } else {
@@ -221,7 +222,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
       setSelectedTokenForDetail(null);
       setIsSearchModalOpen(false);
     } catch (error) {
-      console.error('Failed to add token:', error);
+      logger.error('Failed to add token:', error);
       dispatchToast(t('tokens.addTokenError'), 'danger');
     } finally {
       setIsSearching(false);
@@ -271,7 +272,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
               const fullCard = (await Scry.Cards.byName(c.name)) as CardWithScryfallMetadata;
               allParts = fullCard.all_parts || [];
             } catch (fetchAllPartsError) {
-              console.error('Failed to fetch full card during deck analysis:', fetchAllPartsError);
+              logger.error('Failed to fetch full card during deck analysis:', fetchAllPartsError);
               allParts = [];
             }
           }
@@ -308,7 +309,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
                   });
                 }
               } catch (tokenFetchError) {
-                console.error('Failed to fetch token during deck analysis:', tokenFetchError);
+                logger.error('Failed to fetch token during deck analysis:', tokenFetchError);
               }
             })
           );
@@ -323,7 +324,7 @@ export function useDeckTokens({ cards, cachedTokens, onTokensLoaded }: UseDeckTo
       setLocalTokens(updated);
       onTokensLoaded?.(updated);
     } catch (error) {
-      console.error('Failed to analyze deck for tokens:', error);
+      logger.error('Failed to analyze deck for tokens:', error);
       dispatchToast(t('tokens.analysisError'), 'danger');
     } finally {
       setIsLoading(false);

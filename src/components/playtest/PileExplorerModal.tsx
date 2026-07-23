@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { PlaytestCard } from '../types/Playtest';
+import { PlaytestCard } from '../../types/Playtest';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 
-import { PlaytestZone, LibraryPlacement } from '../types/enums';
-import { useDismissTransition } from '../hooks/useDismissTransition';
-import { useFocusTrap } from '../hooks/useFocusTrap';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useSwipeToClose } from '../hooks/useSwipeToClose';
+import { PlaytestZone, LibraryPlacement } from '../../types/enums';
+import { useDismissTransition } from '../../hooks/useDismissTransition';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 
 export interface PileExplorerModalProps {
   title: string;

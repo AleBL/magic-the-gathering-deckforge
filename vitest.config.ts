@@ -31,7 +31,7 @@ export default defineConfig({
         'src/hooks/usePlaytestSimulator.ts',
         'src/hooks/useInstallPrompt.ts',
         'src/hooks/useOnlineStatus.ts',
-        'src/components/DeckStats.tsx',
+        'src/components/stats/DeckStats.tsx',
         'src/components/card/CardItem.tsx'
       ],
       // 'json-summary' + 'json' feed the PR coverage-report action; 'text' for CI logs.
