@@ -1,11 +1,11 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaPrint, FaTimes, FaInfoCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
-import { Card } from '../types/Card';
-import { DeckRelatedToken } from '../types/Deck';
-import { DeckZone } from '../types/enums';
-import { useProxyPrint, resolveFaceImageUrl } from '../hooks/useProxyPrint';
-import { ProxyPrintSettingsBar } from './deck/ProxyPrintSettingsBar';
+import { Card } from '../../types/Card';
+import { DeckRelatedToken } from '../../types/Deck';
+import { DeckZone } from '../../types/enums';
+import { useProxyPrint, resolveFaceImageUrl } from '../../hooks/useProxyPrint';
+import { ProxyPrintSettingsBar } from '../deck/ProxyPrintSettingsBar';
 
 interface DeckProxyPrintProps {
   isOpen: boolean;

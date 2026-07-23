@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import DeckStats from './DeckStats';
-import { makeCard } from '../test/factories';
-import { Card } from '../types/Card';
+import { makeCard } from '../../test/factories';
+import { Card } from '../../types/Card';
 
 const sampleDeck: Card[] = [
   makeCard({ name: 'Llanowar Elves', type_line: 'Creature — Elf Druid', cmc: 1, colors: ['G'], rarity: 'common' }),

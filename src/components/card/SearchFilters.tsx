@@ -1,12 +1,12 @@
 import { useState, useEffect, Dispatch, SetStateAction, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFilter, FaTimes, FaUndo } from 'react-icons/fa';
-import { SearchFilters as SearchFiltersType } from '../types';
-import { useSearchFilters } from '../hooks/useSearchFilters';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useMediaQuery } from '../hooks/useMediaQuery';
-import { useDeckStore } from '../store/useDeckStore';
-import BottomSheet from './ui/BottomSheet';
+import { SearchFilters as SearchFiltersType } from '../../types';
+import { useSearchFilters } from '../../hooks/useSearchFilters';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useDeckStore } from '../../store/useDeckStore';
+import BottomSheet from '../ui/BottomSheet';
 
 interface SearchFiltersProps {
   filters: SearchFiltersType;

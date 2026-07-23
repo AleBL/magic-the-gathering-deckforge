@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import i18n from '../plugins/i18n';
-import ErrorState from './ui/ErrorState';
+import i18n from '../../plugins/i18n';
+import ErrorState from '../ui/ErrorState';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

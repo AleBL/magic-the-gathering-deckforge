@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useVisualEffects } from '../hooks/useVisualEffects';
-import { usePlaytestContext } from './playtest/PlaytestContext';
+import { useVisualEffects } from '../../hooks/useVisualEffects';
+import { usePlaytestContext } from '../playtest/PlaytestContext';
 
 interface Particle {
   id: number;

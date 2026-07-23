@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import { ValidationResult, ValidationError } from '../utils/deckValidator';
+import { ValidationResult, ValidationError } from '../../utils/deckValidator';
 
 interface DeckValidationBadgeProps {
   validation: ValidationResult;

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBolt, FaTimes } from 'react-icons/fa';
-import { useDeckStore } from '../store/useDeckStore';
-import { DeckFormat } from '../types/Deck';
-import { DeckFormatType } from '../types/enums';
-import { formatLabelKey } from '../utils/formatLabel';
+import { useDeckStore } from '../../store/useDeckStore';
+import { DeckFormat } from '../../types/Deck';
+import { DeckFormatType } from '../../types/enums';
+import { formatLabelKey } from '../../utils/formatLabel';
 
 interface EditingDeckBannerProps {
   deckName: string;

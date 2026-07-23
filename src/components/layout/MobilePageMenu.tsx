@@ -13,10 +13,10 @@ import {
   FaLayerGroup,
   FaEdit
 } from 'react-icons/fa';
-import { PendingAction, useDeckStore } from '../store/useDeckStore';
-import { deckActionLabels } from '../utils/deckActionLabels';
-import BottomSheet from './ui/BottomSheet';
-import { AppTab } from '../types';
+import { PendingAction, useDeckStore } from '../../store/useDeckStore';
+import { deckActionLabels } from '../../utils/deckActionLabels';
+import BottomSheet from '../ui/BottomSheet';
+import { AppTab } from '../../types';
 
 interface MobilePageMenuProps {
   activeTab: AppTab;

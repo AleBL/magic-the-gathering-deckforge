@@ -1,18 +1,18 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
-import { Card } from '../types/Card';
-import CardItem from './card/CardItem';
-import { computeDeckStatistics, filterCardsByStat, StatFilter } from '../utils/deckStatistics';
-import { useColorLabels } from './stats/colorLabels';
-import { ManaCurvePanel } from './stats/ManaCurvePanel';
-import { ColorDistributionPanel } from './stats/ColorDistributionPanel';
-import { TypesBreakdownPanel } from './stats/TypesBreakdownPanel';
-import { ManaBaseOptimizerPanel } from './stats/ManaBaseOptimizerPanel';
-import { ManaPipAnalysisPanel } from './stats/ManaPipAnalysisPanel';
-import { BudgetEstimatorPanel } from './stats/BudgetEstimatorPanel';
-import { RarityPanel } from './stats/RarityPanel';
-import { DeckDoctorPanel } from './stats/DeckDoctorPanel';
+import { Card } from '../../types/Card';
+import CardItem from '../card/CardItem';
+import { computeDeckStatistics, filterCardsByStat, StatFilter } from '../../utils/deckStatistics';
+import { useColorLabels } from '../stats/colorLabels';
+import { ManaCurvePanel } from '../stats/ManaCurvePanel';
+import { ColorDistributionPanel } from '../stats/ColorDistributionPanel';
+import { TypesBreakdownPanel } from '../stats/TypesBreakdownPanel';
+import { ManaBaseOptimizerPanel } from '../stats/ManaBaseOptimizerPanel';
+import { ManaPipAnalysisPanel } from '../stats/ManaPipAnalysisPanel';
+import { BudgetEstimatorPanel } from '../stats/BudgetEstimatorPanel';
+import { RarityPanel } from '../stats/RarityPanel';
+import { DeckDoctorPanel } from '../stats/DeckDoctorPanel';
 
 interface DeckStatsProps {
   currentDeck: Card[];

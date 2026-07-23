@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
-import pwLogo from '../assets/pw-logo.svg';
+import pwLogo from '../../assets/pw-logo.svg';
 import ProfileMenu from './ProfileMenu';
 import MobilePageMenu from './MobilePageMenu';
-import EditingDeckBanner from './EditingDeckBanner';
-import { AppTab } from '../types';
+import EditingDeckBanner from '../deck/EditingDeckBanner';
+import { AppTab } from '../../types';
 
 interface HeaderProps {
   activeTab: AppTab;

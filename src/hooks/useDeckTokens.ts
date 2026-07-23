@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../types/Card';
 import { DeckRelatedToken } from '../types/Deck';
 import { RelatedToken } from './useCardRelatedTokens';
-import { tokenPresets, TokenPreset } from '../components/PlaytestTokenModal';
+import { tokenPresets, TokenPreset } from '../components/playtest/PlaytestTokenModal';
 import { translateCards } from '../utils/translationHelper';
 import { getCardImageUrl } from '../utils/deckGrouping';
 import { CardWithScryfallMetadata, ScryfallCardPart, ScryfallSearchResponse } from '../types/Scryfall';

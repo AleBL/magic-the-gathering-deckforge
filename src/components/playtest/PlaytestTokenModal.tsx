@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes, FaPlus, FaPalette } from 'react-icons/fa';
-import { getCardImageUrl } from '../utils/deckGrouping';
-import { Card } from '../types/Card';
-import { RelatedToken } from '../hooks/useCardRelatedTokens';
-import { useFocusTrap } from '../hooks/useFocusTrap';
-import { useEscapeKey } from '../hooks/useEscapeKey';
+import { getCardImageUrl } from '../../utils/deckGrouping';
+import { Card } from '../../types/Card';
+import { RelatedToken } from '../../hooks/useCardRelatedTokens';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface PlaytestTokenModalProps {
   isOpen: boolean;

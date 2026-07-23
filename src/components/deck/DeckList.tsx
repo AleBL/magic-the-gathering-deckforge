@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { FaLayerGroup } from 'react-icons/fa';
-import { Deck, DeckFormat } from '../types/Deck';
-import { DeckListItem } from './deck/DeckListItem';
+import { Deck, DeckFormat } from '../../types/Deck';
+import { DeckListItem } from '../deck/DeckListItem';
 
 interface DeckListProps {
   decks: Deck[];
