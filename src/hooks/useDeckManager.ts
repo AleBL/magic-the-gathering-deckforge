@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import { Card } from '../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../types/Deck';
@@ -72,7 +73,7 @@ export default function useDeckManager(
     try {
       await db.decks.put(newDeck);
     } catch (error) {
-      console.error('Failed to save deck:', error);
+      logger.error('Failed to save deck:', error);
       return { success: false, errorKey: 'deck.saveError' };
     }
     setDeckName('');
@@ -102,7 +103,7 @@ export default function useDeckManager(
       }
       return { success: true };
     } catch (error) {
-      console.error('Failed to save edited deck:', error);
+      logger.error('Failed to save edited deck:', error);
       return { success: false, errorKey: 'deck.saveError' };
     }
   };
@@ -123,7 +124,7 @@ export default function useDeckManager(
 
       return deckToDelete;
     } catch (error) {
-      console.error('Failed to delete deck:', error);
+      logger.error('Failed to delete deck:', error);
       dispatchToast(t('deck.deleteError'), 'danger');
       return undefined;
     }
@@ -135,7 +136,7 @@ export default function useDeckManager(
       if (existing) return;
       await db.decks.put(deck);
     } catch (error) {
-      console.error('Failed to restore deck:', error);
+      logger.error('Failed to restore deck:', error);
       dispatchToast(t('deck.restoreError'), 'danger');
     }
   };
@@ -173,7 +174,7 @@ export default function useDeckManager(
       link.click();
       link.remove();
     } catch (error) {
-      console.error('Failed to export deck as .dec:', error);
+      logger.error('Failed to export deck as .dec:', error);
       dispatchToast(t('common.unexpectedError'), 'danger');
     }
   };
@@ -189,7 +190,7 @@ export default function useDeckManager(
         await db.decks.put({ ...existing, relatedTokens: tokens });
       }
     } catch (error) {
-      console.error('Failed to save tokens to deck:', error);
+      logger.error('Failed to save tokens to deck:', error);
       dispatchToast(t('deck.saveError'), 'danger');
     }
   };
@@ -232,7 +233,7 @@ export default function useDeckManager(
       setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
       dispatchToast(t('deck.deckImported'));
     } catch (error) {
-      console.error('Failed to import shared deck:', error);
+      logger.error('Failed to import shared deck:', error);
       if (error instanceof Error && error.message === 'ScryfallOffline') {
         setFileImportError(t('search.scryfallOffline'));
       } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
@@ -269,7 +270,7 @@ export default function useDeckManager(
       await db.decks.put(copy);
       return copy;
     } catch (error) {
-      console.error('Failed to duplicate deck:', error);
+      logger.error('Failed to duplicate deck:', error);
       dispatchToast(t('deck.saveError'), 'danger');
       return undefined;
     }
@@ -348,7 +349,7 @@ export default function useDeckManager(
               dispatchToast(t('deck.deckImported'));
               resolve();
             } catch (error) {
-              console.error('Failed to import deck file (text list):', error);
+              logger.error('Failed to import deck file (text list):', error);
               if (error instanceof Error && error.message === 'ScryfallOffline') {
                 setFileImportError(t('search.scryfallOffline'));
               } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
@@ -365,14 +366,14 @@ export default function useDeckManager(
             resolve();
           }
         } catch (error) {
-          console.error('Failed to import deck file:', error);
+          logger.error('Failed to import deck file:', error);
           setFileImportError(t('deck.invalidFile'));
           setImportProgress((prev) => ({ ...prev, isImporting: false }));
           resolve();
         }
       };
       reader.onerror = () => {
-        console.error('Failed to read deck file:', reader.error);
+        logger.error('Failed to read deck file:', reader.error);
         setFileImportError(t('deck.invalidFile'));
         setImportProgress((prev) => ({ ...prev, isImporting: false }));
         resolve();

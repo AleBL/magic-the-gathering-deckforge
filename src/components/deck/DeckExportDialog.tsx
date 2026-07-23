@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCopy, FaLink, FaFileCode } from 'react-icons/fa';
@@ -32,7 +33,7 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
       await navigator.clipboard.writeText(text);
       showToast(t(successKey), 'success');
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      logger.error('Failed to copy to clipboard:', error);
       showToast(t('common.unexpectedError'), 'error');
     }
   };
