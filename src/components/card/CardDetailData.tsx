@@ -58,7 +58,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
         </p>
       )}
       <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
-        {t('cardDetails.rarityLabel')}: {t(card.rarity.toLowerCase()) || card.rarity}
+        {t('cardDetails.rarityLabel')}: {t(`search.${card.rarity.toLowerCase()}`, { defaultValue: card.rarity })}
       </p>
       <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
         {t('cardDetails.setLabel')}: {card.set_name}

@@ -18,17 +18,28 @@ export default function useToast() {
   const showToast = useCallback((text: string, variant: ToastVariant = 'success', action?: ToastAction) => {
     setToastState({ message: text, variant, action });
 
-    // Trigger native desktop OS notification
-    if ('Notification' in window) {
-      if (Notification.permission === 'granted') {
-        new Notification('MTG Deck Forge', { body: text, silent: false });
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            new Notification('MTG Deck Forge', { body: text, silent: false });
-          }
-        });
+    // Trigger native desktop OS notification. Guarded: on mobile browsers
+    // (e.g. Android Chrome) `new Notification()` throws — page-context
+    // notifications are not allowed there — and that must never take the
+    // in-app toast down with it.
+    try {
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          new Notification('MTG Deck Forge', { body: text, silent: false });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+              try {
+                new Notification('MTG Deck Forge', { body: text, silent: false });
+              } catch {
+                // Mobile: constructor unsupported — toast already shown.
+              }
+            }
+          });
+        }
       }
+    } catch (error) {
+      console.error('OS notification failed:', error);
     }
   }, []);
 

@@ -30,9 +30,12 @@ export async function translateCards(cards: Card[], targetLang: string): Promise
   for (let batchStartIndex = 0; batchStartIndex < uniqueOracleIds.length; batchStartIndex += BATCH_SIZE) {
     const batch = uniqueOracleIds.slice(batchStartIndex, batchStartIndex + BATCH_SIZE);
 
-    // Query looks like: oracle_id:(id1 or id2 or ...) lang:lang
+    // Query looks like: (oracle_id:id1 OR oracle_id:id2 ...) lang:xx. The
+    // parentheses are load-bearing: Scryfall binds adjacency tighter than OR,
+    // so without them `lang:` would only constrain the LAST oracle_id term and
+    // every other card would come back in its default (English) printing.
     const oracleQuery = batch.map((id) => `oracle_id:${id}`).join(' OR ');
-    const query = `${oracleQuery} lang:${lang}`;
+    const query = `(${oracleQuery}) lang:${lang}`;
     const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`;
 
     try {

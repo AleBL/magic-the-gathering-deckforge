@@ -76,7 +76,9 @@ const PlaytestHandCard = memo(
               <span className="text-[11px] font-black text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
                 {card.printed_name || card.name}
               </span>
-              <span className="text-[9px] font-bold text-slate-400 capitalize">{t(card.rarity)}</span>
+              <span className="text-[9px] font-bold text-slate-400 capitalize">
+                {t(`search.${card.rarity}`, { defaultValue: card.rarity })}
+              </span>
             </div>
           )}
 

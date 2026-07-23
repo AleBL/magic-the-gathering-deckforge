@@ -6,6 +6,7 @@ import {
   FaDownload,
   FaDiceD20,
   FaEdit,
+  FaLink,
   FaTimes,
   FaPrint,
   FaFileExport,
@@ -13,7 +14,9 @@ import {
 } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { Deck } from '../../types/Deck';
+import { DeckFormatType } from '../../types/enums';
 import { downloadAsJson } from '../../services/fileDownload';
+import { buildShareUrl } from '../../services/deckShare';
 
 /**
  * Hover tooltip for the icon-only action buttons. Hidden at lg and up, where
@@ -99,6 +102,18 @@ function DeckActionBar({
     navigator.clipboard.writeText(arenaStr).then(() => showToast(t('strategy.exportArenaCopied')));
   };
 
+  const handleCopyShareLink = () => {
+    if (cards.length === 0) return;
+    const deck: Deck = selectedDeck ?? {
+      id: '',
+      name: t('deck.unnamedDeck'),
+      format: DeckFormatType.FREEFORM,
+      cards,
+      createdAt: new Date().toISOString()
+    };
+    navigator.clipboard.writeText(buildShareUrl(deck)).then(() => showToast(t('export.linkCopied')));
+  };
+
   const handleDownloadDecFile = () => {
     if (cards.length === 0) return;
     const counts: Record<string, { count: number; card: Card }> = {};
@@ -157,6 +172,17 @@ function DeckActionBar({
 
             {showExportMenu && (
               <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/50 dark:border-white/10 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleCopyShareLink();
+                    setShowExportMenu(false);
+                  }}
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                >
+                  <FaLink className="text-indigo-500 shrink-0" />
+                  {t('export.copyLink')}
+                </button>
                 <button
                   type="button"
                   onClick={() => {

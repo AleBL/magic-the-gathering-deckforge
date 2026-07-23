@@ -1,24 +1,114 @@
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
+  ResponsiveContainer,
+  Tooltip as RechartsTooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import {
   FaStethoscope,
   FaExclamationTriangle,
   FaExclamationCircle,
   FaInfoCircle,
   FaCheckCircle,
+  FaDiceD20,
   FaFish
 } from 'react-icons/fa';
 import { Card } from '../../types/Card';
 import { analyzeDeck, ConsistencyScore, DeckRecommendation, ScoreComponent } from '../../utils/deckDoctor';
+import { DeckStatistics, landDrawProbabilities } from '../../utils/deckStatistics';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { useColorLabels } from './colorLabels';
-import { CHART_STATUS } from './chartTheme';
-import { ChartFrame, ChartSkeleton, useChartReady } from './ChartPrimitives';
+import { CHART_BAR_RADIUS_VERTICAL, CHART_STATUS, CHART_TEXT_MUTED, CHART_TICK_STYLE } from './chartTheme';
+import { ChartFrame, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
 import EmptyState from '../ui/EmptyState';
 
 interface DeckDoctorPanelProps {
   currentDeck: Card[];
+  /** Precomputed deck statistics — powers the opening-hand consistency chart. */
+  stats: DeckStatistics;
+}
+
+const HAND_SIZE = 7;
+// A hand with 2–5 lands is generally keepable.
+const KEEPABLE_MIN = 2;
+const KEEPABLE_MAX = 5;
+const KEEPABLE_COLOR = CHART_STATUS.good;
+const OTHER_COLOR = CHART_TEXT_MUTED;
+
+/**
+ * Opening-hand land distribution (hypergeometric), folded into the Deck Doctor
+ * so consistency lives in one place instead of a separate panel.
+ */
+function OpeningHandChart({ stats }: { stats: DeckStatistics }) {
+  const { t } = useTranslation();
+  const deckSize = stats.totalCards;
+  const landCount = stats.totalLands;
+  const distribution = useMemo(() => landDrawProbabilities(deckSize, landCount, HAND_SIZE), [deckSize, landCount]);
+
+  if (distribution.length === 0 || landCount === 0) return null;
+
+  return (
+    <div>
+      <span className="text-[9px] uppercase tracking-wider text-gray-400 font-bold mb-1.5 flex items-center gap-1.5">
+        <FaDiceD20 className="text-indigo-500" />
+        {t('stats.consistency')}
+      </span>
+      <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-2">{t('stats.consistencyDesc')}</p>
+      <ChartFrame height="h-40">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={distribution} margin={{ top: 8, right: 4, left: 4, bottom: 0 }} barCategoryGap="20%">
+            <XAxis
+              dataKey="lands"
+              tick={CHART_TICK_STYLE}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(lands: number) => t('stats.nLands', { count: lands })}
+            />
+            <YAxis hide />
+            <RechartsTooltip
+              cursor={{ fill: 'var(--chart-grid)', opacity: 0.4 }}
+              content={({ active, payload }) => {
+                const d = payload?.[0]?.payload as { lands: number; prob: number } | undefined;
+                if (!d) return null;
+                const isKeepable = d.lands >= KEEPABLE_MIN && d.lands <= KEEPABLE_MAX;
+                return (
+                  <ChartTooltip
+                    active={active}
+                    title={t('stats.nLands', { count: d.lands })}
+                    rows={[
+                      {
+                        key: 'prob',
+                        label: t('stats.percentage'),
+                        value: `${(d.prob * 100).toFixed(0)}%`,
+                        swatch: isKeepable ? KEEPABLE_COLOR : OTHER_COLOR
+                      }
+                    ]}
+                  />
+                );
+              }}
+            />
+            <Bar dataKey="prob" radius={CHART_BAR_RADIUS_VERTICAL} maxBarSize={28}>
+              {distribution.map((d) => {
+                const isKeepable = d.lands >= KEEPABLE_MIN && d.lands <= KEEPABLE_MAX;
+                return <Cell key={d.lands} fill={isKeepable ? KEEPABLE_COLOR : OTHER_COLOR} />;
+              })}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+      <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">
+        {t('stats.consistencyBasis', { lands: landCount, total: deckSize })}
+      </p>
+    </div>
+  );
 }
 
 const percent = (value: number): string => `${Math.round(value * 100)}%`;
@@ -147,7 +237,7 @@ function useRecommendationText() {
  * the existing statistics panels (ConsistencyPanel, ManaBaseOptimizerPanel)
  * rather than repeating their charts.
  */
-export function DeckDoctorPanel({ currentDeck }: DeckDoctorPanelProps) {
+export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
   const { t } = useTranslation();
   const colorLabels = useColorLabels();
   const recommendationText = useRecommendationText();
@@ -221,8 +311,12 @@ export function DeckDoctorPanel({ currentDeck }: DeckDoctorPanelProps) {
               <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold mb-1.5">
                 {t('deckDoctor.landOdds')}
               </span>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <StatTile label={t('deckDoctor.keepable')} value={percent(landOdds.keepableProb)} />
+                <StatTile
+                  label={t('stats.avgLandsInHand')}
+                  value={((HAND_SIZE * stats.totalLands) / Math.max(1, stats.totalCards)).toFixed(1)}
+                />
                 {landOdds.byTurn.map((milestone) => (
                   <StatTile
                     key={milestone.turn}
@@ -232,6 +326,9 @@ export function DeckDoctorPanel({ currentDeck }: DeckDoctorPanelProps) {
                 ))}
               </div>
             </div>
+
+            {/* Opening-hand land distribution (formerly the Consistency panel) */}
+            <OpeningHandChart stats={stats} />
 
             {/* Color source sufficiency */}
             {colorSources.length > 0 ? (
