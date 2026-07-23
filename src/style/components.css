@@ -230,7 +230,8 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-action-btn {
-  @apply flex-1 sm:flex-none flex justify-center gap-1 items-center py-1.5 px-2.5 rounded-lg font-bold text-xs shadow-sm transition-all;
+  /* min 44px tap height below sm (reverts on desktop); already flex-centered. */
+  @apply flex-1 sm:flex-none flex justify-center gap-1 items-center min-h-[44px] sm:min-h-0 py-1.5 px-2.5 rounded-lg font-bold text-xs shadow-sm transition-all;
 }
 
 .deck-list-action-btn-group-left {
@@ -271,7 +272,9 @@ html.dark .import-export-dropdown {
 }
 
 .modal-close-btn {
-  @apply text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all;
+  /* min 44px tap area below sm (reverts to auto on desktop so the header row is
+     unchanged); inline-flex keeps the icon centered inside the enlarged target. */
+  @apply inline-flex items-center justify-center min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all;
 }
 
 .modal-body {
