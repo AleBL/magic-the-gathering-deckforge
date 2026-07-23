@@ -9,6 +9,7 @@ import { db } from '../db/database';
 import { useTranslation } from 'react-i18next';
 import { dispatchToast } from '../utils/toastHelper';
 import { parseDeckText, fetchCardsFromParsedList, ImportProgressData } from '../services/deckImportService';
+import { DecodedShareDeck, decodeShareString, parseDeckFileContent } from '../services/deckShare';
 
 export default function useDeckManager(
   currentDeck: Card[],
@@ -193,6 +194,87 @@ export default function useDeckManager(
     }
   };
 
+  // Resolves a decoded share payload (from a link or a .deck file) into real
+  // cards via Scryfall and saves it, reusing the file-import progress modal.
+  const resolveShareDeck = async (decoded: DecodedShareDeck): Promise<void> => {
+    setIsFileImportModalOpen(true);
+    setFileImportError(null);
+    setFileMissingCards([]);
+    setImportProgress({
+      isImporting: true,
+      current: 0,
+      total: decoded.entries.length,
+      message: t('common.loading')
+    });
+
+    try {
+      const currentLang = i18n.language || 'en';
+      const { cards, missing } = await fetchCardsFromParsedList(decoded.entries, currentLang, (progress) => {
+        setImportProgress(progress);
+      });
+
+      setFileMissingCards(missing);
+
+      if (cards.length === 0) {
+        setFileImportError(t('deck.importError'));
+        setImportProgress((prev) => ({ ...prev, isImporting: false }));
+        return;
+      }
+
+      const newDeck: Deck = {
+        id: Date.now().toString(),
+        name: decoded.name || t('deck.importedDeckName'),
+        cards,
+        format: decoded.format || DeckFormatType.FREEFORM,
+        createdAt: new Date().toISOString()
+      };
+      await db.decks.put(newDeck);
+      setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
+      dispatchToast(t('deck.deckImported'));
+    } catch (error) {
+      console.error('Failed to import shared deck:', error);
+      if (error instanceof Error && error.message === 'ScryfallOffline') {
+        setFileImportError(t('search.scryfallOffline'));
+      } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
+        setFileImportError(t('search.rateLimited'));
+      } else {
+        setFileImportError(t('deck.importError'));
+      }
+      setImportProgress((prev) => ({ ...prev, isImporting: false }));
+    }
+  };
+
+  // Imports a deck encoded in a shareable link (e.g. opened from another device).
+  const importSharedDeckString = async (encoded: string): Promise<void> => {
+    const decoded = decodeShareString(encoded);
+    if (!decoded) {
+      setIsFileImportModalOpen(true);
+      setFileMissingCards([]);
+      setFileImportError(t('deck.invalidShareLink'));
+      setImportProgress((prev) => ({ ...prev, isImporting: false }));
+      return;
+    }
+    await resolveShareDeck(decoded);
+  };
+
+  // Saves an independent copy of a deck under a "(copy)" name.
+  const duplicateDeck = async (deck: Deck): Promise<Deck | undefined> => {
+    try {
+      const copy: Deck = {
+        ...deck,
+        id: Date.now().toString(),
+        name: `${deck.name} (${t('common.copy')})`,
+        createdAt: new Date().toISOString()
+      };
+      await db.decks.put(copy);
+      return copy;
+    } catch (error) {
+      console.error('Failed to duplicate deck:', error);
+      dispatchToast(t('deck.saveError'), 'danger');
+      return undefined;
+    }
+  };
+
   const importDeckFile = async (file: File): Promise<void> => {
     setIsFileImportModalOpen(true);
     setFileImportError(null);
@@ -218,6 +300,16 @@ export default function useDeckManager(
             await db.decks.put(deck);
             setImportProgress((prev) => ({ ...prev, isImporting: false, current: prev.total }));
             dispatchToast(t('deck.deckImported'));
+            resolve();
+          } else if (file.name.endsWith('.deck')) {
+            const decoded = parseDeckFileContent(content);
+            if (!decoded) {
+              setFileImportError(t('deck.invalidFile'));
+              setImportProgress((prev) => ({ ...prev, isImporting: false }));
+              resolve();
+              return;
+            }
+            await resolveShareDeck(decoded);
             resolve();
           } else if (file.name.endsWith('.dec') || file.name.endsWith('.txt')) {
             const parsed = parseDeckText(content);
@@ -312,6 +404,8 @@ export default function useDeckManager(
     exportDeckAsDec,
     exportAllDecks,
     importDeckFile,
+    importSharedDeckString,
+    duplicateDeck,
     saveTokensToDeck,
     restoreDeck,
     fileMissingCards,

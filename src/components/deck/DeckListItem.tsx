@@ -1,6 +1,6 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEdit, FaDownload, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaDownload, FaTrash, FaEllipsisV, FaClone, FaPlus } from 'react-icons/fa';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
@@ -21,6 +21,8 @@ interface DeckListItemProps {
     relatedTokens?: Deck['relatedTokens']
   ) => void;
   onExport: (deck: Deck) => void;
+  onDuplicate: (deck: Deck) => void;
+  onNewFrom: (deck: Deck) => void;
   onDelete: (deck: Deck) => void;
 }
 
@@ -31,6 +33,8 @@ export const DeckListItem = memo(function DeckListItem({
   onSelect,
   onEdit,
   onExport,
+  onDuplicate,
+  onNewFrom,
   onDelete
 }: DeckListItemProps) {
   const { t } = useTranslation();
@@ -128,6 +132,55 @@ export const DeckListItem = memo(function DeckListItem({
           >
             <FaDownload className="text-sm" />
           </button>
+          <div className="relative" ref={exportMenuRef}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowExportMenu((open) => !open);
+              }}
+              aria-haspopup="menu"
+              aria-expanded={showExportMenu}
+              className="button-small deck-list-action-btn bg-slate-500 hover:bg-slate-600 text-white flex items-center justify-center min-w-[32px]"
+              title={t('common.moreActions')}
+              aria-label={`${t('common.moreActions')} ${deck.name}`}
+            >
+              <FaEllipsisV className="text-sm" />
+            </button>
+            {showExportMenu ? (
+              <div
+                role="menu"
+                className="absolute right-0 top-full mt-1 z-50 min-w-[190px] rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg py-1"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowExportMenu(false);
+                    onDuplicate(deck);
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                >
+                  <FaClone className="text-xs shrink-0" />
+                  {t('deck.duplicateDeck')}
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowExportMenu(false);
+                    onNewFrom(deck);
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                >
+                  <FaPlus className="text-xs shrink-0" />
+                  {t('deck.newDeckFromThis')}
+                </button>
+              </div>
+            ) : null}
+          </div>
           <button
             type="button"
             onClick={(e) => {

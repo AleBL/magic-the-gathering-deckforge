@@ -21,8 +21,18 @@ export default defineConfig({
         'src/utils/deckValidator.ts',
         'src/utils/symbolHelper.tsx',
         'src/utils/translationHelper.ts',
+        'src/utils/deckDoctor.ts',
+        'src/utils/deckStatistics.ts',
+        'src/utils/collectionMath.ts',
+        'src/utils/deckText.ts',
+        'src/services/collectionCsv.ts',
+        'src/services/deckShare.ts',
         'src/store/useDeckStore.ts',
-        'src/hooks/usePlaytestSimulator.ts'
+        'src/hooks/usePlaytestSimulator.ts',
+        'src/hooks/useInstallPrompt.ts',
+        'src/hooks/useOnlineStatus.ts',
+        'src/components/DeckStats.tsx',
+        'src/components/card/CardItem.tsx'
       ],
       // 'json-summary' + 'json' feed the PR coverage-report action; 'text' for CI logs.
       reporter: ['text', 'text-summary', 'json', 'json-summary', 'html'],

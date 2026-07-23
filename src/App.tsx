@@ -2,11 +2,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import CardSearch from './components/card/CardSearch';
 import DeckManager from './components/DeckManager';
+import CollectionManager from './components/collection/CollectionManager';
+import { AppTab } from './types';
 import { fetchSymbols } from './utils/symbolHelper';
 import useToast from './hooks/useToast';
 import { useShortcuts } from './hooks/useShortcuts';
 import RootLayout from './components/layout/RootLayout';
 import { useDeckStore } from './store/useDeckStore';
+import { extractShareParam, SHARE_PARAM } from './services/deckShare';
 import { useDeckActions } from './hooks/useDeckActions';
 import { useGlobalRipple } from './hooks/useGlobalRipple';
 import { useVisualEffects } from './hooks/useVisualEffects';
@@ -16,12 +19,13 @@ function App() {
   const { t, i18n } = useTranslation();
   const { motionEnabled } = useVisualEffects();
   useGlobalRipple();
-  const [activeTab, setActiveTab] = useState<'search' | 'deck'>('search');
+  const [activeTab, setActiveTab] = useState<AppTab>('search');
   const { toastMessage, toastVariant, toastAction, showToast } = useToast();
   const isOnline = useOnlineStatus();
 
   const editingDeck = useDeckStore((state) => state.editingDeck);
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
+  const setPendingSharedDeck = useDeckStore((state) => state.setPendingSharedDeck);
 
   const { handleAddToDeck, handleAddTokenToDeck } = useDeckActions(showToast);
 
@@ -57,6 +61,18 @@ function App() {
     onClearDeck: handleClearDeck
   });
 
+  // On startup, a `?deck=` share link hands its payload to the deck manager and
+  // is stripped from the address bar so a refresh doesn't re-import it.
+  useEffect(() => {
+    const encoded = extractShareParam(window.location.search);
+    if (!encoded) return;
+    setPendingSharedDeck(encoded);
+    setActiveTab('deck');
+    const url = new URL(window.location.href);
+    url.searchParams.delete(SHARE_PARAM);
+    window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+  }, [setPendingSharedDeck]);
+
   useEffect(() => {
     fetchSymbols();
 
@@ -67,6 +83,20 @@ function App() {
     window.addEventListener('global-toast', handleGlobalToast);
     return () => window.removeEventListener('global-toast', handleGlobalToast);
   }, [showToast]);
+
+  // Detached views (e.g. the collection's empty state) can request a tab
+  // switch without receiving the setter through props.
+  useEffect(() => {
+    const handleNavigateTab = (e: Event) => {
+      const tab = (e as CustomEvent).detail as AppTab;
+      if (tab === 'search' || tab === 'deck' || tab === 'collection') {
+        setActiveTab(tab);
+        if (tab === 'search') setPendingAction('focus-search');
+      }
+    };
+    window.addEventListener('mtg-navigate-tab', handleNavigateTab);
+    return () => window.removeEventListener('mtg-navigate-tab', handleNavigateTab);
+  }, [setPendingAction]);
 
   useEffect(() => {
     document.documentElement.lang = i18n.language || 'en';
@@ -121,6 +151,8 @@ function App() {
             onAddTokenToDeck={handleAddTokenToDeck}
             activeFormat={editingDeck.deckFormat}
           />
+        ) : activeTab === 'collection' ? (
+          <CollectionManager />
         ) : (
           <DeckManager showToast={showToast} />
         )}

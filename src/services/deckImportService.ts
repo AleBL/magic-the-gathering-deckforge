@@ -1,4 +1,5 @@
 import { Card } from '../types/Card';
+import { DeckZone } from '../types/enums';
 import { ScryfallCollectionResponse, ScryfallNotFoundIdentifier } from '../types/Scryfall';
 
 const MAX_RATE_LIMIT_RETRIES = 2;
@@ -36,6 +37,10 @@ export interface ParseResult {
   quantity: number;
   set?: string;
   collector_number?: string;
+  /** Optional deck zone to assign the resolved copies to (share imports set this). */
+  zone?: DeckZone;
+  /** Optional commander flag carried through from share imports. */
+  isCommander?: boolean;
 }
 
 export const parseDeckText = (text: string): ParseResult[] => {
@@ -270,7 +275,11 @@ export const fetchCardsFromParsedList = async (
     if (foundCard) {
       for (let copyIndex = 0; copyIndex < item.quantity; copyIndex++) {
         // We append a timestamp so every imported copy has a unique id
-        finalCards.push({ ...foundCard, id: `${foundCard.id}-${copyIndex}-${Date.now()}` } as unknown as Card);
+        const copy = { ...foundCard, id: `${foundCard.id}-${copyIndex}-${Date.now()}` } as unknown as Card;
+        // Preserve zone / commander status when the source (e.g. a share link) carries it.
+        if (item.zone) copy.zone = item.zone;
+        if (item.isCommander) copy.isCommander = true;
+        finalCards.push(copy);
       }
     } else {
       missingNames.push(item.name);

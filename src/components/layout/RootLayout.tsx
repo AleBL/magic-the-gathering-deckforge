@@ -1,6 +1,7 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup } from 'react-icons/fa';
+import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
+import { AppTab } from '../../types';
 import Header from '../Header';
 import AmbientGlow from '../ui/AmbientGlow';
 import OfflineIndicator from '../ui/OfflineIndicator';
@@ -15,8 +16,8 @@ import { ToastAction, ToastVariant } from '../../types/Toast';
 
 interface RootLayoutProps {
   children: ReactNode;
-  activeTab: 'search' | 'deck';
-  setActiveTab: (tab: 'search' | 'deck') => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   toastMessage: string | null;
   toastVariant: ToastVariant;
   toastAction: ToastAction | undefined;
@@ -100,6 +101,16 @@ export default function RootLayout({
           {currentDeckLength > 0 && (
             <span className="count-badge absolute top-1 right-[calc(50%-22px)]">{currentDeckLength}</span>
           )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('collection')}
+          className={`bottom-tab-button ${activeTab === 'collection' ? 'bottom-tab-button-active' : ''}`}
+          aria-label={t('collection.title')}
+          aria-current={activeTab === 'collection' ? 'page' : undefined}
+        >
+          <FaBoxOpen className="bottom-tab-button-icon" />
+          <span>{t('collection.tab')}</span>
         </button>
       </nav>
 

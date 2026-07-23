@@ -1,14 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup } from 'react-icons/fa';
+import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
 import pwLogo from '../assets/pw-logo.svg';
 import ProfileMenu from './ProfileMenu';
 import MobilePageMenu from './MobilePageMenu';
 import EditingDeckBanner from './EditingDeckBanner';
+import { AppTab } from '../types';
 
 interface HeaderProps {
-  activeTab: 'search' | 'deck';
-  setActiveTab: (tab: 'search' | 'deck') => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   currentDeckLength: number;
   editingDeck: {
     deckId: string | null;
@@ -69,6 +70,14 @@ const Header: React.FC<HeaderProps> = ({
                 )}
               </span>
             )}
+          </button>
+          <button
+            onClick={() => setActiveTab('collection')}
+            className={`tab-button ${activeTab === 'collection' ? 'tab-button-active' : ''}`}
+            aria-label={t('collection.title')}
+          >
+            <FaBoxOpen className="tab-button-icon" />
+            <span>{t('collection.tab')}</span>
           </button>
         </nav>
         <div className="header-actions">

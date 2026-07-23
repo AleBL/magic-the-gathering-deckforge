@@ -84,6 +84,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
     exportDeckAsDec,
     exportAllDecks,
     importDeckFile,
+    importSharedDeckString,
+    duplicateDeck,
     saveTokensToDeck,
     restoreDeck,
     fileMissingCards,
@@ -94,6 +96,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const pendingAction = useDeckStore((state) => state.pendingAction);
   const setPendingAction = useDeckStore((state) => state.setPendingAction);
+  const pendingSharedDeck = useDeckStore((state) => state.pendingSharedDeck);
+  const setPendingSharedDeck = useDeckStore((state) => state.setPendingSharedDeck);
   const setSelectedDeckSummary = useDeckStore((state) => state.setSelectedDeckSummary);
   const setSavedDeckCount = useDeckStore((state) => state.setSavedDeckCount);
 
@@ -116,6 +120,14 @@ function DeckManager({ showToast }: DeckManagerProps) {
   useEffect(() => {
     setSavedDeckCount(savedDecks.length);
   }, [savedDecks.length, setSavedDeckCount]);
+
+  // Import a deck handed over from a `?deck=` share link (see App). Consume the
+  // payload exactly once so re-renders don't re-trigger the network import.
+  useEffect(() => {
+    if (!pendingSharedDeck) return;
+    setPendingSharedDeck(null);
+    importSharedDeckString(pendingSharedDeck);
+  }, [pendingSharedDeck, setPendingSharedDeck, importSharedDeckString]);
 
   useEffect(() => {
     if (editingDeckId) {
@@ -363,6 +375,32 @@ function DeckManager({ showToast }: DeckManagerProps) {
     setShowDeckList(true);
   }, [setSelectedDeck, setShowDeckList]);
 
+  const handleDuplicateDeck = useCallback(
+    async (deck: Deck) => {
+      const copy = await duplicateDeck(deck);
+      if (copy) showToast(t('deck.deckDuplicated'));
+    },
+    [duplicateDeck, showToast, t]
+  );
+
+  // "New deck from this": load a copy of the deck into the editor as an unsaved,
+  // brand-new deck (blank id) so saving creates a separate entry.
+  const handleNewDeckFromThis = useCallback(
+    (deck: Deck) => {
+      setSelectedDeck(null);
+      onLoadDeckToEdit(
+        '',
+        `${deck.name} (${t('common.copy')})`,
+        deck.format || DeckFormatType.FREEFORM,
+        deck.cards.map((card) => ({ ...card })),
+        deck.notes,
+        deck.relatedTokens
+      );
+      showToast(t('deck.newDeckFromCopy'));
+    },
+    [setSelectedDeck, onLoadDeckToEdit, showToast, t]
+  );
+
   // Executes commands dispatched through the store's pendingAction channel
   // (keyboard shortcuts, command palette and the navbar's mobile page menu —
   // which below `sm` replaces the on-screen toolbars entirely).
@@ -504,7 +542,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
       <input
         ref={menuImportFileInputRef}
         type="file"
-        accept=".json,.dec,.txt"
+        accept=".json,.dec,.txt,.deck"
         onChange={handleImportDeck}
         className="hidden"
         tabIndex={-1}
@@ -543,6 +581,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
                   onSelectDeck={setSelectedDeck}
                   onEditDeck={handleEditDeck}
                   onExportDeck={(deck) => setDeckToExport(deck)}
+                  onDuplicateDeck={handleDuplicateDeck}
+                  onNewFromDeck={handleNewDeckFromThis}
                   onDeleteDeck={confirmDeleteDeck}
                 />
               </div>
@@ -613,6 +653,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
             setDeckToExport(null);
           }}
           onCancel={() => setDeckToExport(null)}
+          showToast={showToast}
         />
       ) : null}
 
