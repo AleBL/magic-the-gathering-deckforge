@@ -676,6 +676,8 @@ const es = {
     export: {
       downloadJson: 'Descargar JSON',
       exportDecDesc: 'Para MTG Online y simuladores',
+      exportImage: 'Imagen (PNG)',
+      exportImageDesc: 'Una imagen del mazo para compartir',
       exportFormatPrompt: '¿A qué formato desea exportar?',
       exportJsonDesc: 'Datos completos del mazo para copia de seguridad',
       shareTitle: 'Compartir y mover entre dispositivos',

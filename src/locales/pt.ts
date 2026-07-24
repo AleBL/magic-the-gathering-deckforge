@@ -672,6 +672,8 @@ const pt = {
     export: {
       downloadJson: 'Baixar JSON',
       exportDecDesc: 'Para MTG Online e simuladores',
+      exportImage: 'Imagem (PNG)',
+      exportImageDesc: 'Uma imagem do deck para compartilhar',
       exportFormatPrompt: 'Para qual formato deseja exportar?',
       exportJsonDesc: 'Dados completos do deck para backup',
       shareTitle: 'Compartilhar e mover entre dispositivos',

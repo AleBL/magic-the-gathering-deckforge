@@ -1,7 +1,7 @@
 import { logger } from '../../utils/logger';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCopy, FaLink, FaFileCode } from 'react-icons/fa';
+import { FaCopy, FaLink, FaFileCode, FaImage } from 'react-icons/fa';
 import { Deck } from '../../types/Deck';
 import { ShowToastFn } from '../../types/Toast';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -9,7 +9,8 @@ import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useSwipeToClose } from '../../hooks/useSwipeToClose';
 import { buildDeckFileContent, buildShareUrl } from '../../services/deckShare';
 import { deckToArenaText } from '../../utils/deckText';
-import { downloadAsText } from '../../services/fileDownload';
+import { downloadAsText, downloadBlob } from '../../services/fileDownload';
+import { renderDeckImage } from '../../utils/deckImage';
 
 interface DeckExportDialogProps {
   deck: Deck;
@@ -42,6 +43,16 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
   const handleCopyText = () => copyToClipboard(deckToArenaText(deck.cards), 'strategy.exportArenaCopied');
   const handleDownloadDeckFile = () =>
     downloadAsText(buildDeckFileContent(deck), `${deck.name.replace(/\s+/g, '_')}.deck`);
+
+  const handleExportImage = async () => {
+    try {
+      const blob = await renderDeckImage(deck);
+      downloadBlob(blob, `${deck.name.replace(/\s+/g, '_')}.png`);
+    } catch (error) {
+      logger.error('Failed to export deck image:', error);
+      showToast(t('common.unexpectedError'), 'error');
+    }
+  };
 
   return (
     // Backdrop click is a mouse-only convenience; Escape and the cancel button provide the keyboard-equivalent action.
@@ -136,6 +147,17 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
           >
             <div className="font-bold text-lg">DEC (MTGO)</div>
             <div className="text-xs font-normal opacity-80">{t('export.exportDecDesc')}</div>
+          </button>
+          <button
+            type="button"
+            className="w-full primary-button bg-purple-600 hover:bg-purple-700 py-3"
+            onClick={handleExportImage}
+          >
+            <div className="font-bold text-lg flex items-center justify-center gap-2">
+              <FaImage className="text-base" />
+              {t('export.exportImage')}
+            </div>
+            <div className="text-xs font-normal opacity-80">{t('export.exportImageDesc')}</div>
           </button>
           <button type="button" className="w-full mt-1 secondary-button py-2" onClick={onCancel}>
             {t('common.cancel')}
