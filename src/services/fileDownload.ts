@@ -3,7 +3,7 @@ import { dispatchToast } from '../utils/toastHelper';
 import i18n from '../plugins/i18n';
 
 /** Triggers a browser download for the given Blob under `filename`. */
-function downloadBlob(blob: Blob, filename: string): void {
+export function downloadBlob(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
