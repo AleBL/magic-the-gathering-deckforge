@@ -1,6 +1,16 @@
 import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSave, FaPlus, FaTrash, FaFileImport, FaTimes, FaLightbulb, FaBook, FaColumns } from 'react-icons/fa';
+import {
+  FaSave,
+  FaPlus,
+  FaTrash,
+  FaFileImport,
+  FaTimes,
+  FaLightbulb,
+  FaBook,
+  FaColumns,
+  FaHistory
+} from 'react-icons/fa';
 import { Deck } from '../../types/Deck';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { deckActionLabels } from '../../utils/deckActionLabels';
@@ -24,6 +34,7 @@ interface DeckManagerToolbarProps {
   onOpenTextImport: () => void;
   onImportFile: (event: ChangeEvent<HTMLInputElement>) => void;
   onExportAll: () => void;
+  onOpenHistory: () => void;
 }
 
 /** Header for the deck manager: title, info tooltip, and the save/clear/import-export toolbar. */
@@ -44,7 +55,8 @@ export function DeckManagerToolbar({
   onClearDeck,
   onOpenTextImport,
   onImportFile,
-  onExportAll
+  onExportAll,
+  onOpenHistory
 }: DeckManagerToolbarProps) {
   const { t } = useTranslation();
   useEscapeKey(() => setShowImportExportDropdown(false), showImportExportDropdown);
@@ -73,15 +85,26 @@ export function DeckManagerToolbar({
           </div>
 
           {selectedDeck ? (
-            <button
-              type="button"
-              onClick={onToggleDeckList}
-              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
-              title={showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
-            >
-              <FaColumns className="text-xs shrink-0" />
-              <span>{showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}</span>
-            </button>
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onOpenHistory}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+                title={t('deck.versionHistory')}
+              >
+                <FaHistory className="text-xs shrink-0" />
+                <span className="hidden sm:inline">{t('deck.versionHistory')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={onToggleDeckList}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+                title={showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
+              >
+                <FaColumns className="text-xs shrink-0" />
+                <span>{showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}</span>
+              </button>
+            </div>
           ) : null}
         </h2>
       </div>
