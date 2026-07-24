@@ -8,6 +8,7 @@ import { ShowToastFn } from '../../types/Toast';
 import { CARD_SIZES } from '../../constants';
 import SavedDecksPanel from './SavedDecksPanel';
 import DeckCompareModal from './DeckCompareModal';
+import DeckVersionHistoryModal from './DeckVersionHistoryModal';
 import DeckPreview from './DeckPreview';
 import DeckSaveDialog from './DeckSaveDialog';
 import CustomDialog from '../ui/CustomDialog';
@@ -41,6 +42,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
   // area gets the whole viewport; the toggle (or the navbar page menu) opens it.
   const [isMobileDeckListOpen, setIsMobileDeckListOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [showImportExportDropdown, setShowImportExportDropdown] = useState(false);
 
   const currentDeck = useDeckStore((state) => state.currentDeck);
@@ -536,6 +538,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
         }}
         onImportFile={handleImportDeck}
         onExportAll={exportAllDecks}
+        onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
       {/* Hidden, always-mounted twin of the toolbar's file input: the mobile
@@ -625,6 +628,24 @@ function DeckManager({ showToast }: DeckManagerProps) {
       ) : null}
 
       {isCompareOpen ? <DeckCompareModal decks={savedDecks} onClose={() => setIsCompareOpen(false)} /> : null}
+
+      {isHistoryOpen && selectedDeck ? (
+        <DeckVersionHistoryModal
+          deck={selectedDeck}
+          onRestore={(version) => {
+            handleEditDeck(
+              version.deckId,
+              version.name,
+              version.format,
+              version.cards,
+              undefined,
+              version.relatedTokens
+            );
+            setIsHistoryOpen(false);
+          }}
+          onClose={() => setIsHistoryOpen(false)}
+        />
+      ) : null}
 
       {deckToExport ? (
         <DeckExportDialog

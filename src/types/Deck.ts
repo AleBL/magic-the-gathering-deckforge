@@ -18,3 +18,14 @@ export interface Deck {
   createdAt: string;
   relatedTokens?: DeckRelatedToken[];
 }
+
+/** Point-in-time snapshot of a deck, kept for the version history feature. */
+export interface DeckVersion {
+  id: string;
+  deckId: string;
+  name: string;
+  format: DeckFormat;
+  cards: Card[];
+  relatedTokens?: DeckRelatedToken[];
+  createdAt: string;
+}
