@@ -669,6 +669,8 @@ const en = {
     export: {
       downloadJson: 'Download JSON',
       exportDecDesc: 'For MTG Online and simulators',
+      exportImage: 'Image (PNG)',
+      exportImageDesc: 'A shareable picture of the decklist',
       exportFormatPrompt: 'Which format do you want to export to?',
       exportJsonDesc: 'Complete deck data for backup',
       shareTitle: 'Share & move between devices',
