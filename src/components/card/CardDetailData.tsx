@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { LuCrown, LuShield } from 'react-icons/lu';
+import { LuBan, LuCheck, LuCircleAlert, LuCrown, LuMinus } from 'react-icons/lu';
 import { Card, CardFace } from '../../types/Card';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DECK_FORMATS, LEGALITY } from '../../types/enums';
@@ -29,170 +29,177 @@ interface FaceLike {
   toughness?: string;
 }
 
+/** Formats shown in the legality grid: the five the app validates plus the other common ones. */
+const LEGALITY_FORMATS = [
+  ...DECK_FORMATS,
+  'pioneer',
+  'legacy',
+  'historic',
+  'timeless',
+  'brawl',
+  'oathbreaker',
+  'premodern'
+] as const;
+
+const EXTRA_FORMAT_NAMES: Record<string, string> = {
+  pioneer: 'Pioneer',
+  legacy: 'Legacy',
+  historic: 'Historic',
+  timeless: 'Timeless',
+  brawl: 'Brawl',
+  oathbreaker: 'Oathbreaker',
+  premodern: 'Premodern'
+};
+
+/** Status always carries an icon and a word, never colour alone. */
+function LegalityStatus({ status }: { status: string }) {
+  const { t } = useTranslation();
+  if (status === LEGALITY.LEGAL)
+    return (
+      <span className="inline-flex items-center gap-1 whitespace-nowrap text-success">
+        <LuCheck className="shrink-0" aria-hidden="true" />
+        {t('cardDetails.legal')}
+      </span>
+    );
+  if (status === LEGALITY.BANNED)
+    return (
+      <span className="inline-flex items-center gap-1 whitespace-nowrap text-danger">
+        <LuBan className="shrink-0" aria-hidden="true" />
+        {t('cardDetails.banned')}
+      </span>
+    );
+  if (status === LEGALITY.RESTRICTED)
+    return (
+      <span className="inline-flex items-center gap-1 whitespace-nowrap text-warning">
+        <LuCircleAlert className="shrink-0" aria-hidden="true" />
+        {t('cardDetails.restricted')}
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-1 whitespace-nowrap text-fg-muted">
+      <LuMinus className="shrink-0" aria-hidden="true" />
+      {t('cardDetails.notLegal')}
+    </span>
+  );
+}
+
 export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToken, allFaces }: CardDetailDataProps) {
   const { t } = useTranslation();
 
-  const renderFaceBlock = (source: FaceLike, key?: string | number) => (
-    <div key={key} className="space-y-1">
-      <p className="text-fg-secondary transition-colors duration-300 font-semibold">
-        {source.printed_name || source.name}
-      </p>
-      <p className="text-fg-secondary transition-colors duration-300">{source.printed_type_line || source.type_line}</p>
-      {source.mana_cost && (
-        <p className="text-warning transition-colors duration-300 flex items-center flex-wrap gap-1">
-          {t('cardDetails.manaCostLabel')}: {parseTextWithSymbols(source.mana_cost, true)}
-        </p>
-      )}
+  // Rules-reference order: name and cost on one line, type, rules text, then the body.
+  const renderFace = (source: FaceLike, isTitle: boolean, key?: string | number) => (
+    <div key={key} className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        {isTitle ? (
+          <h2 id="modal-card-title" className="font-serif text-2xl font-semibold leading-tight text-fg">
+            {source.printed_name || source.name}
+          </h2>
+        ) : (
+          <h3 className="text-base font-semibold text-fg">{source.printed_name || source.name}</h3>
+        )}
+        {source.mana_cost && (
+          <span
+            className="flex items-center flex-wrap justify-end gap-0.5 pt-1 shrink-0"
+            aria-label={t('cardDetails.manaCostLabel')}
+          >
+            {parseTextWithSymbols(source.mana_cost, true)}
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-fg-secondary">{source.printed_type_line || source.type_line}</p>
       {(source.printed_text || source.oracle_text) && (
-        <p className="text-fg-secondary whitespace-pre-line transition-colors duration-300 leading-relaxed">
+        <p className="text-body text-fg whitespace-pre-line">
           {parseTextWithSymbols(source.printed_text || source.oracle_text)}
         </p>
       )}
       {source.power && source.toughness && (
-        <p className="text-success dark:text-success transition-colors duration-300">
-          {t('cardDetails.powerToughnessLabel')}: {source.power}/{source.toughness}
+        <p className="flex justify-end">
+          <span
+            className="px-2 py-0.5 rounded-md border border-line-strong text-sm font-semibold text-fg"
+            aria-label={t('cardDetails.powerToughnessLabel')}
+          >
+            {source.power}/{source.toughness}
+          </span>
         </p>
       )}
     </div>
   );
 
   const showAllFaces = !!allFaces && allFaces.length > 1;
+  const titleSource: FaceLike = currentFace ?? card;
+  const prices = [
+    { key: 'usd', label: t('common.usd'), value: card.prices?.usd ? `$${card.prices.usd}` : null },
+    { key: 'eur', label: t('common.eur'), value: card.prices?.eur ? `€${card.prices.eur}` : null },
+    { key: 'tix', label: t('common.tix'), value: card.prices?.tix ?? null }
+  ].filter((price) => price.value);
+  // Scryfall sends every format it tracks; the Card type only names the ones the app validates.
+  const legalityMap: Record<string, string | undefined> = card.legalities ?? {};
+  const legalities = LEGALITY_FORMATS.filter((format) => legalityMap[format]);
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 id="modal-card-title" className="text-2xl font-semibold">
-          {currentFace ? currentFace.printed_name || currentFace.name : card.printed_name || card.name}
-        </h2>
-        {card.isCommander && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-warning-soft text-warning border border-warning/40 shadow-sm animate-pulse">
-            <LuCrown className="text-warning text-xs shrink-0" />
-            {t('cardDetails.commanderBadge')}
-          </span>
-        )}
-      </div>
+      {card.isCommander && (
+        <span className="inline-flex self-start items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-warning-soft text-warning border border-warning/40">
+          <LuCrown className="text-xs shrink-0" />
+          {t('cardDetails.commanderBadge')}
+        </span>
+      )}
 
       {showAllFaces ? (
         <div className="flex flex-col gap-3 divide-y divide-line [&>*+*]:pt-3">
-          {allFaces!.map((face, index) => renderFaceBlock(face, index))}
+          <h2 id="modal-card-title" className="font-serif text-2xl font-semibold leading-tight text-fg">
+            {card.printed_name || card.name}
+          </h2>
+          {allFaces!.map((face, index) => renderFace(face, false, index))}
         </div>
       ) : (
-        <>
-          <p className="text-fg-secondary transition-colors duration-300">
-            {currentFace
-              ? currentFace.printed_type_line || currentFace.type_line
-              : card.printed_type_line || card.type_line}
-          </p>
-          {((currentFace && currentFace.mana_cost) || card.mana_cost) && (
-            <p className="text-warning transition-colors duration-300 flex items-center flex-wrap gap-1">
-              {t('cardDetails.manaCostLabel')}:{' '}
-              {parseTextWithSymbols(currentFace ? currentFace.mana_cost : card.mana_cost, true)}
-            </p>
-          )}
-          {((currentFace && (currentFace.printed_text || currentFace.oracle_text)) ||
-            card.printed_text ||
-            card.oracle_text) && (
-            <div>
-              <h3 className="font-semibold mb-1">{t('cardDetails.textLabel')}:</h3>
-              <p className="text-fg-secondary whitespace-pre-line transition-colors duration-300 leading-relaxed">
-                {parseTextWithSymbols(
-                  currentFace
-                    ? currentFace.printed_text || currentFace.oracle_text
-                    : card.printed_text || card.oracle_text
-                )}
-              </p>
-            </div>
-          )}
-          {((currentFace && currentFace.power && currentFace.toughness) || (card.power && card.toughness)) && (
-            <p className="text-success dark:text-success transition-colors duration-300">
-              {t('cardDetails.powerToughnessLabel')}: {currentFace ? currentFace.power : card.power}/
-              {currentFace ? currentFace.toughness : card.toughness}
-            </p>
-          )}
-        </>
+        renderFace(titleSource, true)
       )}
-      <p className="text-fg-secondary transition-colors duration-300">
-        {t('cardDetails.rarityLabel')}: {t(`search.${card.rarity.toLowerCase()}`, { defaultValue: card.rarity })}
-      </p>
-      <p className="text-fg-secondary transition-colors duration-300">
-        {t('cardDetails.setLabel')}: {card.set_name}
-      </p>
 
-      {!isToken && !hidePriceAndLegality && (
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm border-t border-line pt-3">
+        <dt className="text-fg-muted">{t('cardDetails.rarityLabel')}</dt>
+        <dd className="text-fg">{t(`search.${card.rarity.toLowerCase()}`, { defaultValue: card.rarity })}</dd>
+        <dt className="text-fg-muted">{t('cardDetails.setLabel')}</dt>
+        <dd className="text-fg">{card.set_name}</dd>
+        {card.artist && (
+          <>
+            <dt className="text-fg-muted">{t('cardDetails.artistLabel')}</dt>
+            <dd className="text-fg">{card.artist}</dd>
+          </>
+        )}
+        {!isToken && !hidePriceAndLegality && (
+          <>
+            <dt className="text-fg-muted">{t('stats.prices')}</dt>
+            <dd className="text-fg">
+              {prices.length > 0 ? (
+                <span className="flex flex-wrap gap-x-4 gap-y-0.5">
+                  {prices.map((price) => (
+                    <span key={price.key}>
+                      <span className="text-fg-muted">{price.label}</span> {price.value}
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                <span className="text-fg-muted">{t('cardDetails.noPrice')}</span>
+              )}
+            </dd>
+          </>
+        )}
+      </dl>
+
+      {legalities.length > 0 && !isToken && !hidePriceAndLegality && (
         <div className="border-t border-line pt-3">
-          <h3 className="font-semibold mb-2 text-sm text-fg-muted">{t('stats.prices')}:</h3>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="bg-surface-2/50 border border-line rounded-lg p-2 text-center">
-              <span className="block text-xs text-gray-500">{t('common.usd')}</span>
-              <span className="font-semibold text-sm text-fg">
-                {card.prices?.usd ? `$${card.prices.usd}` : t('common.priceNotAvailable')}
-              </span>
-            </div>
-            <div className="bg-surface-2/50 border border-line rounded-lg p-2 text-center">
-              <span className="block text-xs text-gray-500">{t('common.eur')}</span>
-              <span className="font-semibold text-sm text-fg">
-                {card.prices?.eur ? `€${card.prices.eur}` : t('common.priceNotAvailable')}
-              </span>
-            </div>
-            <div className="bg-surface-2/50 border border-line rounded-lg p-2 text-center">
-              <span className="block text-xs text-gray-500">{t('common.tix')}</span>
-              <span className="font-semibold text-sm text-fg">
-                {card.prices?.tix ? `${card.prices.tix}` : t('common.priceNotAvailable')}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {card.legalities && !isToken && !hidePriceAndLegality && (
-        <div className="border-t border-line pt-4 mt-1">
-          <h3 className="font-semibold mb-3 text-xs text-fg-muted flex items-center gap-1.5">
-            <LuShield className="text-accent text-xs shrink-0" />
-            <span>{t('cardDetails.legality')}</span>
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-            {DECK_FORMATS.map((deckFormat) => {
-              const status = card.legalities?.[deckFormat];
-              if (!status) return null;
-
-              let bgClass = '';
-              let dotClass = '';
-              let label = t('cardDetails.notLegal');
-
-              if (status === LEGALITY.LEGAL) {
-                bgClass = 'bg-success-soft text-success border-success/40';
-                dotClass = 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]';
-                label = t('cardDetails.legal');
-              } else if (status === LEGALITY.BANNED) {
-                bgClass = 'bg-danger-soft text-danger border-danger/40';
-                dotClass = 'bg-danger shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse';
-                label = t('cardDetails.banned');
-              } else if (status === LEGALITY.RESTRICTED) {
-                bgClass = 'bg-warning-soft text-warning border-warning/40';
-                dotClass = 'bg-warning shadow-[0_0_8px_rgba(245,158,11,0.5)]';
-                label = t('cardDetails.restricted');
-              } else {
-                bgClass = 'bg-gray-500/5 text-fg-muted border-line';
-                dotClass = 'bg-gray-400 dark:bg-gray-500';
-                label = t('cardDetails.notLegal');
-              }
-
-              return (
-                <div
-                  key={deckFormat}
-                  className={`flex flex-col justify-center px-2.5 py-1.5 rounded-xl border transition-all duration-200 hover:brightness-105 hover:shadow-xs ${bgClass}`}
-                >
-                  <span className="text-[11px] font-semibold text-fg-muted leading-none">
-                    {t(formatLabelKey(deckFormat))}
-                  </span>
-                  <div className="flex items-center gap-1.5 mt-1 shrink-0">
-                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${dotClass}`} />
-                    <span className="text-[11px] font-semibold select-none leading-none">{label}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <h3 className="mb-2 text-sm font-medium text-fg-secondary">{t('cardDetails.legality')}</h3>
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs">
+            {legalities.map((format) => (
+              <li key={format} className="flex items-center justify-between gap-2 min-w-0">
+                <span className="text-fg-secondary truncate">
+                  {EXTRA_FORMAT_NAMES[format] ?? t(formatLabelKey(format))}
+                </span>
+                <LegalityStatus status={legalityMap[format]!} />
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </>
