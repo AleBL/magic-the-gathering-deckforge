@@ -168,9 +168,9 @@ export function PlaytestLibraryGraveyard() {
         }}
         className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'exile'
-            ? 'border-dashed border-gray-400 bg-gray-500/10 shadow-lg shadow-gray-500/10 ring-2 ring-gray-400/30 scale-105'
+            ? 'border-dashed border-gray-400 bg-gray-500/10 shadow-lg ring-2 ring-gray-400/30 scale-105'
             : exile.length > 0
-              ? 'border-slate-300 dark:border-slate-700 hover:border-gray-500/60 hover:shadow-gray-500/5 bg-slate-100 dark:bg-slate-950 hover:-translate-y-1 cursor-pointer'
+              ? 'border-slate-300 dark:border-slate-700 hover:border-gray-500/60 bg-slate-100 dark:bg-slate-950 hover:-translate-y-1 cursor-pointer'
               : 'border-dashed border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/20 cursor-pointer'
         }`}
         onDragOver={(event) => {

@@ -1,6 +1,6 @@
 {
-  "rawHue": 37,
-  "rawNeutral": 363,
+  "rawHue": 32,
+  "rawNeutral": 361,
   "transitionAll": 150,
   "heavyWeights": 275,
   "uppercase": 82,
@@ -9,5 +9,5 @@
   "hoverMotion": 33,
   "gradients": 21,
   "loopAnimations": 29,
-  "coloredShadows": 7
+  "coloredShadows": 0
 }
