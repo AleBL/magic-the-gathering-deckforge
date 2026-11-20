@@ -658,6 +658,33 @@ const en = {
       filter: 'Filter by tag',
       all: 'All'
     },
+    matchLog: {
+      title: 'Match log',
+      result: 'Result',
+      opponent: 'Opponent',
+      opponentPlaceholder: 'Mono-red, Azorius control…',
+      onPlay: 'On the play',
+      notes: 'Notes',
+      logGame: 'Log game',
+      empty: 'No games logged yet. Log each game to see the win rate by matchup',
+      overall: 'Win rate',
+      onPlayRate: 'On the play',
+      onDrawRate: 'On the draw',
+      record: '{{wins}}-{{losses}}-{{draws}}',
+      byMatchup: 'By matchup',
+      games: 'Games',
+      winRate: 'Win rate',
+      recent: 'Recent games',
+      play: 'Play',
+      draw: 'Draw',
+      delete: 'Delete game',
+      unknownOpponent: 'Unknown',
+      results: {
+        win: 'Win',
+        loss: 'Loss',
+        draw: 'Draw'
+      }
+    },
     deckDoctor: {
       pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',

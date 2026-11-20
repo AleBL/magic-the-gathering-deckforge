@@ -664,6 +664,33 @@ const es = {
       filter: 'Filtrar por etiqueta',
       all: 'Todos'
     },
+    matchLog: {
+      title: 'Diario de partidas',
+      result: 'Resultado',
+      opponent: 'Rival',
+      opponentPlaceholder: 'Rojo mono, control Azorius…',
+      onPlay: 'Empecé yo',
+      notes: 'Notas',
+      logGame: 'Registrar partida',
+      empty: 'Aún no hay partidas. Registra cada una para ver el porcentaje de victorias por rival',
+      overall: 'Victorias',
+      onPlayRate: 'Empezando',
+      onDrawRate: 'Robando',
+      record: '{{wins}}-{{losses}}-{{draws}}',
+      byMatchup: 'Por rival',
+      games: 'Partidas',
+      winRate: 'Victorias',
+      recent: 'Partidas recientes',
+      play: 'Empecé',
+      draw: 'Robé',
+      delete: 'Borrar partida',
+      unknownOpponent: 'Desconocido',
+      results: {
+        win: 'Victoria',
+        loss: 'Derrota',
+        draw: 'Empate'
+      }
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} puntos',
       title: 'Deck Doctor',
