@@ -118,3 +118,64 @@ for (const theme of ['light', 'dark'] as const) {
     expect(failures, `${failures.length} low-contrast texts:\n${JSON.stringify(failures, null, 2)}`).toEqual([]);
   });
 }
+
+/**
+ * The semantic colour roles, checked as pairs straight from the theme variables. A role that
+ * drifts below AA fails here even before any screen happens to render that pair.
+ */
+const ROLE_PAIRS: { fg: string; bg: string; required: number }[] = [
+  ...['--color-fg', '--color-fg-secondary', '--color-fg-muted'].flatMap((fg) =>
+    ['--color-surface-0', '--color-surface-1', '--color-surface-2'].map((bg) => ({ fg, bg, required: 4.5 }))
+  ),
+  { fg: '--color-accent', bg: '--color-surface-0', required: 4.5 },
+  { fg: '--color-accent', bg: '--color-surface-1', required: 4.5 },
+  { fg: '--color-on-primary', bg: '--color-primary', required: 4.5 },
+  { fg: '--color-on-danger', bg: '--color-danger', required: 4.5 },
+  { fg: '--color-on-success', bg: '--color-success', required: 4.5 },
+  { fg: '--color-on-warning', bg: '--color-warning', required: 4.5 },
+  { fg: '--color-danger', bg: '--color-surface-1', required: 4.5 },
+  { fg: '--color-success', bg: '--color-surface-1', required: 4.5 },
+  { fg: '--color-warning', bg: '--color-surface-1', required: 4.5 },
+  // WCAG 2.2 SC 1.4.11: focus indicators need 3:1 against what they sit on.
+  { fg: '--color-focus', bg: '--color-surface-0', required: 3 },
+  { fg: '--color-focus', bg: '--color-surface-1', required: 3 }
+];
+
+for (const theme of ['light', 'dark'] as const) {
+  test(`colour roles meet WCAG AA in the ${theme} theme`, async ({ appPage }) => {
+    await appPage.addInitScript((mode) => {
+      window.localStorage.setItem('deckforge_dark_mode', String(mode === 'dark'));
+    }, theme);
+    await appPage.goto('/');
+    await expect(appPage.getByRole('banner')).toBeVisible();
+
+    const results = await appPage.evaluate((pairs) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+      const root = getComputedStyle(document.documentElement);
+      const rgb = (name: string) => {
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = root.getPropertyValue(name).trim();
+        ctx.fillRect(0, 0, 1, 1);
+        return Array.from(ctx.getImageData(0, 0, 1, 1).data.slice(0, 3));
+      };
+      const luminance = (channels: number[]) => {
+        const [r, g, b] = channels.map((c) => {
+          const s = c / 255;
+          return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      return pairs.map(({ fg, bg, required }) => {
+        const [l1, l2] = [luminance(rgb(fg)), luminance(rgb(bg))];
+        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        return { pair: `${fg} on ${bg}`, ratio: Math.round(ratio * 100) / 100, required };
+      });
+    }, ROLE_PAIRS);
+
+    const failures = results.filter((result) => result.ratio < result.required);
+    expect(failures, JSON.stringify(failures, null, 2)).toEqual([]);
+  });
+}
