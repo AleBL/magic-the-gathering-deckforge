@@ -138,7 +138,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
             {renderedNodes.length > 0 ? (
               renderedNodes
             ) : (
-              <p className="text-gray-400 italic text-center py-12 select-none">{t('strategy.preview')}</p>
+              <p className="text-fg-muted text-center py-12 select-none">{t('strategy.preview')}</p>
             )}
           </div>
         </div>
@@ -147,7 +147,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
           {notesInput.trim() ? (
             renderedNodes
           ) : (
-            <p className="text-xs text-gray-400 italic text-center py-12 select-none">
+            <p className="text-sm text-fg-muted text-center py-12 select-none">
               {isEditable ? t('common.edit') + ' →  ' : ''} {t('strategy.noStrategyNotes')}
             </p>
           )}

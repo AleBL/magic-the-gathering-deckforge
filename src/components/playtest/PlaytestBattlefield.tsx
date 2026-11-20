@@ -221,7 +221,7 @@ export function PlaytestBattlefield() {
 
       {battlefield.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center p-6 pointer-events-none w-full mx-auto">
-          <p className="text-sm text-slate-500 font-semibold italic">{t('playtest.emptyBattlefieldMessage')}</p>
+          <p className="text-sm text-fg-secondary font-medium">{t('playtest.emptyBattlefieldMessage')}</p>
           <p className="text-xs text-slate-600 mt-1">{t('playtest.playCardsHint')}</p>
         </div>
       ) : (

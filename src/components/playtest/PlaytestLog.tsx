@@ -77,7 +77,7 @@ export function PlaytestLog() {
         </div>
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2 font-mono text-[10px] select-text">
           {gameLog.length === 0 ? (
-            <p className="text-fg-muted italic text-center py-8 select-none">{t('playtest.playtestLogEmpty')}</p>
+            <p className="text-fg-muted text-center py-8 select-none">{t('playtest.playtestLogEmpty')}</p>
           ) : (
             [...gameLog].reverse().map((log) => (
               <div
