@@ -136,19 +136,19 @@ export const DeckCardListItem = memo(function DeckCardListItem({
             {isBanned && (
               <span className="deck-card-status-chip-banned ml-2">
                 <LuBan className="text-danger text-[9px] shrink-0" />
-                {t('cardDetails.banned').toUpperCase()}
+                {t('cardDetails.banned')}
               </span>
             )}
             {isRestricted && (
               <span className="deck-card-status-chip-restricted ml-2">
                 <LuTriangleAlert className="text-warning text-[9px] shrink-0" />
-                {t('cardDetails.restricted').toUpperCase()}
+                {t('cardDetails.restricted')}
               </span>
             )}
             {isInvalid && (
               <span className="deck-card-status-chip-invalid ml-2" title={t('cardDetails.invalidInFormatHint')}>
                 <LuCircleX className="text-accent text-[9px] shrink-0" />
-                {t('cardDetails.invalidInFormat').toUpperCase()}
+                {t('cardDetails.invalidInFormat')}
               </span>
             )}
           </div>

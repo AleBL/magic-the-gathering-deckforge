@@ -55,7 +55,7 @@ export function CardItemStatusBadges({
       {isInactiveToken && (
         <div className="absolute top-2 left-2 z-10 bg-slate-800/95 dark:bg-slate-900/95 backdrop-blur-sm text-slate-350 dark:text-slate-400 px-2 py-0.5 rounded-md text-[9px] font-semibold shadow-md border border-slate-700/60 flex items-center gap-1 select-none">
           <span className="w-1 h-1 rounded-full bg-slate-400" />
-          {t('common.inactive').toUpperCase()}
+          {t('common.inactive')}
         </div>
       )}
     </>
