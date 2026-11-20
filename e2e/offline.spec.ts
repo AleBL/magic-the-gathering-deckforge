@@ -105,7 +105,7 @@ test.describe('offline', () => {
     await expect(appPage.getByRole('dialog')).toBeVisible();
     // Not a toast: the message sits where the editions button would have been, because an
     // absent control is exactly what reads as "this card has only one printing".
-    await expect(appPage.getByText('Failed to load other printings.')).toBeVisible({ timeout: 20_000 });
+    await expect(appPage.getByText('Failed to load other printings')).toBeVisible({ timeout: 20_000 });
   });
 
   test('a text import that cannot resolve cards reports it', async ({ appPage }) => {
@@ -148,7 +148,7 @@ test.describe('offline', () => {
     await dialog.getByRole('button', { name: 'Search', exact: true }).click();
 
     await expect(dialog.getByText(/No connection\. Check your internet/)).toBeVisible({ timeout: 20_000 });
-    await expect(dialog.getByText('No tokens found with this name.')).toHaveCount(0);
+    await expect(dialog.getByText('No tokens found with this name')).toHaveCount(0);
   });
 
   // Deck analysis resolves each generator's tokens over the network. With none reachable it
