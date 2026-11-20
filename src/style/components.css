@@ -9,19 +9,17 @@
    ─────────────────────────────────────────────────────────── */
 
 .deck-content-tab-bar {
-  @apply flex flex-wrap border-b border-line mb-4 text-xs font-semibold gap-1 select-none;
+  @apply flex flex-wrap border-b border-line mb-4 text-sm gap-4 select-none;
 }
 
-/* Reads as a real tab: padded hit area, rounded top, and a hover background so
-   it is obviously interactive rather than plain muted text. */
+/* A text tab on a hairline: the active one takes the ink colour and a 2px rule
+   in the brass accent, the rest stay secondary. */
 .deck-content-tab {
-  @apply relative px-3 py-2 min-h-11 sm:min-h-0 rounded-t-lg whitespace-nowrap transition-all border-b-2 flex items-center gap-1.5 cursor-pointer;
-  border-color: transparent;
-  @apply text-fg-muted hover:text-fg hover:bg-surface-2/80;
+  @apply relative -mb-px py-2 min-h-11 sm:min-h-0 whitespace-nowrap border-b-2 border-transparent flex items-center gap-1.5 cursor-pointer text-fg-secondary hover:text-fg transition-colors duration-150;
 }
 
 .deck-content-tab-active {
-  @apply border-accent/50 text-accent font-semibold bg-accent-soft;
+  @apply border-accent text-fg font-medium;
 }
 
 /* ── Option Toggle Button (View Mode / Group By / Sort By) ──

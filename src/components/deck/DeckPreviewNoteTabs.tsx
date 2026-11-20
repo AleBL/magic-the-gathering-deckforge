@@ -28,21 +28,21 @@ export function DeckPreviewNoteTabs({
         onClick={onSelectCardsTab}
         className={`deck-content-tab ${activeNoteTab === 'cards' ? 'deck-content-tab-active' : ''}`}
       >
-        <LuLayers className="text-[11px]" /> {t('deck.currentDeck')}
+        <LuLayers className="text-sm" /> {t('deck.tabCards')}
       </button>
       <button
         type="button"
         onClick={onSelectStatsTab}
         className={`deck-content-tab ${isStatsTabActive ? 'deck-content-tab-active' : ''}`}
       >
-        <LuChartColumn className="text-[11px]" /> {t('stats.deckStats')}
+        <LuChartColumn className="text-sm" /> {t('deck.tabAnalysis')}
       </button>
       <button
         type="button"
         onClick={onSelectNotesTab}
         className={`deck-content-tab ${activeNoteTab === 'notes' ? 'deck-content-tab-active' : ''}`}
       >
-        <LuPencil className="text-[11px]" /> {t('strategy.strategyGuide')}
+        <LuPencil className="text-sm" /> {t('deck.tabNotes')}
       </button>
     </div>
   );
