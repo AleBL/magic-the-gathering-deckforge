@@ -93,8 +93,8 @@ function CardSearch({
   }, [loadNextPage]);
 
   return (
-    <div className="flex flex-col h-full bg-surface-2/30">
-      <div className="bg-surface-1/95 backdrop-blur-xl border-b border-line sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4 shadow-sm transition-all duration-300">
+    <div className="flex flex-col h-full bg-surface-0">
+      <div className="bg-surface-0 border-b border-line sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4">
         <div className="w-full space-y-2 sm:space-y-4">
           {/* Main Search Input */}
           <div className="flex flex-row gap-2 sm:gap-3">
@@ -114,7 +114,7 @@ function CardSearch({
                   }
                 }}
                 placeholder={t('search.searchPlaceholder')}
-                className="w-full pl-11 pr-4 py-3.5 bg-surface-2 border border-transparent dark:border-slate-700 rounded-2xl text-base font-medium text-fg placeholder:text-fg-muted focus:bg-surface-1 focus:border-accent/50 focus:ring-4 focus:ring-focus transition-all duration-300 shadow-sm"
+                className="w-full pl-11 pr-4 py-3.5 bg-surface-1 border border-line-strong rounded-xl text-base text-fg placeholder:text-fg-muted focus:outline-none focus:border-fg-muted focus-visible:outline-2 focus-visible:outline-focus transition-colors duration-150"
               />
             </div>
             <button
@@ -204,7 +204,7 @@ function CardSearch({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-surface-2/50 p-4 sm:p-6 transition-colors duration-300">
+      <div className="flex-1 overflow-auto bg-surface-0 p-4 sm:p-6">
         <div className="w-full">
           {isLoadingInitial && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
