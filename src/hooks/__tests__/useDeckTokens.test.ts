@@ -60,7 +60,7 @@ describe('useDeckTokens', () => {
         await result.current.handleSearchTokens();
       });
 
-      expect(result.current.searchError).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.searchError).toBe(i18n.t('search.noConnection'));
     });
 
     it('reports a plain search failure as such while online', async () => {
@@ -84,7 +84,7 @@ describe('useDeckTokens', () => {
         await result.current.handleSearchTokens();
       });
 
-      expect(result.current.searchError).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.searchError).toBe(i18n.t('search.scryfallUnavailable'));
     });
   });
 
@@ -170,7 +170,7 @@ describe('useDeckTokens', () => {
         await result.current.handleAnalyzeDeck();
       });
 
-      expect(dispatchToast).toHaveBeenCalledWith(i18n.t('search.scryfallOffline'), 'error');
+      expect(dispatchToast).toHaveBeenCalledWith(i18n.t('search.noConnection'), 'error');
     });
 
     it('reports a failed lookup while online as an analysis failure', async () => {

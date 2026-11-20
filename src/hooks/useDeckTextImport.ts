@@ -66,17 +66,17 @@ export function useDeckTextImport(
         // `fetchCardsFromParsedList` swallows per-card network failures and returns an
         // empty list, which is indistinguishable from every name being wrong. Offline, the
         // lookups never happened — blaming the user's spelling sends them to fix nothing.
-        setErrorMsg(isBrowserOffline() ? t('search.scryfallOffline') : t('deck.importError'));
+        setErrorMsg(isBrowserOffline() ? t('search.noConnection') : t('deck.importError'));
         setImportProgress((prev: ImportProgressData) => ({ ...prev, isImporting: false }));
       }
     } catch (err: unknown) {
       logger.error('Failed to import deck from text:', err);
       if (err instanceof Error && err.message === 'ScryfallOffline') {
-        setErrorMsg(t('search.scryfallOffline'));
+        setErrorMsg(t('search.scryfallUnavailable'));
       } else if (err instanceof Error && err.message === 'ScryfallRateLimited') {
         setErrorMsg(t('search.rateLimited'));
       } else {
-        setErrorMsg(isBrowserOffline() ? t('search.scryfallOffline') : t('deck.importError'));
+        setErrorMsg(isBrowserOffline() ? t('search.noConnection') : t('deck.importError'));
       }
       setImportProgress((prev: ImportProgressData) => ({ ...prev, isImporting: false }));
     }

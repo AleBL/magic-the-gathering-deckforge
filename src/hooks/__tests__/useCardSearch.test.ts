@@ -144,7 +144,7 @@ describe('useCardSearch results', () => {
     try {
       const result = await withResults([]);
       expect(result.current.cards).toEqual([]);
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.noConnection'));
     } finally {
       Object.defineProperty(navigator, 'onLine', { value: true, configurable: true, writable: true });
     }
@@ -165,7 +165,7 @@ describe('useCardSearch results', () => {
       await act(async () => {
         await result.current.loadNextPage();
       });
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.noConnection'));
       expect(result.current.hasMore).toBe(false);
     } finally {
       Object.defineProperty(navigator, 'onLine', { value: true, configurable: true, writable: true });
@@ -263,7 +263,7 @@ describe('useCardSearch network endings', () => {
         await vi.advanceTimersByTimeAsync(6000);
       });
 
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.scryfallSlow'));
       expect(result.current.isLoadingInitial).toBe(false);
     } finally {
       vi.useRealTimers();

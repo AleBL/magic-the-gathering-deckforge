@@ -64,8 +64,10 @@ export function useTokenSearch(addTokens: (tokens: RelatedToken[]) => void) {
       logger.error('Failed to search tokens:', error);
       // A dropped connection rejects the fetch with a generic network error, and "Error
       // searching tokens." next to an empty result list reads as a problem with the name.
-      if (isBrowserOffline() || (error instanceof Error && error.message === 'ScryfallOffline')) {
-        setSearchError(t('search.scryfallOffline'));
+      if (isBrowserOffline()) {
+        setSearchError(t('search.noConnection'));
+      } else if (error instanceof Error && error.message === 'ScryfallOffline') {
+        setSearchError(t('search.scryfallUnavailable'));
       } else {
         setSearchError(t('tokens.searchError'));
       }
