@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { APP_EVENTS, emitAppEvent } from '../../constants/appEvents';
 import { useTranslation } from 'react-i18next';
 import { LuChevronDown, LuUser } from 'react-icons/lu';
 import { useVisualEffects } from '../../hooks/useVisualEffects';
@@ -98,6 +99,10 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
               onOpenBackup={() => setActiveSection('backup')}
               onOpenAbout={() => setActiveSection('about')}
               onOpenHelp={() => setActiveSection('help')}
+              onOpenLifeCounter={() => {
+                setIsOpen(false);
+                emitAppEvent(APP_EVENTS.openLifeCounter);
+              }}
             />
           ) : null}
 

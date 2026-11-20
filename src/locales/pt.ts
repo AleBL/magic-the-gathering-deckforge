@@ -624,6 +624,33 @@ const pt = {
       onlyIn: 'Só em {{name}}',
       differentCounts: 'Quantidades diferentes'
     },
+    lifeCounter: {
+      title: 'Contador de vidas',
+      players: 'Jogadores',
+      startingLife: 'Vida inicial',
+      newGame: 'Nova partida',
+      out: 'Fora',
+      playerName: 'Jogador {{number}}',
+      playerCount_one: '{{count}} jogador',
+      playerCount_other: '{{count}} jogadores',
+      lifeOption: '{{life}} vidas',
+      loseLife: '{{name}} perde 1 vida',
+      gainLife: '{{name}} ganha 1 vida',
+      poison: 'Veneno',
+      energy: 'Energia',
+      commanderFrom: 'De {{name}}',
+      addCommanderDamage: '{{name}} recebe 1 de dano de comandante de {{source}}',
+      removeCommanderDamage: 'Remover 1 de dano de comandante de {{source}} para {{name}}',
+      noWakeLock: 'Este navegador não consegue manter a tela ligada; ajuste o tempo de desligamento se ela escurecer',
+      add: {
+        poison: 'Adicionar veneno a {{name}}',
+        energy: 'Adicionar energia a {{name}}'
+      },
+      remove: {
+        poison: 'Remover veneno de {{name}}',
+        energy: 'Remover energia de {{name}}'
+      }
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} pontos',
       title: 'Deck Doctor',

@@ -12,13 +12,15 @@ import { ToastVariant } from '../types/Toast';
 export const APP_EVENTS = {
   toast: 'global-toast',
   escape: 'mtg-escape',
-  navigateTab: 'mtg-navigate-tab'
+  navigateTab: 'mtg-navigate-tab',
+  openLifeCounter: 'mtg-open-life-counter'
 } as const;
 
 export interface AppEventDetail {
   [APP_EVENTS.toast]: { message: string; variant: ToastVariant };
   [APP_EVENTS.escape]: undefined;
   [APP_EVENTS.navigateTab]: AppTab;
+  [APP_EVENTS.openLifeCounter]: undefined;
 }
 
 type AppEventName = keyof AppEventDetail;

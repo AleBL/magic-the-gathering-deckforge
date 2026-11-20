@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { APP_EVENTS, emitAppEvent } from '../../constants/appEvents';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,7 +12,8 @@ import {
   LuSave,
   LuSearch,
   LuSun,
-  LuTrash2
+  LuTrash2,
+  LuSwords
 } from 'react-icons/lu';
 import { dispatchPendingAction } from '../../hooks/usePendingAction';
 import { SUPPORTED_LANGUAGES } from '../../constants';
@@ -123,6 +125,13 @@ export default function CommandPalette({
         icon: isDarkMode ? <LuSun /> : <LuMoon />,
         keywords: 'theme tema dark light claro escuro modo',
         run: () => setIsDarkMode((prev) => !prev)
+      },
+      {
+        id: 'life-counter',
+        label: t('lifeCounter.title'),
+        icon: <LuSwords />,
+        keywords: 'life counter vida contador table mesa poison veneno commander',
+        run: () => emitAppEvent(APP_EVENTS.openLifeCounter)
       },
       {
         id: 'shortcuts',
