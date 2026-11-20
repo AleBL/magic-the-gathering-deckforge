@@ -523,6 +523,13 @@ const es = {
       wastes: 'Yermos'
     },
     stats: {
+      sampleHand: 'Mano de prueba',
+      sampleHandSummary: '{{cards}} cartas, {{lands}} tierras',
+      sampleHandDrawn_one: '+{{count}} robada',
+      sampleHandDrawn_other: '+{{count}} robadas',
+      newHand: 'Nueva mano',
+      mulliganTo: 'Mulligan a {{count}}',
+      drawNext: 'Robar una carta',
       applySuggestedLands: 'Aplicar tierras básicas recomendadas',
       averageCmc: 'CMC medio (sin tierras)',
       budgetEstimator: 'Presupuesto Estimado del Deck',

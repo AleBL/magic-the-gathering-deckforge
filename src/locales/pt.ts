@@ -519,6 +519,13 @@ const pt = {
       wastes: 'Ermo'
     },
     stats: {
+      sampleHand: 'Mão de teste',
+      sampleHandSummary: '{{cards}} cartas, {{lands}} terrenos',
+      sampleHandDrawn_one: '+{{count}} comprada',
+      sampleHandDrawn_other: '+{{count}} compradas',
+      newHand: 'Nova mão',
+      mulliganTo: 'Mulligan para {{count}}',
+      drawNext: 'Comprar uma carta',
       applySuggestedLands: 'Aplicar terrenos básicos recomendados',
       averageCmc: 'CMC médio (sem terrenos)',
       budgetEstimator: 'Orçamento Estimado do Deck',

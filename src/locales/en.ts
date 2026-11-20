@@ -518,6 +518,13 @@ const en = {
       wastes: 'Wastes'
     },
     stats: {
+      sampleHand: 'Sample hand',
+      sampleHandSummary: '{{cards}} cards, {{lands}} lands',
+      sampleHandDrawn_one: '+{{count}} drawn',
+      sampleHandDrawn_other: '+{{count}} drawn',
+      newHand: 'New hand',
+      mulliganTo: 'Mulligan to {{count}}',
+      drawNext: 'Draw a card',
       applySuggestedLands: 'Apply suggested basic lands',
       averageCmc: 'Average CMC (Non-Lands)',
       budgetEstimator: 'Estimated deck budget',
