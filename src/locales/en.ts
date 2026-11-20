@@ -583,6 +583,7 @@ const en = {
       suggestedDistribution: 'Suggested distribution'
     },
     deckDoctor: {
+      pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',
       desc: "A full diagnosis of your deck's consistency, with actionable advice.",
       noData: 'Add more cards to run a full diagnosis.',

@@ -585,6 +585,7 @@ const pt = {
       suggestedDistribution: 'Distribuição sugerida'
     },
     deckDoctor: {
+      pointsOf: '{{score}} de {{max}} pontos',
       title: 'Deck Doctor',
       desc: 'Um diagnóstico completo da consistência do seu deck, com conselhos práticos.',
       noData: 'Adicione mais cartas para rodar um diagnóstico completo.',

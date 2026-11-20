@@ -49,7 +49,7 @@ function OpeningHandChart({ stats }: { stats: DeckStatistics }) {
 
   return (
     <div>
-      <span className="text-[11px] text-gray-400 font-semibold mb-1.5 flex items-center gap-1.5">
+      <span className="text-xs text-fg-secondary font-semibold mb-1.5 flex items-center gap-1.5">
         <LuDices className="text-accent" />
         {t('stats.consistency')}
       </span>
@@ -153,16 +153,20 @@ function ScoreBreakdownRow({ component }: { component: ScoreComponent }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between text-[11px] mb-1">
-        <span className="font-semibold text-fg-secondary">{label}</span>
-        <span className="tabular-nums text-fg-muted">
-          {Math.round(component.score)}/{component.max}
+      <div className="flex items-center justify-between text-xs mb-1">
+        <span className="font-medium text-fg-secondary">{label}</span>
+        {/* Spelled out: a bare "0/30" next to a lands row read as "0 of 30 lands". */}
+        <span className="text-fg-muted">
+          {t('deckDoctor.pointsOf', { score: Math.round(component.score), max: component.max })}
         </span>
       </div>
       <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
-        <div className="h-full rounded-full bg-surface-3 transition-all" style={{ width: `${pct * 100}%` }} />
+        <div
+          className="h-full rounded-full bg-accent transition-[width] duration-300"
+          style={{ width: `${pct * 100}%` }}
+        />
       </div>
-      <p className="text-[10px] text-fg-muted mt-1">{note}</p>
+      <p className="text-xs text-fg-muted mt-1">{note}</p>
     </div>
   );
 }
@@ -267,7 +271,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
           {/* Goldfish + land odds + color sources */}
           <div className="space-y-4">
             <div>
-              <span className="text-[11px] text-gray-400 block font-semibold mb-1.5 flex items-center gap-1.5">
+              <span className="text-xs text-fg-secondary block font-semibold mb-1.5 flex items-center gap-1.5">
                 <LuFish className="text-accent" />
                 {t('deckDoctor.openingHands')}
               </span>
@@ -296,7 +300,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
 
             {/* Land odds by turn — hypergeometric, on the play */}
             <div>
-              <span className="text-[11px] text-gray-400 block font-semibold mb-1.5">{t('deckDoctor.landOdds')}</span>
+              <span className="text-xs text-fg-secondary block font-semibold mb-1.5">{t('deckDoctor.landOdds')}</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <StatTile label={t('deckDoctor.keepable')} value={percent(landOdds.keepableProb)} />
                 <StatTile
@@ -319,7 +323,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
             {/* Color source sufficiency */}
             {colorSources.length > 0 ? (
               <div>
-                <span className="text-[11px] text-gray-400 block font-semibold mb-1.5">
+                <span className="text-xs text-fg-secondary block font-semibold mb-1.5">
                   {t('deckDoctor.colorSources')}
                 </span>
                 <div className="space-y-1.5">

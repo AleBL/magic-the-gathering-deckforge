@@ -590,6 +590,7 @@ const es = {
       suggestedDistribution: 'Distribución sugerida'
     },
     deckDoctor: {
+      pointsOf: '{{score}} de {{max}} puntos',
       title: 'Deck Doctor',
       desc: 'Un diagnóstico completo de la consistencia de tu mazo, con consejos prácticos.',
       noData: 'Añade más cartas para ejecutar un diagnóstico completo.',
