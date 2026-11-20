@@ -39,7 +39,7 @@ export function RarityPanel({ stats }: RarityPanelProps) {
   return (
     <div className="space-y-4 p-4 rounded-xl border border-line bg-slate-500/5 dark:bg-slate-900/20 transition-colors duration-300">
       <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-        <FaGem className="text-sky-500" />
+        <FaGem className="text-accent" />
         {t('stats.rarityBreakdown')}
       </h4>
 

@@ -156,8 +156,8 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={() => setShowExportMenu(!showExportMenu)}
-                className={`flex items-center justify-center gap-1 px-3 h-11 sm:h-8 rounded-lg text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${
-                  showExportMenu ? 'bg-purple-700' : 'bg-purple-600 hover:bg-purple-700'
+                className={`flex items-center justify-center gap-1 px-3 h-11 sm:h-8 rounded-lg text-fg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${
+                  showExportMenu ? 'bg-surface-3' : 'bg-surface-3 hover:bg-surface-3'
                 }`}
                 aria-label={t('deck.export')}
               >
@@ -180,7 +180,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaLink className="text-indigo-500 shrink-0" />
+                  <FaLink className="text-accent shrink-0" />
                   {t('export.copyLink')}
                 </button>
                 <button
@@ -191,7 +191,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaDownload className="text-purple-500 shrink-0" />
+                  <FaDownload className="text-accent shrink-0" />
                   {t('strategy.downloadDec')} (.dec)
                 </button>
                 <button
@@ -202,7 +202,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaDownload className="text-emerald-500 shrink-0" />
+                  <FaDownload className="text-success shrink-0" />
                   {t('export.downloadJson') || 'Download'} (.json)
                 </button>
                 <button
@@ -213,7 +213,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaClipboardList className="text-amber-500 shrink-0" />
+                  <FaClipboardList className="text-warning shrink-0" />
                   {t('strategy.exportArena')} (Arena)
                 </button>
                 <button
@@ -224,7 +224,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaCopy className="text-blue-500 shrink-0" />
+                  <FaCopy className="text-accent shrink-0" />
                   {t('deck.copyList')} (.txt)
                 </button>
               </div>
@@ -237,7 +237,7 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={onPrintProxies}
-                className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-surface-2 border border-line text-fg-secondary hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-500/50 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-emerald-500/20 active:scale-95"
+                className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-surface-2 border border-line text-fg-secondary hover:bg-success-soft hover:text-success hover:border-success/40 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
                 aria-label={t('print.printProxies')}
               >
                 <FaPrint className="text-sm shrink-0" />
@@ -254,7 +254,7 @@ function DeckActionBar({
               id="playtest-btn"
               type="button"
               onClick={onPlaytest}
-              className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white transition-all duration-300 shadow-md hover:shadow-orange-500/40 active:scale-95 relative overflow-hidden group/playbtn"
+              className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white transition-all duration-300 shadow-md active:scale-95 relative overflow-hidden group/playbtn"
               aria-label={t('playtest.playtest')}
             >
               <div className="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover/playbtn:scale-x-100 origin-left transition-transform duration-500 ease-out" />

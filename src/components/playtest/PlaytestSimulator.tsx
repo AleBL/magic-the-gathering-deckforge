@@ -125,9 +125,9 @@ function PlaytestSimulatorContent({
         <PlaytestControlBarTop onClose={onClose} />
 
         {isMulliganPhase ? (
-          <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1.5 justify-center sm:justify-start">
-              <FaExclamationTriangle className="text-amber-500 shrink-0" />
+          <div className="bg-warning-soft border-b border-warning/40 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <span className="text-xs text-warning font-semibold flex items-center gap-1.5 justify-center sm:justify-start">
+              <FaExclamationTriangle className="text-warning shrink-0" />
               <span>
                 {t('playtest.mulliganPhaseBanner', {
                   mulligans: String(mulligans),
@@ -143,7 +143,7 @@ function PlaytestSimulatorContent({
                     createRipple(event);
                     handleConfirmMulligan();
                   }}
-                  className="ripple-container bg-amber-500 hover:bg-warning text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
+                  className="ripple-container bg-warning hover:bg-warning text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
                 >
                   <FaCheck />
                   {t('playtest.confirmMulligan')}

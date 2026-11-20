@@ -122,7 +122,7 @@ function CollectionManager() {
       // `relative` is load-bearing: .count-badge is absolute and would escape to the page edge.
       className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-bold transition-all ${
         view === value
-          ? 'bg-primary text-on-primary shadow-md shadow-blue-500/25'
+          ? 'bg-primary text-on-primary shadow-md '
           : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '
       }`}
     >
@@ -175,7 +175,7 @@ function CollectionManager() {
                 type="button"
                 onClick={handleClear}
                 disabled={entries.length === 0}
-                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-rose-600 dark:text-rose-400 border border-line hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-danger border border-line hover:bg-danger-soft transition-colors disabled:opacity-50"
               >
                 <FaTrashAlt className="text-xs shrink-0" />
                 <span className="truncate">{t('collection.clear')}</span>
@@ -224,7 +224,7 @@ function CollectionManager() {
           {isImporting && (
             <div className="modal-overlay" role="status" aria-live="polite">
               <div className="bg-surface-1 border border-line rounded-2xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center gap-3 text-center">
-                <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
+                <FaSpinner className="text-3xl text-accent animate-spin" />
                 <h3 className="text-sm font-bold text-fg uppercase tracking-wider">{t('collection.importingTitle')}</h3>
                 {importProgress && importProgress.total > 0 ? (
                   <>
@@ -236,7 +236,7 @@ function CollectionManager() {
                     </p>
                     <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
                       <div
-                        className="h-full bg-indigo-500 transition-[width] duration-300"
+                        className="h-full bg-surface-3 transition-[width] duration-300"
                         style={{
                           width: `${Math.round((importProgress.done / importProgress.total) * 100)}%`
                         }}

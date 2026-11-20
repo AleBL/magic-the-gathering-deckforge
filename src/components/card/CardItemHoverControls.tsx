@@ -32,7 +32,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onRemoveFromDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-danger hover:scale-110 transition-all pointer-events-auto"
           title={t('cardDetails.remove')}
         >
           <FaMinus />
@@ -49,7 +49,7 @@ export function CardItemHoverControls({
             className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
               card.zone === DeckZone.MAIN
                 ? 'bg-primary text-on-primary ring-2 ring-white/50'
-                : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
+                : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
             }`}
             title={t('deck.printFilters.main')}
           >
@@ -63,8 +63,8 @@ export function CardItemHoverControls({
             }}
             className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
               card.zone === DeckZone.SIDEBOARD
-                ? 'bg-purple-600 text-white ring-2 ring-white/50'
-                : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
+                ? 'bg-surface-3 text-fg ring-2 ring-white/50'
+                : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
             }`}
             title={t('deck.printFilters.sideboard')}
           >
@@ -79,7 +79,7 @@ export function CardItemHoverControls({
             className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
               card.zone === DeckZone.MAYBEBOARD
                 ? 'bg-warning text-white ring-2 ring-white/50'
-                : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
+                : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-white'
             }`}
             title={t('deck.printFilters.maybeboard')}
           >
@@ -94,7 +94,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onAddToDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-blue-500 hover:scale-110 transition-all pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-extrabold shadow-md hover:bg-surface-3 hover:scale-110 transition-all pointer-events-auto"
           title={t('cardDetails.addCopy')}
         >
           <FaPlus />

@@ -65,7 +65,7 @@ export function ProfileMenuMainSection({
 
       <div className="profile-menu-row">
         <div className="flex items-center gap-2 text-fg-secondary">
-          {isDarkMode ? <FaMoon className="text-indigo-400 text-sm" /> : <FaSun className="text-amber-400 text-sm" />}
+          {isDarkMode ? <FaMoon className="text-accent text-sm" /> : <FaSun className="text-warning text-sm" />}
           <span className="text-sm font-medium">{isDarkMode ? t('common.darkMode') : t('common.lightMode')}</span>
         </div>
         <button
@@ -80,7 +80,7 @@ export function ProfileMenuMainSection({
 
       <div className="profile-menu-row">
         <div className="flex items-center gap-2 text-fg-secondary">
-          <FaMagic className={`text-sm ${effectsEnabled ? 'text-fuchsia-400' : 'text-gray-400'}`} />
+          <FaMagic className={`text-sm ${effectsEnabled ? 'text-accent' : 'text-gray-400'}`} />
           <span className="text-sm font-medium">{t('common.visualEffects')}</span>
         </div>
         <button
@@ -96,7 +96,7 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenLanguage} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaGlobeAmericas className="text-blue-500 text-sm shrink-0" />
+          <FaGlobeAmericas className="text-accent text-sm shrink-0" />
           <span>{t('common.language')}</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -109,7 +109,7 @@ export function ProfileMenuMainSection({
       {canInstall ? (
         <button type="button" className="profile-menu-item" onClick={onInstall} role="menuitem">
           <div className="flex items-center gap-2">
-            <FaDownload className="text-blue-500 text-sm shrink-0" />
+            <FaDownload className="text-accent text-sm shrink-0" />
             <span>{t('common.installApp')}</span>
           </div>
         </button>
@@ -119,7 +119,7 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenBackup} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaShieldAlt className="text-blue-500 text-sm shrink-0" />
+          <FaShieldAlt className="text-accent text-sm shrink-0" />
           <span>{t('backup.title')}</span>
         </div>
         <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
@@ -127,7 +127,7 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenAbout} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaInfoCircle className="text-purple-500 text-sm shrink-0" />
+          <FaInfoCircle className="text-accent text-sm shrink-0" />
           <span>{t('strategy.aboutApp')}</span>
         </div>
         <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
@@ -137,7 +137,7 @@ export function ProfileMenuMainSection({
           keyboard on phone-width screens, so the shortcuts are unusable there. */}
       <button type="button" className="profile-menu-item hidden sm:flex" onClick={onOpenHelp} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaKeyboard className="text-green-500 text-sm shrink-0" />
+          <FaKeyboard className="text-success text-sm shrink-0" />
           <span>{t('common.help')}</span>
         </div>
         <FaChevronDown className="text-gray-400 text-xs -rotate-90" />

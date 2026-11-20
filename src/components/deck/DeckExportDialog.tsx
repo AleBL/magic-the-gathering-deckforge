@@ -140,28 +140,28 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
           />
           <ExportOption
             icon={<FaFileDownload />}
-            accent="bg-sky-500/10 text-sky-600 dark:text-sky-400"
+            accent="bg-accent-soft text-accent"
             title={t('export.downloadDeckFile')}
             description=".deck"
             onClick={handleDownloadDeckFile}
           />
           <ExportOption
             icon={<FaFileCode />}
-            accent="bg-blue-500/10 text-blue-600 dark:text-blue-400"
+            accent="bg-accent-soft text-accent"
             title="JSON"
             description={t('export.exportJsonDesc')}
             onClick={() => onExportJson(deck)}
           />
           <ExportOption
             icon={<FaFileCode />}
-            accent="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+            accent="bg-success-soft text-success"
             title="DEC (MTGO)"
             description={t('export.exportDecDesc')}
             onClick={() => onExportDec(deck)}
           />
           <ExportOption
             icon={<FaImage />}
-            accent="bg-violet-500/10 text-violet-600 dark:text-violet-400"
+            accent="bg-accent-soft text-accent"
             title={t('export.exportImage')}
             description={t('export.exportImageDesc')}
             onClick={handleExportImage}

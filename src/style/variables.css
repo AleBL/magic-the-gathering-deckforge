@@ -107,6 +107,7 @@
   --color-danger-soft: rgb(185 28 28 / 0.1);
   --color-warning: #92580a;
   --color-warning-hover: #7a4a08;
+  --color-on-warning: #ffffff;
   --color-warning-soft: rgb(176 112 20 / 0.14);
 
   /* ── Z-Index Scale ─────────────────────────────────────
@@ -208,6 +209,7 @@ html.dark {
   --color-danger-soft: rgb(240 106 106 / 0.14);
   --color-warning: #e0a43a;
   --color-warning-hover: #ebb85c;
+  --color-on-warning: #161513;
   --color-warning-soft: rgb(224 164 58 / 0.14);
 }
 

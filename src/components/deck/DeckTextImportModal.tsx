@@ -39,7 +39,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
         {/* Modal Header */}
         <div className="modal-header-container">
           <h3 id="deck-text-import-title" className="text-fg text-lg font-bold flex items-center gap-2">
-            <FaFileImport className="text-blue-500" />
+            <FaFileImport className="text-accent" />
             {t('deck.importTextListTitle')}
           </h3>
           <button
@@ -62,12 +62,12 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
             onChange={(e) => setTextDeckList(e.target.value)}
             disabled={isImporting}
             placeholder="4 Lightning Bolt&#10;2 Llanowar Elves&#10;1 Black Lotus"
-            className="w-full text-sm font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none disabled:opacity-60"
+            className="w-full text-sm font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all resize-none disabled:opacity-60"
           />
 
           {errorMsg && (
-            <div className="text-xs text-danger bg-red-50 dark:bg-red-950/20 dark:text-red-400 p-3 rounded-lg border border-red-200 dark:border-red-900/50 flex items-center gap-1.5">
-              <FaExclamationTriangle className="text-red-500 shrink-0" />
+            <div className="text-xs text-danger bg-danger-soft dark:text-danger p-3 rounded-lg border border-danger/40 flex items-center gap-1.5">
+              <FaExclamationTriangle className="text-danger shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}

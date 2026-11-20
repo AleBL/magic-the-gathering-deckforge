@@ -63,7 +63,7 @@ export function ProxyPrintSettingsBar({
             type="checkbox"
             checked={useRealSize}
             onChange={(e) => setUseRealSize(e.target.checked)}
-            className="rounded border-line-strong text-accent focus:ring-blue-500 w-3.5 h-3.5 cursor-pointer bg-surface-1"
+            className="rounded border-line-strong text-accent focus:ring-focus w-3.5 h-3.5 cursor-pointer bg-surface-1"
           />
           <span className="text-[11px] font-extrabold text-accent uppercase tracking-wider">
             {t('print.printRealSize')}

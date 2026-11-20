@@ -40,16 +40,14 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
   return (
     <div
       className={`rounded-xl border p-3 ${
-        complete
-          ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/50'
-          : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/50'
+        complete ? 'bg-success-soft border-success/40 ' : 'bg-warning-soft border-warning/40 '
       }`}
     >
       <div className="flex items-center gap-2 flex-wrap">
         {complete ? (
-          <FaCheckCircle className="text-emerald-500 shrink-0" />
+          <FaCheckCircle className="text-success shrink-0" />
         ) : (
-          <FaBoxOpen className="text-amber-500 shrink-0" />
+          <FaBoxOpen className="text-warning shrink-0" />
         )}
         <span className="text-sm font-semibold text-fg">
           {complete
@@ -67,7 +65,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
             type="button"
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
-            className="ml-auto flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline"
+            className="ml-auto flex items-center gap-1 text-xs font-bold text-warning hover:underline"
           >
             {t('collection.deckShoppingList')}
             <FaChevronDown className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`} />
@@ -85,7 +83,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
       </div>
 
       {expanded && !complete ? (
-        <ul className="mt-2 pt-2 border-t border-amber-200/70 dark:border-amber-800/40 flex flex-col gap-1">
+        <ul className="mt-2 pt-2 border-t border-warning/40 flex flex-col gap-1">
           {missingRows.map((row) => (
             <li key={row.name} className="flex items-center justify-between text-xs text-fg-secondary">
               <span className="truncate">

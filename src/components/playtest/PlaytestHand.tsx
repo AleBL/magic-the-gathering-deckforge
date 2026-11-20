@@ -62,7 +62,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-line-strong '}`}
+          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-4 hover:scale-105 hover:border-accent/50'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
         >
           {imageUrl ? (
             <img
@@ -84,10 +84,10 @@ const PlaytestHandCard = memo(
 
           {isMulliganPhase ? (
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500/20' : 'bg-black/10 hover:bg-black/0'}`}
+              className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-warning-soft' : 'bg-black/10 hover:bg-black/0'}`}
             >
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-amber-500 border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
               >
                 {isSelected ? '✓' : ''}
               </div>
@@ -104,7 +104,7 @@ const PlaytestHandCard = memo(
                 onShowDetails(card);
               }}
               title={t('cardDetails.viewCardDetails')}
-              className="touch-hitarea absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
+              className="touch-hitarea absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-accent hover:border-line-strong opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
               <FaInfoCircle />
             </button>
@@ -155,7 +155,7 @@ export function PlaytestHand() {
     <div
       className={`border rounded-2xl p-3 sm:p-4 transition-all duration-300 ${
         dragOverZone === 'hand'
-          ? 'border-2 border-dashed border-emerald-400 bg-emerald-500/5 shadow-lg ring-2 ring-emerald-400/30'
+          ? 'border-2 border-dashed border-success bg-success-soft shadow-lg ring-2 ring-success/40'
           : 'border-line bg-surface-1 '
       }`}
       onDragOver={(event) => {

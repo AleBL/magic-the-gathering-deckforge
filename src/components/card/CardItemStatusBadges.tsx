@@ -22,21 +22,21 @@ export function CardItemStatusBadges({
   return (
     <>
       {isCommander && (
-        <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
-          <FaCrown className="text-amber-200 text-xs shrink-0 animate-pulse" />
+        <div className="absolute top-2 left-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-warning flex items-center gap-1 animate-pulse select-none">
+          <FaCrown className="text-warning text-xs shrink-0 animate-pulse" />
           {t('cardDetails.commanderBadge')}
         </div>
       )}
 
       {isBanned && (
-        <div className="absolute top-2 right-2 z-10 bg-rose-600/90 dark:bg-rose-700/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-rose-500 flex items-center gap-1 select-none">
+        <div className="absolute top-2 right-2 z-10 bg-danger backdrop-blur-sm text-on-danger px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-danger flex items-center gap-1 select-none">
           <FaBan className="text-white text-[9px] shrink-0 animate-spin-slow" />
           {t('cardDetails.banned')}
         </div>
       )}
 
       {isRestricted && (
-        <div className="absolute top-2 right-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 select-none">
+        <div className="absolute top-2 right-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-warning flex items-center gap-1 select-none">
           <FaExclamationTriangle className="text-white text-[9px] shrink-0" />
           {t('cardDetails.restricted')}
         </div>
@@ -45,7 +45,7 @@ export function CardItemStatusBadges({
       {isInvalid && (
         <div
           title={t('cardDetails.invalidInFormatHint')}
-          className="absolute top-2 right-2 z-10 bg-violet-600/90 dark:bg-violet-700/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-violet-500 flex items-center gap-1 select-none"
+          className="absolute top-2 right-2 z-10 bg-surface-3 backdrop-blur-sm text-fg px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-accent/50 flex items-center gap-1 select-none"
         >
           <FaTimesCircle className="text-white text-[9px] shrink-0" />
           {t('cardDetails.invalidInFormat')}

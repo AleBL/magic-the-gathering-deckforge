@@ -53,7 +53,7 @@ function DeckTokensTab({
   if (isLoading) {
     return (
       <div className="h-64 flex flex-col items-center justify-center gap-3 text-fg-muted">
-        <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
+        <FaSpinner className="text-3xl text-accent animate-spin" />
         <p className="text-xs font-semibold">{t('tokens.loadingTokens')}</p>
       </div>
     );
@@ -80,7 +80,7 @@ function DeckTokensTab({
             <button
               type="button"
               onClick={openSearchModal}
-              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-all cursor-pointer"
+              className="flex items-center gap-1.5 bg-surface-3 hover:bg-surface-3 text-fg font-extrabold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-all cursor-pointer"
             >
               <FaPlus className="text-[10px]" />
               {t('tokens.addToken')}
@@ -113,7 +113,7 @@ function DeckTokensTab({
                       type="button"
                       onClick={() => handleDeleteToken(tokenCard.id)}
                       title={t('tokens.deleteToken')}
-                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
+                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-danger-soft text-danger hover:bg-danger hover:text-white border border-danger/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
                     >
                       <FaTrash className="text-[10px]" />
                     </button>
@@ -142,14 +142,14 @@ function DeckTokensTab({
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                        <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
+                        <FaPalette className="text-accent text-xs shrink-0" />
                         <span className="text-[8px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
                           {tokenCard.name}
                         </span>
                       </div>
                     )}
                     {/* Click hint overlay */}
-                    <div className="absolute inset-0 bg-indigo-900/0 group-hover/img:bg-indigo-900/25 transition-colors duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-accent-soft group-hover/img:bg-indigo-900/25 transition-colors duration-300 flex items-center justify-center">
                       <span className="text-[8px] text-white font-bold opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow">
                         {t('tokens.viewLabel')}
                       </span>
@@ -162,8 +162,7 @@ function DeckTokensTab({
                       {tokenCard.printed_name || tokenCard.name}
                     </h5>
                     <p className="text-[8px] text-fg-muted truncate font-semibold uppercase tracking-wider">
-                      {t('common.generatedBy')}:{' '}
-                      <span className="font-extrabold text-indigo-500">{generatorCardName}</span>
+                      {t('common.generatedBy')}: <span className="font-extrabold text-accent">{generatorCardName}</span>
                     </p>
                   </div>
                 </div>

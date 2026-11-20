@@ -17,7 +17,7 @@ function ShareBar({ share, tone = 'primary' }: { share: number; tone?: 'primary'
   return (
     <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
       <div
-        className={`h-full rounded-full ${tone === 'warning' ? 'bg-amber-500' : 'bg-primary'}`}
+        className={`h-full rounded-full ${tone === 'warning' ? 'bg-warning' : 'bg-primary'}`}
         style={{ width: `${Math.round(share * 100)}%` }}
       />
     </div>
@@ -78,9 +78,7 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
         </div>
         <div className="stat-tile" title={t('stats.playoutStalledHelp')}>
           <span className="stat-tile-label">{t('stats.playoutStalled')}</span>
-          <span className="text-base font-extrabold text-amber-600 dark:text-amber-400 tabular-nums">
-            {percent(result.stalledRate)}
-          </span>
+          <span className="text-base font-extrabold text-warning tabular-nums">{percent(result.stalledRate)}</span>
         </div>
         <div className="stat-tile" title={t('stats.playoutOnCurveHelp')}>
           <span className="stat-tile-label">{t('stats.playoutOnCurve')}</span>

@@ -97,7 +97,7 @@ function CardSearch({
           {/* Main Search Input */}
           <div className="flex flex-row gap-2 sm:gap-3">
             <div className="relative flex-1 group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-accent transition-colors">
                 <FaSearch className="text-lg" />
               </div>
               <input
@@ -112,12 +112,12 @@ function CardSearch({
                   }
                 }}
                 placeholder={t('search.searchPlaceholder')}
-                className="w-full pl-11 pr-4 py-3.5 bg-surface-2 border border-transparent dark:border-slate-700 rounded-2xl text-base font-medium text-fg placeholder:text-fg-muted focus:bg-surface-1 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 shadow-sm"
+                className="w-full pl-11 pr-4 py-3.5 bg-surface-2 border border-transparent dark:border-slate-700 rounded-2xl text-base font-medium text-fg placeholder:text-fg-muted focus:bg-surface-1 focus:border-accent/50 focus:ring-4 focus:ring-focus transition-all duration-300 shadow-sm"
               />
             </div>
             <button
               onClick={() => loadFirstPage(buildQuery(searchQuery))}
-              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-blue-500 text-on-primary rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 active:scale-95 whitespace-nowrap"
+              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-bold shadow-lg transition-all duration-300 active:scale-95 whitespace-nowrap"
             >
               {t('search.searchButton')}
             </button>

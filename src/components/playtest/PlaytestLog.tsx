@@ -45,7 +45,7 @@ export function PlaytestLog() {
       >
         <div className="p-3 border-b border-line flex justify-between items-center bg-surface-1">
           <h4 className="font-extrabold text-[10px] uppercase tracking-wider text-fg-muted flex items-center gap-1.5 select-none">
-            <FaFileAlt className="text-indigo-500 dark:text-indigo-400 text-xs" />
+            <FaFileAlt className="text-accent text-xs" />
             {t('playtest.playtestLog')}
           </h4>
           <div className="flex items-center gap-3">
@@ -54,14 +54,14 @@ export function PlaytestLog() {
               onClick={handleCopyLog}
               title={t('playtest.copyLog')}
               aria-label={t('playtest.copyLog')}
-              className="text-fg-muted hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+              className="text-fg-muted hover:text-accent transition-colors cursor-pointer"
             >
               <FaCopy className="text-[11px]" />
             </button>
             <button
               type="button"
               onClick={() => setGameLog([])}
-              className="text-[9px] text-fg-muted hover:text-red-500 dark:hover:text-red-400 transition-colors uppercase font-bold cursor-pointer"
+              className="text-[9px] text-fg-muted hover:text-danger transition-colors uppercase font-bold cursor-pointer"
             >
               {t('playtest.clearLog')}
             </button>

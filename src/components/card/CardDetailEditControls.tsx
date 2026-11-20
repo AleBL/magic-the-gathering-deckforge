@@ -41,7 +41,7 @@ export function CardDetailEditControls({
   return (
     <div className="border-t border-line pt-4 mt-auto space-y-4">
       <h3 className="font-bold text-[11px] text-fg-muted uppercase tracking-wider flex items-center gap-2 select-none">
-        <FaPalette className="text-indigo-400/70" />
+        <FaPalette className="text-accent" />
         <span>{t('cardDetails.copiesAndArt')}</span>
       </h3>
 
@@ -60,7 +60,7 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleDecrementCopies}
-              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-danger dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors border border-red-100 dark:border-red-900/30"
+              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-danger dark:text-danger bg-danger-soft hover:bg-danger-soft rounded-lg transition-colors border border-danger/40"
             >
               {t('cardDetails.remove')}
             </button>
@@ -106,16 +106,14 @@ export function CardDetailEditControls({
           {/* Said here rather than in a toast: with the lookup failed there is no editions
               button, and an absent control looks like a card with a single printing. */}
           {printsError ? (
-            <p className="w-full text-xs font-semibold text-amber-600 dark:text-amber-400">
-              {t('common.printsLoadError')}
-            </p>
+            <p className="w-full text-xs font-semibold text-warning">{t('common.printsLoadError')}</p>
           ) : null}
           {prints.length > 1 && (
             <button
               type="button"
               onClick={() => setShowPrintsSidebar((prev) => !prev)}
               className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition-all ${
-                showPrintsSidebar ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30' : ''
+                showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
               }`}
             >
               <FaPalette className="text-xs shrink-0" />
@@ -142,7 +140,7 @@ export function CardDetailEditControls({
             type="button"
             onClick={() => setShowPrintsSidebar((prev) => !prev)}
             className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition-all ${
-              showPrintsSidebar ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30' : ''
+              showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
             }`}
           >
             <FaPalette className="text-xs shrink-0" />

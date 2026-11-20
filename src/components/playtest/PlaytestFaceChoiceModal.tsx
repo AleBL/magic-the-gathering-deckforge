@@ -56,7 +56,7 @@ export function PlaytestFaceChoiceModal() {
                 key={face.name}
                 type="button"
                 onClick={() => handleChooseFace(faceIndex)}
-                className="group flex flex-col items-stretch gap-2 p-2.5 sm:p-3 rounded-2xl border-2 border-line hover:border-indigo-500 dark:hover:border-indigo-400 focus-visible:border-indigo-500 bg-surface-2 transition-all duration-200 active:scale-[0.98] cursor-pointer text-left"
+                className="group flex flex-col items-stretch gap-2 p-2.5 sm:p-3 rounded-2xl border-2 border-line hover:border-accent/50 focus-visible:border-accent/50 bg-surface-2 transition-all duration-200 active:scale-[0.98] cursor-pointer text-left"
               >
                 <div className="aspect-[5/7] rounded-xl overflow-hidden bg-surface-3 shadow-md">
                   {imageUrl ? (

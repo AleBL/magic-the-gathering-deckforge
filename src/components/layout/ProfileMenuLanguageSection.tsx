@@ -34,7 +34,7 @@ export function ProfileMenuLanguageSection({
             <img src={lang.iconPath} alt={lang.label} className="w-5 h-5 rounded-full object-cover shadow-sm" />
             <span className="font-medium text-fg">{lang.label}</span>
           </div>
-          {currentLang.key === lang.key ? <FaCheck className="text-blue-500 text-xs" /> : null}
+          {currentLang.key === lang.key ? <FaCheck className="text-accent text-xs" /> : null}
         </button>
       ))}
     </>

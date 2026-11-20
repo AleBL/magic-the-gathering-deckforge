@@ -20,7 +20,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
         className={`status-badge flex items-center gap-1.5 text-[10px] ${validation.isValid ? 'status-badge-success' : 'status-badge-danger'}`}
       >
         <span
-          className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
+          className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-success shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-danger shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
         />
         {validation.isValid ? t('validation.valid') : t('validation.invalid')}
       </span>
@@ -55,7 +55,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
             }`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
+              className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-success shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-danger shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
             />
             {validation.isValid ? t('validation.valid') : t('validation.invalid')}
           </span>
@@ -71,18 +71,16 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
         <div
           className={`transition-all duration-300 ${isExpanded ? 'max-h-[500px] mt-3 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}
         >
-          <ul className="space-y-1 text-xs border-t border-red-200 dark:border-red-950 pt-2.5 list-disc pl-4">
+          <ul className="space-y-1 text-xs border-t border-danger/40 pt-2.5 list-disc pl-4">
             {validation.errors.map((err: ValidationError, i: number) => (
-              <li key={i} className="text-red-700 dark:text-red-400 font-medium">
+              <li key={i} className="text-danger font-medium">
                 {t(`validation.${err.key}`, err.params) as string}
               </li>
             ))}
           </ul>
         </div>
       ) : (
-        <p className="text-xs text-green-700 dark:text-green-400 mt-2 font-medium">
-          {t('validation.validationFormatSuccess')}
-        </p>
+        <p className="text-xs text-success mt-2 font-medium">{t('validation.validationFormatSuccess')}</p>
       )}
     </div>
   );

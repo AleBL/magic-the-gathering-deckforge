@@ -69,7 +69,7 @@ export function DeckDisplayOptions({
         className={`display-settings-btn ${isOpen ? 'display-settings-btn-active' : ''}`}
         title={t('common.displaySettings')}
       >
-        <FaSlidersH className="text-xs shrink-0 text-blue-500 dark:text-blue-400" />
+        <FaSlidersH className="text-xs shrink-0 text-accent" />
         <span>{t('common.viewMode')}</span>
         <span
           className="text-[9px] opacity-60 transition-transform duration-200"

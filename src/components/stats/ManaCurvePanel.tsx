@@ -38,7 +38,7 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
   return (
     <div className="space-y-4 min-w-0">
       <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-        <FaChartBar className="text-blue-500" />
+        <FaChartBar className="text-accent" />
         {t('stats.manaCurve')}
       </h4>
 

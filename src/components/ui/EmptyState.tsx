@@ -27,13 +27,13 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
     >
       {icon && (
         <div
-          className={`bg-surface-1/60 backdrop-blur-md rounded-full flex items-center justify-center shadow-blue-500/10 border border-blue-100 dark:border-blue-900/50 relative group cursor-default ${
+          className={`bg-surface-1/60 backdrop-blur-md rounded-full flex items-center justify-center border border-line-strong relative group cursor-default ${
             compact ? 'w-9 h-9 mb-2 shadow-sm' : 'w-24 h-24 mb-6 shadow-xl'
           }`}
         >
-          <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
+          <div className="absolute inset-0 rounded-full bg-accent-soft animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
           <div
-            className={`text-blue-500 dark:text-blue-400 opacity-80 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 ${
+            className={`text-accent opacity-80 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 ${
               compact ? 'text-base' : 'text-4xl'
             }`}
           >
@@ -63,7 +63,7 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
       {action && (
         <button
           onClick={action.onClick}
-          className="px-6 py-2.5 bg-primary hover:bg-blue-500 text-on-primary rounded-2xl font-bold shadow-lg shadow-blue-500/30 transition-all duration-300 active:scale-95 mb-8"
+          className="px-6 py-2.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-bold shadow-lg transition-all duration-300 active:scale-95 mb-8"
         >
           {action.label}
         </button>
@@ -79,7 +79,7 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
               <button
                 key={idx}
                 onClick={suggestion.onClick}
-                className="px-4 py-2 bg-surface-1 border border-line rounded-xl text-sm font-mono font-bold text-fg-secondary hover:border-blue-400 dark:hover:border-blue-500 hover:text-accent hover:shadow-md transition-all active:scale-95"
+                className="px-4 py-2 bg-surface-1 border border-line rounded-xl text-sm font-mono font-bold text-fg-secondary hover:border-accent/50 hover:text-accent hover:shadow-md transition-all active:scale-95"
               >
                 {suggestion.label}
               </button>

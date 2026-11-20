@@ -5,5 +5,5 @@
 }
 
 .dropdown-item {
-  @apply flex items-center w-full gap-2 px-3 py-2 text-sm text-left text-fg-secondary font-medium hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 cursor-pointer;
+  @apply flex items-center w-full gap-2 px-3 py-2 text-sm text-left text-fg-secondary font-medium hover:bg-accent-soft dark:hover:bg-gray-700 transition-colors duration-150 cursor-pointer;
 }

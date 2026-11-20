@@ -4,8 +4,8 @@ import { Card } from '../../types/Card';
 
 const RARITY_STYLES: Record<string, string> = {
   mythic:
-    'border-orange-500/60 bg-gradient-to-b from-orange-500/20 to-orange-600/5 text-orange-500 dark:text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.15)]',
-  rare: 'border-amber-400/60 bg-gradient-to-b from-amber-400/15 to-amber-500/5 text-warning dark:text-amber-400',
+    'border-warning bg-gradient-to-b from-orange-500/20 to-orange-600/5 text-warning shadow-[0_0_8px_rgba(249,115,22,0.15)]',
+  rare: 'border-warning bg-gradient-to-b from-amber-400/15 to-amber-500/5 text-warning dark:text-warning',
   uncommon: 'border-slate-400/50 bg-gradient-to-b from-slate-400/10 to-slate-500/5 text-fg-secondary',
   common: 'border-line-strong bg-surface-2 text-fg-secondary'
 };
@@ -104,7 +104,7 @@ export function CardDetailPrintsSidebar({
             aria-pressed={isSelected}
             className={`group relative shrink-0 rounded-xl flex flex-col items-center justify-center border transition-all duration-200 px-2 py-2.5 min-w-[62px] md:w-16 cursor-pointer ${
               isSelected
-                ? 'border-blue-500 bg-blue-500/15 text-accent ring-2 ring-blue-500/30 shadow-md brightness-110'
+                ? 'border-accent/50 bg-accent-soft text-accent ring-2 ring-focus shadow-md brightness-110'
                 : `${rarityStyle} hover:border-blue-400/60 hover:bg-blue-500/5 hover:brightness-110 hover:shadow-xs`
             }`}
           >
@@ -119,7 +119,7 @@ export function CardDetailPrintsSidebar({
             ) : null}
 
             {isSelected && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-blue-500 rounded-full border-2 border-line shadow-sm" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-surface-3 rounded-full border-2 border-line shadow-sm" />
             )}
           </button>
         );

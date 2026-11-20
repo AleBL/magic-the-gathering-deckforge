@@ -81,7 +81,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
           English printing's price as an estimate, say so. */}
       {summary.fallbackPricedCount > 0 ? (
         <p className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-          <FaInfoCircle className="text-blue-400 shrink-0" />
+          <FaInfoCircle className="text-accent shrink-0" />
           {t('collection.priceFallbackNote', { count: summary.fallbackPricedCount })}
         </p>
       ) : null}

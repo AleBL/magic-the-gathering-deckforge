@@ -211,7 +211,7 @@ html.dark .deck-preview-section {
 }
 
 .card-image-button {
-  @apply w-full rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-surface-3 border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 aspect-[5/7] border-0 p-0;
+  @apply w-full rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-surface-3 border border-transparent focus:outline-none focus:ring-2 focus:ring-focus aspect-[5/7] border-0 p-0;
   position: relative;
   transition:
     transform 0.5s cubic-bezier(0.2, 1, 0.3, 1),
@@ -273,7 +273,7 @@ html.dark .deck-preview-section {
 }
 
 .card-item-wrapper:hover {
-  @apply z-10 shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20;
+  @apply z-10 shadow-2xl;
   transform: translateY(-6px) scale(1.03);
 }
 
@@ -315,11 +315,11 @@ html.dark .deck-preview-section {
 
 .deck-list-row:hover {
   transform: translateX(2px);
-  @apply border-blue-400/50 dark:border-blue-500/30 shadow-md;
+  @apply border-accent/50 shadow-md;
 }
 
 .quantity-badge {
-  @apply font-mono bg-accent-soft text-accent dark:bg-blue-400/10 border border-accent/20 dark:border-blue-400/20 px-2 py-0.5 rounded text-xs font-bold mr-2.5 inline-block shrink-0 shadow-sm;
+  @apply font-mono bg-accent-soft text-accent dark:bg-accent-soft border border-accent/20 dark:border-line-strong px-2 py-0.5 rounded text-xs font-bold mr-2.5 inline-block shrink-0 shadow-sm;
 }
 
 .floating-card-preview {
@@ -402,7 +402,7 @@ html.dark .deck-preview-section {
 }
 
 .app-brand-logo-glow {
-  @apply absolute inset-0 bg-blue-500/20 dark:bg-accent-soft rounded-lg blur-xs animate-pulse;
+  @apply absolute inset-0 bg-accent-soft dark:bg-accent-soft rounded-lg blur-xs animate-pulse;
 }
 
 .app-brand-logo-image {
@@ -436,7 +436,7 @@ html.dark .deck-preview-section {
 }
 
 .profile-menu-trigger {
-  @apply flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-line bg-surface-1 hover:bg-surface-2 transition-all duration-200 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+  @apply flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-line bg-surface-1 hover:bg-surface-2 transition-all duration-200 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-focus;
 }
 
 .profile-avatar {
@@ -517,7 +517,7 @@ html.dark .profile-menu-panel {
 }
 
 .proxy-select {
-  @apply text-xs bg-surface-1 border border-line rounded-lg py-1 px-2 text-fg-secondary focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer;
+  @apply text-xs bg-surface-1 border border-line rounded-lg py-1 px-2 text-fg-secondary focus:outline-none focus:ring-1 focus:ring-focus cursor-pointer;
 }
 
 .proxy-option-btn {

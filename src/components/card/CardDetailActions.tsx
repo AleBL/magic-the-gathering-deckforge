@@ -20,7 +20,7 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
           href={card.scryfall_uri}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-50 text-purple-700 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 transition-colors border border-purple-100 dark:border-purple-800/50"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-accent-soft text-accent hover:bg-accent-soft transition-colors border border-line-strong"
           title={t('export.scryfall')}
         >
           <img

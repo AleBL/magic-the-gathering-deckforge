@@ -21,7 +21,7 @@
 }
 
 .deck-content-tab-active {
-  @apply border-blue-500 text-accent font-extrabold bg-blue-500/5 dark:bg-blue-400/10;
+  @apply border-accent/50 text-accent font-extrabold bg-accent-soft;
 }
 
 /* ── Option Toggle Button (View Mode / Group By / Sort By) ──
@@ -33,7 +33,7 @@
 }
 
 .option-toggle-btn-active {
-  @apply bg-blue-500 border-accent text-white shadow-md font-black scale-[1.02];
+  @apply bg-surface-3 border-accent text-fg shadow-md font-black scale-[1.02];
 }
 
 /* Compact variant for Group By and Sort By (smaller padding) */
@@ -42,7 +42,7 @@
 }
 
 .option-toggle-btn-compact-active {
-  @apply bg-blue-500 border-accent text-white shadow-md scale-[1.02];
+  @apply bg-surface-3 border-accent text-fg shadow-md scale-[1.02];
 }
 
 /* ── Display Settings Trigger Button ────────────────────────
@@ -54,7 +54,7 @@
 }
 
 .display-settings-btn-active {
-  @apply bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800;
+  @apply bg-accent-soft text-accent border-line-strong;
 }
 
 /* Deck manager toolbar buttons — share the display-settings surface so the
@@ -64,7 +64,7 @@
 }
 
 .deck-toolbar-btn-accent {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-blue-500 hover:shadow-md;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-surface-3 hover:shadow-md;
 }
 
 .display-settings-dropdown {
@@ -100,7 +100,7 @@ html.dark .display-settings-dropdown {
 .manager-info-tooltip-btn {
   /* relative + .touch-hitarea (utilities.css) widen the tap box to 44px on
      touch layouts without growing the small inline glyph */
-  @apply relative touch-hitarea text-gray-400 hover:text-yellow-500 transition-colors p-1 cursor-pointer;
+  @apply relative touch-hitarea text-gray-400 hover:text-warning transition-colors p-1 cursor-pointer;
 }
 
 .manager-info-tooltip-panel {
@@ -151,7 +151,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .unsaved-deck-chip {
-  @apply bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/25 px-2.5 py-0.5 rounded-full text-[10px] font-bold mt-1.5 inline-flex items-center gap-1 shadow-sm;
+  @apply bg-danger-soft text-danger border border-danger/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold mt-1.5 inline-flex items-center gap-1 shadow-sm;
 }
 
 /* ── Active Editing Mode Badge ──────────────────────────────
@@ -159,7 +159,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .editing-mode-badge {
-  @apply inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-400/40 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider animate-pulse;
+  @apply inline-flex items-center gap-1.5 bg-warning-soft border border-warning/40 text-warning px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider animate-pulse;
 }
 
 /* ─── Deck List Item ─────────────────────────────────────── */
@@ -169,7 +169,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-editing-badge {
-  @apply shrink-0 inline-block w-2.5 h-2.5 bg-amber-400 border border-line rounded-full animate-ping;
+  @apply shrink-0 inline-block w-2.5 h-2.5 bg-warning border border-line rounded-full animate-ping;
 }
 
 .deck-list-item-meta {
@@ -181,7 +181,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-format-badge-selected {
-  @apply bg-primary text-on-primary shadow-sm ring-1 ring-blue-500/30;
+  @apply bg-primary text-on-primary shadow-sm ring-1 ring-focus;
 }
 
 .deck-list-item-format-badge-default {
@@ -200,7 +200,7 @@ html.dark .import-export-dropdown {
 /* ─── Export dialog option rows ────────────────────────────────── */
 
 .export-option {
-  @apply flex w-full items-center gap-3 rounded-xl border border-line bg-surface-1 p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-400 hover:bg-blue-50/50 active:scale-[0.99] dark:hover:border-blue-500/50 dark:hover:bg-slate-700;
+  @apply flex w-full items-center gap-3 rounded-xl border border-line bg-surface-1 p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:bg-accent-soft active:scale-[0.99] dark:hover:bg-slate-700;
 }
 
 .export-option-icon {
@@ -220,7 +220,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-active {
-  @apply bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 border-blue-400 dark:border-blue-500/50 ring-2 ring-blue-500 shadow-md;
+  @apply bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 border-accent/50 ring-2 ring-focus shadow-md;
 }
 
 /* The 4:3 ratio sets the shape, the cap sets the limit: a wide lane would otherwise scale
@@ -296,7 +296,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-edit-mobile-tab-active {
-  @apply border-blue-400 bg-primary text-on-primary shadow-sm dark:border-blue-500/50;
+  @apply border-accent/50 bg-primary text-on-primary shadow-sm;
 }
 
 .deck-edit-panes {
@@ -317,7 +317,7 @@ html.dark .import-export-dropdown {
 
 /* Highlight while a searched card is being dragged over the deck side. */
 .deck-edit-pane-deck-drop {
-  @apply ring-2 ring-blue-500 ring-offset-2 ring-offset-transparent;
+  @apply ring-2 ring-focus ring-offset-2 ring-offset-transparent;
 }
 
 /* ─── Empty Deck List State ─────────────────────────────────────── */
@@ -331,7 +331,7 @@ html.dark .import-export-dropdown {
 }
 
 .empty-deck-list-state-icon-wrapper {
-  @apply w-12 h-12 bg-purple-50 dark:bg-purple-900/30 rounded-full flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform duration-300;
+  @apply w-12 h-12 bg-accent-soft rounded-full flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform duration-300;
 }
 
 /* ── Modals & Overlays ─────────────────────────────────────── */
@@ -391,7 +391,7 @@ html.dark .import-export-dropdown {
 }
 
 .token-card-add-btn {
-  @apply mt-3 w-full justify-center bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm;
+  @apply mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm;
 }
 
 /* Stat panels (budget / deck doctor / mana base) share one tile + label treatment.

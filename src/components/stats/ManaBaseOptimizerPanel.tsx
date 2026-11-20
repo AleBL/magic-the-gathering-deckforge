@@ -35,9 +35,9 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
   const rowHeight = Math.max(chartData.length, 1) * 32 + 16;
 
   return (
-    <div className="space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-500/5 dark:bg-blue-950/10 transition-colors duration-300">
-      <h4 className="font-bold text-sm text-blue-700 dark:text-blue-400 uppercase tracking-wider flex items-center gap-2">
-        <FaInfoCircle className="text-blue-500" />
+    <div className="space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
+      <h4 className="font-bold text-sm text-accent uppercase tracking-wider flex items-center gap-2">
+        <FaInfoCircle className="text-accent" />
         {t('stats.manaBaseOptimizer')}
       </h4>
       <p className="text-xs text-fg-muted">
@@ -63,9 +63,9 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           </div>
 
           {stats.removeCount > 0 ? (
-            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
-              <FaExclamationTriangle className="text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-[11px] text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
+            <div className="p-3 bg-warning-soft border border-warning/40 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
+              <FaExclamationTriangle className="text-warning shrink-0 mt-0.5" />
+              <p className="text-[11px] text-warning font-medium leading-relaxed">
                 {t('stats.manaBaseWarning')
                   .replace('{{finalSize}}', String(stats.finalDeckSize))
                   .replace('{{limit}}', String(stats.targetDeckLimit))
@@ -130,7 +130,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           ) : null}
         </>
       ) : (
-        <div className="flex items-center gap-2 mt-4 text-success dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
+        <div className="flex items-center gap-2 mt-4 text-success dark:text-success bg-success-soft p-3 rounded-lg border border-success/40">
           <FaTint className="shrink-0" />
           <p className="text-xs font-semibold">{t('stats.landsAlreadySufficient')}</p>
         </div>

@@ -187,7 +187,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
           <button
             type="button"
             onClick={() => onComplete(topCards, otherCards)}
-            className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors cursor-pointer"
+            className="px-6 py-2 bg-surface-3 hover:bg-surface-3 text-fg font-medium rounded-lg transition-colors cursor-pointer"
           >
             {t('common.confirm')}
           </button>

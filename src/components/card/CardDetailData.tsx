@@ -39,7 +39,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
       </p>
       <p className="text-fg-secondary transition-colors duration-300">{source.printed_type_line || source.type_line}</p>
       {source.mana_cost && (
-        <p className="text-yellow-600 dark:text-yellow-400 transition-colors duration-300 flex items-center flex-wrap gap-1">
+        <p className="text-warning transition-colors duration-300 flex items-center flex-wrap gap-1">
           {t('cardDetails.manaCostLabel')}: {parseTextWithSymbols(source.mana_cost, true)}
         </p>
       )}
@@ -49,7 +49,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
         </p>
       )}
       {source.power && source.toughness && (
-        <p className="text-success dark:text-green-400 transition-colors duration-300">
+        <p className="text-success dark:text-success transition-colors duration-300">
           {t('cardDetails.powerToughnessLabel')}: {source.power}/{source.toughness}
         </p>
       )}
@@ -65,8 +65,8 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
           {currentFace ? currentFace.printed_name || currentFace.name : card.printed_name || card.name}
         </h2>
         {card.isCommander && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-900/50 shadow-sm animate-pulse">
-            <FaCrown className="text-amber-500 dark:text-amber-400 text-xs shrink-0" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-warning-soft text-warning border border-warning/40 shadow-sm animate-pulse">
+            <FaCrown className="text-warning text-xs shrink-0" />
             {t('cardDetails.commanderBadge')}
           </span>
         )}
@@ -84,7 +84,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
               : card.printed_type_line || card.type_line}
           </p>
           {((currentFace && currentFace.mana_cost) || card.mana_cost) && (
-            <p className="text-yellow-600 dark:text-yellow-400 transition-colors duration-300 flex items-center flex-wrap gap-1">
+            <p className="text-warning transition-colors duration-300 flex items-center flex-wrap gap-1">
               {t('cardDetails.manaCostLabel')}:{' '}
               {parseTextWithSymbols(currentFace ? currentFace.mana_cost : card.mana_cost, true)}
             </p>
@@ -104,7 +104,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
             </div>
           )}
           {((currentFace && currentFace.power && currentFace.toughness) || (card.power && card.toughness)) && (
-            <p className="text-success dark:text-green-400 transition-colors duration-300">
+            <p className="text-success dark:text-success transition-colors duration-300">
               {t('cardDetails.powerToughnessLabel')}: {currentFace ? currentFace.power : card.power}/
               {currentFace ? currentFace.toughness : card.toughness}
             </p>
@@ -147,7 +147,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
       {card.legalities && !isToken && !hidePriceAndLegality && (
         <div className="border-t border-line pt-4 mt-1">
           <h3 className="font-bold mb-3 text-xs text-fg-muted uppercase tracking-widest flex items-center gap-1.5">
-            <FaShieldAlt className="text-blue-500 text-xs shrink-0" />
+            <FaShieldAlt className="text-accent text-xs shrink-0" />
             <span>{t('cardDetails.legality')}</span>
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -160,17 +160,16 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
               let label = t('cardDetails.notLegal');
 
               if (status === LEGALITY.LEGAL) {
-                bgClass =
-                  'bg-emerald-500/5 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40';
-                dotClass = 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]';
+                bgClass = 'bg-success-soft text-success border-success/40';
+                dotClass = 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]';
                 label = t('cardDetails.legal');
               } else if (status === LEGALITY.BANNED) {
-                bgClass = 'bg-red-500/5 text-red-800 dark:text-red-400 border-red-200 dark:border-red-900/40';
-                dotClass = 'bg-red-500 dark:bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse';
+                bgClass = 'bg-danger-soft text-danger border-danger/40';
+                dotClass = 'bg-danger shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse';
                 label = t('cardDetails.banned');
               } else if (status === LEGALITY.RESTRICTED) {
-                bgClass = 'bg-amber-500/5 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900/40';
-                dotClass = 'bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.5)]';
+                bgClass = 'bg-warning-soft text-warning border-warning/40';
+                dotClass = 'bg-warning shadow-[0_0_8px_rgba(245,158,11,0.5)]';
                 label = t('cardDetails.restricted');
               } else {
                 bgClass = 'bg-gray-500/5 text-fg-muted border-line';

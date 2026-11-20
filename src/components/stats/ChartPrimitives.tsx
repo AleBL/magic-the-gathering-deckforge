@@ -131,7 +131,7 @@ export function ChartLegend({ items }: { items: ChartLegendItem[] }) {
             onClick={item.onClick}
             className={`px-3 py-1 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
               item.active
-                ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-slate-900 shadow-md border-transparent'
+                ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 shadow-md border-transparent'
                 : 'border-line '
             } ${item.muted ? 'opacity-40' : 'opacity-90 hover:opacity-100'} ${item.onClick ? 'cursor-pointer' : ''}`}
           >

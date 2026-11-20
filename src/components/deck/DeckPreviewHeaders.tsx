@@ -87,7 +87,7 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
       </h3>
       {cardCount > 0 ? (
         <span className="unsaved-deck-chip">
-          <FaExclamationTriangle className="text-rose-500 dark:text-rose-400 text-[9px] shrink-0" />
+          <FaExclamationTriangle className="text-danger text-[9px] shrink-0" />
           <span>{t('deck.temporaryUnsavedDeck')}</span>
         </span>
       ) : null}

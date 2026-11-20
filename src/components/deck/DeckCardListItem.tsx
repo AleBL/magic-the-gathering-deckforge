@@ -74,9 +74,9 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         aria-label={displayName}
         className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-line-strong cursor-pointer ${
           isBanned
-            ? 'ring-1 ring-inset ring-red-500 bg-red-50 dark:bg-red-950/40'
+            ? 'ring-1 ring-inset ring-danger/40 bg-danger-soft '
             : isRestricted
-              ? 'ring-1 ring-inset ring-amber-500 bg-amber-50 dark:bg-amber-950/40'
+              ? 'ring-1 ring-inset ring-warning/40 bg-warning-soft '
               : 'bg-surface-1 hover:bg-surface-2 '
         }`}
         draggable={isRemovable && !isTokenZone}
@@ -126,37 +126,37 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         <div className="relative z-20 flex items-center justify-between h-full px-2">
           <div className="flex items-center min-w-0 pr-2">
             <span
-              className={`font-black w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-fg-secondary '}`}
+              className={`font-black w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-danger ' : 'text-fg-secondary '}`}
             >
               {count}
             </span>
             <span
-              className={`font-semibold truncate text-sm hover:text-accent transition-colors drop-shadow-sm ${isBanned ? 'text-red-800 dark:text-red-300 font-extrabold' : 'text-fg '}`}
+              className={`font-semibold truncate text-sm hover:text-accent transition-colors drop-shadow-sm ${isBanned ? 'text-danger font-extrabold' : 'text-fg '}`}
             >
               {displayName}
             </span>
 
             {card.isCommander && (
               <span className="deck-card-status-chip-commander animate-pulse ml-2">
-                <FaCrown className="text-amber-500 dark:text-amber-400 shrink-0 text-[10px]" />
+                <FaCrown className="text-warning shrink-0 text-[10px]" />
                 {t('cardDetails.commanderBadge')}
               </span>
             )}
             {isBanned && (
               <span className="deck-card-status-chip-banned ml-2">
-                <FaBan className="text-red-500 dark:text-red-400 text-[9px] shrink-0" />
+                <FaBan className="text-danger text-[9px] shrink-0" />
                 {t('cardDetails.banned').toUpperCase()}
               </span>
             )}
             {isRestricted && (
               <span className="deck-card-status-chip-restricted ml-2">
-                <FaExclamationTriangle className="text-amber-500 dark:text-amber-400 text-[9px] shrink-0" />
+                <FaExclamationTriangle className="text-warning text-[9px] shrink-0" />
                 {t('cardDetails.restricted').toUpperCase()}
               </span>
             )}
             {isInvalid && (
               <span className="deck-card-status-chip-invalid ml-2" title={t('cardDetails.invalidInFormatHint')}>
-                <FaTimesCircle className="text-violet-500 dark:text-violet-400 text-[9px] shrink-0" />
+                <FaTimesCircle className="text-accent text-[9px] shrink-0" />
                 {t('cardDetails.invalidInFormat').toUpperCase()}
               </span>
             )}

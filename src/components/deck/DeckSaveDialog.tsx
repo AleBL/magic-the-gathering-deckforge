@@ -63,7 +63,7 @@ function DeckSaveDialog({
                 value={deckName}
                 onChange={(e) => onDeckNameChange(e.target.value)}
                 placeholder={t('deck.deckNamePlaceholder')}
-                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-focus"
               />
             </div>
 
@@ -72,7 +72,7 @@ function DeckSaveDialog({
               <select
                 value={deckFormat}
                 onChange={(e) => onDeckFormatChange((e.target.value as DeckFormat) || DeckFormatType.FREEFORM)}
-                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-focus"
               >
                 {DECK_FORMATS.map((fmt) => (
                   <option key={fmt.value} value={fmt.value}>
@@ -82,7 +82,7 @@ function DeckSaveDialog({
               </select>
             </div>
 
-            <div className="flex gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-lg text-sm">
+            <div className="flex gap-2 p-3 bg-accent-soft text-accent rounded-lg text-sm">
               <FaInfoCircle className="shrink-0 mt-0.5" />
               <span>{t('validation.deckRulesExplanation')}</span>
             </div>
