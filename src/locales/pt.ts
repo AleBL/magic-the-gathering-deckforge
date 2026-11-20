@@ -235,6 +235,7 @@ const pt = {
       decksImported: '{{count}} decks importados',
       deckDuplicated: 'Deck duplicado',
       duplicateDeck: 'Duplicar deck',
+      trySampleDeck: 'Experimentar um deck de exemplo',
       tabCards: 'Cartas',
       tabAnalysis: 'Análise',
       tabNotes: 'Notas',

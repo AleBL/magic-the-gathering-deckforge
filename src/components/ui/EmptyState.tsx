@@ -6,6 +6,8 @@ interface EmptyStateProps {
   title: string;
   compact?: boolean;
   description?: string;
+  /** Quieter alternatives shown next to the primary action, e.g. on a first run. */
+  secondaryActions?: { label: string; onClick: () => void }[];
   action?: {
     label: string;
     onClick: () => void;
@@ -16,7 +18,7 @@ interface EmptyStateProps {
   }[];
 }
 
-function EmptyState({ icon, title, compact, description, action, suggestions }: EmptyStateProps) {
+function EmptyState({ icon, title, compact, description, action, secondaryActions, suggestions }: EmptyStateProps) {
   const { t } = useTranslation();
 
   return (
@@ -60,13 +62,19 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
         </p>
       )}
 
-      {action && (
-        <button
-          onClick={action.onClick}
-          className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 mb-8"
-        >
-          {action.label}
-        </button>
+      {(action || secondaryActions?.length) && (
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          {action && (
+            <button type="button" onClick={action.onClick} className="primary-button">
+              {action.label}
+            </button>
+          )}
+          {secondaryActions?.map((secondary) => (
+            <button key={secondary.label} type="button" onClick={secondary.onClick} className="secondary-button">
+              {secondary.label}
+            </button>
+          ))}
+        </div>
       )}
 
       {suggestions && suggestions.length > 0 && (

@@ -236,6 +236,7 @@ const es = {
       decksImported: '{{count}} mazos importados',
       deckDuplicated: 'Mazo duplicado',
       duplicateDeck: 'Duplicar mazo',
+      trySampleDeck: 'Probar un mazo de ejemplo',
       tabCards: 'Cartas',
       tabAnalysis: 'Análisis',
       tabNotes: 'Notas',

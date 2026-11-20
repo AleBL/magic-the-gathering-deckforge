@@ -62,6 +62,7 @@ interface DeckManagerModalsProps {
   readonly onCancelExport: () => void;
 
   readonly isTextImportOpen: boolean;
+  readonly textImportInitial: string;
   readonly onCloseTextImport: () => void;
   readonly onImportText: (text: string) => void;
   readonly isTextImporting: boolean;
@@ -117,6 +118,7 @@ export function DeckManagerModals({
   onExportDec,
   onCancelExport,
   isTextImportOpen,
+  textImportInitial,
   onCloseTextImport,
   onImportText,
   isTextImporting,
@@ -211,6 +213,7 @@ export function DeckManagerModals({
 
       <DeckTextImportModal
         isOpen={isTextImportOpen}
+        initialText={textImportInitial}
         onClose={onCloseTextImport}
         onImport={onImportText}
         isImporting={isTextImporting}

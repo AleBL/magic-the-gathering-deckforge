@@ -235,6 +235,7 @@ const en = {
       decksImported: '{{count}} decks imported',
       deckDuplicated: 'Deck duplicated',
       duplicateDeck: 'Duplicate deck',
+      trySampleDeck: 'Try a sample deck',
       tabCards: 'Cards',
       tabAnalysis: 'Analysis',
       tabNotes: 'Notes',

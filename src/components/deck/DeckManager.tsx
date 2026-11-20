@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
+import { SAMPLE_DECK_TEXT } from '../../constants/sampleDeck';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
@@ -55,6 +56,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
   const { handleAddToDeck, handleAddTokenToDeck, handleRemoveFromDeckWithToast } = useDeckActions(showToast);
 
   const [isTextImportOpen, setIsTextImportOpen] = useState(false);
+  const [textImportInitial, setTextImportInitial] = useState('');
 
   const { dialogState, showAlert, showConfirm, closeDialog } = useDialog();
 
@@ -277,6 +279,14 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const openTextImport = useCallback(() => {
     setTextErrorMsg(null);
+    setTextImportInitial('');
+    setIsTextImportOpen(true);
+  }, [setTextErrorMsg]);
+
+  // First run: the same import, already filled with a small real list to explore the app with.
+  const openSampleImport = useCallback(() => {
+    setTextErrorMsg(null);
+    setTextImportInitial(SAMPLE_DECK_TEXT);
     setIsTextImportOpen(true);
   }, [setTextErrorMsg]);
 
@@ -408,6 +418,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
     },
     'export-all-decks': exportAllDecks,
     'import-deck-text': openTextImport,
+    'import-sample-deck': openSampleImport,
     'import-deck-file': () => menuImportFileInputRef.current?.click(),
     'edit-selected-deck': () => {
       if (!selectedDeck) return;
@@ -599,6 +610,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
         }}
         onCancelExport={() => setDeckToExport(null)}
         isTextImportOpen={isTextImportOpen}
+        textImportInitial={textImportInitial}
         onCloseTextImport={() => setIsTextImportOpen(false)}
         onImportText={importTextDeck}
         isTextImporting={isTextImporting}
