@@ -112,7 +112,13 @@ for (const theme of ['light', 'dark'] as const) {
     await appPage.emulateMedia({ reducedMotion: 'reduce' });
     await appPage.goto('/');
     await expect(appPage.getByRole('banner')).toBeVisible();
-    await appPage.waitForTimeout(200);
+    // The theme class lands in an effect after the first paint; under load the scan could
+    // otherwise read one element before the switch and its neighbour after it.
+    await appPage.waitForFunction(
+      (dark) => document.documentElement.classList.contains('dark') === dark,
+      theme === 'dark'
+    );
+    await appPage.waitForTimeout(300);
 
     const failures = await findContrastFailures(appPage);
     expect(failures, `${failures.length} low-contrast texts:\n${JSON.stringify(failures, null, 2)}`).toEqual([]);
