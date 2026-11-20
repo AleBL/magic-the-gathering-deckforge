@@ -56,12 +56,12 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                     e.currentTarget.blur();
                   }
                 }}
-                className="bg-slate-800/80 text-white text-sm font-bold border border-slate-500 rounded px-2 py-0.5 w-1/3 min-w-[120px] focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40"
+                className="bg-surface-1 text-fg text-sm font-semibold border border-line-strong rounded px-2 py-0.5 w-1/3 min-w-[120px] focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40"
               />
             ) : (
               <button
                 type="button"
-                className="font-bold text-sm text-white flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-warning transition-colors text-left"
+                className="font-semibold text-sm text-fg flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-warning transition-colors text-left"
                 onClick={() => setIsEditingName(true)}
                 title={t('deck.editDeckInfo')}
               >
@@ -124,7 +124,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
           <button
             type="button"
             onClick={onCancelEdit}
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-danger-soft hover:bg-danger-soft text-danger hover:text-white transition-all border border-danger/40 active:scale-95 shadow-sm"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-danger-soft hover:bg-danger text-danger hover:text-on-danger transition-colors border border-danger/40 active:scale-95 shadow-sm"
             aria-label={t('deck.exitEditMode')}
           >
             <FaTimes className="text-xs shrink-0" />

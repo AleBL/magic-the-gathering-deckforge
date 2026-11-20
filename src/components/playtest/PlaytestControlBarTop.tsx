@@ -51,7 +51,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={handleNextTurn}
-            className="bg-success hover:bg-success text-on-success text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-primary hover:bg-primary-hover text-on-primary text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.nextTurn')}
           </button>
@@ -84,7 +84,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev - 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-on-danger transition-all text-xs font-bold cursor-pointer"
             >
               <FaMinus className="text-[11px] sm:text-[8px]" />
             </button>
@@ -94,7 +94,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev + 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-on-success transition-all text-xs font-bold cursor-pointer"
             >
               <FaPlus className="text-[11px] sm:text-[8px]" />
             </button>

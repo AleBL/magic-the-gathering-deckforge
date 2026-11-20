@@ -59,7 +59,7 @@ export function PlaytestLibraryGraveyard() {
             // Do nothing for unknown drops
           }
         }}
-        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus scale-105' : 'border-line-strong hover:border-accent/50'}`}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gray-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus scale-105' : 'border-line-strong hover:border-accent/50'}`}
         draggable={library.length > 0}
         onDragStart={(event) => {
           if (library.length === 0) {

@@ -36,7 +36,6 @@ function Header({
       <div className="header-toolbar">
         <div className="app-brand">
           <div className="app-brand-logo-wrapper">
-            <div className="app-brand-logo-glow"></div>
             <img src={pwLogo} alt="MTG Deck Forge Logo" className="app-brand-logo-image" />
           </div>
           <h1 className="app-brand-title">{t('common.appTitle')}</h1>

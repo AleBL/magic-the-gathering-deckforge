@@ -158,7 +158,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
           className={`w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-md backdrop-blur-md border transition-colors pointer-events-auto ${
             wishlist
               ? 'bg-danger text-on-danger border-danger'
-              : 'bg-black/65 text-white/90 border-white/20 hover:bg-danger hover:text-white'
+              : 'bg-black/65 text-white/90 border-white/20 hover:bg-danger hover:text-on-danger'
           }`}
         >
           {wishlist ? <FaHeart className="text-xs" /> : <FaRegHeart className="text-xs" />}

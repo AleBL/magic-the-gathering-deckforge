@@ -113,7 +113,7 @@ function DeckTokensTab({
                       type="button"
                       onClick={() => handleDeleteToken(tokenCard.id)}
                       title={t('tokens.deleteToken')}
-                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-danger-soft text-danger hover:bg-danger hover:text-white border border-danger/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
+                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-danger-soft text-danger hover:bg-danger hover:text-on-danger border border-danger/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
                     >
                       <FaTrash className="text-[10px]" />
                     </button>

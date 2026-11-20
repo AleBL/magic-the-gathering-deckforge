@@ -18,7 +18,7 @@ export function ProfileMenuAboutSection({ onBack, onClose }: ProfileMenuAboutSec
       <div className="p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="profile-avatar-lg">
-            <FaUser className="text-sm text-white" />
+            <FaUser className="text-sm" />
           </div>
           <div>
             <p className="font-bold text-fg text-sm">{APP_NAME}</p>

@@ -18,6 +18,13 @@ import { DeckFormatType } from '../../types/enums';
 import { downloadAsJson } from '../../services/fileDownload';
 import { buildShareUrl } from '../../services/deckShare';
 
+/** One shape for every action in the bar; only Playtest is primary. */
+const BAR_BUTTON =
+  'flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg text-xs font-medium transition-colors duration-150 active:scale-[0.98]';
+const BAR_PRIMARY = 'bg-primary text-on-primary hover:bg-primary-hover';
+const BAR_SECONDARY = 'bg-surface-1 border border-line-strong text-fg hover:bg-surface-2';
+const BAR_GHOST = 'text-fg-secondary hover:bg-surface-2 hover:text-fg';
+
 /**
  * Hover tooltip for the icon-only action buttons. Hidden at lg and up, where
  * each button shows its text label inline instead.
@@ -156,13 +163,11 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={() => setShowExportMenu(!showExportMenu)}
-                className={`flex items-center justify-center gap-1 px-3 h-11 sm:h-8 rounded-lg text-fg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${
-                  showExportMenu ? 'bg-surface-3' : 'bg-surface-3 hover:bg-surface-3'
-                }`}
+                className={`${BAR_BUTTON} ${BAR_SECONDARY} ${showExportMenu ? 'bg-surface-2' : ''}`}
                 aria-label={t('deck.export')}
               >
                 <FaFileExport className="text-sm shrink-0" />
-                <span className="hidden lg:inline text-xs font-semibold">{t('deck.export')}</span>
+                <span className="hidden lg:inline">{t('deck.export')}</span>
                 <FaChevronDown
                   className={`text-[10px] transition-transform duration-200 ${showExportMenu ? 'rotate-180' : ''}`}
                 />
@@ -237,11 +242,11 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={onPrintProxies}
-                className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-surface-2 border border-line text-fg-secondary hover:bg-success-soft hover:text-success hover:border-success/40 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
+                className={`${BAR_BUTTON} ${BAR_SECONDARY}`}
                 aria-label={t('print.printProxies')}
               >
                 <FaPrint className="text-sm shrink-0" />
-                <span className="hidden lg:inline text-xs font-semibold">{t('print.printProxies')}</span>
+                <span className="hidden lg:inline">{t('print.printProxies')}</span>
               </button>
               <ActionTooltip label={t('print.printProxies')} />
             </div>
@@ -254,12 +259,11 @@ function DeckActionBar({
               id="playtest-btn"
               type="button"
               onClick={onPlaytest}
-              className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white transition-all duration-300 shadow-md active:scale-95 relative overflow-hidden group/playbtn"
+              className={`${BAR_BUTTON} ${BAR_PRIMARY}`}
               aria-label={t('playtest.playtest')}
             >
-              <div className="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover/playbtn:scale-x-100 origin-left transition-transform duration-500 ease-out" />
-              <FaDiceD20 className="text-sm shrink-0 relative z-10 group-hover/playbtn:animate-spin-slow" />
-              <span className="hidden lg:inline text-xs font-semibold relative z-10">{t('playtest.playtest')}</span>
+              <FaDiceD20 className="text-sm shrink-0" />
+              <span className="hidden lg:inline">{t('playtest.playtest')}</span>
             </button>
             <ActionTooltip label={t('playtest.playtest')} />
           </div>
@@ -271,11 +275,11 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onLoadDeckToEdit}
-            className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-primary hover:bg-primary-hover text-on-primary transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className={`${BAR_BUTTON} ${BAR_SECONDARY}`}
             aria-label={t('common.edit')}
           >
             <FaEdit className="text-sm shrink-0" />
-            <span className="hidden lg:inline text-xs font-semibold">{t('common.edit')}</span>
+            <span className="hidden lg:inline">{t('common.edit')}</span>
           </button>
           <ActionTooltip label={t('common.edit')} />
         </div>
@@ -286,11 +290,11 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onDeselectDeck}
-            className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className={`${BAR_BUTTON} ${BAR_GHOST}`}
             aria-label={t('common.cancel')}
           >
             <FaTimes className="text-sm shrink-0" />
-            <span className="hidden lg:inline text-xs font-semibold">{t('common.cancel')}</span>
+            <span className="hidden lg:inline">{t('common.cancel')}</span>
           </button>
           <ActionTooltip label={t('common.cancel')} />
         </div>
