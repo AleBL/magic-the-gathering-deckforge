@@ -30,7 +30,7 @@ function Toast({ message, variant = 'success', action }: ToastProps) {
       // save/error toast is most likely to fire. The bottom offset clears
       // the tab bar's own height (~56px) plus the safe-area inset below `sm`,
       // where that bar exists; sm: and up it's hidden, so bottom-5 is enough.
-      className={`fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] sm:bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-line animate-toast-enter transition-all duration-300 backdrop-blur-md bg-surface-1/80 border border-white/20 dark:border-white/5 border-l-4 z-[var(--z-toast)] ${borderMap[variant]}`}
+      className={`fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] sm:bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-line animate-toast-enter transition duration-300 backdrop-blur-md bg-surface-1/80 border border-white/20 dark:border-white/5 border-l-4 z-[var(--z-toast)] ${borderMap[variant]}`}
     >
       <div className="p-4 flex items-center justify-between gap-3" role="alert" aria-live="assertive">
         <div className="flex items-center gap-3">

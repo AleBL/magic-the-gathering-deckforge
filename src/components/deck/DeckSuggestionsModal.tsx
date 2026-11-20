@@ -116,7 +116,7 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
                     type="button"
                     onClick={() => handleAdd(card)}
                     disabled={added.has(card.id)}
-                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-accent hover:bg-accent-soft disabled:opacity-50 disabled:cursor-default transition-all cursor-pointer"
+                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-accent hover:bg-accent-soft disabled:opacity-50 disabled:cursor-default transition cursor-pointer"
                   >
                     <LuPlus className="text-[10px] shrink-0" />
                     {added.has(card.id) ? t('deck.suggestionAdded') : t('deck.addSuggestion')}

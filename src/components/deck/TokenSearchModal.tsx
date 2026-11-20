@@ -56,7 +56,7 @@ export function TokenSearchModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="token-search-modal-title"
-        className="modal-sheet-panel bg-surface-1 border border-line text-fg rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all"
+        className="modal-sheet-panel bg-surface-1 border border-line text-fg rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition"
         style={panelStyle}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -76,7 +76,7 @@ export function TokenSearchModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
+            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition cursor-pointer"
           >
             <LuX />
           </button>
@@ -92,14 +92,14 @@ export function TokenSearchModal({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('tokens.searchTokenPlaceholder')}
-                className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all"
+                className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition"
               />
               <LuSearch className="absolute left-3 top-3 text-xs text-gray-400" />
             </div>
             <button
               type="submit"
               disabled={isSearching || !searchTerm.trim()}
-              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-semibold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-semibold text-xs py-2 px-4 rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
               {isSearching ? <LuLoaderCircle className="animate-spin text-xs" /> : <LuSearch className="text-xs" />}
               {t('search.searchButton')}
@@ -118,7 +118,7 @@ export function TokenSearchModal({
                   key={preset.id}
                   type="button"
                   onClick={() => onPresetClick(preset)}
-                  className="bg-surface-2 hover:bg-surface-3 text-fg-secondary border border-line-strong rounded-full px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-102"
+                  className="bg-surface-2 hover:bg-surface-3 text-fg-secondary border border-line-strong rounded-full px-3 py-1.5 text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 shadow-sm"
                 >
                   {preset.imageUrl && (
                     <div className="w-4 h-4 rounded-full overflow-hidden border border-line-strong bg-slate-900 shrink-0">
@@ -176,14 +176,14 @@ export function TokenSearchModal({
                           onSelectToken(token);
                         }
                       }}
-                      className="border border-line bg-surface-2/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-accent/50 group"
+                      className="border border-line bg-surface-2/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition duration-300 hover:shadow-lg hover:border-accent/50 group"
                     >
                       <div className="w-20 h-28 rounded-lg overflow-hidden border border-line bg-slate-950 mb-2 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
                           <img
                             src={imgUrl}
                             alt={token.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover transition-transform duration-300"
                             loading="lazy"
                           />
                         ) : (
@@ -214,7 +214,7 @@ export function TokenSearchModal({
                           e.stopPropagation();
                           onConfirmAdd(token);
                         }}
-                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-semibold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-semibold transition flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <LuPlus className="text-[8px]" />
                         {t('tokens.add')}
@@ -232,7 +232,7 @@ export function TokenSearchModal({
           <button
             type="button"
             onClick={onClose}
-            className="bg-surface-3 hover:bg-surface-3 text-fg-secondary font-semibold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
+            className="bg-surface-3 hover:bg-surface-3 text-fg-secondary font-semibold text-xs py-2 px-4 rounded-xl transition cursor-pointer"
           >
             {t('common.close')}
           </button>

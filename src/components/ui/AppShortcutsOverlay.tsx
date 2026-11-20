@@ -56,7 +56,7 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
+            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition cursor-pointer"
           >
             <LuX />
           </button>

@@ -132,7 +132,7 @@ export default function DeckImportProgressModal({
                 onClose();
                 if (onFinish && !errorMsg) onFinish();
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm ${
+              className={`px-5 py-2.5 rounded-xl font-semibold transition shadow-sm ${
                 errorMsg ? 'bg-surface-3 hover:bg-surface-3 text-fg ' : 'bg-success hover:bg-success text-on-success '
               }`}
             >

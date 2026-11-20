@@ -25,7 +25,7 @@ function SavedDecksPanel({ savedDeckCount, isMobileOpen, onToggleMobileOpen, ...
         onClick={onToggleMobileOpen}
         aria-expanded={isMobileOpen}
         aria-controls="saved-decks-panel"
-        className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-surface-1 border border-line text-sm font-semibold text-fg shadow-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
+        className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-surface-1 border border-line text-sm font-semibold text-fg shadow-sm active:scale-[0.99] transition duration-200 cursor-pointer"
       >
         {/* `relative` is load-bearing: .count-badge is absolutely positioned, so without a
             positioned ancestor here it resolves against the initial containing block and

@@ -120,7 +120,7 @@ function PlaytestSimulatorContent({
         role="dialog"
         aria-modal="true"
         aria-label={t('playtest.playtestSimulator')}
-        className="bg-surface-2 border border-line text-fg rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition-all duration-300"
+        className="bg-surface-2 border border-line text-fg rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition duration-300"
       >
         <PlaytestControlBarTop onClose={onClose} />
 

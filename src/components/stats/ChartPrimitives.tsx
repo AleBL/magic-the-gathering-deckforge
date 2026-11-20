@@ -129,7 +129,7 @@ export function ChartLegend({ items }: { items: ChartLegendItem[] }) {
             role="listitem"
             type={item.onClick ? 'button' : undefined}
             onClick={item.onClick}
-            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1.5 ${
               item.active
                 ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 shadow-md border-transparent'
                 : 'border-line '

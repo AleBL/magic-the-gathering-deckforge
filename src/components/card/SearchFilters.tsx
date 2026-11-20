@@ -34,7 +34,7 @@ interface SearchFiltersProps {
 const MOBILE_QUERY = '(max-width: 639px)';
 
 const FIELD_CLASS =
-  'w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition-all placeholder:font-normal placeholder:text-gray-400 shadow-inner dark:shadow-none hover:bg-surface-2';
+  'w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition placeholder:font-normal placeholder:text-gray-400 shadow-inner dark:shadow-none hover:bg-surface-2';
 
 function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOracleTag }: SearchFiltersProps) {
   const { t } = useTranslation();
@@ -164,7 +164,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
             id="filter-rarity"
             value={filters.rarity}
             onChange={(e) => setRarity(e.target.value)}
-            className="w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition-all cursor-pointer shadow-inner dark:shadow-none hover:bg-surface-2"
+            className="w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition cursor-pointer shadow-inner dark:shadow-none hover:bg-surface-2"
           >
             {rarities.map((rarity) => (
               <option key={rarity.value} value={rarity.value}>
@@ -185,7 +185,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
             value={filters.cmc}
             onChange={(e) => setCmc(e.target.value)}
             placeholder={t('search.cmcPlaceholder')}
-            className="w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition-all placeholder:font-normal placeholder:text-gray-400 shadow-inner dark:shadow-none hover:bg-surface-2"
+            className="w-full px-3 py-2.5 bg-surface-2 border border-line rounded-xl text-sm font-semibold text-fg-secondary focus:ring-2 focus:ring-focus focus:border-accent/50 transition placeholder:font-normal placeholder:text-gray-400 shadow-inner dark:shadow-none hover:bg-surface-2"
           />
         </div>
       </div>
@@ -212,7 +212,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
             setIsExpanded(false);
           }}
           disabled={!hasActiveFilters}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-2 hover:bg-danger-soft text-fg-secondary hover:text-danger dark:hover:text-danger border border-transparent hover:border-danger/40 text-xs font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-2 hover:bg-danger-soft text-fg-secondary hover:text-danger dark:hover:text-danger border border-transparent hover:border-danger/40 text-xs font-semibold rounded-xl transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <LuUndo2 className={hasActiveFilters ? 'animate-spin-slow once' : ''} />
           {t('search.clearFilters')}
@@ -226,7 +226,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 font-semibold text-xs cursor-pointer border shadow-sm active:scale-95 ${
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition duration-300 font-semibold text-xs cursor-pointer border shadow-sm active:scale-95 ${
           isExpanded || hasActiveFilters
             ? 'bg-accent-soft text-accent border-line-strong ring-2 ring-focus '
             : 'bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong backdrop-blur-sm'
@@ -238,7 +238,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
         />
         <span>{t('search.advancedFilters')}</span>
         {hasActiveFilters ? (
-          <span className="w-2 h-2 rounded-full bg-surface-3 absolute top-0 right-0 -mt-0.5 -mr-0.5 animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-accent absolute top-0 right-0 -mt-0.5 -mr-0.5"></span>
         ) : null}
       </button>
 

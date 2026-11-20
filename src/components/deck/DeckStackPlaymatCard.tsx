@@ -106,7 +106,7 @@ export function DeckStackPlaymatCard({
           <img
             src={imageUrl}
             alt={card.name}
-            className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${
+            className={`w-full h-full object-cover pointer-events-none select-none transition duration-300 ${
               isBanned ? 'opacity-50 grayscale-[40%] brightness-[75%]' : ''
             }`}
           />
@@ -126,7 +126,7 @@ export function DeckStackPlaymatCard({
         {count > 1 ? <span className="deck-stack-count-badge">{count}x</span> : null}
 
         {isBanned ? (
-          <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
+          <div className="deck-stack-status-badge deck-stack-status-badge-banned">
             <LuBan className="text-white text-[8px] shrink-0" />
             <span>{t('cardDetails.banned')}</span>
           </div>
@@ -158,7 +158,7 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onAddToDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-success hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-success transition pointer-events-auto"
                 title={t('cardDetails.addCopy')}
               >
                 <LuPlus className="text-[10px]" />
@@ -169,7 +169,7 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onRemoveFromDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-danger hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-danger transition pointer-events-auto"
                 title={t('cardDetails.removeCopy')}
               >
                 <LuMinus className="text-[10px]" />
@@ -184,7 +184,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAIN);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.MAIN
                       ? 'bg-primary text-on-primary ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -199,7 +199,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.SIDEBOARD
                       ? 'bg-surface-3 text-fg ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -214,7 +214,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.MAYBEBOARD
                       ? 'bg-warning text-white ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'

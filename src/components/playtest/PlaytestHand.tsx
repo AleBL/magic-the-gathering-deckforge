@@ -62,7 +62,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative ${PLAYTEST_HAND_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-[transform,border-color] duration-150 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-1 hover:border-accent'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
+          className={`relative ${PLAYTEST_HAND_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-[transform,border-color] duration-150 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-0.5 hover:border-accent'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
         >
           {imageUrl ? (
             <img
@@ -84,10 +84,10 @@ const PlaytestHandCard = memo(
 
           {isMulliganPhase ? (
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-warning-soft' : 'bg-black/10 hover:bg-black/0'}`}
+              className={`absolute inset-0 flex items-center justify-center transition ${isSelected ? 'bg-warning-soft' : 'bg-black/10 hover:bg-black/0'}`}
             >
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center font-semibold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-semibold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
               >
                 {isSelected ? '✓' : ''}
               </div>

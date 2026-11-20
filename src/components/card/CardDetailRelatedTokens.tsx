@@ -23,14 +23,14 @@ export function CardDetailRelatedTokens({ relatedTokens, onCardClick }: CardDeta
             type="button"
             key={token.id}
             onClick={() => onCardClick(token)}
-            className="group relative w-16 md:w-20 rounded-lg overflow-hidden border border-line hover:border-accent/50 transition-all shadow-sm hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-focus"
+            className="group relative w-16 md:w-20 rounded-lg overflow-hidden border border-line hover:border-accent/50 transition shadow-sm hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-focus"
             title={token.name}
           >
             {getCardImageUrl(token) ? (
               <img
                 src={getCardImageUrl(token)}
                 alt={token.name}
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-auto object-cover transform transition-transform duration-300"
                 loading="lazy"
               />
             ) : (

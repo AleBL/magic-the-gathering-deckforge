@@ -31,7 +31,7 @@ const BAR_GHOST = 'text-fg-secondary hover:bg-surface-2 hover:text-fg';
  */
 function ActionTooltip({ label }: { label: string }) {
   return (
-    <div className="lg:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-slate-900 dark:bg-slate-950 text-white text-[11px] text-center rounded-lg shadow-xl border border-slate-700 dark:border-slate-800 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-all duration-300 z-50 transform translate-y-1 group-hover/tooltip:translate-y-0 whitespace-nowrap">
+    <div className="lg:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-slate-900 dark:bg-slate-950 text-white text-[11px] text-center rounded-lg shadow-xl border border-slate-700 dark:border-slate-800 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition duration-300 z-50 transform translate-y-1 group-hover/tooltip:translate-y-0 whitespace-nowrap">
       <p className="font-medium leading-none">{label}</p>
     </div>
   );

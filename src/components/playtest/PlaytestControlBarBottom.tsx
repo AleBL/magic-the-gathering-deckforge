@@ -58,7 +58,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleShuffleLibrary();
           }}
           disabled={library.length === 0 || isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.shuffle')} (S)`}
         >
           <LuDices className="text-[10px]" />
@@ -72,7 +72,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleUntapAll();
           }}
           disabled={battlefield.length === 0 || isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
           <LuRefreshCw className="text-[10px]" />
           {t('playtest.untapAll')}
@@ -85,7 +85,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             setIsTokenModalOpen(true);
           }}
           disabled={isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
           <LuPlus className="text-[10px]" />
           {t('tokens.summonToken')}
@@ -111,7 +111,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             createRipple(event);
             startSimulation();
           }}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition flex items-center gap-1.5 cursor-pointer"
         >
           <LuUndo2 className="text-[10px]" />
           {t('playtest.resetSimulator')}

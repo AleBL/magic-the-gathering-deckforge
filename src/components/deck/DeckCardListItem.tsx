@@ -63,7 +63,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         role="button"
         tabIndex={0}
         aria-label={displayName}
-        className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-line-strong cursor-pointer ${
+        className={`group relative overflow-hidden transition duration-200 h-11 border-b border-line-strong cursor-pointer ${
           isBanned
             ? 'ring-1 ring-inset ring-danger/40 bg-danger-soft '
             : isRestricted
@@ -128,7 +128,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
             </span>
 
             {card.isCommander && (
-              <span className="deck-card-status-chip-commander animate-pulse ml-2">
+              <span className="deck-card-status-chip-commander ml-2">
                 <LuCrown className="text-warning shrink-0 text-[10px]" />
                 {t('cardDetails.commanderBadge')}
               </span>

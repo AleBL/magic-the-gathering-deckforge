@@ -69,7 +69,7 @@ function DeckTokensTab({
             <button
               type="button"
               onClick={handleAnalyzeDeck}
-              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-1.5 px-3 rounded-lg transition-all cursor-pointer"
+              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-1.5 px-3 rounded-lg transition cursor-pointer"
               title={t('deck.analyzeDeck')}
             >
               <LuRefreshCw className="text-[10px]" />
@@ -80,7 +80,7 @@ function DeckTokensTab({
             <button
               type="button"
               onClick={openSearchModal}
-              className="flex items-center gap-1.5 bg-surface-3 hover:bg-surface-3 text-fg font-semibold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-all cursor-pointer"
+              className="flex items-center gap-1.5 bg-surface-3 hover:bg-surface-3 text-fg font-semibold text-xs py-1.5 px-3 rounded-lg shadow-sm transition cursor-pointer"
             >
               <LuPlus className="text-[10px]" />
               {t('tokens.addToken')}
@@ -105,7 +105,7 @@ function DeckTokensTab({
               return (
                 <div
                   key={tokenCard.id}
-                  className="relative border border-line bg-surface-1/40 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all duration-300 group"
+                  className="relative border border-line bg-surface-1/40 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition duration-300 group"
                 >
                   {/* Trash/Delete icon button */}
                   {isEditMode && (
@@ -137,7 +137,7 @@ function DeckTokensTab({
                       <img
                         src={imgUrl}
                         alt={tokenCard.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none"
+                        className="w-full h-full object-cover transition-transform duration-300 pointer-events-none"
                         loading="lazy"
                       />
                     ) : (

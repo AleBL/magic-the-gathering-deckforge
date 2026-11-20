@@ -53,7 +53,7 @@ function DeckTextImportModal({
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="text-gray-400 hover:text-fg-secondary p-1 rounded-lg hover:bg-surface-2 transition-all"
+            className="text-gray-400 hover:text-fg-secondary p-1 rounded-lg hover:bg-surface-2 transition"
           >
             <LuX />
           </button>
@@ -69,7 +69,7 @@ function DeckTextImportModal({
             onChange={(e) => setTextDeckList(e.target.value)}
             disabled={isImporting}
             placeholder="4 Lightning Bolt&#10;2 Llanowar Elves&#10;1 Black Lotus"
-            className="w-full text-sm font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all resize-none disabled:opacity-60"
+            className="w-full text-sm font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition resize-none disabled:opacity-60"
           />
 
           {errorMsg && (

@@ -101,7 +101,7 @@ export function CardDetailPrintsSidebar({
             onClick={() => onSelectPrint(printCard)}
             title={`${printCard.set_name} · ${printCard.set?.toUpperCase()} #${printCard.collector_number || ''}${printCard.lang ? ` · ${printCard.lang.toUpperCase()}` : ''}`}
             aria-pressed={isSelected}
-            className={`group relative shrink-0 rounded-xl flex flex-col items-center justify-center border transition-all duration-200 px-2 py-2.5 min-w-[62px] md:w-16 cursor-pointer ${
+            className={`group relative shrink-0 rounded-xl flex flex-col items-center justify-center border transition duration-200 px-2 py-2.5 min-w-[62px] md:w-16 cursor-pointer ${
               isSelected
                 ? 'border-accent/50 bg-accent-soft text-accent ring-2 ring-focus shadow-md brightness-110'
                 : `${rarityStyle} hover:border-blue-400/60 hover:bg-blue-500/5 hover:brightness-110 hover:shadow-xs`

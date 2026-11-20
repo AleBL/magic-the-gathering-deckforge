@@ -29,7 +29,7 @@ export function SavedDeckHeader({ deck, onEditInfo }: SavedDeckHeaderProps) {
           <button
             type="button"
             onClick={() => onEditInfo(deck)}
-            className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-accent hover:bg-accent-soft transition-all cursor-pointer"
+            className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-accent hover:bg-accent-soft transition cursor-pointer"
             title={t('deck.editDeckInfo')}
             aria-label={t('deck.editDeckInfo')}
           >

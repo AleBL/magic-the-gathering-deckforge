@@ -53,7 +53,7 @@ export function PlaytestShortcutsOverlay() {
             type="button"
             onClick={() => setIsShortcutsOpen(false)}
             aria-label={t('common.close')}
-            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all cursor-pointer"
+            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition cursor-pointer"
           >
             <LuX />
           </button>

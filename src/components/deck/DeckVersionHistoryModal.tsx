@@ -125,7 +125,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => setExpanded(isOpen ? null : version.id)}
                         aria-expanded={isOpen}
-                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-fg-secondary hover:bg-surface-2 text-xs font-semibold transition-all cursor-pointer"
+                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-fg-secondary hover:bg-surface-2 text-xs font-semibold transition cursor-pointer"
                       >
                         {t('deck.versionChanges')}
                         <LuChevronDown className={`text-[10px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -133,7 +133,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                       <button
                         type="button"
                         onClick={() => onRestore(version)}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft text-accent text-xs font-semibold transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft text-accent text-xs font-semibold transition cursor-pointer"
                       >
                         <LuUndo2 className="text-xs" />
                         {t('deck.restoreVersion')}
@@ -142,7 +142,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => handleDelete(version.id)}
                         aria-label={t('deck.deleteVersion')}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-danger hover:bg-danger-soft transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-danger hover:bg-danger-soft transition cursor-pointer"
                       >
                         <LuTrash2 className="text-xs" />
                       </button>

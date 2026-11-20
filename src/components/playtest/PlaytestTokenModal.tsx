@@ -217,7 +217,7 @@ export function PlaytestTokenModal({
           {uniqueDeckTokens.length > 0 ? (
             <div className="space-y-3">
               <h4 className="text-xs font-semibold text-accent flex items-center gap-1.5 border-b border-line pb-1.5 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-surface-3 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                 <span>{t('tokens.deckRelatedTokens')}</span>
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -246,7 +246,7 @@ export function PlaytestTokenModal({
                           <img
                             src={imgUrl}
                             alt={tokenCard.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover transition-transform duration-300"
                             loading="lazy"
                           />
                         ) : (

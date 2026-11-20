@@ -59,7 +59,7 @@ export function PlaytestLibraryGraveyard() {
             // Do nothing for unknown drops
           }
         }}
-        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gray-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus scale-105' : 'border-line-strong hover:border-accent/50'}`}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gray-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:-translate-y-0.5 transition duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus scale-105' : 'border-line-strong hover:border-accent/50'}`}
         draggable={library.length > 0}
         onDragStart={(event) => {
           if (library.length === 0) {
@@ -100,11 +100,11 @@ export function PlaytestLibraryGraveyard() {
             setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' });
           }
         }}
-        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition duration-300 select-none ${
           dragOverZone === 'graveyard'
             ? 'border-dashed border-danger bg-danger-soft shadow-lg ring-2 ring-danger/40 scale-105'
             : graveyard.length > 0
-              ? 'border-line-strong hover:border-danger bg-surface-2 hover:-translate-y-1 cursor-pointer'
+              ? 'border-line-strong hover:border-danger bg-surface-2 hover:-translate-y-0.5 cursor-pointer'
               : 'border-dashed border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/20 cursor-pointer'
         }`}
         onDragOver={(event) => {
@@ -132,11 +132,11 @@ export function PlaytestLibraryGraveyard() {
             <img
               src={getCardImageUrl(graveyard[0].card)}
               alt="Graveyard Top"
-              className="w-full h-full object-cover rounded-2xl opacity-40 group-hover:opacity-30 group-hover:scale-98 transition-all"
+              className="w-full h-full object-cover rounded-2xl opacity-40 group-hover:opacity-30 transition"
               loading="lazy"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-              <LuSkull className="text-danger text-lg mb-1 group-hover:scale-110 transition-transform" />
+              <LuSkull className="text-danger text-lg mb-1 transition-transform" />
               <span className="text-[11px] font-semibold text-slate-350">{t('playtest.graveyard')}</span>
             </div>
             <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
@@ -162,11 +162,11 @@ export function PlaytestLibraryGraveyard() {
             setPileExplorerConfig({ title: t('playtest.exile'), pile: 'exile' });
           }
         }}
-        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition duration-300 select-none ${
           dragOverZone === 'exile'
             ? 'border-dashed border-gray-400 bg-gray-500/10 shadow-lg ring-2 ring-gray-400/30 scale-105'
             : exile.length > 0
-              ? 'border-slate-300 dark:border-slate-700 hover:border-gray-500/60 bg-slate-100 dark:bg-slate-950 hover:-translate-y-1 cursor-pointer'
+              ? 'border-slate-300 dark:border-slate-700 hover:border-gray-500/60 bg-slate-100 dark:bg-slate-950 hover:-translate-y-0.5 cursor-pointer'
               : 'border-dashed border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/20 cursor-pointer'
         }`}
         onDragOver={(event) => {
@@ -192,11 +192,11 @@ export function PlaytestLibraryGraveyard() {
             <img
               src={getCardImageUrl(exile[0].card)}
               alt="Exile Top"
-              className="w-full h-full object-cover rounded-2xl opacity-40 group-hover:opacity-30 group-hover:scale-98 transition-all grayscale"
+              className="w-full h-full object-cover rounded-2xl opacity-40 group-hover:opacity-30 transition grayscale"
               loading="lazy"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-              <LuBan className="text-gray-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
+              <LuBan className="text-gray-500/70 text-lg mb-1 transition-transform" />
               <span className="text-[11px] font-semibold text-slate-350">{t('playtest.exile')}</span>
             </div>
             <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">

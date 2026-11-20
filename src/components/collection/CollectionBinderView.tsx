@@ -126,7 +126,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
                     key={entry.id}
                     type="button"
                     onClick={() => onSelectCard(entry.card)}
-                    className="relative aspect-[5/7] rounded-lg overflow-hidden border border-line bg-surface-2 hover:ring-2 hover:ring-focus transition-all"
+                    className="relative aspect-[5/7] rounded-lg overflow-hidden border border-line bg-surface-2 hover:ring-2 hover:ring-focus transition"
                     aria-label={`${entry.card.printed_name || entry.name} — ${entry.quantity}x`}
                   >
                     {artOf(entry.card) ? (

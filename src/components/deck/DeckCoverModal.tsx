@@ -71,7 +71,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                   type="button"
                   onClick={() => onSelect(card.id)}
                   title={card.printed_name || card.name}
-                  className={`group relative overflow-hidden rounded-lg border-2 transition-all ${
+                  className={`group relative overflow-hidden rounded-lg border-2 transition ${
                     isActive ? 'border-accent/50 ring-2 ring-focus' : 'border-transparent hover:border-accent/50'
                   }`}
                 >
@@ -79,7 +79,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                     src={cardArtCrop(card)}
                     alt={card.printed_name || card.name}
                     loading="lazy"
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-300"
                   />
                   {isActive && (
                     <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-3 text-fg shadow">
