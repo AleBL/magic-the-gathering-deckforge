@@ -12,7 +12,7 @@ test.describe('modal accessibility', () => {
     await appPage.getByRole('button', { name: 'Add copy' }).click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
-    const opener = appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ });
+    const opener = appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i });
     await opener.click();
 
     const dialog = appPage.getByRole('dialog');

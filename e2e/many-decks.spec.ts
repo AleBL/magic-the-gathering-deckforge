@@ -37,7 +37,7 @@ test.describe('a collection of many decks', () => {
     await seedDecks(appPage, DECK_COUNT);
     await appPage.reload();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
-    await expect(appPage.getByRole('heading', { name: new RegExp(`Saved Decks \\(${DECK_COUNT}\\)`) })).toBeVisible();
+    await expect(appPage.getByRole('heading', { name: new RegExp(`Saved decks \\(${DECK_COUNT}\\)`) })).toBeVisible();
   });
 
   // Unbounded, thirty decks made this column ~9,500px tall in a 720px viewport.
