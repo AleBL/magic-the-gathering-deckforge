@@ -221,7 +221,6 @@ function LifeCounter({ onClose }: LifeCounterProps) {
             <LuRotateCcw aria-hidden="true" />
             {t('lifeCounter.newGame')}
           </button>
-          {/* Visibility sits on a wrapper: .ghost-button sets display itself and would win. */}
           <div className="hidden sm:block">
             <button type="button" className="ghost-button px-2" onClick={onClose} aria-label={t('common.close')}>
               <LuX aria-hidden="true" />

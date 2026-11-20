@@ -5,42 +5,46 @@
    danger. Colour never encodes which action a button runs; position and
    label do. Hover is a colour step, press a small scale; no lift, glow or
    coloured shadow. The app-wide focus ring in index.css covers focus. */
-.primary-button,
-.secondary-button,
-.ghost-button,
-.danger-button,
-.success-button {
-  /* position+overflow let the app-wide ripple (useGlobalRipple) clip its
-     circle to the button's rounded corners, same as .ripple-container. */
-  position: relative;
-  overflow: hidden;
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 rounded-lg font-medium flex items-center justify-center gap-2 text-sm cursor-pointer transition-[background-color,border-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100;
-}
+/* In the components layer so utilities on the element (text-xs, px-3, text-danger) win
+   over these defaults, as they would for any Tailwind component class. */
+@layer components {
+  .primary-button,
+  .secondary-button,
+  .ghost-button,
+  .danger-button,
+  .success-button {
+    /* position+overflow let the app-wide ripple (useGlobalRipple) clip its
+       circle to the button's rounded corners, same as .ripple-container. */
+    position: relative;
+    overflow: hidden;
+    @apply px-4 py-2 min-h-[44px] sm:min-h-0 rounded-lg font-medium flex items-center justify-center gap-2 text-sm cursor-pointer transition-[background-color,border-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100;
+  }
 
-.primary-button {
-  @apply bg-primary text-on-primary hover:bg-primary-hover disabled:bg-surface-3 disabled:text-fg-muted;
-}
+  .primary-button {
+    @apply bg-primary text-on-primary hover:bg-primary-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
 
-.secondary-button {
-  @apply bg-surface-1 text-fg border border-line-strong hover:bg-surface-2 disabled:opacity-50;
-}
+  .secondary-button {
+    @apply bg-surface-1 text-fg border border-line-strong hover:bg-surface-2 disabled:opacity-50;
+  }
 
-.ghost-button {
-  @apply bg-transparent text-fg-secondary hover:bg-surface-2 hover:text-fg disabled:opacity-50;
-}
+  .ghost-button {
+    @apply bg-transparent text-fg-secondary hover:bg-surface-2 hover:text-fg disabled:opacity-50;
+  }
 
-.danger-button {
-  @apply bg-danger text-on-danger hover:bg-danger-hover disabled:bg-surface-3 disabled:text-fg-muted;
-}
+  .danger-button {
+    @apply bg-danger text-on-danger hover:bg-danger-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
 
-/* Kept for confirmations that read as "done"; same shape as primary. */
-.success-button {
-  @apply bg-success text-on-success hover:bg-success-hover disabled:bg-surface-3 disabled:text-fg-muted;
-}
+  /* Kept for confirmations that read as "done"; same shape as primary. */
+  .success-button {
+    @apply bg-success text-on-success hover:bg-success-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
 
-/* Modifiers using class composition */
-.button-small {
-  @apply px-2 py-1 text-xs rounded;
+  /* Modifiers using class composition */
+  .button-small {
+    @apply px-2 py-1 text-xs rounded;
+  }
 }
 
 /* Navigation Tabs */
