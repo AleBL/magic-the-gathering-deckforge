@@ -45,6 +45,18 @@ test.describe('deck building', () => {
     await expect(appPage.getByRole('button', { name: /Save Deck "E2E Test Deck"/ })).toBeVisible();
   });
 
+  // The draft lives in localStorage: closing the window before saving must not lose it.
+  test('a draft survives a reload before it is saved', async ({ appPage }) => {
+    await appPage.getByRole('button', { name: 'Add copy' }).click();
+    await appPage.getByRole('button', { name: 'My Decks' }).click();
+    await expect(appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ })).toBeEnabled();
+
+    await appPage.reload();
+    await appPage.getByRole('button', { name: 'My Decks' }).click();
+    await expect(appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ })).toBeEnabled();
+    await expect(appPage.getByText(/Not saved as a deck yet/i).first()).toBeVisible();
+  });
+
   test('a saved deck survives a reload', async ({ appPage }) => {
     await appPage.getByRole('button', { name: 'Add copy' }).click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
