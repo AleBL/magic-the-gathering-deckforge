@@ -401,6 +401,23 @@ const pt = {
       shortcutsTitle: 'Atalhos de teclado'
     },
     validation: {
+      validFor: 'Válido para {{format}}',
+      invalidFor: 'Inválido para {{format}}',
+      moreIssues_one: '+{{count}} problema',
+      moreIssues_other: '+{{count}} problemas',
+      short: {
+        validationEmptyDeck: 'Deck vazio',
+        validationMinCards: '{{count}} de 60 cartas',
+        validationMaxCopies: 'Cópias demais de {{name}}',
+        validationCommanderExactCards: '{{count}} de 100 cartas',
+        validationCommanderSingleton: 'Cartas repetidas',
+        validationCommanderNoCommander: 'Nenhum comandante escolhido',
+        validationCommanderMaxTwo: 'Mais de dois comandantes',
+        validationCommanderColorIdentity: 'Cartas fora da identidade de cor',
+        validationPauperCommonsOnly: 'Cartas que não são comuns',
+        validationBanlist: 'Cartas banidas',
+        validationRestrictedList: 'Cartas restritas demais'
+      },
       basicLandCheckList: 'básico,básica',
       backgroundCheckList: 'segundo plano',
       backgroundCreatureCheckList: 'escolha um segundo plano',
@@ -408,12 +425,10 @@ const pt = {
       commander: 'Commander',
       deckRulesExplanation:
         'Padrão, Moderno, Vintage e Pauper exigem no mínimo 60 cartas e no máximo 4 cópias. Commander exige exatamente 100 cartas e no máximo 1 cópia (singleton). Pauper permite apenas cartas de raridade comum.',
-      deckValidation: 'Validação do Deck',
       doctorCheckList: 'companheiro do doutor',
       format: 'Formato',
       freeform: 'Formato Livre',
       friendsCheckList: 'amigos para sempre',
-      hideDetails: 'Ocultar detalhes',
       invalid: 'Inválido',
       legendaryCheckList: 'lendária,lendário',
       modern: 'Moderno (Modern)',
@@ -443,7 +458,6 @@ const pt = {
       validationPauperCommonsOnly: 'Pauper permite apenas cartas comuns. As seguintes cartas não são comuns: {{list}}.',
       validationRestrictedList:
         'Limite de cartas restritas excedido: as seguintes cartas são restritas a 1 cópia no Vintage: {{list}}.',
-      viewDetails: 'Clique para ver detalhes',
       vintage: 'Vintage'
     },
     cardDetails: {
