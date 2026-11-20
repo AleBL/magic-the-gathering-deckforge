@@ -1,13 +1,13 @@
 {
   "rawHue": 32,
-  "rawNeutral": 361,
-  "transitionAll": 150,
-  "heavyWeights": 275,
-  "uppercase": 82,
-  "wideTracking": 73,
+  "rawNeutral": 351,
+  "transitionAll": 146,
+  "heavyWeights": 0,
+  "uppercase": 4,
+  "wideTracking": 0,
   "backdropBlur": 46,
-  "hoverMotion": 33,
-  "gradients": 21,
+  "hoverMotion": 32,
+  "gradients": 9,
   "loopAnimations": 29,
   "coloredShadows": 0
 }
