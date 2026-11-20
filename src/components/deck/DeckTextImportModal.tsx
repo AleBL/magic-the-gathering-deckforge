@@ -38,10 +38,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
       >
         {/* Modal Header */}
         <div className="modal-header-container">
-          <h3
-            id="deck-text-import-title"
-            className="text-gray-900 dark:text-white text-lg font-bold flex items-center gap-2"
-          >
+          <h3 id="deck-text-import-title" className="text-fg text-lg font-bold flex items-center gap-2">
             <FaFileImport className="text-blue-500" />
             {t('deck.importTextListTitle')}
           </h3>
@@ -49,7 +46,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
+            className="text-gray-400 hover:text-fg-secondary p-1 rounded-lg hover:bg-surface-2 transition-all"
           >
             <FaTimes />
           </button>
@@ -57,7 +54,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
 
         {/* Modal Body */}
         <div className="p-6 flex flex-col gap-4 overflow-y-auto">
-          <p className="text-xs text-gray-500 dark:text-gray-400">{t('deck.pasteTextList')}</p>
+          <p className="text-xs text-fg-muted">{t('deck.pasteTextList')}</p>
 
           <textarea
             rows={10}
@@ -65,7 +62,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
             onChange={(e) => setTextDeckList(e.target.value)}
             disabled={isImporting}
             placeholder="4 Lightning Bolt&#10;2 Llanowar Elves&#10;1 Black Lotus"
-            className="w-full text-sm font-mono p-3 bg-gray-50 dark:bg-slate-950 text-gray-850 dark:text-slate-100 border border-gray-300 dark:border-slate-850 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none disabled:opacity-60"
+            className="w-full text-sm font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none disabled:opacity-60"
           />
 
           {errorMsg && (

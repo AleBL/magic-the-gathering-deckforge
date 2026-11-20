@@ -1,5 +1,5 @@
 .deck-stack-container {
-  @apply space-y-6 md:space-y-8 p-4 md:p-6 bg-slate-900/20 dark:bg-slate-950/30 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl backdrop-blur-xs select-none w-full max-w-full min-w-0 overflow-x-hidden;
+  @apply space-y-6 md:space-y-8 p-4 md:p-6 bg-slate-900/20 dark:bg-slate-950/30 border border-line rounded-2xl shadow-xl backdrop-blur-xs select-none w-full max-w-full min-w-0 overflow-x-hidden;
 }
 
 .deck-stack-zone-title {
@@ -59,7 +59,7 @@
 }
 
 .deck-stack-empty-zone {
-  @apply text-xs text-gray-400 dark:text-gray-500 italic py-4 text-left;
+  @apply text-xs text-fg-muted italic py-4 text-left;
 }
 
 .deck-stack-cards-row {
@@ -122,7 +122,7 @@
 }
 
 .deck-stack-count-badge {
-  @apply absolute bottom-1.5 right-1.5 bg-primary border border-blue-400 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
+  @apply absolute bottom-1.5 right-1.5 bg-primary border border-blue-400 text-on-primary text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
 }
 
 .deck-stack-status-badge {
@@ -153,7 +153,7 @@
   left: 0;
   width: calc(100% - var(--grid-stack-trim));
   height: calc(100% - var(--grid-stack-trim));
-  @apply absolute rounded-[4.5%] shadow-sm pointer-events-none transition-all duration-300 bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80;
+  @apply absolute rounded-[4.5%] shadow-sm pointer-events-none transition-all duration-300 bg-surface-3 border border-gray-400/80 dark:border-slate-800/80;
 }
 
 .card-grid-stack-shadow-one {

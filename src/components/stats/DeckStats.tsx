@@ -48,7 +48,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
         <TypesBreakdownPanel stats={stats} activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-line mt-6 text-left">
         <ManaBaseOptimizerPanel stats={stats} onApplySuggestedLands={onApplySuggestedLands} />
         <ManaPipAnalysisPanel stats={stats} colorLabels={colorLabels} />
         {/* Sits beside the analytic mana panels. Distinct from the Deck Doctor above, which
@@ -56,23 +56,23 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
         <PlayoutPanel currentDeck={currentDeck} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-line mt-6 text-left">
         <BudgetEstimatorPanel stats={stats} />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6 text-left">
+      <div className="grid grid-cols-1 gap-6 pt-6 border-t border-line mt-6 text-left">
         <RarityPanel stats={stats} />
       </div>
 
       {activeFilter ? (
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 animate-fadeIn">
+        <div className="mt-8 pt-6 border-t border-line animate-fadeIn">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="font-bold text-lg text-gray-800 dark:text-gray-200">
+            <h4 className="font-bold text-lg text-fg">
               {t('search.filteredCards')} ({filteredCards.length})
             </h4>
             <button
               onClick={() => setActiveFilter(null)}
-              className="text-xs flex items-center gap-1.5 text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-semibold px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors"
+              className="text-xs flex items-center gap-1.5 text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-semibold px-3 py-1.5 bg-surface-2 rounded-lg transition-colors"
             >
               <FaTimes />
               {t('search.clearFilter')}

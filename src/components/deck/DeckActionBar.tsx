@@ -171,14 +171,14 @@ function DeckActionBar({
             </div>
 
             {showExportMenu && (
-              <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/50 dark:border-white/10 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
+              <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-surface-1/80 backdrop-blur-xl border border-white/50 dark:border-white/10 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
                 <button
                   type="button"
                   onClick={() => {
                     handleCopyShareLink();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
                   <FaLink className="text-indigo-500 shrink-0" />
                   {t('export.copyLink')}
@@ -189,7 +189,7 @@ function DeckActionBar({
                     handleDownloadDecFile();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
                   <FaDownload className="text-purple-500 shrink-0" />
                   {t('strategy.downloadDec')} (.dec)
@@ -200,7 +200,7 @@ function DeckActionBar({
                     downloadAsJson(selectedDeck || { cards }, `${selectedDeck?.name || 'deck'}.json`);
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
                   <FaDownload className="text-emerald-500 shrink-0" />
                   {t('export.downloadJson') || 'Download'} (.json)
@@ -211,7 +211,7 @@ function DeckActionBar({
                     handleCopyArenaFormat();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
                   <FaClipboardList className="text-amber-500 shrink-0" />
                   {t('strategy.exportArena')} (Arena)
@@ -222,7 +222,7 @@ function DeckActionBar({
                     handleCopyDeckList();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
                   <FaCopy className="text-blue-500 shrink-0" />
                   {t('deck.copyList')} (.txt)
@@ -237,7 +237,7 @@ function DeckActionBar({
               <button
                 type="button"
                 onClick={onPrintProxies}
-                className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-500/50 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-emerald-500/20 active:scale-95"
+                className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-surface-2 border border-line text-fg-secondary hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-500/50 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-emerald-500/20 active:scale-95"
                 aria-label={t('print.printProxies')}
               >
                 <FaPrint className="text-sm shrink-0" />
@@ -271,7 +271,7 @@ function DeckActionBar({
           <button
             type="button"
             onClick={onLoadDeckToEdit}
-            className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-primary hover:bg-primary-hover text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+            className="flex items-center justify-center gap-1.5 w-11 h-11 sm:w-8 sm:h-8 lg:w-auto lg:px-3 rounded-lg bg-primary hover:bg-primary-hover text-on-primary transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
             aria-label={t('common.edit')}
           >
             <FaEdit className="text-sm shrink-0" />

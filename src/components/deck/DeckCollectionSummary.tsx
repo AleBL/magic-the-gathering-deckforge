@@ -51,7 +51,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
         ) : (
           <FaBoxOpen className="text-amber-500 shrink-0" />
         )}
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+        <span className="text-sm font-semibold text-fg">
           {complete
             ? t('collection.deckComplete')
             : t('collection.deckMissing', {
@@ -59,7 +59,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
                 value: formatCurrency(gap.missingValue, currency)
               })}
         </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-fg-muted">
           {t('collection.deckOwnedOf', { owned: gap.totalOwned, total: gap.totalNeeded })}
         </span>
         {!complete && missingRows.length > 0 ? (
@@ -78,7 +78,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
           onClick={() => setShowDeckGap(false)}
           title={t('collection.deckGapHide')}
           aria-label={t('collection.deckGapHide')}
-          className={`${complete || missingRows.length === 0 ? 'ml-auto' : 'ml-1'} shrink-0 p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
+          className={`${complete || missingRows.length === 0 ? 'ml-auto' : 'ml-1'} shrink-0 p-1 rounded text-gray-400 hover:text-fg-secondary hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
         >
           <FaTimes className="text-[11px]" />
         </button>
@@ -87,11 +87,11 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
       {expanded && !complete ? (
         <ul className="mt-2 pt-2 border-t border-amber-200/70 dark:border-amber-800/40 flex flex-col gap-1">
           {missingRows.map((row) => (
-            <li key={row.name} className="flex items-center justify-between text-xs text-gray-700 dark:text-gray-200">
+            <li key={row.name} className="flex items-center justify-between text-xs text-fg-secondary">
               <span className="truncate">
                 <span className="font-bold tabular-nums">{row.missing}×</span> {row.name}
               </span>
-              <span className="tabular-nums text-gray-500 dark:text-gray-400 shrink-0 ml-2">
+              <span className="tabular-nums text-fg-muted shrink-0 ml-2">
                 {row.unitPrice !== null ? formatCurrency(row.missingValue, currency) : '—'}
               </span>
             </li>

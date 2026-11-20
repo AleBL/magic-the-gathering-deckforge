@@ -25,7 +25,7 @@ function SavedDecksPanel({ savedDeckCount, isMobileOpen, onToggleMobileOpen, ...
         onClick={onToggleMobileOpen}
         aria-expanded={isMobileOpen}
         aria-controls="saved-decks-panel"
-        className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
+        className="lg:hidden w-full min-h-11 flex items-center justify-between gap-2 px-4 py-2.5 mb-2 rounded-xl bg-surface-1 border border-line text-sm font-bold text-fg shadow-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
       >
         {/* `relative` is load-bearing: .count-badge is absolutely positioned, so without a
             positioned ancestor here it resolves against the initial containing block and
@@ -33,7 +33,7 @@ function SavedDecksPanel({ savedDeckCount, isMobileOpen, onToggleMobileOpen, ...
         {/* pr-3 keeps the badge clear of the label's last letter, since an absolutely
             positioned child contributes no width of its own. */}
         <span className="relative flex items-center gap-2 pr-3">
-          <FaLayerGroup className="text-primary shrink-0" />
+          <FaLayerGroup className="text-accent shrink-0" />
           {t('deck.savedDecks')}
           <span className="count-badge">{savedDeckCount}</span>
         </span>
@@ -60,7 +60,7 @@ function SavedDecksPanel({ savedDeckCount, isMobileOpen, onToggleMobileOpen, ...
           <button
             type="button"
             onClick={() => setIsAllDecksOpen(true)}
-            className="mt-3 w-full min-h-11 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+            className="mt-3 w-full min-h-11 flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-surface-1 border border-line text-xs font-bold text-fg-secondary hover:bg-surface-2 transition-colors"
           >
             <FaThLarge className="text-[11px] shrink-0" />
             {t('deck.viewAllDecks')}

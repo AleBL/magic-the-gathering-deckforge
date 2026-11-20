@@ -102,7 +102,7 @@ function DeckCommandersHeader({
                   <span className="quantity-badge bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-900">
                     {count}x
                   </span>
-                  <span className="font-semibold truncate text-sm text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-blue-400 transition-colors">
+                  <span className="font-semibold truncate text-sm text-fg hover:text-accent transition-colors">
                     {card.printed_name || card.name}
                   </span>
                   <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm animate-pulse">

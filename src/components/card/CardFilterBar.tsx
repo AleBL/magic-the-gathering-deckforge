@@ -25,7 +25,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
       'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm cursor-pointer transition-all duration-300 transform';
 
     if (!isActive)
-      return `${base} bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-400 border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:scale-110`;
+      return `${base} bg-surface-2 text-fg-secondary border border-line hover:bg-surface-1 hover:shadow-sm hover:scale-110`;
 
     return `${base} ${MANA_COLOR_GRADIENTS[code] ?? ''}`;
   };
@@ -47,7 +47,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
                 className={`flex items-center gap-2 w-full min-h-11 px-2.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border border-transparent ${
                   isActive
                     ? MANA_COLOR_ROW_ACTIVE[color.code]
-                    : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    : 'bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 '
                 }`}
               >
                 <span
@@ -64,7 +64,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
         </div>
 
         {/* Divider */}
-        <div className="w-px self-stretch bg-gray-200 dark:bg-slate-700" />
+        <div className="w-px self-stretch bg-surface-3" />
 
         {/* Types — right column */}
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
@@ -78,8 +78,8 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
                 aria-pressed={isActive}
                 className={`flex items-center w-full min-h-11 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer truncate ${
                   isActive
-                    ? 'bg-primary text-white shadow-md shadow-blue-500/25'
-                    : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    ? 'bg-primary text-on-primary shadow-md shadow-blue-500/25'
+                    : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '
                 }`}
               >
                 {type.name}
@@ -112,7 +112,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
       </div>
 
       {/* Divider between colors and types on large screens. */}
-      <div className="hidden lg:block w-px self-stretch bg-gray-200 dark:bg-slate-700" />
+      <div className="hidden lg:block w-px self-stretch bg-surface-3" />
 
       {/* Types — wrap onto multiple rows so every type stays visible instead of
           hiding behind an awkward horizontal scroll. */}
@@ -125,8 +125,8 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
               onClick={() => toggleType(type.code)}
               className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-primary border-transparent text-white shadow-md shadow-blue-500/25 scale-[1.02]'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-primary border-transparent text-on-primary shadow-md shadow-blue-500/25 scale-[1.02]'
+                  : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 hover:border-line-strong shadow-sm hover:text-fg '
               }`}
             >
               {type.name}

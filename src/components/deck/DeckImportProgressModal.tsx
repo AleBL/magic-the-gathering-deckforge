@@ -58,14 +58,11 @@ export default function DeckImportProgressModal({
             from anywhere on the sheet (see useSwipeToClose), only while dismissible. */}
         {dismissible && (
           <div className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1" aria-hidden="true">
-            <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+            <div className="w-10 h-1.5 rounded-full bg-surface-3" />
           </div>
         )}
         <div className="flex justify-between items-center mb-6">
-          <h2
-            id="deck-import-progress-title"
-            className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2"
-          >
+          <h2 id="deck-import-progress-title" className="text-xl font-bold text-fg flex items-center gap-2">
             {progress.isImporting ? (
               <FaSpinner className="animate-spin text-blue-500" />
             ) : errorMsg ? (
@@ -80,10 +77,7 @@ export default function DeckImportProgressModal({
                 : t('deck.importComplete')}
           </h2>
           {!progress.isImporting && (
-            <button
-              onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
-            >
+            <button onClick={onClose} className="text-slate-400 hover:text-fg-secondary transition-colors">
               <FaTimes size={20} />
             </button>
           )}
@@ -96,11 +90,11 @@ export default function DeckImportProgressModal({
         ) : (
           <>
             <div className="mb-6">
-              <div className="flex justify-between text-sm mb-2 font-medium text-slate-600 dark:text-slate-300">
+              <div className="flex justify-between text-sm mb-2 font-medium text-fg-secondary">
                 <span>{progress.message || t('common.loading')}</span>
                 <span>{percentage}%</span>
               </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-surface-3 rounded-full h-3 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${isComplete ? 'bg-emerald-500' : 'bg-blue-500'}`}
                   style={{ width: `${percentage}%` }}
@@ -140,7 +134,7 @@ export default function DeckImportProgressModal({
               }}
               className={`px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
                 errorMsg
-                  ? 'bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white'
+                  ? 'bg-surface-3 hover:bg-surface-3 text-fg '
                   : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20'
               }`}
             >

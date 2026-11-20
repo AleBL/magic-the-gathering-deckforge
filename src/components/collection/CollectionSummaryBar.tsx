@@ -28,11 +28,11 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
   const valueLabel = isWishlist ? t('collection.wishlistValue') : t('collection.ownedValue');
 
   const stat = (icon: React.ReactNode, label: string, value: string) => (
-    <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-100 dark:border-slate-700 shadow-sm">
-      <span className="text-primary shrink-0">{icon}</span>
+    <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface-1 border border-line shadow-sm">
+      <span className="text-accent shrink-0">{icon}</span>
       <div className="flex flex-col leading-tight">
-        <span className="text-sm font-bold text-gray-900 dark:text-white tabular-nums">{value}</span>
-        <span className="text-[11px] text-gray-500 dark:text-gray-400">{label}</span>
+        <span className="text-sm font-bold text-fg tabular-nums">{value}</span>
+        <span className="text-[11px] text-fg-muted">{label}</span>
       </div>
     </div>
   );
@@ -58,7 +58,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
         )}
         {stat(<FaDollarSign className="text-base" />, valueLabel, formatCurrency(value, currency))}
 
-        <div className="col-span-2 w-fit sm:col-span-1 flex items-center rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 p-0.5 shadow-sm">
+        <div className="col-span-2 w-fit sm:col-span-1 flex items-center rounded-full bg-surface-1 border border-line p-0.5 shadow-sm">
           {(['usd', 'eur'] as const).map((code) => (
             <button
               key={code}
@@ -67,8 +67,8 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
               aria-pressed={currency === code}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
                 currency === code
-                  ? 'bg-primary text-white shadow'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                  ? 'bg-primary text-on-primary shadow'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-fg '
               }`}
             >
               {code.toUpperCase()}
@@ -80,7 +80,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
       {/* Scryfall has no prices for non-English printings; when we borrowed the
           English printing's price as an estimate, say so. */}
       {summary.fallbackPricedCount > 0 ? (
-        <p className="flex items-center gap-1.5 text-[11px] text-gray-500 dark:text-gray-400">
+        <p className="flex items-center gap-1.5 text-[11px] text-fg-muted">
           <FaInfoCircle className="text-blue-400 shrink-0" />
           {t('collection.priceFallbackNote', { count: summary.fallbackPricedCount })}
         </p>

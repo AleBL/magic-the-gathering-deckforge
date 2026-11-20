@@ -15,7 +15,7 @@ const TURNS = 8;
 /** Percentage bar sized by `share`, for the kept-hand and milestone rows. */
 function ShareBar({ share, tone = 'primary' }: { share: number; tone?: 'primary' | 'warning' }) {
   return (
-    <div className="h-1.5 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden">
+    <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
       <div
         className={`h-full rounded-full ${tone === 'warning' ? 'bg-amber-500' : 'bg-primary'}`}
         style={{ width: `${Math.round(share * 100)}%` }}
@@ -42,8 +42,8 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
   if (!result) {
     return (
       <div className="space-y-4 min-w-0">
-        <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
-          <FaDice className="text-primary" />
+        <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
+          <FaDice className="text-accent" />
           {t('stats.playout')}
         </h4>
         <EmptyState title={t('stats.playoutTooSmall')} compact />
@@ -54,27 +54,25 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
   return (
     <div className="space-y-4 min-w-0">
       <div className="flex items-center justify-between gap-3">
-        <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
-          <FaDice className="text-primary" />
+        <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
+          <FaDice className="text-accent" />
           {t('stats.playout')}
         </h4>
         <button
           type="button"
           onClick={reroll}
-          className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400 transition-colors"
+          className="flex items-center gap-1.5 text-[11px] font-bold text-fg-muted hover:text-accent transition-colors"
         >
           <FaRedo className="text-[9px]" />
           {t('stats.playoutRerun')}
         </button>
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        {t('stats.playoutExplanation', { runs: result.runs, turns: TURNS })}
-      </p>
+      <p className="text-xs text-fg-muted">{t('stats.playoutExplanation', { runs: result.runs, turns: TURNS })}</p>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="stat-tile" title={t('stats.playoutMulliganHelp')}>
           <span className="stat-tile-label">{t('stats.playoutMulligan')}</span>
-          <span className="text-base font-extrabold text-gray-700 dark:text-gray-200 tabular-nums">
+          <span className="text-base font-extrabold text-fg-secondary tabular-nums">
             {percent(result.mulliganRate)}
           </span>
         </div>
@@ -86,9 +84,7 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
         </div>
         <div className="stat-tile" title={t('stats.playoutOnCurveHelp')}>
           <span className="stat-tile-label">{t('stats.playoutOnCurve')}</span>
-          <span className="text-base font-extrabold text-primary dark:text-blue-400 tabular-nums">
-            {percent(result.onCurveShare)}
-          </span>
+          <span className="text-base font-extrabold text-accent tabular-nums">{percent(result.onCurveShare)}</span>
         </div>
       </div>
 
@@ -99,8 +95,8 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
         {result.keptHandSizes.map(({ size, share }) => (
           <div key={size} className="space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-300">{t('stats.playoutHandOf', { size })}</span>
-              <span className="font-bold tabular-nums text-gray-700 dark:text-gray-200">{percent(share)}</span>
+              <span className="text-fg-secondary">{t('stats.playoutHandOf', { size })}</span>
+              <span className="font-bold tabular-nums text-fg-secondary">{percent(share)}</span>
             </div>
             <ShareBar share={share} />
           </div>
@@ -114,8 +110,8 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
         {result.landMilestones.map(({ lands, medianTurn, reachedShare }) => (
           <div key={lands} className="space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-300">{t('stats.playoutLandsCount', { lands })}</span>
-              <span className="font-bold tabular-nums text-gray-700 dark:text-gray-200">
+              <span className="text-fg-secondary">{t('stats.playoutLandsCount', { lands })}</span>
+              <span className="font-bold tabular-nums text-fg-secondary">
                 {medianTurn === null
                   ? t('stats.playoutNeverReached')
                   : t('stats.playoutByTurn', { turn: medianTurn, share: Math.round(reachedShare * 100) })}
@@ -128,7 +124,7 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
 
       {/* The simulation does not read card text; saying so beats letting the numbers imply
           more precision than they carry. */}
-      <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed">{t('stats.playoutCaveat')}</p>
+      <p className="text-[11px] text-fg-muted leading-relaxed">{t('stats.playoutCaveat')}</p>
     </div>
   );
 }

@@ -48,7 +48,7 @@ export function CardItemHoverControls({
             }}
             className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-bold transition-all ${
               card.zone === DeckZone.MAIN
-                ? 'bg-primary text-white ring-2 ring-white/50'
+                ? 'bg-primary text-on-primary ring-2 ring-white/50'
                 : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
             }`}
             title={t('deck.printFilters.main')}

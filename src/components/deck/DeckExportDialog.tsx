@@ -34,8 +34,8 @@ function ExportOption({ icon, accent, title, description, onClick }: ExportOptio
     <button type="button" onClick={onClick} className="export-option">
       <span className={`export-option-icon ${accent}`}>{icon}</span>
       <span className="min-w-0">
-        <span className="block text-sm font-bold text-gray-900 dark:text-white">{title}</span>
-        {description ? <span className="block text-xs text-gray-500 dark:text-gray-400">{description}</span> : null}
+        <span className="block text-sm font-bold text-fg">{title}</span>
+        {description ? <span className="block text-xs text-fg-muted">{description}</span> : null}
       </span>
     </button>
   );
@@ -98,18 +98,16 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
         {/* Grab handle: purely a visual affordance now — drag-to-close works
             from anywhere on the sheet (see useSwipeToClose), not just here. */}
         <div className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1" aria-hidden="true">
-          <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+          <div className="w-10 h-1.5 rounded-full bg-surface-3" />
         </div>
-        <h3 id="deck-export-dialog-title" className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+        <h3 id="deck-export-dialog-title" className="text-xl font-bold text-fg mb-1">
           {t('deck.export')} {deck.name}
         </h3>
-        <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">{t('export.exportFormatPrompt')}</p>
+        <p className="text-sm text-fg-secondary mb-4">{t('export.exportFormatPrompt')}</p>
 
         {/* Share section: link to move the deck to another device, no backend. */}
-        <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50/60 dark:bg-slate-900/40 p-3 mb-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">
-            {t('export.shareTitle')}
-          </p>
+        <div className="rounded-xl border border-line bg-surface-2/60 p-3 mb-4">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-fg-muted mb-2">{t('export.shareTitle')}</p>
           <div className="flex items-center gap-2">
             <input
               type="text"
@@ -117,7 +115,7 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
               value={shareUrl}
               aria-label={t('export.shareLink')}
               onFocus={(e) => e.currentTarget.select()}
-              className="flex-1 min-w-0 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 px-3 py-2 text-xs text-slate-700 dark:text-slate-200 font-mono"
+              className="flex-1 min-w-0 rounded-lg bg-surface-1 border border-line px-3 py-2 text-xs text-fg-secondary font-mono"
             />
             <button
               type="button"
@@ -135,7 +133,7 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
         <div className="grid grid-cols-1 gap-2">
           <ExportOption
             icon={<FaCopy />}
-            accent="bg-slate-500/10 text-slate-600 dark:text-slate-300"
+            accent="bg-slate-500/10 text-fg-secondary"
             title={t('export.copyText')}
             description=""
             onClick={handleCopyText}

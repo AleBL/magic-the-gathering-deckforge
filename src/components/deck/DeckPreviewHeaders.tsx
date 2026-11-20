@@ -21,15 +21,15 @@ export function SavedDeckHeader({ deck, onEditInfo }: SavedDeckHeaderProps) {
   return (
     <>
       <div className="flex items-center gap-2 min-w-0">
-        <h3 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 flex items-center gap-2 min-w-0">
-          <FaFileAlt className="text-primary shrink-0" />
+        <h3 className="text-fg text-xl font-bold transition-colors duration-300 flex items-center gap-2 min-w-0">
+          <FaFileAlt className="text-accent shrink-0" />
           <span className="truncate">{deck.name}</span>
         </h3>
         {onEditInfo ? (
           <button
             type="button"
             onClick={() => onEditInfo(deck)}
-            className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/10 transition-all cursor-pointer"
+            className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-accent hover:bg-accent-soft transition-all cursor-pointer"
             title={t('deck.editDeckInfo')}
             aria-label={t('deck.editDeckInfo')}
           >
@@ -39,8 +39,7 @@ export function SavedDeckHeader({ deck, onEditInfo }: SavedDeckHeaderProps) {
       </div>
       <div className="flex items-center gap-2 mt-1">
         <span className="text-muted">
-          {t('validation.format')}:{' '}
-          <span className="font-semibold text-gray-800 dark:text-gray-200">{t(formatLabelKey(deck.format))}</span>
+          {t('validation.format')}: <span className="font-semibold text-fg">{t(formatLabelKey(deck.format))}</span>
         </span>
         <span className="text-muted">•</span>
         <span className="text-muted">
@@ -71,11 +70,11 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
           </span>
         </div>
         {cardCount > 0 ? (
-          <h3 className="text-gray-900 dark:text-white text-xl font-bold transition-colors duration-300 text-left truncate">
+          <h3 className="text-fg text-xl font-bold transition-colors duration-300 text-left truncate">
             {cardCount} {t('common.cards')}
           </h3>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-left leading-snug">{t('deck.addCardsMessage')}</p>
+          <p className="text-sm text-fg-muted text-left leading-snug">{t('deck.addCardsMessage')}</p>
         )}
       </>
     );
@@ -83,7 +82,7 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
 
   return (
     <>
-      <h3 className="text-gray-900 dark:text-white text-xl font-serif font-semibold transition-colors duration-300 text-left">
+      <h3 className="text-fg text-xl font-serif font-semibold transition-colors duration-300 text-left">
         {t('deck.currentDeck')}
       </h3>
       {cardCount > 0 ? (

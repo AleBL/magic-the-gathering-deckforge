@@ -294,9 +294,7 @@ function DeckPreview({
       ) : selectedDeck && activeNoteTab === 'stats' ? (
         /* Inline for a saved deck. The working deck sends the same tab to a modal instead
            (see noteTabHeader), which is why this branch is guarded by `selectedDeck`. */
-        <Suspense
-          fallback={<div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>}
-        >
+        <Suspense fallback={<div className="p-8 text-center text-fg-muted">{t('common.loading')}...</div>}>
           <DeckStats currentDeck={activeCards} renderFilteredCards={renderStatsFilteredCards} />
         </Suspense>
       ) : !selectedDeck && currentDeck.length === 0 ? (

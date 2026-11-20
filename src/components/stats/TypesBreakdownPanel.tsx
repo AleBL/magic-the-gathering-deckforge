@@ -43,7 +43,7 @@ export function TypesBreakdownPanel({ stats, activeFilter, setActiveFilter }: Ty
 
   return (
     <div className="space-y-4 min-w-0">
-      <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
+      <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
         <FaFileInvoice className="text-green-500" />
         {t('stats.typesBreakdown')}
       </h4>

@@ -83,7 +83,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
       nodes.push(<br key={k} />);
     } else {
       nodes.push(
-        <p key={k} className="text-slate-800 dark:text-slate-300 leading-relaxed my-0.5">
+        <p key={k} className="text-fg leading-relaxed my-0.5">
           {renderInline(line)}
         </p>
       );
@@ -113,9 +113,9 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
   const renderedNodes = parseMarkdownToJSX(notesInput);
 
   return (
-    <div className="space-y-4 p-4 rounded-xl border border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 text-left animate-fadeIn">
-      <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-slate-800">
-        <h4 className="text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-widest flex items-center gap-1.5 select-none">
+    <div className="space-y-4 p-4 rounded-xl border border-line bg-surface-1/50 text-left animate-fadeIn">
+      <div className="flex justify-between items-center pb-2 border-b border-line">
+        <h4 className="text-sm font-bold text-fg-secondary uppercase tracking-widest flex items-center gap-1.5 select-none">
           <FaPencilAlt className="text-blue-500 shrink-0 text-xs" />
           <span>{t('strategy.strategyGuide')}</span>
         </h4>
@@ -132,9 +132,9 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
             value={notesInput}
             onChange={(e) => setNotesInput(e.target.value)}
             placeholder={t('strategy.strategyGuidePlaceholder')}
-            className="w-full h-full text-xs font-mono p-3 bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-slate-200 border border-gray-300 dark:border-slate-850 rounded-lg outline-none resize-none focus:ring-1 focus:ring-blue-500"
+            className="w-full h-full text-xs font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg outline-none resize-none focus:ring-1 focus:ring-blue-500"
           />
-          <div className="w-full h-full overflow-y-auto p-4 bg-white/80 dark:bg-slate-950/20 border border-gray-200 dark:border-slate-850 rounded-lg max-h-96 text-xs">
+          <div className="w-full h-full overflow-y-auto p-4 bg-surface-1/80 border border-line rounded-lg max-h-96 text-xs">
             {renderedNodes.length > 0 ? (
               renderedNodes
             ) : (
@@ -143,7 +143,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
           </div>
         </div>
       ) : (
-        <div className="min-h-48 p-4 bg-white/40 dark:bg-slate-950/20 rounded-lg border border-gray-150 dark:border-slate-800/60 max-h-96 overflow-y-auto text-xs">
+        <div className="min-h-48 p-4 bg-surface-1/40 rounded-lg border border-line max-h-96 overflow-y-auto text-xs">
           {notesInput.trim() ? (
             renderedNodes
           ) : (
