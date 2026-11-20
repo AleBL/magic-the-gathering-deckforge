@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { Deck, DeckVersion } from '../../types/Deck';
+import { Deck, DeckVersion, MatchRecord } from '../../types/Deck';
 import { CollectionEntry } from '../../types/Collection';
 import { DeckFormatType } from '../../types/enums';
 import { makeCard } from '../../test/factories';
@@ -14,7 +14,8 @@ import { STORAGE_KEYS } from '../../constants/storage';
 const tables = vi.hoisted(() => ({
   decks: new Map<string, Deck>(),
   collection: new Map<string, CollectionEntry>(),
-  deckVersions: new Map<string, DeckVersion>()
+  deckVersions: new Map<string, DeckVersion>(),
+  matches: new Map<string, MatchRecord>()
 }));
 
 const fakeTable = <T extends { id: string }>(store: Map<string, T>) => ({
@@ -36,13 +37,15 @@ vi.mock('../../db/database', () => ({
     decks: fakeTable(tables.decks),
     collection: fakeTable(tables.collection),
     deckVersions: fakeTable(tables.deckVersions),
+    matches: fakeTable(tables.matches),
     // Dexie rolls back on a throw; the fake restores the snapshot it took going in.
     transaction: async (_mode: string, ..._args: unknown[]) => {
       const work = _args[_args.length - 1] as () => Promise<unknown>;
       const snapshot = {
         decks: new Map(tables.decks),
         collection: new Map(tables.collection),
-        deckVersions: new Map(tables.deckVersions)
+        deckVersions: new Map(tables.deckVersions),
+        matches: new Map(tables.matches)
       };
       try {
         const result = await work();
@@ -56,6 +59,7 @@ vi.mock('../../db/database', () => ({
         restoreInto(tables.decks, snapshot.decks);
         restoreInto(tables.collection, snapshot.collection);
         restoreInto(tables.deckVersions, snapshot.deckVersions);
+        restoreInto(tables.matches, snapshot.matches);
         throw error;
       }
     }
@@ -98,6 +102,7 @@ const wipe = () => {
   tables.decks.clear();
   tables.collection.clear();
   tables.deckVersions.clear();
+  tables.matches.clear();
 };
 
 describe('profile backup', () => {
@@ -152,6 +157,7 @@ describe('profile backup', () => {
         decks: [aDeck('d1', 'From backup')],
         collection: [],
         deckVersions: [],
+        matches: [],
         settings: {}
       });
 
@@ -170,6 +176,7 @@ describe('profile backup', () => {
         decks: [aDeck('old-id')],
         collection: [],
         deckVersions: [aVersion('v1', 'old-id')],
+        matches: [],
         settings: {}
       });
 
@@ -179,6 +186,41 @@ describe('profile backup', () => {
       const [version] = [...tables.deckVersions.values()];
       expect(deck.id).not.toBe('old-id');
       expect(version.deckId).toBe(deck.id);
+    });
+
+    it('moves logged games onto the reissued deck ids', async () => {
+      const file = serializeProfileBackup({
+        format: BACKUP_FORMAT,
+        version: 2,
+        exportedAt: '2026-01-01T00:00:00.000Z',
+        decks: [aDeck('old-id')],
+        collection: [],
+        deckVersions: [],
+        matches: [
+          { id: 'm1', deckId: 'old-id', result: 'win', opponent: 'Mono-red', onPlay: true, playedAt: '2026-01-02' }
+        ],
+        settings: {}
+      });
+
+      await restoreProfileBackup(parseProfileBackup(file)!, 'merge');
+
+      const [deck] = [...tables.decks.values()];
+      const [match] = [...tables.matches.values()];
+      expect(match.deckId).toBe(deck.id);
+      expect(match.opponent).toBe('Mono-red');
+    });
+
+    // Files written before the match log existed must still restore, with no games.
+    it('reads a version 1 file as having no match log', () => {
+      const legacy = JSON.stringify({
+        format: BACKUP_FORMAT,
+        version: 1,
+        exportedAt: '2025-01-01T00:00:00.000Z',
+        decks: [],
+        collection: [],
+        deckVersions: []
+      });
+      expect(parseProfileBackup(legacy)?.matches).toEqual([]);
     });
 
     // The reissued ids used to be `Date.now() + index`, i.e. the same numeric space the
@@ -192,6 +234,7 @@ describe('profile backup', () => {
         decks: [aDeck('d1', 'From backup'), aDeck('d2', 'Also from backup')],
         collection: [],
         deckVersions: [aVersion('v1', 'd1')],
+        matches: [],
         settings: {}
       });
 
@@ -221,6 +264,7 @@ describe('profile backup', () => {
         decks: [],
         collection: [anEntry('c1', 4)],
         deckVersions: [],
+        matches: [],
         settings: {}
       });
 
@@ -240,6 +284,7 @@ describe('profile backup', () => {
         decks: [],
         collection: [anEntry('c1', 1)],
         deckVersions: [],
+        matches: [],
         settings: {}
       });
 
@@ -261,6 +306,7 @@ describe('profile backup', () => {
         decks: [aDeck('d1', 'From backup')],
         collection: [],
         deckVersions: [],
+        matches: [],
         settings: { [STORAGE_KEYS.language]: 'es' }
       })
     )!;
@@ -302,6 +348,7 @@ describe('profile backup', () => {
         decks: [],
         collection: [],
         deckVersions: [],
+        matches: [],
         settings: { evil: 'value' } as never
       });
 

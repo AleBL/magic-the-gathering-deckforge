@@ -1,6 +1,6 @@
 import { db } from '../db/database';
 import { STORAGE_KEYS, StorageKey } from '../constants/storage';
-import { Deck, DeckVersion } from '../types/Deck';
+import { Deck, DeckVersion, MatchRecord } from '../types/Deck';
 import { CollectionEntry } from '../types/Collection';
 import { newId } from '../utils/id';
 
@@ -9,7 +9,8 @@ import { newId } from '../utils/id';
 // history. The envelope is versioned so a future schema can migrate an old file, not reject it.
 
 export const BACKUP_FORMAT = 'mtg-deckforge-backup';
-export const BACKUP_VERSION = 1;
+// v2 adds the match log; v1 files restore with an empty one.
+export const BACKUP_VERSION = 2;
 
 export interface ProfileBackup {
   format: typeof BACKUP_FORMAT;
@@ -18,6 +19,7 @@ export interface ProfileBackup {
   decks: Deck[];
   collection: CollectionEntry[];
   deckVersions: DeckVersion[];
+  matches: MatchRecord[];
   settings: Partial<Record<StorageKey, string>>;
 }
 
@@ -28,6 +30,7 @@ export interface RestoreSummary {
   decks: number;
   collection: number;
   deckVersions: number;
+  matches: number;
   settings: number;
 }
 
@@ -41,10 +44,11 @@ function readSettings(): Partial<Record<StorageKey, string>> {
 }
 
 export async function createProfileBackup(): Promise<ProfileBackup> {
-  const [decks, collection, deckVersions] = await Promise.all([
+  const [decks, collection, deckVersions, matches] = await Promise.all([
     db.decks.toArray(),
     db.collection.toArray(),
-    db.deckVersions.toArray()
+    db.deckVersions.toArray(),
+    db.matches.toArray()
   ]);
 
   return {
@@ -54,6 +58,7 @@ export async function createProfileBackup(): Promise<ProfileBackup> {
     decks,
     collection,
     deckVersions,
+    matches,
     settings: readSettings()
   };
 }
@@ -94,6 +99,9 @@ export function parseProfileBackup(content: string): ProfileBackup | null {
     decks,
     collection,
     deckVersions: parsed.deckVersions as DeckVersion[],
+    matches: Array.isArray(parsed.matches)
+      ? (parsed.matches as MatchRecord[]).filter((match) => isRecord(match) && typeof match.deckId === 'string')
+      : [],
     settings: isRecord(parsed.settings) ? (parsed.settings as Partial<Record<StorageKey, string>>) : {}
   };
 }
@@ -119,18 +127,20 @@ function applySettings(settings: Partial<Record<StorageKey, string>>): number {
 // remaps snapshots onto the new ids, and keeps the higher quantity for a printing already
 // owned, which is what makes restoring the same file twice a no-op.
 export async function restoreProfileBackup(backup: ProfileBackup, mode: RestoreMode): Promise<RestoreSummary> {
-  const summary = await db.transaction('rw', db.decks, db.collection, db.deckVersions, async () => {
+  const summary = await db.transaction('rw', [db.decks, db.collection, db.deckVersions, db.matches], async () => {
     if (mode === 'replace') {
-      await Promise.all([db.decks.clear(), db.collection.clear(), db.deckVersions.clear()]);
+      await Promise.all([db.decks.clear(), db.collection.clear(), db.deckVersions.clear(), db.matches.clear()]);
       await Promise.all([
         db.decks.bulkPut(backup.decks),
         db.collection.bulkPut(backup.collection),
-        db.deckVersions.bulkPut(backup.deckVersions)
+        db.deckVersions.bulkPut(backup.deckVersions),
+        db.matches.bulkPut(backup.matches)
       ]);
       return {
         decks: backup.decks.length,
         collection: backup.collection.length,
         deckVersions: backup.deckVersions.length,
+        matches: backup.matches.length,
         settings: 0
       };
     }
@@ -152,6 +162,13 @@ export async function restoreProfileBackup(backup: ProfileBackup, mode: RestoreM
       deckId: deckIdByOldId.get(version.deckId) ?? version.deckId
     }));
 
+    // Logged games follow their deck onto its new id, like the snapshots above.
+    const matches = backup.matches.map((match) => ({
+      ...match,
+      id: newId(),
+      deckId: deckIdByOldId.get(match.deckId) ?? match.deckId
+    }));
+
     const existing = await db.collection.bulkGet(backup.collection.map((entry) => entry.id));
     const collection = backup.collection.map((entry, index) => {
       const current = existing[index];
@@ -166,13 +183,15 @@ export async function restoreProfileBackup(backup: ProfileBackup, mode: RestoreM
     await Promise.all([
       db.decks.bulkPut(decks),
       db.collection.bulkPut(collection),
-      db.deckVersions.bulkPut(deckVersions)
+      db.deckVersions.bulkPut(deckVersions),
+      db.matches.bulkPut(matches)
     ]);
 
     return {
       decks: decks.length,
       collection: collection.length,
       deckVersions: deckVersions.length,
+      matches: matches.length,
       settings: 0
     };
   });
