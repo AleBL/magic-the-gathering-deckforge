@@ -176,16 +176,16 @@ function DeckActionBar({
             </div>
 
             {showExportMenu && (
-              <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-xl bg-surface-1/80 backdrop-blur-xl border border-white/50 dark:border-white/10 z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
+              <div className="absolute top-full right-0 mt-2 w-56 rounded-lg shadow-lg bg-surface-1 border border-line z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
                 <button
                   type="button"
                   onClick={() => {
                     handleCopyShareLink();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
                 >
-                  <LuLink className="text-accent shrink-0" />
+                  <LuLink className="text-fg-muted shrink-0" />
                   {t('export.copyLink')}
                 </button>
                 <button
@@ -194,9 +194,9 @@ function DeckActionBar({
                     handleDownloadDecFile();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
                 >
-                  <LuDownload className="text-accent shrink-0" />
+                  <LuDownload className="text-fg-muted shrink-0" />
                   {t('strategy.downloadDec')} (.dec)
                 </button>
                 <button
@@ -205,9 +205,9 @@ function DeckActionBar({
                     downloadAsJson(selectedDeck || { cards }, `${selectedDeck?.name || 'deck'}.json`);
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
                 >
-                  <LuDownload className="text-success shrink-0" />
+                  <LuDownload className="text-fg-muted shrink-0" />
                   {t('export.downloadJson') || 'Download'} (.json)
                 </button>
                 <button
@@ -216,9 +216,9 @@ function DeckActionBar({
                     handleCopyArenaFormat();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
                 >
-                  <LuClipboardList className="text-warning shrink-0" />
+                  <LuClipboardList className="text-fg-muted shrink-0" />
                   {t('strategy.exportArena')} (Arena)
                 </button>
                 <button
@@ -227,30 +227,30 @@ function DeckActionBar({
                     handleCopyDeckList();
                     setShowExportMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
                 >
-                  <LuCopy className="text-accent shrink-0" />
+                  <LuCopy className="text-fg-muted shrink-0" />
                   {t('deck.copyList')} (.txt)
                 </button>
+                {onPrintProxies && (
+                  <>
+                    <div className="my-1 h-px bg-line" role="separator" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowExportMenu(false);
+                        onPrintProxies();
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-fg-secondary hover:bg-surface-2 hover:text-fg flex items-center gap-2 cursor-pointer"
+                    >
+                      <LuPrinter className="text-fg-muted shrink-0" />
+                      {t('print.printProxies')}
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
-
-          {/* Print Proxies */}
-          {onPrintProxies && (
-            <div className="relative group/tooltip inline-flex items-center">
-              <button
-                type="button"
-                onClick={onPrintProxies}
-                className={`${BAR_BUTTON} ${BAR_SECONDARY}`}
-                aria-label={t('print.printProxies')}
-              >
-                <LuPrinter className="text-sm shrink-0" />
-                <span className="hidden lg:inline">{t('print.printProxies')}</span>
-              </button>
-              <ActionTooltip label={t('print.printProxies')} />
-            </div>
-          )}
 
           {/* Playtest button — hidden below sm: the multi-zone simulator isn't
               usable on phone-width screens, so we don't expose an entry point there. */}
