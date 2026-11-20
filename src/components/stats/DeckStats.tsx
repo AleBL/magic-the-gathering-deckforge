@@ -72,7 +72,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
             </h4>
             <button
               onClick={() => setActiveFilter(null)}
-              className="text-xs flex items-center gap-1.5 text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-semibold px-3 py-1.5 bg-surface-2 rounded-lg transition-colors"
+              className="text-xs flex items-center gap-1.5 text-gray-500 hover:text-danger font-semibold px-3 py-1.5 bg-surface-2 rounded-lg transition-colors"
             >
               <FaTimes />
               {t('search.clearFilter')}

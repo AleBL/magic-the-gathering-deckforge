@@ -47,8 +47,8 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
             aria-label={`${t('collection.wishlist')} — ${entry.card.printed_name || entry.name}`}
             className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
               entry.wishlist
-                ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-500 dark:text-rose-400'
-                : 'bg-surface-1 border-line-strong text-fg-muted hover:border-rose-300 hover:text-rose-400'
+                ? 'bg-danger-soft border-danger/40 text-danger '
+                : 'bg-surface-1 border-line-strong text-fg-muted hover:border-danger/40 hover:text-danger'
             }`}
           >
             {entry.wishlist ? <FaHeart className="text-sm" /> : <FaRegHeart className="text-sm" />}

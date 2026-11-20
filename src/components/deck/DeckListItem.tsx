@@ -101,7 +101,7 @@ export const DeckListItem = memo(function DeckListItem({
           else onSelect(deck);
         }
       }}
-      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
+      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-focus ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
     >
       {/*
         Below lg the list sits above the deck in page flow, so a cover per deck turns choosing
@@ -130,7 +130,7 @@ export const DeckListItem = memo(function DeckListItem({
 
       <div className="deck-box-footer">
         <div className="deck-list-item-meta pointer-events-none">
-          <span className={`text-xs ${isSelected ? 'text-blue-700 dark:text-blue-100' : 'text-fg-muted '}`}>
+          <span className={`text-xs ${isSelected ? 'text-accent ' : 'text-fg-muted '}`}>
             {deck.cards.length} {t('common.cards')}
           </span>
           <span
@@ -171,7 +171,7 @@ export const DeckListItem = memo(function DeckListItem({
               e.stopPropagation();
               onExport(deck);
             }}
-            className="button-small deck-list-action-btn bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center min-w-[32px]"
+            className="button-small deck-list-action-btn bg-success hover:bg-success text-on-success flex items-center justify-center min-w-[32px]"
             title={t('deck.export')}
             aria-label={`${t('deck.export')} ${deck.name}`}
           >

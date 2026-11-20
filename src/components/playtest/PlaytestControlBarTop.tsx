@@ -44,14 +44,14 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={handleUntapAll}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-surface-3 hover:bg-surface-3 text-fg text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.untapAll')}
           </button>
           <button
             type="button"
             onClick={handleNextTurn}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-success hover:bg-success text-on-success text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.nextTurn')}
           </button>
@@ -84,7 +84,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev - 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-red-500/20 text-red-400 border border-red-500/30 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-white transition-all text-xs font-bold cursor-pointer"
             >
               <FaMinus className="text-[11px] sm:text-[8px]" />
             </button>
@@ -94,7 +94,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev + 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-white transition-all text-xs font-bold cursor-pointer"
             >
               <FaPlus className="text-[11px] sm:text-[8px]" />
             </button>
@@ -102,7 +102,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
 
           {!isMulliganPhase && (
             <div className="flex items-center bg-surface-2 border border-line rounded-xl px-2 sm:px-3 py-1 shadow-inner gap-2 hidden sm:flex">
-              <span className="text-[9px] sm:text-[10px] text-indigo-600 dark:text-indigo-400 font-extrabold uppercase tracking-wider">
+              <span className="text-[9px] sm:text-[10px] text-accent font-extrabold uppercase tracking-wider">
                 {t('playtest.turnLabel', { turn })}
               </span>
             </div>
@@ -114,7 +114,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setPileExplorerConfig({ title: t('playtest.library'), pile: 'library' })}
-              className="flex items-center gap-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 hover:text-accent transition-colors cursor-pointer"
               title={t('playtest.viewLibrary')}
             >
               <FaInbox className="text-fg-muted" />
@@ -127,14 +127,14 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setPileExplorerConfig({ title: t('playtest.graveyard'), pile: 'graveyard' })}
-              className="flex items-center gap-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 hover:text-accent transition-colors cursor-pointer"
               title={t('playtest.viewGraveyard')}
             >
               <FaSkull className="text-fg-muted" />
               {t('playtest.graveyard')}: <strong className="text-fg-secondary">{graveyard.length}</strong>
             </button>
             {mulligans > 0 && (
-              <span className="bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 px-2 py-0.5 rounded-full">
+              <span className="bg-warning-soft text-warning border border-warning/40 px-2 py-0.5 rounded-full">
                 Mulligan: <strong>{mulligans}</strong>
               </span>
             )}
@@ -146,7 +146,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             title={t('playtest.toggleLogPanel')}
             className={`p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer ${
               isLogOpen
-                ? 'bg-indigo-100 border-indigo-200 text-indigo-600 dark:bg-indigo-600/20 dark:border-indigo-500/40 dark:text-indigo-400'
+                ? 'bg-accent-soft border-line-strong text-accent '
                 : 'bg-surface-2 border-line text-fg-muted hover:text-fg-secondary '
             }`}
           >
@@ -167,14 +167,14 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setScrySurveilPrompt({ type: 'scry' })}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 text-fg text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
             >
               {t('playtest.scry')}
             </button>
             <button
               type="button"
               onClick={() => setScrySurveilPrompt({ type: 'surveil' })}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 text-fg text-xs px-2 py-1.5 min-h-[44px] sm:min-h-0 rounded transition-colors cursor-pointer"
             >
               {t('playtest.surveil')}
             </button>

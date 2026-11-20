@@ -7,35 +7,35 @@
 }
 
 .deck-stack-zone-frontline {
-  @apply text-warning dark:text-amber-400 border-amber-300/30 dark:border-amber-900/30;
+  @apply text-warning dark:text-warning border-warning/40;
 }
 
 .deck-stack-zone-frontline svg {
-  @apply text-amber-500;
+  @apply text-warning;
 }
 
 .deck-stack-zone-backline {
-  @apply text-indigo-600 dark:text-indigo-400 border-indigo-300/30 dark:border-indigo-900/30;
+  @apply text-accent border-line-strong;
 }
 
 .deck-stack-zone-backline svg {
-  @apply text-indigo-500;
+  @apply text-accent;
 }
 
 .deck-stack-zone-spells {
-  @apply text-cyan-600 dark:text-cyan-400 border-cyan-300/30 dark:border-cyan-900/30;
+  @apply text-accent border-line-strong;
 }
 
 .deck-stack-zone-spells svg {
-  @apply text-cyan-500;
+  @apply text-accent;
 }
 
 .deck-stack-zone-lands {
-  @apply text-emerald-600 dark:text-emerald-400 border-emerald-300/30 dark:border-emerald-900/30;
+  @apply text-success border-success/40;
 }
 
 .deck-stack-zone-lands svg {
-  @apply text-emerald-500;
+  @apply text-success;
 }
 
 .deck-stack-zone-count {
@@ -43,19 +43,19 @@
 }
 
 .deck-stack-zone-frontline .deck-stack-zone-count {
-  @apply bg-amber-500/10 border-amber-500/20 text-warning dark:text-amber-400;
+  @apply bg-warning-soft border-warning/40 text-warning dark:text-warning;
 }
 
 .deck-stack-zone-backline .deck-stack-zone-count {
-  @apply bg-indigo-500/10 border-indigo-500/20 text-indigo-600 dark:text-indigo-400;
+  @apply bg-accent-soft border-line-strong text-accent;
 }
 
 .deck-stack-zone-spells .deck-stack-zone-count {
-  @apply bg-cyan-500/10 border-cyan-500/20 text-cyan-600 dark:text-cyan-400;
+  @apply bg-accent-soft border-line-strong text-accent;
 }
 
 .deck-stack-zone-lands .deck-stack-zone-count {
-  @apply bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400;
+  @apply bg-success-soft border-success/40 text-success;
 }
 
 .deck-stack-empty-zone {
@@ -122,7 +122,7 @@
 }
 
 .deck-stack-count-badge {
-  @apply absolute bottom-1.5 right-1.5 bg-primary border border-blue-400 text-on-primary text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
+  @apply absolute bottom-1.5 right-1.5 bg-primary border border-accent/50 text-on-primary text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
 }
 
 .deck-stack-status-badge {
@@ -130,11 +130,11 @@
 }
 
 .deck-stack-status-badge-banned {
-  @apply bg-rose-600/90 dark:bg-rose-700/90 border border-rose-500;
+  @apply bg-danger border border-danger;
 }
 
 .deck-stack-status-badge-restricted {
-  @apply bg-amber-500/90 dark:bg-warning/90 border border-amber-400;
+  @apply bg-warning dark:bg-warning/90 border border-warning;
 }
 
 .card-grid-stack-wrapper {

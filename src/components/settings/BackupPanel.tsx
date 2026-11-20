@@ -69,7 +69,7 @@ export default function BackupPanel() {
 
         {status.persisted === false ? (
           <>
-            <p className="text-xs text-amber-600 dark:text-amber-400 leading-relaxed">{t('backup.persistenceHint')}</p>
+            <p className="text-xs text-warning leading-relaxed">{t('backup.persistenceHint')}</p>
             <button
               type="button"
               onClick={enablePersistence}
@@ -136,7 +136,7 @@ export default function BackupPanel() {
               type="button"
               onClick={() => run('replace')}
               disabled={isWorking}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-bold bg-danger text-on-danger hover:bg-danger transition-colors disabled:opacity-50"
             >
               <FaExclamationTriangle className="text-xs shrink-0" />
               {t('backup.replaceConfirm')}
@@ -146,7 +146,7 @@ export default function BackupPanel() {
               type="button"
               onClick={() => setConfirmingReplace(true)}
               disabled={isWorking}
-              className="px-3 py-2 rounded-lg text-sm font-semibold text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors disabled:opacity-50"
+              className="px-3 py-2 rounded-lg text-sm font-semibold text-danger border border-danger/40 hover:bg-danger-soft transition-colors disabled:opacity-50"
             >
               {t('backup.replace')}
             </button>

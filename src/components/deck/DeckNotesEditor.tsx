@@ -51,7 +51,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
 
     if (line.startsWith('### ')) {
       nodes.push(
-        <h4 key={k} className="text-xs font-extrabold text-blue-400 mt-4 mb-2 uppercase select-none">
+        <h4 key={k} className="text-xs font-extrabold text-accent mt-4 mb-2 uppercase select-none">
           {line.slice(4)}
         </h4>
       );
@@ -59,7 +59,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
       nodes.push(
         <h3
           key={k}
-          className="text-sm font-extrabold text-indigo-400 mt-5 mb-2 border-b border-slate-800/80 pb-1 select-none"
+          className="text-sm font-extrabold text-accent mt-5 mb-2 border-b border-slate-800/80 pb-1 select-none"
         >
           {line.slice(3)}
         </h3>
@@ -116,7 +116,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
     <div className="space-y-4 p-4 rounded-xl border border-line bg-surface-1/50 text-left animate-fadeIn">
       <div className="flex justify-between items-center pb-2 border-b border-line">
         <h4 className="text-sm font-bold text-fg-secondary uppercase tracking-widest flex items-center gap-1.5 select-none">
-          <FaPencilAlt className="text-blue-500 shrink-0 text-xs" />
+          <FaPencilAlt className="text-accent shrink-0 text-xs" />
           <span>{t('strategy.strategyGuide')}</span>
         </h4>
         {isEditable && (
@@ -132,7 +132,7 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
             value={notesInput}
             onChange={(e) => setNotesInput(e.target.value)}
             placeholder={t('strategy.strategyGuidePlaceholder')}
-            className="w-full h-full text-xs font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg outline-none resize-none focus:ring-1 focus:ring-blue-500"
+            className="w-full h-full text-xs font-mono p-3 bg-surface-2 text-fg border border-line-strong rounded-lg outline-none resize-none focus:ring-1 focus:ring-focus"
           />
           <div className="w-full h-full overflow-y-auto p-4 bg-surface-1/80 border border-line rounded-lg max-h-96 text-xs">
             {renderedNodes.length > 0 ? (

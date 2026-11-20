@@ -68,7 +68,7 @@ function DeckList({
           <div className="empty-deck-list-state group">
             <div className="empty-deck-list-state-bg" />
             <div className="empty-deck-list-state-icon-wrapper">
-              <FaLayerGroup className="text-xl text-purple-500 dark:text-purple-400" />
+              <FaLayerGroup className="text-xl text-accent" />
             </div>
             <p className="text-sm font-bold text-fg mb-1">{t('deck.noSavedDecks')}</p>
             <p className="text-xs text-fg-muted">{t('deck.addCardsMessage')}</p>

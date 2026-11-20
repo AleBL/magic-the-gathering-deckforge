@@ -48,8 +48,8 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
             title={t('collection.wishlist')}
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
               wishlist
-                ? 'bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300'
-                : 'bg-surface-1 text-fg-muted hover:text-rose-500 border border-line-strong '
+                ? 'bg-danger-soft text-danger '
+                : 'bg-surface-1 text-fg-muted hover:text-danger border border-line-strong '
             }`}
           >
             {wishlist ? <FaHeart className="text-sm" /> : <FaRegHeart className="text-sm" />}
@@ -69,7 +69,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               type="button"
               onClick={increment}
               aria-label={t('collection.increment')}
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-blue-500 transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-surface-3 transition-colors"
             >
               <FaPlus className="text-[10px]" />
             </button>
@@ -123,7 +123,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               }}
               title={t('collection.increment')}
               aria-label={t('collection.increment')}
-              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-blue-500 transition-colors"
+              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-surface-3 transition-colors"
             >
               <FaPlus className="text-[9px]" />
             </button>
@@ -157,8 +157,8 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
           aria-label={t('collection.wishlist')}
           className={`w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-md backdrop-blur-md border transition-colors pointer-events-auto ${
             wishlist
-              ? 'bg-rose-500/90 text-white border-rose-400'
-              : 'bg-black/65 text-white/90 border-white/20 hover:bg-rose-500/80 hover:text-white'
+              ? 'bg-danger text-on-danger border-danger'
+              : 'bg-black/65 text-white/90 border-white/20 hover:bg-danger hover:text-white'
           }`}
         >
           {wishlist ? <FaHeart className="text-xs" /> : <FaRegHeart className="text-xs" />}

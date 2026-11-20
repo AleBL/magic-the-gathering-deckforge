@@ -79,7 +79,7 @@ function DeckProxyPrint({
         >
           <div className="modal-header-container">
             <h3 id="proxy-print-title" className="text-fg text-lg font-bold flex items-center gap-2">
-              <FaPrint className="text-blue-500" />
+              <FaPrint className="text-accent" />
               {t('print.printProxiesTitle')}
             </h3>
             <button
@@ -114,24 +114,24 @@ function DeckProxyPrint({
           />
 
           {useRealSize ? (
-            <div className="mx-6 my-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
-              <FaInfoCircle className="text-blue-500 shrink-0 text-lg" />
+            <div className="mx-6 my-2 p-3 bg-accent-soft border border-line-strong rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <FaInfoCircle className="text-accent shrink-0 text-lg" />
               <div className="flex-1 text-fg-secondary">
                 <strong>{t('print.realSizeGuaranteed')} (63x88mm):</strong> {t('print.printInstructionsText')}{' '}
                 <strong className="text-fg underline">{t('print.scaleOption')}</strong>{' '}
                 {t('print.printInstructionsTextSuffix')}
               </div>
-              <div className="text-blue-700 dark:text-blue-300 font-medium whitespace-nowrap bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded">
+              <div className="text-accent font-medium whitespace-nowrap bg-accent-soft px-2 py-1 rounded">
                 {cardsPerPage} {t('print.cardsPerPageTextSuffix')}
               </div>
             </div>
           ) : (
-            <div className="mx-6 my-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
-              <FaExclamationTriangle className="text-amber-500 shrink-0 text-lg" />
+            <div className="mx-6 my-2 p-3 bg-warning-soft border border-warning/40 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <FaExclamationTriangle className="text-warning shrink-0 text-lg" />
               <div className="flex-1 text-fg-secondary">
                 <strong>{t('print.customSizeLabel')}</strong> {t('print.customSizeWarning')}
               </div>
-              <div className="text-amber-700 dark:text-amber-300 font-medium whitespace-nowrap bg-amber-100 dark:bg-amber-800/50 px-2 py-1 rounded">
+              <div className="text-warning font-medium whitespace-nowrap bg-warning-soft px-2 py-1 rounded">
                 {cardsPerPage} {t('print.cardsPerPageSimple')}
               </div>
             </div>

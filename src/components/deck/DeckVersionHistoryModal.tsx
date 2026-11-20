@@ -24,12 +24,12 @@ const CHANGE_LABEL_KEY: Record<DeckVersionChangeType, string> = {
 };
 
 const CHANGE_TONE: Record<DeckVersionChangeType, string> = {
-  added: 'text-green-600 dark:text-green-400',
-  removed: 'text-red-600 dark:text-red-400',
-  increased: 'text-green-600 dark:text-green-400',
-  decreased: 'text-amber-600 dark:text-amber-400',
-  printing: 'text-blue-600 dark:text-blue-400',
-  commander: 'text-purple-600 dark:text-purple-400',
+  added: 'text-success',
+  removed: 'text-danger',
+  increased: 'text-success',
+  decreased: 'text-warning',
+  printing: 'text-accent',
+  commander: 'text-accent',
   renamed: 'text-fg-secondary'
 };
 
@@ -142,7 +142,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => handleDelete(version.id)}
                         aria-label={t('deck.deleteVersion')}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-danger hover:bg-danger-soft transition-all cursor-pointer"
                       >
                         <FaTrash className="text-xs" />
                       </button>

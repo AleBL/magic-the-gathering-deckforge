@@ -49,7 +49,7 @@ export function PlaytestShortcutsOverlay() {
             id="playtest-shortcuts-title"
             className="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"
           >
-            <FaKeyboard className="text-indigo-400" />
+            <FaKeyboard className="text-accent" />
             {t('playtest.shortcutsTitle')}
           </h3>
           <button

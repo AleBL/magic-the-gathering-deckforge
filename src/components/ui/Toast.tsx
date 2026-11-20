@@ -9,17 +9,17 @@ interface ToastProps {
 
 function Toast({ message, variant = 'success', action }: ToastProps) {
   const iconMap = {
-    success: <FaCheckCircle className="text-lg shrink-0 text-green-500" />,
-    error: <FaExclamationTriangle className="text-lg shrink-0 text-red-500" />,
-    warning: <FaExclamationTriangle className="text-lg shrink-0 text-amber-500" />,
-    info: <FaInfoCircle className="text-lg shrink-0 text-blue-500" />
+    success: <FaCheckCircle className="text-lg shrink-0 text-success" />,
+    error: <FaExclamationTriangle className="text-lg shrink-0 text-danger" />,
+    warning: <FaExclamationTriangle className="text-lg shrink-0 text-warning" />,
+    info: <FaInfoCircle className="text-lg shrink-0 text-accent" />
   };
 
   const borderMap = {
-    success: 'border-l-green-500',
-    error: 'border-l-red-500',
-    warning: 'border-l-amber-500',
-    info: 'border-l-blue-500'
+    success: 'border-l-success',
+    error: 'border-l-danger',
+    warning: 'border-l-warning',
+    info: 'border-l-accent/50'
   };
 
   return (

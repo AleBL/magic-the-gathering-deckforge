@@ -81,7 +81,7 @@ export function DeckManagerToolbar({
           {t('deck.deckManager')}
           <div className="manager-info-tooltip-trigger group/tooltip">
             <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>
-              <FaLightbulb className="text-yellow-500 text-base" />
+              <FaLightbulb className="text-warning text-base" />
             </button>
             <div className="manager-info-tooltip-panel">
               <p className="font-medium leading-relaxed">{t('validation.savedLocationNote')}</p>

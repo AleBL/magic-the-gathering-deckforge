@@ -72,7 +72,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                   onClick={() => onSelect(card.id)}
                   title={card.printed_name || card.name}
                   className={`group relative overflow-hidden rounded-lg border-2 transition-all ${
-                    isActive ? 'border-blue-500 ring-2 ring-blue-500/40' : 'border-transparent hover:border-blue-400'
+                    isActive ? 'border-accent/50 ring-2 ring-focus' : 'border-transparent hover:border-accent/50'
                   }`}
                 >
                   <img
@@ -82,7 +82,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                     className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   {isActive && (
-                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white shadow">
+                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-3 text-fg shadow">
                       <FaCheck className="text-[10px]" />
                     </span>
                   )}

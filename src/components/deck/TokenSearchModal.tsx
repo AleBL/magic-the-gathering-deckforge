@@ -73,7 +73,7 @@ export function TokenSearchModal({
             id="token-search-modal-title"
             className="text-base font-bold text-fg uppercase tracking-wider flex items-center gap-2"
           >
-            <FaPalette className="text-indigo-500" />
+            <FaPalette className="text-accent" />
             {t('tokens.searchTokensTitle')}
           </h3>
           <button
@@ -95,14 +95,14 @@ export function TokenSearchModal({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('tokens.searchTokenPlaceholder')}
-                className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all"
               />
               <FaSearch className="absolute left-3 top-3 text-xs text-gray-400" />
             </div>
             <button
               type="submit"
               disabled={isSearching || !searchTerm.trim()}
-              className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               {isSearching ? <FaSpinner className="animate-spin text-xs" /> : <FaSearch className="text-xs" />}
               {t('search.searchButton')}
@@ -112,7 +112,7 @@ export function TokenSearchModal({
           {/* Quick Presets Section */}
           <div className="space-y-2.5">
             <h4 className="text-xs font-bold text-fg-muted uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1 select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-surface-3" />
               <span>{t('tokens.quickPresets')}</span>
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -148,11 +148,11 @@ export function TokenSearchModal({
 
             {isSearching ? (
               <div className="h-48 flex flex-col items-center justify-center gap-2.5 text-gray-400">
-                <FaSpinner className="text-2xl text-indigo-500 animate-spin" />
+                <FaSpinner className="text-2xl text-accent animate-spin" />
                 <span className="text-xs font-semibold">{t('tokens.searching')}</span>
               </div>
             ) : searchError ? (
-              <div className="h-48 flex items-center justify-center text-xs font-bold text-red-500">{searchError}</div>
+              <div className="h-48 flex items-center justify-center text-xs font-bold text-danger">{searchError}</div>
             ) : searchResults.length === 0 ? (
               <div className="h-48 flex flex-col items-center justify-center text-fg-muted gap-1">
                 <span className="text-xs font-bold">{t('tokens.noTokensFoundSearch')}</span>
@@ -177,7 +177,7 @@ export function TokenSearchModal({
                           onSelectToken(token);
                         }
                       }}
-                      className="border border-line bg-surface-2/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-indigo-500/50 group"
+                      className="border border-line bg-surface-2/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-accent/50 group"
                     >
                       <div className="w-20 h-28 rounded-lg overflow-hidden border border-line bg-slate-950 mb-2 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
@@ -189,7 +189,7 @@ export function TokenSearchModal({
                           />
                         ) : (
                           <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                            <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
+                            <FaPalette className="text-accent text-xs shrink-0" />
                             <span className="text-[8px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
                               {token.name}
                             </span>
@@ -203,7 +203,7 @@ export function TokenSearchModal({
                       </div>
 
                       <div className="w-full min-w-0">
-                        <h5 className="text-xs font-bold text-fg-secondary truncate leading-tight group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                        <h5 className="text-xs font-bold text-fg-secondary truncate leading-tight group-hover:text-accent transition-colors">
                           {token.name}
                         </h5>
                         <p className="text-[9px] text-fg-muted truncate mt-0.5">{token.type_line}</p>
@@ -215,7 +215,7 @@ export function TokenSearchModal({
                           e.stopPropagation();
                           onConfirmAdd(token);
                         }}
-                        className="mt-3 w-full justify-center bg-indigo-650/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <FaPlus className="text-[8px]" />
                         {t('tokens.add')}

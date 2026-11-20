@@ -52,7 +52,7 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
             id="app-shortcuts-title"
             className="text-sm font-bold text-fg uppercase tracking-wider flex items-center gap-2"
           >
-            <FaKeyboard className="text-indigo-500 dark:text-indigo-400" />
+            <FaKeyboard className="text-accent" />
             {t('commandPalette.shortcutsTitle')}
           </h3>
           <button

@@ -208,7 +208,7 @@ export default function CommandPalette({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('commandPalette.placeholder')}
-            className="flex-1 bg-transparent text-sm text-fg placeholder-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+            className="flex-1 bg-transparent text-sm text-fg placeholder-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent/50"
           />
           <kbd className="text-[10px] font-mono font-bold text-gray-400 bg-surface-2 border border-line rounded px-1.5 py-0.5">
             ESC
@@ -226,9 +226,7 @@ export default function CommandPalette({
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => run(command.run)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer ${
-                  index === selectedIndex
-                    ? 'bg-indigo-50 dark:bg-indigo-600/20 text-indigo-700 dark:text-indigo-300'
-                    : 'text-fg-secondary hover:bg-surface-2 '
+                  index === selectedIndex ? 'bg-accent-soft text-accent ' : 'text-fg-secondary hover:bg-surface-2 '
                 }`}
               >
                 <span className="text-sm shrink-0 opacity-80">{command.icon}</span>

@@ -24,9 +24,7 @@ interface DeckPreviewShellProps {
  */
 export function DeckPreviewShell({ accent, header, controls, children }: DeckPreviewShellProps) {
   return (
-    <div
-      className={`deck-preview-section relative ${accent ? 'border-l-4 border-amber-400 dark:border-amber-500 pl-3' : ''}`}
-    >
+    <div className={`deck-preview-section relative ${accent ? 'border-l-4 border-warning pl-3' : ''}`}>
       <div className="panel-header panel-header-sticky relative">
         {/* `min-w-0` so a long deck name truncates instead of pushing the controls off. */}
         <div className="min-w-0">{header}</div>

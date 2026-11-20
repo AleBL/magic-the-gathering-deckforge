@@ -59,7 +59,7 @@ export function PlaytestLibraryGraveyard() {
             // Do nothing for unknown drops
           }
         }}
-        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-indigo-400 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-400/30 scale-105' : 'border-indigo-500/30 hover:border-indigo-500'}`}
+        className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 border-2 flex flex-col items-center justify-center cursor-pointer shadow-lg hover:-translate-y-1 transition-all duration-300 select-none ${library.length === 0 ? 'opacity-30 border-line-strong ' : dragOverZone === 'library' ? 'border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus scale-105' : 'border-line-strong hover:border-accent/50'}`}
         draggable={library.length > 0}
         onDragStart={(event) => {
           if (library.length === 0) {
@@ -79,7 +79,7 @@ export function PlaytestLibraryGraveyard() {
             <span className="absolute bottom-3 text-[10px] uppercase font-black tracking-widest text-white bg-slate-950/70 px-2 py-0.5 rounded backdrop-blur-xs group-hover:bg-slate-950/90 transition-colors shadow shadow-black/30">
               {t('playtest.draw').toUpperCase()}
             </span>
-            <div className="absolute -top-2 -right-2 bg-indigo-600 text-white font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow shadow-indigo-500/40 z-10">
+            <div className="absolute -top-2 -right-2 bg-surface-3 text-fg font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow z-10">
               {library.length}
             </div>
           </>
@@ -102,9 +102,9 @@ export function PlaytestLibraryGraveyard() {
         }}
         className={`group relative ${PLAYTEST_PILE_SIZE_CLASSES} rounded-2xl border-2 flex flex-col items-center justify-center transition-all duration-300 select-none ${
           dragOverZone === 'graveyard'
-            ? 'border-dashed border-red-400 bg-red-500/10 shadow-lg shadow-red-500/10 ring-2 ring-red-400/30 scale-105'
+            ? 'border-dashed border-danger bg-danger-soft shadow-lg ring-2 ring-danger/40 scale-105'
             : graveyard.length > 0
-              ? 'border-line-strong hover:border-red-500/60 hover:shadow-red-500/5 bg-surface-2 hover:-translate-y-1 cursor-pointer'
+              ? 'border-line-strong hover:border-danger bg-surface-2 hover:-translate-y-1 cursor-pointer'
               : 'border-dashed border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/20 cursor-pointer'
         }`}
         onDragOver={(event) => {
@@ -136,7 +136,7 @@ export function PlaytestLibraryGraveyard() {
               loading="lazy"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-              <FaSkull className="text-red-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
+              <FaSkull className="text-danger text-lg mb-1 group-hover:scale-110 transition-transform" />
               <span className="text-[8px] uppercase font-black tracking-widest text-slate-350">
                 {t('playtest.graveyard').toUpperCase()}
               </span>

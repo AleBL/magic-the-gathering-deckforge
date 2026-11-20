@@ -36,7 +36,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <span className="banner-status-dot shrink-0" />
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 dark:text-amber-300 flex items-center gap-1 leading-none mb-0.5">
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-warning flex items-center gap-1 leading-none mb-0.5">
             <FaBolt className="text-[8px] shrink-0" />
             {t('deck.editingDeck')}
           </span>
@@ -56,12 +56,12 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                     e.currentTarget.blur();
                   }
                 }}
-                className="bg-slate-800/80 text-white text-sm font-bold border border-slate-500 rounded px-2 py-0.5 w-1/3 min-w-[120px] focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                className="bg-slate-800/80 text-white text-sm font-bold border border-slate-500 rounded px-2 py-0.5 w-1/3 min-w-[120px] focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40"
               />
             ) : (
               <button
                 type="button"
-                className="font-bold text-sm text-white flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-amber-300 transition-colors text-left"
+                className="font-bold text-sm text-white flex items-baseline leading-tight min-w-0 gap-2 truncate flex-shrink cursor-pointer hover:text-warning transition-colors text-left"
                 onClick={() => setIsEditingName(true)}
                 title={t('deck.editDeckInfo')}
               >
@@ -83,31 +83,31 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                     setIsEditingFormat(false);
                   }
                 }}
-                className="bg-slate-800 text-amber-200 text-xs font-bold border border-amber-500/50 rounded px-1 py-0.5 uppercase focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 cursor-pointer shadow-lg"
+                className="bg-slate-800 text-warning text-xs font-bold border border-warning rounded px-1 py-0.5 uppercase focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40 cursor-pointer shadow-lg"
               >
-                <option value="standard" className="bg-slate-800 text-amber-200">
+                <option value="standard" className="bg-slate-800 text-warning">
                   {t('validation.standard')}
                 </option>
-                <option value="modern" className="bg-slate-800 text-amber-200">
+                <option value="modern" className="bg-slate-800 text-warning">
                   {t('validation.modern')}
                 </option>
-                <option value="commander" className="bg-slate-800 text-amber-200">
+                <option value="commander" className="bg-slate-800 text-warning">
                   {t('validation.commander')}
                 </option>
-                <option value="vintage" className="bg-slate-800 text-amber-200">
+                <option value="vintage" className="bg-slate-800 text-warning">
                   {t('validation.vintage')}
                 </option>
-                <option value="pauper" className="bg-slate-800 text-amber-200">
+                <option value="pauper" className="bg-slate-800 text-warning">
                   {t('validation.pauper')}
                 </option>
-                <option value={DeckFormatType.FREEFORM} className="bg-slate-800 text-amber-200">
+                <option value={DeckFormatType.FREEFORM} className="bg-slate-800 text-warning">
                   {t('validation.freeform')}
                 </option>
               </select>
             ) : (
               <button
                 type="button"
-                className="text-[10px] bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 px-1.5 py-0.5 rounded uppercase font-bold shrink-0 border border-amber-500/30 cursor-pointer transition-colors"
+                className="text-[10px] bg-warning-soft text-warning hover:bg-warning-soft px-1.5 py-0.5 rounded uppercase font-bold shrink-0 border border-warning/40 cursor-pointer transition-colors"
                 onClick={() => setIsEditingFormat(true)}
                 title={t('deck.editDeckInfo')}
               >
@@ -124,7 +124,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
           <button
             type="button"
             onClick={onCancelEdit}
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-200 hover:text-white transition-all border border-red-500/30 active:scale-95 shadow-sm"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-danger-soft hover:bg-danger-soft text-danger hover:text-white transition-all border border-danger/40 active:scale-95 shadow-sm"
             aria-label={t('deck.exitEditMode')}
           >
             <FaTimes className="text-xs shrink-0" />
