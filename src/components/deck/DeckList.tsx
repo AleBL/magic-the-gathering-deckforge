@@ -72,7 +72,8 @@ function DeckList({
   return (
     <div className="deck-list-section">
       {hideHeading ? null : (
-        <h3 className="text-fg text-xl font-semibold mb-4 transition-colors duration-300">
+        // Below lg the "Saved decks" toggle above the list already names it.
+        <h3 className="hidden lg:block text-fg text-xl font-semibold mb-4">
           {t('deck.savedDecks')} ({decks.length})
         </h3>
       )}
