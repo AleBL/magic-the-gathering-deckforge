@@ -174,7 +174,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-meta {
-  @apply flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5;
+  @apply flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden whitespace-nowrap;
 }
 
 /* ─── Export dialog option rows ────────────────────────────────── */

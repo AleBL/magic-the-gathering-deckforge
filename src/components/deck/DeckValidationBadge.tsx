@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import { LuChevronDown, LuChevronUp, LuCircleCheck, LuTriangleAlert } from 'react-icons/lu';
 import { ValidationResult, ValidationError } from '../../utils/deckValidator';
 import { formatLabelKey } from '../../utils/formatLabel';
 
@@ -15,14 +15,18 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (variant === 'compact') {
+    // A shape plus a word for assistive tech: the check and the warning read apart without
+    // colour, and the row stays on one line in the narrow library lane.
+    const label = validation.isValid ? t('validation.valid') : t('validation.invalid');
+    const Icon = validation.isValid ? LuCircleCheck : LuTriangleAlert;
     return (
       <span
-        className={`status-badge flex items-center gap-1.5 text-[10px] ${validation.isValid ? 'status-badge-success' : 'status-badge-danger'}`}
+        className={`inline-flex items-center ${validation.isValid ? 'text-success' : 'text-danger'}`}
+        title={label}
+        role="img"
+        aria-label={label}
       >
-        <span
-          className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-success shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-danger shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
-        />
-        {validation.isValid ? t('validation.valid') : t('validation.invalid')}
+        <Icon className="text-sm" aria-hidden="true" />
       </span>
     );
   }

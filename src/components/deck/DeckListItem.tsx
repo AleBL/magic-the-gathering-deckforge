@@ -147,9 +147,7 @@ export const DeckListItem = memo(function DeckListItem({
             </span>
           )}
           <span className="text-xs text-fg-secondary">{t(formatLabelKey(deck.format))}</span>
-          <span className="text-xs text-fg-muted">
-            {deck.cards.length} {t('common.cards')}
-          </span>
+          <span className="text-xs text-fg-muted">{deck.cards.length}</span>
           <DeckValidationBadge
             validation={validation}
             formatKey={deck.format || DeckFormatType.FREEFORM}
