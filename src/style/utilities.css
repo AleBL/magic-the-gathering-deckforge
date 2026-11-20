@@ -13,8 +13,9 @@
   @apply bg-danger-soft text-danger;
 }
 
+/* A count is information, not an alert: ink on paper, no pulse. Widens for two digits. */
 .count-badge {
-  @apply absolute -top-1.5 -right-1.5 bg-danger text-on-danger text-[10px] font-semibold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-line;
+  @apply absolute -top-1.5 -right-1.5 bg-primary text-on-primary text-[11px] font-medium rounded-full min-w-4.5 h-4.5 px-1 flex items-center justify-center;
 }
 
 /* Alerts and Banners */
