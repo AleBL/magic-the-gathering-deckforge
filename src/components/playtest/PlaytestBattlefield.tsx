@@ -81,7 +81,7 @@ const PlaytestBattlefieldCard = memo(
 
             {isTapped && (
               <div className="absolute top-1.5 right-1.5 bg-warning text-slate-950 text-[6px] font-semibold px-1 rounded shadow animate-pulse">
-                {t('playtest.tapped').toUpperCase()}
+                {t('playtest.tapped')}
               </div>
             )}
             {counters !== undefined && counters > 0 && (
@@ -192,7 +192,7 @@ export function PlaytestBattlefield() {
 
   return (
     <div
-      className={`flex-1 border rounded-2xl p-3 sm:p-4 min-h-[200px] sm:min-h-[300px] flex flex-col transition-all duration-300 ${
+      className={`flex-1 border rounded-2xl p-3 sm:p-4 min-h-[200px] sm:min-h-[240px] lg:min-h-0 lg:overflow-y-auto flex flex-col transition-all duration-300 ${
         dragOverZone === 'battlefield'
           ? 'border-2 border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus'
           : 'border-line bg-surface-1 '

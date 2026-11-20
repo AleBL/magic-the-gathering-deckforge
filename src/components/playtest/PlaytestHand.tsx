@@ -153,7 +153,7 @@ export function PlaytestHand() {
 
   return (
     <div
-      className={`border rounded-2xl p-3 sm:p-4 transition-all duration-300 ${
+      className={`shrink-0 border rounded-2xl p-3 transition-colors duration-150 ${
         dragOverZone === 'hand'
           ? 'border-2 border-dashed border-success bg-success-soft shadow-lg ring-2 ring-success/40'
           : 'border-line bg-surface-1 '
@@ -186,7 +186,7 @@ export function PlaytestHand() {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] sm:min-h-[170px] p-2 bg-surface-2 rounded-xl border border-line">
+      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] p-2 bg-surface-2 rounded-xl border border-line">
         {hand.length === 0 ? (
           <p className="text-xs text-slate-600 italic py-4">{t('playtest.handEmpty')}</p>
         ) : (

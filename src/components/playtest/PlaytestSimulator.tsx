@@ -143,7 +143,7 @@ function PlaytestSimulatorContent({
                     createRipple(event);
                     handleConfirmMulligan();
                   }}
-                  className="ripple-container bg-warning hover:bg-warning text-slate-950 text-xs font-semibold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
+                  className="ripple-container bg-warning hover:bg-warning-hover text-on-warning text-xs font-medium px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <LuCheck />
                   {t('playtest.confirmMulligan')}
@@ -155,7 +155,7 @@ function PlaytestSimulatorContent({
                   createRipple(event);
                   handleKeepHand();
                 }}
-                className="ripple-container bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all cursor-pointer"
+                className="ripple-container bg-primary hover:bg-primary-hover text-on-primary text-xs font-medium px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 {t('playtest.keepHand')}
               </button>
@@ -164,11 +164,14 @@ function PlaytestSimulatorContent({
         ) : null}
 
         <div className="flex-1 flex flex-row overflow-hidden min-h-0 sm:min-h-[480px]">
-          <div className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-4 sm:gap-6 relative bg-surface-2">
+          {/* From lg up the table fits the window: the hand and the bottom bar keep their
+              height at the bottom and the battlefield takes what is left, scrolling inside
+              itself. Below lg the column scrolls as a whole. */}
+          <div className="flex-1 min-h-0 p-3 sm:p-4 overflow-y-auto lg:overflow-hidden flex flex-col gap-3 sm:gap-4 relative bg-surface-2">
             <LowLifeWash active={lifeTotal <= 5} />
             <PlaytestParticles />
 
-            <div className="relative flex flex-col lg:flex-row gap-4 sm:gap-6 items-stretch z-10">
+            <div className="relative flex flex-col lg:flex-row gap-3 sm:gap-4 items-stretch z-10 lg:flex-1 lg:min-h-0">
               <PlaytestLibraryGraveyard />
               <PlaytestBattlefield />
             </div>

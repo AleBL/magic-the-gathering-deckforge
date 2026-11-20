@@ -21,7 +21,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
   } = usePlaytestContext();
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/60 pt-4">
+    <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
       <div className="flex items-center gap-2">
         <button
           type="button"
