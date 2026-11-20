@@ -177,9 +177,17 @@ function LifeCounter({ onClose }: LifeCounterProps) {
       className="fixed inset-0 z-[var(--z-modal)] flex flex-col gap-3 bg-surface-0 p-3 sm:p-4"
     >
       <header className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="life-counter-title" className="font-serif text-xl font-semibold text-fg">
-          {t('lifeCounter.title')}
-        </h2>
+        <div className="flex w-full items-center justify-between gap-2 sm:w-auto">
+          <h2 id="life-counter-title" className="font-serif text-xl font-semibold text-fg">
+            {t('lifeCounter.title')}
+          </h2>
+          {/* On a phone the close sits beside the title; from sm up it ends the controls row. */}
+          <div className="sm:hidden">
+            <button type="button" className="ghost-button px-2" onClick={onClose} aria-label={t('common.close')}>
+              <LuX aria-hidden="true" />
+            </button>
+          </div>
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <label className="text-sm text-fg-secondary">
             <span className="sr-only">{t('lifeCounter.players')}</span>
@@ -213,9 +221,12 @@ function LifeCounter({ onClose }: LifeCounterProps) {
             <LuRotateCcw aria-hidden="true" />
             {t('lifeCounter.newGame')}
           </button>
-          <button type="button" className="ghost-button px-2" onClick={onClose} aria-label={t('common.close')}>
-            <LuX aria-hidden="true" />
-          </button>
+          {/* Visibility sits on a wrapper: .ghost-button sets display itself and would win. */}
+          <div className="hidden sm:block">
+            <button type="button" className="ghost-button px-2" onClick={onClose} aria-label={t('common.close')}>
+              <LuX aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </header>
 
