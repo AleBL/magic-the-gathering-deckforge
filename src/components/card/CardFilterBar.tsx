@@ -78,7 +78,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
                 aria-pressed={isActive}
                 className={`flex items-center w-full min-h-11 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer truncate ${
                   isActive
-                    ? 'bg-primary text-on-primary shadow-md shadow-blue-500/25'
+                    ? 'bg-primary text-on-primary'
                     : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '
                 }`}
               >
@@ -125,7 +125,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
               onClick={() => toggleType(type.code)}
               className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-primary border-transparent text-on-primary shadow-md shadow-blue-500/25 scale-[1.02]'
+                  ? 'bg-primary border-transparent text-on-primary'
                   : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 hover:border-line-strong shadow-sm hover:text-fg '
               }`}
             >

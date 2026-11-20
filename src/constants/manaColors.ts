@@ -10,12 +10,12 @@ export const MANA_COLOR_GRADIENTS: Record<string, string> = {
 // {@link MANA_COLOR_GRADIENTS} minus ring, scale and z-index: on a full-width row those read
 // as a stray halo around an oddly enlarged button rather than as a color cue.
 export const MANA_COLOR_ROW_ACTIVE: Record<string, string> = {
-  W: 'bg-gradient-to-r from-[#fff7de] to-[#f8e7b9] text-[#5c4f2e] shadow-md shadow-black/5',
-  U: 'bg-gradient-to-r from-[#1a7bc4] to-[#0e68ab] text-white shadow-md shadow-blue-500/20',
-  B: 'bg-gradient-to-r from-[#2a1600] to-[#150b00] text-[#e8ddd0] shadow-md shadow-black/20',
-  R: 'bg-gradient-to-r from-[#e63c45] to-[#d3202a] text-white shadow-md shadow-red-500/20',
-  G: 'bg-gradient-to-r from-[#008f4d] to-[#00733e] text-white shadow-md shadow-green-500/20',
-  C: 'bg-gradient-to-r from-[#d6d6d6] to-[#a8a9ad] text-[#3f3f3f] shadow-md shadow-black/5'
+  W: 'bg-gradient-to-r from-[#fff7de] to-[#f8e7b9] text-[#5c4f2e]',
+  U: 'bg-gradient-to-r from-[#1a7bc4] to-[#0e68ab] text-white',
+  B: 'bg-gradient-to-r from-[#2a1600] to-[#150b00] text-[#e8ddd0]',
+  R: 'bg-gradient-to-r from-[#e63c45] to-[#d3202a] text-white',
+  G: 'bg-gradient-to-r from-[#008f4d] to-[#00733e] text-white',
+  C: 'bg-gradient-to-r from-[#d6d6d6] to-[#a8a9ad] text-[#3f3f3f]'
 };
 
 /** Light backgrounds need a dark swatch overlay, not a light one. */
