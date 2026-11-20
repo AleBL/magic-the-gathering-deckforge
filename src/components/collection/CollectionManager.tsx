@@ -249,7 +249,7 @@ function CollectionManager() {
                     </p>
                     <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
                       <div
-                        className="h-full bg-surface-3 transition-[width] duration-300"
+                        className="h-full bg-accent transition-[width] duration-300"
                         style={{
                           width: `${Math.round((importProgress.done / importProgress.total) * 100)}%`
                         }}

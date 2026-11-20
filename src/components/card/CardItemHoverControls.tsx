@@ -94,7 +94,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onAddToDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-surface-3 hover:scale-110 transition-all pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-primary-hover hover:scale-110 transition-all pointer-events-auto"
           title={t('cardDetails.addCopy')}
         >
           <LuPlus />
