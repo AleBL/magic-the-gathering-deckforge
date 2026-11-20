@@ -61,7 +61,7 @@ function OpeningHandChart({ stats }: { stats: DeckStatistics }) {
         <FaDiceD20 className="text-indigo-500" />
         {t('stats.consistency')}
       </span>
-      <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-2">{t('stats.consistencyDesc')}</p>
+      <p className="text-[10px] text-fg-muted mb-2">{t('stats.consistencyDesc')}</p>
       <ChartFrame height="h-40">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={distribution} margin={{ top: 8, right: 4, left: 4, bottom: 0 }} barCategoryGap="20%">
@@ -104,7 +104,7 @@ function OpeningHandChart({ stats }: { stats: DeckStatistics }) {
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
-      <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">
+      <p className="text-[10px] text-fg-muted mt-1">
         {t('stats.consistencyBasis', { lands: landCount, total: deckSize })}
       </p>
     </div>
@@ -144,9 +144,7 @@ function StatTile({ label, value, tone }: { label: string; value: string; tone?:
   return (
     <div className="stat-tile">
       <span className="stat-tile-label">{label}</span>
-      <span className={`text-base font-extrabold tabular-nums ${tone ?? 'text-gray-700 dark:text-gray-200'}`}>
-        {value}
-      </span>
+      <span className={`text-base font-extrabold tabular-nums ${tone ?? 'text-fg-secondary '}`}>{value}</span>
     </div>
   );
 }
@@ -164,15 +162,15 @@ function ScoreBreakdownRow({ component }: { component: ScoreComponent }) {
   return (
     <div>
       <div className="flex items-center justify-between text-[11px] mb-1">
-        <span className="font-semibold text-gray-700 dark:text-gray-300">{label}</span>
-        <span className="tabular-nums text-gray-500 dark:text-gray-400">
+        <span className="font-semibold text-fg-secondary">{label}</span>
+        <span className="tabular-nums text-fg-muted">
           {Math.round(component.score)}/{component.max}
         </span>
       </div>
-      <div className="h-1.5 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden">
+      <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
         <div className="h-full rounded-full bg-indigo-500 transition-all" style={{ width: `${pct * 100}%` }} />
       </div>
-      <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{note}</p>
+      <p className="text-[10px] text-fg-muted mt-1">{note}</p>
     </div>
   );
 }
@@ -191,7 +189,7 @@ function ScoreGauge({ score }: { score: ConsistencyScore }) {
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <span className="text-4xl font-extrabold tabular-nums text-gray-800 dark:text-gray-100">{score.total}</span>
+        <span className="text-4xl font-extrabold tabular-nums text-fg">{score.total}</span>
         <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color }}>
           {t(`deckDoctor.rating.${score.rating}`)}
         </span>
@@ -253,7 +251,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
         <FaStethoscope className="text-teal-500" />
         {t('deckDoctor.title')}
       </h4>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{t('deckDoctor.desc')}</p>
+      <p className="text-xs text-fg-muted">{t('deckDoctor.desc')}</p>
 
       {!ready ? (
         <ChartSkeleton height="h-40" />
@@ -281,7 +279,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
                 <FaFish className="text-teal-500" />
                 {t('deckDoctor.openingHands')}
               </span>
-              <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-2">
+              <p className="text-[10px] text-fg-muted mb-2">
                 {t('deckDoctor.handsSimulated', { count: openingHands.iterations })}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -340,14 +338,14 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
                     return (
                       <div
                         key={diag.color}
-                        className="flex items-center justify-between gap-2 text-[11px] px-2.5 py-1.5 rounded-lg bg-white/70 dark:bg-slate-800/60 border border-gray-200 dark:border-gray-700"
+                        className="flex items-center justify-between gap-2 text-[11px] px-2.5 py-1.5 rounded-lg bg-surface-1/70 border border-line"
                       >
-                        <span className="flex items-center gap-1.5 font-semibold text-gray-700 dark:text-gray-300">
+                        <span className="flex items-center gap-1.5 font-semibold text-fg-secondary">
                           <span className="flex items-center">{parseTextWithSymbols(`{${diag.color}}`)}</span>
                           {colorLabels[diag.color]?.name}
                         </span>
                         <span className="flex items-center gap-3 tabular-nums">
-                          <span className="text-gray-500 dark:text-gray-400">
+                          <span className="text-fg-muted">
                             {t('deckDoctor.sourcesOfIdeal', { sources: diag.sources, ideal: diag.idealSources })}
                           </span>
                           <span

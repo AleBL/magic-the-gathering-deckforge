@@ -52,7 +52,7 @@ function DeckTokensTab({
 
   if (isLoading) {
     return (
-      <div className="h-64 flex flex-col items-center justify-center gap-3 text-gray-500 dark:text-gray-400">
+      <div className="h-64 flex flex-col items-center justify-center gap-3 text-fg-muted">
         <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
         <p className="text-xs font-semibold">{t('tokens.loadingTokens')}</p>
       </div>
@@ -63,7 +63,7 @@ function DeckTokensTab({
     <div className="space-y-4 text-left animate-fadeIn">
       {/* Tab Header with Add Token Button */}
       {isEditMode && (
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 relative">
+        <div className="flex items-center justify-between border-b border-line pb-2 relative">
           <div className="flex items-center gap-2">
             {/* Analyze deck manually */}
             <button
@@ -105,7 +105,7 @@ function DeckTokensTab({
               return (
                 <div
                   key={tokenCard.id}
-                  className="relative border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-gray-800/10 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all duration-300 group"
+                  className="relative border border-line bg-surface-1/40 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all duration-300 group"
                 >
                   {/* Trash/Delete icon button */}
                   {isEditMode && (
@@ -131,7 +131,7 @@ function DeckTokensTab({
                         onTokenClick?.(tokenCard);
                       }
                     }}
-                    className="relative w-full h-34 rounded-lg overflow-hidden border border-gray-150 dark:border-gray-800 bg-slate-950 flex items-center justify-center mb-2 cursor-pointer group/img shrink-0"
+                    className="relative w-full h-34 rounded-lg overflow-hidden border border-line bg-slate-950 flex items-center justify-center mb-2 cursor-pointer group/img shrink-0"
                   >
                     {imgUrl ? (
                       <img
@@ -158,10 +158,10 @@ function DeckTokensTab({
 
                   {/* Text metadata */}
                   <div className="w-full text-center space-y-0.5 min-w-0">
-                    <h5 className="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate leading-tight">
+                    <h5 className="text-[11px] font-bold text-fg truncate leading-tight">
                       {tokenCard.printed_name || tokenCard.name}
                     </h5>
-                    <p className="text-[8px] text-gray-400 dark:text-gray-500 truncate font-semibold uppercase tracking-wider">
+                    <p className="text-[8px] text-fg-muted truncate font-semibold uppercase tracking-wider">
                       {t('common.generatedBy')}:{' '}
                       <span className="font-extrabold text-indigo-500">{generatorCardName}</span>
                     </p>

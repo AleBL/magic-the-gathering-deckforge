@@ -14,7 +14,7 @@
 }
 
 .count-badge {
-  @apply absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-white dark:border-slate-800;
+  @apply absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-line;
 }
 
 /* Alerts and Banners */
@@ -40,7 +40,7 @@
 }
 
 .text-muted {
-  @apply text-xs text-gray-600 dark:text-gray-400 transition-colors duration-200;
+  @apply text-xs text-fg-secondary transition-colors duration-200;
 }
 
 /* Badge list styles */

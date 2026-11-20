@@ -62,7 +62,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-300 dark:border-slate-800'}`}
+          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-line-strong '}`}
         >
           {imageUrl ? (
             <img
@@ -156,7 +156,7 @@ export function PlaytestHand() {
       className={`border rounded-2xl p-3 sm:p-4 transition-all duration-300 ${
         dragOverZone === 'hand'
           ? 'border-2 border-dashed border-emerald-400 bg-emerald-500/5 shadow-lg ring-2 ring-emerald-400/30'
-          : 'border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/10'
+          : 'border-line bg-surface-1 '
       }`}
       onDragOver={(event) => {
         event.preventDefault();
@@ -180,13 +180,13 @@ export function PlaytestHand() {
           {t('playtest.hand')} ({hand.length})
         </span>
         {!isMulliganPhase && hand.length > 0 ? (
-          <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-600 normal-case font-normal">
+          <span className="text-[9px] sm:text-[10px] text-fg-muted normal-case font-normal">
             {t('playtest.clickCardHint')}
           </span>
         ) : null}
       </div>
 
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] sm:min-h-[170px] p-2 bg-slate-50 dark:bg-slate-950/15 rounded-xl border border-slate-200 dark:border-slate-900/30">
+      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] sm:min-h-[170px] p-2 bg-surface-2 rounded-xl border border-line">
         {hand.length === 0 ? (
           <p className="text-xs text-slate-600 italic py-4">{t('playtest.handEmpty')}</p>
         ) : (

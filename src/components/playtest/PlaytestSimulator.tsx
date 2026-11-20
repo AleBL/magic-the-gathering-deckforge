@@ -120,7 +120,7 @@ function PlaytestSimulatorContent({
         role="dialog"
         aria-modal="true"
         aria-label={t('playtest.playtestSimulator')}
-        className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition-all duration-300"
+        className="bg-surface-2 border border-line text-fg rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition-all duration-300"
       >
         <PlaytestControlBarTop onClose={onClose} />
 
@@ -164,7 +164,7 @@ function PlaytestSimulatorContent({
         ) : null}
 
         <div className="flex-1 flex flex-row overflow-hidden min-h-0 sm:min-h-[480px]">
-          <div className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-4 sm:gap-6 relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] bg-slate-50 dark:bg-slate-950">
+          <div className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-4 sm:gap-6 relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] bg-surface-2">
             <AmbientGlow lowLife={lifeTotal <= 5} intensity={1.4} positionClassName="absolute inset-0 z-0" />
             <PlaytestParticles />
 

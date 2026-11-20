@@ -195,7 +195,7 @@ export function PlaytestBattlefield() {
       className={`flex-1 border rounded-2xl p-3 sm:p-4 min-h-[200px] sm:min-h-[300px] flex flex-col transition-all duration-300 ${
         dragOverZone === 'battlefield'
           ? 'border-2 border-dashed border-indigo-400 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-400/30'
-          : 'border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/10'
+          : 'border-line bg-surface-1 '
       }`}
       onDragOver={(event) => {
         event.preventDefault();

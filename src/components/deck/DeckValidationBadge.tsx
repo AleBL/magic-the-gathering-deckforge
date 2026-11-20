@@ -43,7 +43,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
         <span className="font-bold flex items-center gap-2">
           {t('validation.deckValidation')} ({t(formatLabelKey(formatKey))})
           {hasErrors ? (
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
+            <span className="text-[10px] text-fg-muted font-normal">
               ({isExpanded ? t('validation.hideDetails') : t('validation.viewDetails')})
             </span>
           ) : null}
@@ -60,7 +60,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
             {validation.isValid ? t('validation.valid') : t('validation.invalid')}
           </span>
           {hasErrors ? (
-            <span className="text-gray-500 dark:text-gray-400">
+            <span className="text-fg-muted">
               {isExpanded ? <FaChevronUp className="w-3.5 h-3.5" /> : <FaChevronDown className="w-3.5 h-3.5" />}
             </span>
           ) : null}

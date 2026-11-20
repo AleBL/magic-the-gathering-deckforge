@@ -66,10 +66,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
       </div>
 
       <div className="space-y-2">
-        <label
-          htmlFor="budget-target"
-          className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block"
-        >
+        <label htmlFor="budget-target" className="text-[10px] font-bold text-fg-muted uppercase tracking-wider block">
           {t('stats.budgetTarget')}
         </label>
         <div className="flex items-center gap-1.5">
@@ -82,7 +79,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
             value={budgetTarget}
             onChange={(e) => handleTargetChange(e.target.value)}
             placeholder={t('stats.budgetTargetPlaceholder')}
-            className="w-24 min-h-11 sm:min-h-0 px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-24 min-h-11 sm:min-h-0 px-2 py-1 rounded-lg border border-line bg-surface-1 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-purple-400"
           />
         </div>
         {targetNum > 0 &&
@@ -91,13 +88,13 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
               <span className="text-xs font-bold text-red-600 dark:text-red-400 block">
                 {t('stats.overBudgetBy', { amount: plan.overBy.toFixed(2) })}
               </span>
-              <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">
+              <span className="text-[10px] font-bold text-fg-muted uppercase tracking-wider block">
                 {t('stats.cutSuggestions')}
               </span>
               <ul className="space-y-1">
                 {plan.cuts.map((card) => (
                   <li key={card.id} className="flex items-center justify-between gap-2 text-xs">
-                    <span className="truncate text-gray-700 dark:text-gray-300">{card.name}</span>
+                    <span className="truncate text-fg-secondary">{card.name}</span>
                     <span className="tabular-nums font-semibold text-red-500 shrink-0">−${card.price.toFixed(2)}</span>
                   </li>
                 ))}
@@ -112,7 +109,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
         <ChartSkeleton height="h-32" />
       ) : chartData.length > 0 ? (
         <div className="space-y-1.5">
-          <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1">
+          <span className="text-[10px] font-bold text-fg-muted uppercase tracking-wider flex items-center gap-1">
             <FaStar className="text-amber-500" />
             {t('stats.topExpensiveCards')}
           </span>

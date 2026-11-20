@@ -46,17 +46,17 @@ export default function BackupPanel() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{t('backup.description')}</p>
+      <p className="text-xs text-fg-muted leading-relaxed">{t('backup.description')}</p>
 
-      <div className="rounded-xl border border-gray-200 dark:border-slate-700 p-3 flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
-          <FaDatabase className="text-primary shrink-0 text-xs" />
+      <div className="rounded-xl border border-line p-3 flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-sm text-fg-secondary">
+          <FaDatabase className="text-accent shrink-0 text-xs" />
           <span className="font-semibold">{t('backup.storageUsed')}</span>
           <span className="ml-auto tabular-nums">{usage ?? t('backup.unavailable')}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
-          <FaLock className="text-primary shrink-0 text-xs" />
+        <div className="flex items-center gap-2 text-sm text-fg-secondary">
+          <FaLock className="text-accent shrink-0 text-xs" />
           <span className="font-semibold">{t('backup.persistence')}</span>
           <span className="ml-auto">
             {status.persisted === null
@@ -73,7 +73,7 @@ export default function BackupPanel() {
             <button
               type="button"
               onClick={enablePersistence}
-              className="self-start px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:opacity-90 transition-opacity"
+              className="self-start px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-on-primary hover:opacity-90 transition-opacity"
             >
               {t('backup.enablePersistence')}
             </button>
@@ -85,7 +85,7 @@ export default function BackupPanel() {
         type="button"
         onClick={exportBackup}
         disabled={isWorking}
-        className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-primary text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+        className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-primary text-on-primary hover:opacity-90 transition-opacity disabled:opacity-50"
       >
         <FaDownload className="text-xs shrink-0" />
         {t('backup.export')}
@@ -95,7 +95,7 @@ export default function BackupPanel() {
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={isWorking}
-        className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+        className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors disabled:opacity-50"
       >
         <FaUpload className="text-xs shrink-0" />
         {t('backup.chooseFile')}
@@ -111,8 +111,8 @@ export default function BackupPanel() {
       />
 
       {pending ? (
-        <div className="rounded-xl border border-gray-200 dark:border-slate-700 p-3 flex flex-col gap-3">
-          <p className="text-xs text-gray-600 dark:text-gray-300">
+        <div className="rounded-xl border border-line p-3 flex flex-col gap-3">
+          <p className="text-xs text-fg-secondary">
             {t('backup.fileSummary', {
               date: new Date(pending.exportedAt).toLocaleDateString(),
               decks: pending.decks.length,
@@ -124,11 +124,11 @@ export default function BackupPanel() {
             type="button"
             onClick={() => run('merge')}
             disabled={isWorking}
-            className="px-3 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="px-3 py-2 rounded-lg text-sm font-semibold bg-primary text-on-primary hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {t('backup.merge')}
           </button>
-          <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">{t('backup.mergeHint')}</p>
+          <p className="text-xs text-fg-muted -mt-1">{t('backup.mergeHint')}</p>
 
           {/* Two steps on purpose: replace is the only action here that can destroy data. */}
           {confirmingReplace ? (
@@ -151,7 +151,7 @@ export default function BackupPanel() {
               {t('backup.replace')}
             </button>
           )}
-          <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">{t('backup.replaceHint')}</p>
+          <p className="text-xs text-fg-muted -mt-1">{t('backup.replaceHint')}</p>
         </div>
       ) : null}
     </div>

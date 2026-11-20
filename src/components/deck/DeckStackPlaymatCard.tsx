@@ -61,7 +61,7 @@ export function DeckStackPlaymatCard({
               ? 'bg-red-950/60 border border-red-900/60'
               : isRestricted
                 ? 'bg-amber-100/60 dark:bg-amber-950/60 border border-amber-300/60 dark:border-amber-900/60'
-                : 'bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80'
+                : 'bg-surface-3 border border-gray-400/80 dark:border-slate-800/80'
           }`}
         />
       ) : null}
@@ -73,7 +73,7 @@ export function DeckStackPlaymatCard({
               ? 'bg-red-950/40 border border-red-900/40'
               : isRestricted
                 ? 'bg-amber-100/40 dark:bg-amber-950/40 border border-amber-300/40 dark:border-amber-900/40'
-                : 'bg-gray-200 dark:bg-slate-950 border border-gray-300/80 dark:border-slate-800/80'
+                : 'bg-surface-3 border border-line-strong '
           }`}
         />
       ) : null}
@@ -87,7 +87,7 @@ export function DeckStackPlaymatCard({
             ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
             : isRestricted
               ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
-              : 'border-gray-300 dark:border-slate-800/50 hover:border-blue-500/80'
+              : 'border-line-strong hover:border-blue-500/80'
         }`}
         data-has-stack={count > 1 ? 'true' : 'false'}
         onClick={() => onSelectCard(card)}
@@ -112,10 +112,10 @@ export function DeckStackPlaymatCard({
           />
         ) : (
           <div
-            className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-100 dark:bg-red-950/20' : 'bg-gray-100 dark:bg-slate-850'}`}
+            className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-100 dark:bg-red-950/20' : 'bg-surface-2 '}`}
           >
             <span
-              className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}
+              className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-fg '}`}
             >
               {card.printed_name || card.name}
             </span>
@@ -186,7 +186,7 @@ export function DeckStackPlaymatCard({
                   }}
                   className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
                     card.zone === DeckZone.MAIN
-                      ? 'bg-primary text-white ring-1 ring-white/50'
+                      ? 'bg-primary text-on-primary ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
                   }`}
                   title={t('deck.printFilters.main')}

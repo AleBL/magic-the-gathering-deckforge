@@ -101,7 +101,7 @@ function CustomDialog({
         <button
           type="button"
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-fg-secondary transition-colors"
           aria-label={t('common.close')}
         >
           <FaTimes className="text-base" />
@@ -110,13 +110,10 @@ function CustomDialog({
         <div className="flex gap-4 pt-2">
           {iconMap[variant]}
           <div className="flex-1 space-y-2">
-            <h3
-              id="dialog-title"
-              className="text-lg font-bold text-gray-900 dark:text-white transition-colors duration-300"
-            >
+            <h3 id="dialog-title" className="text-lg font-bold text-fg transition-colors duration-300">
               {title}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 whitespace-pre-line leading-relaxed">
+            <p className="text-sm text-fg-secondary transition-colors duration-300 whitespace-pre-line leading-relaxed">
               {message}
             </p>
           </div>

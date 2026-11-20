@@ -53,8 +53,8 @@ export function ProfileMenuMainSection({
             <FaUser className="text-sm text-white" />
           </div>
           <div>
-            <p className="text-sm font-bold text-gray-900 dark:text-white">{APP_NAME}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-sm font-bold text-fg">{APP_NAME}</p>
+            <p className="text-xs text-fg-muted">
               {t('strategy.version')} {APP_VERSION}
             </p>
           </div>
@@ -64,7 +64,7 @@ export function ProfileMenuMainSection({
       <div className="profile-menu-divider" />
 
       <div className="profile-menu-row">
-        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-fg-secondary">
           {isDarkMode ? <FaMoon className="text-indigo-400 text-sm" /> : <FaSun className="text-amber-400 text-sm" />}
           <span className="text-sm font-medium">{isDarkMode ? t('common.darkMode') : t('common.lightMode')}</span>
         </div>
@@ -79,7 +79,7 @@ export function ProfileMenuMainSection({
       </div>
 
       <div className="profile-menu-row">
-        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+        <div className="flex items-center gap-2 text-fg-secondary">
           <FaMagic className={`text-sm ${effectsEnabled ? 'text-fuchsia-400' : 'text-gray-400'}`} />
           <span className="text-sm font-medium">{t('common.visualEffects')}</span>
         </div>
@@ -101,7 +101,7 @@ export function ProfileMenuMainSection({
         </div>
         <div className="flex items-center gap-1.5">
           <img src={currentLang.iconPath} alt={currentLang.label} className="w-4 h-4 rounded-full object-cover" />
-          <span className="text-xs text-gray-500 dark:text-gray-400">{currentLang.label}</span>
+          <span className="text-xs text-fg-muted">{currentLang.label}</span>
           <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
         </div>
       </button>
@@ -151,7 +151,7 @@ export function ProfileMenuMainSection({
         role="menuitem"
       >
         <div className="flex items-center gap-2">
-          <FaGithub className="text-gray-600 dark:text-gray-300 text-sm shrink-0" />
+          <FaGithub className="text-fg-secondary text-sm shrink-0" />
           <span>{t('strategy.gitHub')}</span>
         </div>
         <span className="text-xs text-gray-400">↗</span>

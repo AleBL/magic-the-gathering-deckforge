@@ -57,17 +57,17 @@ export function CollectionBySetView({ entries, onSelectCard }: CollectionBySetVi
       {groups.map((group) => {
         const isOpen = !collapsed.has(group.code);
         return (
-          <section key={group.code} className="rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <section key={group.code} className="rounded-xl border border-line overflow-hidden">
             <button
               type="button"
               onClick={() => toggle(group.code)}
               aria-expanded={isOpen}
-              className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-slate-800/60 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 bg-surface-2 hover:bg-surface-2 transition-colors"
             >
-              <FaLayerGroup className="text-primary text-xs shrink-0" />
-              <span className="font-bold text-sm text-gray-800 dark:text-gray-100 truncate">{group.name}</span>
-              <span className="text-[10px] uppercase text-gray-400 dark:text-gray-500 shrink-0">{group.code}</span>
-              <span className="ml-auto text-xs font-semibold text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
+              <FaLayerGroup className="text-accent text-xs shrink-0" />
+              <span className="font-bold text-sm text-fg truncate">{group.name}</span>
+              <span className="text-[10px] uppercase text-fg-muted shrink-0">{group.code}</span>
+              <span className="ml-auto text-xs font-semibold text-fg-muted tabular-nums shrink-0">
                 {t('collection.ownedCount', { count: group.owned })}
               </span>
               <FaChevronDown
@@ -76,21 +76,21 @@ export function CollectionBySetView({ entries, onSelectCard }: CollectionBySetVi
             </button>
 
             {isOpen ? (
-              <ul className="divide-y divide-gray-100 dark:divide-slate-800">
+              <ul className="divide-y divide-line">
                 {group.items.map((entry) => (
                   <li key={entry.id}>
                     <button
                       type="button"
                       onClick={() => onSelectCard(entry.card)}
-                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left hover:bg-surface-2 transition-colors"
                     >
-                      <span className="w-10 shrink-0 text-[10px] tabular-nums text-gray-400 dark:text-gray-500">
+                      <span className="w-10 shrink-0 text-[10px] tabular-nums text-fg-muted">
                         {entry.card.collector_number ? `#${entry.card.collector_number}` : ''}
                       </span>
-                      <span className="flex-1 min-w-0 truncate text-sm text-gray-800 dark:text-gray-100">
+                      <span className="flex-1 min-w-0 truncate text-sm text-fg">
                         {entry.card.printed_name || entry.name}
                       </span>
-                      <span className="shrink-0 text-xs font-bold tabular-nums text-gray-700 dark:text-gray-200">
+                      <span className="shrink-0 text-xs font-bold tabular-nums text-fg-secondary">
                         {entry.quantity}
                       </span>
                     </button>

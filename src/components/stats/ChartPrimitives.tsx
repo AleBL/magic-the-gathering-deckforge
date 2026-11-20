@@ -21,7 +21,7 @@ export function ChartFrame({
 }) {
   return (
     <div
-      className={`w-full ${height} rounded-xl border border-gray-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-slate-900/40 shadow-inner p-2 relative ${className}`}
+      className={`w-full ${height} rounded-xl border border-line bg-surface-1/50 shadow-inner p-2 relative ${className}`}
       style={style}
     >
       {children}
@@ -35,13 +35,13 @@ export function ChartSkeleton({ height }: { height: string }) {
   const bars = [55, 80, 45, 90, 60, 75, 50];
   return (
     <div
-      className={`w-full ${height} rounded-xl border border-gray-200/70 dark:border-slate-800/70 bg-gray-100/50 dark:bg-slate-800/30 animate-pulse overflow-hidden relative`}
+      className={`w-full ${height} rounded-xl border border-line bg-surface-2/50 animate-pulse overflow-hidden relative`}
       role="status"
       aria-label={t('common.loading')}
     >
       <div className="absolute inset-0 flex items-end justify-between gap-2 p-4">
         {bars.map((h, i) => (
-          <div key={i} className="flex-1 rounded-t bg-gray-300/60 dark:bg-slate-700/50" style={{ height: `${h}%` }} />
+          <div key={i} className="flex-1 rounded-t bg-surface-3/60" style={{ height: `${h}%` }} />
         ))}
       </div>
     </div>
@@ -85,23 +85,21 @@ export function ChartTooltip({ active, title, rows }: ChartTooltipProps) {
   return (
     <div
       role="tooltip"
-      className="bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 text-xs p-3 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700/60 min-w-[9rem]"
+      className="bg-surface-1 text-fg text-xs p-3 rounded-lg shadow-xl border border-line min-w-[9rem]"
     >
       {title ? (
-        <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-gray-200 dark:border-slate-700 font-bold text-gray-900 dark:text-white">
-          {title}
-        </div>
+        <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-line font-bold text-fg">{title}</div>
       ) : null}
       <div className="flex flex-col gap-1">
         {rows.map((row) => (
           <div key={row.key} className="flex items-center justify-between gap-3">
-            <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 font-medium">
+            <span className="flex items-center gap-1.5 text-fg-muted font-medium">
               {row.swatch ? (
                 <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: row.swatch }} />
               ) : null}
               {row.label}
             </span>
-            <span className="font-bold text-gray-900 dark:text-white tabular-nums">{row.value}</span>
+            <span className="font-bold text-fg tabular-nums">{row.value}</span>
           </div>
         ))}
       </div>
@@ -134,13 +132,13 @@ export function ChartLegend({ items }: { items: ChartLegendItem[] }) {
             className={`px-3 py-1 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
               item.active
                 ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-slate-900 shadow-md border-transparent'
-                : 'border-gray-200 dark:border-slate-700'
+                : 'border-line '
             } ${item.muted ? 'opacity-40' : 'opacity-90 hover:opacity-100'} ${item.onClick ? 'cursor-pointer' : ''}`}
           >
             <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: item.swatch }} />
-            <span className="flex items-center gap-1 text-gray-700 dark:text-gray-200">{item.label}</span>
+            <span className="flex items-center gap-1 text-fg-secondary">{item.label}</span>
             {item.value !== undefined ? (
-              <span className="text-gray-400 dark:text-gray-500 font-normal tabular-nums">{item.value}</span>
+              <span className="text-fg-muted font-normal tabular-nums">{item.value}</span>
             ) : null}
           </Tag>
         );

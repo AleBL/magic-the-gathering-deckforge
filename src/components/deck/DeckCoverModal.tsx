@@ -51,7 +51,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
       >
         <div className="flex items-center justify-between mb-4">
           <h3 id="deck-cover-title" className="modal-title">
-            <FaImage className="text-primary" />
+            <FaImage className="text-accent" />
             {t('deck.setCover')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
@@ -60,7 +60,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
         </div>
 
         {options.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">{t('deck.addCardsMessage')}</p>
+          <p className="text-sm text-fg-muted text-center py-6">{t('deck.addCardsMessage')}</p>
         ) : (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {options.map((card) => {

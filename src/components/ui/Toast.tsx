@@ -30,17 +30,17 @@ function Toast({ message, variant = 'success', action }: ToastProps) {
       // save/error toast is most likely to fire. The bottom offset clears
       // the tab bar's own height (~56px) plus the safe-area inset below `sm`,
       // where that bar exists; sm: and up it's hidden, so bottom-5 is enough.
-      className={`fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] sm:bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 animate-toast-enter transition-all duration-300 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-white/5 border-l-4 z-[var(--z-toast)] ${borderMap[variant]}`}
+      className={`fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] sm:bottom-5 right-5 left-5 md:left-auto w-auto md:w-full max-w-[calc(100vw-40px)] md:max-w-sm overflow-hidden rounded-xl shadow-2xl ring-1 ring-line animate-toast-enter transition-all duration-300 backdrop-blur-md bg-surface-1/80 border border-white/20 dark:border-white/5 border-l-4 z-[var(--z-toast)] ${borderMap[variant]}`}
     >
       <div className="p-4 flex items-center justify-between gap-3" role="alert" aria-live="assertive">
         <div className="flex items-center gap-3">
           {iconMap[variant]}
-          <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{message}</span>
+          <span className="text-sm font-semibold text-fg">{message}</span>
         </div>
         {action ? (
           <button
             onClick={action.onClick}
-            className="shrink-0 px-3 py-1 text-xs font-bold rounded-md bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/40 text-primary dark:text-blue-400 transition-colors"
+            className="shrink-0 px-3 py-1 text-xs font-bold rounded-md bg-surface-1/20 hover:bg-surface-1/30 text-accent transition-colors"
           >
             {action.label}
           </button>

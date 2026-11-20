@@ -9,7 +9,7 @@
    ─────────────────────────────────────────────────────────── */
 
 .deck-content-tab-bar {
-  @apply flex flex-wrap border-b border-gray-200 dark:border-gray-700 mb-4 text-xs font-bold gap-1 select-none;
+  @apply flex flex-wrap border-b border-line mb-4 text-xs font-bold gap-1 select-none;
 }
 
 /* Reads as a real tab: padded hit area, rounded top, and a hover background so
@@ -17,11 +17,11 @@
 .deck-content-tab {
   @apply relative px-3 py-2 min-h-11 sm:min-h-0 rounded-t-lg whitespace-nowrap transition-all border-b-2 flex items-center gap-1.5 cursor-pointer;
   border-color: transparent;
-  @apply text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/80 dark:hover:bg-slate-800/70;
+  @apply text-fg-muted hover:text-fg hover:bg-surface-2/80;
 }
 
 .deck-content-tab-active {
-  @apply border-blue-500 text-primary dark:text-blue-400 font-extrabold bg-blue-500/5 dark:bg-blue-400/10;
+  @apply border-blue-500 text-accent font-extrabold bg-blue-500/5 dark:bg-blue-400/10;
 }
 
 /* ── Option Toggle Button (View Mode / Group By / Sort By) ──
@@ -29,20 +29,20 @@
    ─────────────────────────────────────────────────────────── */
 
 .option-toggle-btn {
-  @apply flex flex-col items-center justify-center py-2.5 rounded-xl border transition-all cursor-pointer gap-1.5 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 font-semibold shadow-sm;
+  @apply flex flex-col items-center justify-center py-2.5 rounded-xl border transition-all cursor-pointer gap-1.5 bg-surface-1 border-line text-fg-secondary hover:text-fg hover:bg-surface-2 hover:border-line-strong font-semibold shadow-sm;
 }
 
 .option-toggle-btn-active {
-  @apply bg-blue-500 border-primary text-white shadow-md font-black scale-[1.02];
+  @apply bg-blue-500 border-accent text-white shadow-md font-black scale-[1.02];
 }
 
 /* Compact variant for Group By and Sort By (smaller padding) */
 .option-toggle-btn-compact {
-  @apply py-2 px-1 text-[10px] truncate font-extrabold rounded-xl border transition-all cursor-pointer text-center bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm;
+  @apply py-2 px-1 text-[10px] truncate font-extrabold rounded-xl border transition-all cursor-pointer text-center bg-surface-1 border-line text-fg-secondary hover:text-fg hover:bg-surface-2 hover:border-line-strong shadow-sm;
 }
 
 .option-toggle-btn-compact-active {
-  @apply bg-blue-500 border-primary text-white shadow-md scale-[1.02];
+  @apply bg-blue-500 border-accent text-white shadow-md scale-[1.02];
 }
 
 /* ── Display Settings Trigger Button ────────────────────────
@@ -50,7 +50,7 @@
    ─────────────────────────────────────────────────────────── */
 
 .display-settings-btn {
-  @apply flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs cursor-pointer border shadow-sm active:scale-95 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600;
+  @apply flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs cursor-pointer border shadow-sm active:scale-95 bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
 }
 
 .display-settings-btn-active {
@@ -60,15 +60,15 @@
 /* Deck manager toolbar buttons — share the display-settings surface so the
    whole toolbar reads as one system instead of washed-out chips. */
 .deck-toolbar-btn {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
 }
 
 .deck-toolbar-btn-accent {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-white hover:bg-blue-500 hover:shadow-md;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-blue-500 hover:shadow-md;
 }
 
 .display-settings-dropdown {
-  @apply absolute right-0 mt-2 w-72 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 space-y-4;
+  @apply absolute right-0 mt-2 w-72 rounded-2xl border border-line p-4 space-y-4;
   background-color: var(--glass-fill-light);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -82,7 +82,7 @@ html.dark .display-settings-dropdown {
 }
 
 .display-settings-section-label {
-  @apply text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider block;
+  @apply text-[10px] font-extrabold text-fg-muted uppercase tracking-wider block;
 }
 
 /* ── Empty Deck State ───────────────────────────────────────
@@ -113,7 +113,7 @@ html.dark .display-settings-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .import-export-dropdown {
-  @apply absolute right-0 mt-1 w-60 rounded-xl py-1.5 border border-gray-200 dark:border-slate-700;
+  @apply absolute right-0 mt-1 w-60 rounded-xl py-1.5 border border-line;
   background-color: var(--glass-fill-light);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -127,15 +127,15 @@ html.dark .import-export-dropdown {
 }
 
 .import-export-dropdown-section {
-  @apply px-3 pt-2 pb-1 text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider;
+  @apply px-3 pt-2 pb-1 text-[10px] font-extrabold text-fg-muted uppercase tracking-wider;
 }
 
 .import-export-dropdown-divider {
-  @apply h-px bg-gray-100 dark:bg-slate-700/60 my-1;
+  @apply h-px bg-surface-2 my-1;
 }
 
 .import-export-dropdown-item {
-  @apply w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 cursor-pointer;
+  @apply w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 transition-colors flex items-center gap-2 cursor-pointer;
 }
 
 /* ── Deck Preview: Zone tabs row ────────────────────────────
@@ -143,7 +143,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .deck-zone-row {
-  @apply flex flex-wrap items-center justify-between mb-4 pb-2 border-b border-gray-200/50 dark:border-slate-700/50 gap-2;
+  @apply flex flex-wrap items-center justify-between mb-4 pb-2 border-b border-line gap-2;
 }
 
 /* ── Unsaved Deck Warning Chip ──────────────────────────────
@@ -169,7 +169,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-editing-badge {
-  @apply shrink-0 inline-block w-2.5 h-2.5 bg-amber-400 border border-white dark:border-slate-800 rounded-full animate-ping;
+  @apply shrink-0 inline-block w-2.5 h-2.5 bg-amber-400 border border-line rounded-full animate-ping;
 }
 
 .deck-list-item-meta {
@@ -181,15 +181,15 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-format-badge-selected {
-  @apply bg-primary text-white shadow-sm ring-1 ring-blue-500/30;
+  @apply bg-primary text-on-primary shadow-sm ring-1 ring-blue-500/30;
 }
 
 .deck-list-item-format-badge-default {
-  @apply bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300;
+  @apply bg-surface-3 text-fg-secondary;
 }
 
 .deck-list-item-actions {
-  @apply flex gap-1.5 justify-end w-full shrink-0 border-t border-black/10 dark:border-white/10 pt-2 mt-auto;
+  @apply flex gap-1.5 justify-end w-full shrink-0 border-t border-line pt-2 mt-auto;
 }
 
 .deck-list-action-btn {
@@ -200,7 +200,7 @@ html.dark .import-export-dropdown {
 /* ─── Export dialog option rows ────────────────────────────────── */
 
 .export-option {
-  @apply flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-400 hover:bg-blue-50/50 active:scale-[0.99] dark:border-slate-700 dark:bg-slate-800 dark:hover:border-blue-500/50 dark:hover:bg-slate-700;
+  @apply flex w-full items-center gap-3 rounded-xl border border-line bg-surface-1 p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-400 hover:bg-blue-50/50 active:scale-[0.99] dark:hover:border-blue-500/50 dark:hover:bg-slate-700;
 }
 
 .export-option-icon {
@@ -216,7 +216,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-inactive {
-  @apply bg-white/80 dark:bg-slate-800/80 border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5;
+  @apply bg-surface-1/80 border-line shadow-sm hover:shadow-md hover:-translate-y-0.5;
 }
 
 .deck-box-active {
@@ -228,7 +228,7 @@ html.dark .import-export-dropdown {
    lg+ sidebar already produces, so nothing changes there. `object-cover` on the image keeps
    the art from distorting once the cap bites. */
 .deck-box-art {
-  @apply relative aspect-[4/3] max-h-[13rem] w-full overflow-hidden rounded-t-xl bg-slate-200 dark:bg-slate-900;
+  @apply relative aspect-[4/3] max-h-[13rem] w-full overflow-hidden rounded-t-xl bg-surface-3;
 }
 
 .deck-box-art-image {
@@ -240,7 +240,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-art-placeholder {
-  @apply flex h-full w-full items-center justify-center text-3xl text-slate-400 dark:text-slate-600;
+  @apply flex h-full w-full items-center justify-center text-3xl text-fg-muted;
 }
 
 .deck-box-art-scrim {
@@ -254,7 +254,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-title-compact {
-  @apply truncate text-sm font-bold text-gray-900 dark:text-white;
+  @apply truncate text-sm font-bold text-fg;
 }
 
 @media (min-width: 1024px) {
@@ -292,11 +292,11 @@ html.dark .import-export-dropdown {
 }
 
 .deck-edit-mobile-tab {
-  @apply flex min-h-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-bold text-gray-600 transition-all dark:border-slate-700 dark:bg-slate-800/80 dark:text-gray-300;
+  @apply flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface-1 text-sm font-bold text-fg-secondary transition-all;
 }
 
 .deck-edit-mobile-tab-active {
-  @apply border-blue-400 bg-primary text-white shadow-sm dark:border-blue-500/50;
+  @apply border-blue-400 bg-primary text-on-primary shadow-sm dark:border-blue-500/50;
 }
 
 .deck-edit-panes {
@@ -307,7 +307,7 @@ html.dark .import-export-dropdown {
 
 /* Holds the (h-full) card search: clip its sticky header to the rounded pane. */
 .deck-edit-pane-search {
-  @apply min-h-0 min-w-0 overflow-hidden rounded-xl border border-gray-200 shadow-sm dark:border-slate-700;
+  @apply min-h-0 min-w-0 overflow-hidden rounded-xl border border-line shadow-sm;
 }
 
 /* Holds the deck preview/editor; scrolls independently of the search results. */
@@ -323,7 +323,7 @@ html.dark .import-export-dropdown {
 /* ─── Empty Deck List State ─────────────────────────────────────── */
 
 .empty-deck-list-state {
-  @apply flex flex-col items-center justify-center py-10 px-4 text-center bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm rounded-xl border border-dashed border-gray-300 dark:border-slate-700 shadow-sm relative overflow-hidden;
+  @apply flex flex-col items-center justify-center py-10 px-4 text-center bg-surface-1/40 backdrop-blur-sm rounded-xl border border-dashed border-line-strong shadow-sm relative overflow-hidden;
 }
 
 .empty-deck-list-state-bg {
@@ -397,7 +397,7 @@ html.dark .import-export-dropdown {
 /* Stat panels (budget / deck doctor / mana base) share one tile + label treatment.
    Repeated verbatim across all three before this. */
 .stat-tile {
-  @apply bg-white/80 dark:bg-slate-800/80 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm;
+  @apply bg-surface-1/80 p-2.5 rounded-lg border border-line shadow-sm;
 }
 
 .stat-tile-label {

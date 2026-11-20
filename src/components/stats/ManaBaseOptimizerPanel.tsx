@@ -40,7 +40,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
         <FaInfoCircle className="text-blue-500" />
         {t('stats.manaBaseOptimizer')}
       </h4>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-fg-muted">
         {t('stats.manaBaseExplanation').replace('{{target}}', String(stats.targetTotalLands))}
       </p>
       {stats.neededBasicLands > 0 ? (
@@ -50,21 +50,15 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           <div className="grid grid-cols-3 gap-3">
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.currentLands')}</span>
-              <span className="text-base font-extrabold text-gray-700 dark:text-gray-200 tabular-nums">
-                {stats.totalLands}
-              </span>
+              <span className="text-base font-extrabold text-fg-secondary tabular-nums">{stats.totalLands}</span>
             </div>
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.targetLands')}</span>
-              <span className="text-base font-extrabold text-gray-700 dark:text-gray-200 tabular-nums">
-                {stats.targetTotalLands}
-              </span>
+              <span className="text-base font-extrabold text-fg-secondary tabular-nums">{stats.targetTotalLands}</span>
             </div>
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.landsToAdd')}</span>
-              <span className="text-base font-extrabold text-primary dark:text-blue-400 tabular-nums">
-                +{stats.neededBasicLands}
-              </span>
+              <span className="text-base font-extrabold text-accent tabular-nums">+{stats.neededBasicLands}</span>
             </div>
           </div>
 

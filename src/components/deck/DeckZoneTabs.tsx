@@ -31,8 +31,8 @@ function DeckZoneTabs({
     return [
       'px-3 py-1.5 rounded-t-lg transition-all text-xs font-semibold relative',
       isActive
-        ? 'bg-primary text-white font-extrabold shadow-sm'
-        : 'bg-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
+        ? 'bg-primary text-on-primary font-extrabold shadow-sm'
+        : 'bg-transparent text-gray-500 hover:text-fg-secondary',
       isDragTarget
         ? 'ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-slate-900 bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-extrabold scale-105 shadow-lg shadow-indigo-500/20'
         : ''
@@ -61,7 +61,7 @@ function DeckZoneTabs({
   };
 
   return (
-    <div className="flex flex-wrap border-b border-gray-200 dark:border-slate-800 mb-4 text-xs font-semibold gap-1.5 select-none">
+    <div className="flex flex-wrap border-b border-line mb-4 text-xs font-semibold gap-1.5 select-none">
       <button
         type="button"
         onClick={() => onZoneChange('main')}
