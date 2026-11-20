@@ -24,6 +24,21 @@ export interface Deck {
   tags?: string[];
 }
 
+export type MatchResult = 'win' | 'loss' | 'draw';
+
+/** One game logged against a saved deck, for the win rate by matchup. */
+export interface MatchRecord {
+  id: string;
+  deckId: string;
+  result: MatchResult;
+  /** What the opponent played, as the user names it ("Mono-red", "Azorius control"). */
+  opponent: string;
+  /** Whether this deck went first. */
+  onPlay: boolean;
+  notes?: string;
+  playedAt: string;
+}
+
 export interface DeckVersion {
   id: string;
   deckId: string;
