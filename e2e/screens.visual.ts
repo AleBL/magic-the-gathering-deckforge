@@ -5,7 +5,7 @@ import { mockScryfall } from './fixtures';
 
 /**
  * Visual baseline: walks the main screens in light/dark at desktop and phone sizes and
- * saves one screenshot per screen under `test-results/visual/<mode>/`.
+ * saves one screenshot per screen under `visual-results/<mode>/`.
  *
  * It asserts nothing about pixels on purpose. Fonts and antialiasing differ between
  * machines, so a pixel diff would be noise; the captures are reviewed by eye before and
@@ -18,7 +18,8 @@ import { mockScryfall } from './fixtures';
 
 const ROOT = join(__dirname, '..');
 const SEED = join(ROOT, 'seed-profile.json');
-const OUT = join(ROOT, 'test-results', 'visual');
+// Outside test-results/: every Playwright run wipes that folder, captures included.
+const OUT = join(ROOT, 'visual-results');
 
 const MODES = [
   { name: 'desktop-light', viewport: { width: 1440, height: 900 }, colorScheme: 'light' },
@@ -125,7 +126,7 @@ test.describe('visual baseline', () => {
         const input = page.getByPlaceholder(/search cards/i).first();
         await input.fill('bolt');
         await input.press('Enter');
-        await page.locator('img[alt]').nth(3).waitFor({ timeout: 10_000 });
+        await page.locator('.card-image-button').nth(3).waitFor({ timeout: 10_000 });
         await page.waitForTimeout(1500);
         await capture(page, mode.name, '02-search-results');
       });

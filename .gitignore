@@ -45,6 +45,7 @@ src/dev-dist/
 /test-results/
 /playwright-report/
 /blob-report/
+/visual-results/
 /playwright/.cache/
 
 # Generated demo profile (scripts/seed-profile.mjs)
