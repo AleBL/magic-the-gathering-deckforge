@@ -1,14 +1,14 @@
 {
-  "rawHue": 32,
+  "rawHue": 31,
   "rawNeutral": 330,
-  "transitionAll": 126,
+  "transitionAll": 0,
   "heavyWeights": 0,
   "uppercase": 4,
   "wideTracking": 0,
-  "backdropBlur": 43,
-  "hoverMotion": 30,
+  "backdropBlur": 42,
+  "hoverMotion": 6,
   "gradients": 8,
-  "loopAnimations": 23,
+  "loopAnimations": 3,
   "coloredShadows": 0,
   "jsUppercase": 0
 }
