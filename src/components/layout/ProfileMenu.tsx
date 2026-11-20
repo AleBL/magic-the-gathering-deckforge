@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaUser, FaChevronDown } from 'react-icons/fa';
+import { LuChevronDown, LuUser } from 'react-icons/lu';
 import { useVisualEffects } from '../../hooks/useVisualEffects';
 import useInstallPrompt from '../../hooks/useInstallPrompt';
 import { PROFILE_MENU_LANGUAGES } from './profileMenuLanguages';
@@ -73,9 +73,9 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
         title={t('strategy.profileMenu')}
       >
         <div className="profile-avatar">
-          <FaUser className="text-xs" />
+          <LuUser className="text-xs" />
         </div>
-        <FaChevronDown
+        <LuChevronDown
           className={`text-fg-muted text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>

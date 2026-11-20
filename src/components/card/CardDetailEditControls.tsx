@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaPalette, FaMinus, FaPlus, FaSync } from 'react-icons/fa';
+import { LuMinus, LuPalette, LuPlus, LuRefreshCw } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 
 interface CardDetailEditControlsProps {
@@ -40,8 +40,8 @@ export function CardDetailEditControls({
 
   return (
     <div className="border-t border-line pt-4 mt-auto space-y-4">
-      <h3 className="font-bold text-[11px] text-fg-muted uppercase tracking-wider flex items-center gap-2 select-none">
-        <FaPalette className="text-accent" />
+      <h3 className="font-semibold text-[11px] text-fg-muted flex items-center gap-2 select-none">
+        <LuPalette className="text-accent" />
         <span>{t('cardDetails.copiesAndArt')}</span>
       </h3>
 
@@ -49,7 +49,7 @@ export function CardDetailEditControls({
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <span className="text-xs font-medium text-fg-muted">{t('cardDetails.inDeck')}</span>
-            <span className="text-base font-bold text-fg">
+            <span className="text-base font-semibold text-fg">
               {copiesCount} {copiesCount === 1 ? t('cardDetails.copyCountSingular') : t('cardDetails.copyCountPlural')}
             </span>
           </div>
@@ -72,9 +72,9 @@ export function CardDetailEditControls({
                 className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary hover:bg-surface-3 transition-colors"
                 title={t('cardDetails.removeCopy')}
               >
-                <FaMinus className="text-[10px]" />
+                <LuMinus className="text-[10px]" />
               </button>
-              <div className="w-8 h-8 flex items-center justify-center font-bold text-sm text-fg border-x border-line">
+              <div className="w-8 h-8 flex items-center justify-center font-semibold text-sm text-fg border-x border-line">
                 {copiesCount}
               </div>
               <button
@@ -83,7 +83,7 @@ export function CardDetailEditControls({
                 className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary hover:bg-surface-3 transition-colors"
                 title={t('cardDetails.addCopy')}
               >
-                <FaPlus className="text-[10px]" />
+                <LuPlus className="text-[10px]" />
               </button>
             </div>
           )}
@@ -95,7 +95,7 @@ export function CardDetailEditControls({
               className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary bg-surface-2 border border-line rounded-lg hover:bg-surface-3 transition-colors ml-1"
               title={t('cardDetails.addCopy')}
             >
-              <FaPlus className="text-[10px]" />
+              <LuPlus className="text-[10px]" />
             </button>
           )}
         </div>
@@ -116,7 +116,7 @@ export function CardDetailEditControls({
                 showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
               }`}
             >
-              <FaPalette className="text-xs shrink-0" />
+              <LuPalette className="text-xs shrink-0" />
               {t('cardDetails.showEditions')}
             </button>
           )}
@@ -127,7 +127,7 @@ export function CardDetailEditControls({
               onClick={handleConfirmArtChange}
               className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
             >
-              <FaSync className="text-xs shrink-0 animate-spin-slow" />
+              <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
             </button>
           )}
@@ -143,7 +143,7 @@ export function CardDetailEditControls({
               showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
             }`}
           >
-            <FaPalette className="text-xs shrink-0" />
+            <LuPalette className="text-xs shrink-0" />
             {t('cardDetails.changeArt')}
           </button>
 
@@ -153,7 +153,7 @@ export function CardDetailEditControls({
               onClick={handleConfirmArtChange}
               className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
             >
-              <FaSync className="text-xs shrink-0 animate-spin-slow" />
+              <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
             </button>
           )}

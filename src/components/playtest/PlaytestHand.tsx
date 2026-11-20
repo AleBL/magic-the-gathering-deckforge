@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaInfoCircle, FaEllipsisH } from 'react-icons/fa';
+import { LuEllipsis, LuInfo } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
 import { PlaytestCard, PlaytestDragData } from '../../types/Playtest';
@@ -73,10 +73,10 @@ const PlaytestHandCard = memo(
             />
           ) : (
             <div className="w-full h-full p-2 flex flex-col justify-between text-left bg-slate-800">
-              <span className="text-[11px] font-black text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
+              <span className="text-[11px] font-semibold text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
                 {card.printed_name || card.name}
               </span>
-              <span className="text-[9px] font-bold text-slate-400 capitalize">
+              <span className="text-[9px] font-semibold text-slate-400 capitalize">
                 {t(`search.${card.rarity}`, { defaultValue: card.rarity })}
               </span>
             </div>
@@ -87,7 +87,7 @@ const PlaytestHandCard = memo(
               className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-warning-soft' : 'bg-black/10 hover:bg-black/0'}`}
             >
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-semibold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
               >
                 {isSelected ? '✓' : ''}
               </div>
@@ -106,7 +106,7 @@ const PlaytestHandCard = memo(
               title={t('cardDetails.viewCardDetails')}
               className="touch-hitarea absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-accent hover:border-line-strong opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
-              <FaInfoCircle />
+              <LuInfo />
             </button>
             <button
               type="button"
@@ -117,7 +117,7 @@ const PlaytestHandCard = memo(
               title={t('common.moreActions')}
               className="touch-hitarea absolute -top-3 -right-2.5 sm:-top-2.5 sm:-right-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-slate-200 hover:border-slate-600 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
-              <FaEllipsisH />
+              <LuEllipsis />
             </button>
           </>
         ) : null}
@@ -175,7 +175,7 @@ export function PlaytestHand() {
         }
       }}
     >
-      <div className="flex items-center justify-between mb-2 sm:mb-3 text-[10px] sm:text-xs uppercase font-extrabold tracking-widest text-slate-500 select-none">
+      <div className="flex items-center justify-between mb-2 sm:mb-3 text-[11px] sm:text-xs font-semibold text-slate-500 select-none">
         <span>
           {t('playtest.hand')} ({hand.length})
         </span>

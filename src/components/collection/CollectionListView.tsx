@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
+import { LuArrowDown, LuArrowUp, LuArrowUpDown } from 'react-icons/lu';
 import { CollectionEntry, Currency } from '../../types/Collection';
 import { Card } from '../../types/Card';
 import { formatCurrency } from '../../utils/collectionMath';
@@ -68,15 +68,15 @@ export function CollectionListView({ entries, currency, onSelectCard }: Collecti
       <button
         type="button"
         onClick={() => toggle(key)}
-        className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] text-fg-muted hover:text-accent transition-colors"
+        className="inline-flex items-center gap-1.5 font-semibold text-[11px] text-fg-muted hover:text-accent transition-colors"
       >
         {label}
         {sort.key !== key ? (
-          <FaSort className="text-[8px] opacity-40" />
+          <LuArrowUpDown className="text-[8px] opacity-40" />
         ) : sort.asc ? (
-          <FaSortUp className="text-[8px]" />
+          <LuArrowUp className="text-[8px]" />
         ) : (
-          <FaSortDown className="text-[8px]" />
+          <LuArrowDown className="text-[8px]" />
         )}
       </button>
     </th>
@@ -125,7 +125,7 @@ export function CollectionListView({ entries, currency, onSelectCard }: Collecti
               <td className="px-3 py-2 text-fg-muted text-xs hidden md:table-cell">
                 {RARITY_KEYS[entry.rarity] ? t(RARITY_KEYS[entry.rarity]) : entry.rarity}
               </td>
-              <td className="px-3 py-2 text-right font-bold tabular-nums text-fg">{entry.quantity}</td>
+              <td className="px-3 py-2 text-right font-semibold tabular-nums text-fg">{entry.quantity}</td>
               <td className="px-3 py-2 text-right tabular-nums text-fg-muted hidden sm:table-cell">
                 {formatCurrency(unitPrice(entry, currency) * entry.quantity, currency)}
               </td>

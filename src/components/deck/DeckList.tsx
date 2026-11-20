@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaLayerGroup } from 'react-icons/fa';
+import { LuLayers } from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckListItem } from '../deck/DeckListItem';
 
@@ -49,7 +49,7 @@ function DeckList({
   return (
     <div className="deck-list-section">
       {hideHeading ? null : (
-        <h3 className="text-fg text-xl font-bold mb-4 transition-colors duration-300">
+        <h3 className="text-fg text-xl font-semibold mb-4 transition-colors duration-300">
           {t('deck.savedDecks')} ({decks.length})
         </h3>
       )}
@@ -68,9 +68,9 @@ function DeckList({
           <div className="empty-deck-list-state group">
             <div className="empty-deck-list-state-bg" />
             <div className="empty-deck-list-state-icon-wrapper">
-              <FaLayerGroup className="text-xl text-accent" />
+              <LuLayers className="text-xl text-accent" />
             </div>
-            <p className="text-sm font-bold text-fg mb-1">{t('deck.noSavedDecks')}</p>
+            <p className="text-sm font-semibold text-fg mb-1">{t('deck.noSavedDecks')}</p>
             <p className="text-xs text-fg-muted">{t('deck.addCardsMessage')}</p>
           </div>
         ) : (

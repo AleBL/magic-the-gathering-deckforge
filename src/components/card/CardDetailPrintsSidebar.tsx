@@ -107,12 +107,12 @@ export function CardDetailPrintsSidebar({
                 : `${rarityStyle} hover:border-blue-400/60 hover:bg-blue-500/5 hover:brightness-110 hover:shadow-xs`
             }`}
           >
-            <span className="text-[11px] uppercase font-black tracking-tight leading-none">{printCard.set}</span>
+            <span className="text-[11px] uppercase font-semibold tracking-tight leading-none">{printCard.set}</span>
             <span className="text-[9px] font-semibold select-none mt-0.5 leading-none opacity-80">
               #{printCard.collector_number || ''}
             </span>
             {printCard.lang ? (
-              <span className="mt-0.5 rounded bg-black/10 dark:bg-white/10 px-1 text-[8px] font-black uppercase leading-none tracking-wide">
+              <span className="mt-0.5 rounded bg-black/10 dark:bg-white/10 px-1 text-[8px] font-semibold uppercase leading-none">
                 {printCard.lang}
               </span>
             ) : null}

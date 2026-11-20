@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCog } from 'react-icons/fa';
+import { LuSettings } from 'react-icons/lu';
 import { PrintZoneFilter } from '../../types/enums';
 import {
   SpacingOption,
@@ -57,7 +57,7 @@ export function ProxyPrintSettingsBar({
   return (
     <div className="proxy-settings-bar flex-wrap">
       <div className="flex items-center gap-2 pr-2 border-r border-line mr-2">
-        <FaCog className="text-gray-400 text-sm shrink-0" />
+        <LuSettings className="text-gray-400 text-sm shrink-0" />
         <label className="flex items-center gap-1.5 cursor-pointer select-none">
           <input
             type="checkbox"
@@ -65,9 +65,7 @@ export function ProxyPrintSettingsBar({
             onChange={(e) => setUseRealSize(e.target.checked)}
             className="rounded border-line-strong text-accent focus:ring-focus w-3.5 h-3.5 cursor-pointer bg-surface-1"
           />
-          <span className="text-[11px] font-extrabold text-accent uppercase tracking-wider">
-            {t('print.printRealSize')}
-          </span>
+          <span className="text-[11px] font-semibold text-accent">{t('print.printRealSize')}</span>
         </label>
       </div>
 

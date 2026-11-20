@@ -88,7 +88,7 @@ export function ChartTooltip({ active, title, rows }: ChartTooltipProps) {
       className="bg-surface-1 text-fg text-xs p-3 rounded-lg shadow-xl border border-line min-w-[9rem]"
     >
       {title ? (
-        <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-line font-bold text-fg">{title}</div>
+        <div className="flex items-center gap-2 mb-1.5 pb-1.5 border-b border-line font-semibold text-fg">{title}</div>
       ) : null}
       <div className="flex flex-col gap-1">
         {rows.map((row) => (
@@ -99,7 +99,7 @@ export function ChartTooltip({ active, title, rows }: ChartTooltipProps) {
               ) : null}
               {row.label}
             </span>
-            <span className="font-bold text-fg tabular-nums">{row.value}</span>
+            <span className="font-semibold text-fg tabular-nums">{row.value}</span>
           </div>
         ))}
       </div>
@@ -129,7 +129,7 @@ export function ChartLegend({ items }: { items: ChartLegendItem[] }) {
             role="listitem"
             type={item.onClick ? 'button' : undefined}
             onClick={item.onClick}
-            className={`px-3 py-1 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all flex items-center gap-1.5 ${
               item.active
                 ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 shadow-md border-transparent'
                 : 'border-line '

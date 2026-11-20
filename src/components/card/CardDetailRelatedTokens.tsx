@@ -14,7 +14,7 @@ export function CardDetailRelatedTokens({ relatedTokens, onCardClick }: CardDeta
 
   return (
     <div className="border-t border-line pt-4 mt-3">
-      <h3 className="font-bold text-xs text-fg-muted uppercase tracking-widest flex items-center gap-1.5 mb-3 select-none">
+      <h3 className="font-semibold text-xs text-fg-muted flex items-center gap-1.5 mb-3 select-none">
         <span>{t('tokens.relatedTokens')}</span>
       </h3>
       <div className="flex flex-wrap gap-2">

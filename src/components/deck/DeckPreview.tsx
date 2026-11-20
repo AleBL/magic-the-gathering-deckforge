@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaLayerGroup } from 'react-icons/fa';
+import { LuLayers } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
 import { CardSize } from '../../types';
@@ -299,7 +299,7 @@ function DeckPreview({
         </Suspense>
       ) : !selectedDeck && currentDeck.length === 0 ? (
         <EmptyState
-          icon={<FaLayerGroup />}
+          icon={<LuLayers />}
           title={t('deck.emptyDeck')}
           description={t('deck.addCardsMessage')}
           action={{

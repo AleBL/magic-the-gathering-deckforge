@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
+import { LuLayers, LuPackageOpen, LuSearch } from 'react-icons/lu';
 import { AppTab } from '../../types';
 import Header from './Header';
 import OfflineIndicator from '../ui/OfflineIndicator';
@@ -88,7 +88,7 @@ export default function RootLayout({
           aria-label={t('common.searchTab')}
           aria-current={activeTab === 'search' ? 'page' : undefined}
         >
-          <FaSearch className="bottom-tab-button-icon" />
+          <LuSearch className="bottom-tab-button-icon" />
           <span>{t('common.searchTab')}</span>
         </button>
         <button
@@ -98,7 +98,7 @@ export default function RootLayout({
           aria-label={t('common.decksTab')}
           aria-current={activeTab === 'deck' ? 'page' : undefined}
         >
-          <FaLayerGroup className="bottom-tab-button-icon" />
+          <LuLayers className="bottom-tab-button-icon" />
           <span>{t('common.decksTab')}</span>
           {currentDeckLength > 0 && (
             <span className="count-badge absolute top-1 right-[calc(50%-22px)]">{currentDeckLength}</span>
@@ -111,7 +111,7 @@ export default function RootLayout({
           aria-label={t('collection.title')}
           aria-current={activeTab === 'collection' ? 'page' : undefined}
         >
-          <FaBoxOpen className="bottom-tab-button-icon" />
+          <LuPackageOpen className="bottom-tab-button-icon" />
           <span>{t('collection.tab')}</span>
         </button>
       </nav>

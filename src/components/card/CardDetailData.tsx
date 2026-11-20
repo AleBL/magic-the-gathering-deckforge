@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaShieldAlt } from 'react-icons/fa';
+import { LuCrown, LuShield } from 'react-icons/lu';
 import { Card, CardFace } from '../../types/Card';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DECK_FORMATS, LEGALITY } from '../../types/enums';
@@ -61,12 +61,12 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 id="modal-card-title" className="text-2xl font-bold">
+        <h2 id="modal-card-title" className="text-2xl font-semibold">
           {currentFace ? currentFace.printed_name || currentFace.name : card.printed_name || card.name}
         </h2>
         {card.isCommander && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-warning-soft text-warning border border-warning/40 shadow-sm animate-pulse">
-            <FaCrown className="text-warning text-xs shrink-0" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-warning-soft text-warning border border-warning/40 shadow-sm animate-pulse">
+            <LuCrown className="text-warning text-xs shrink-0" />
             {t('cardDetails.commanderBadge')}
           </span>
         )}
@@ -120,7 +120,7 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
 
       {!isToken && !hidePriceAndLegality && (
         <div className="border-t border-line pt-3">
-          <h3 className="font-semibold mb-2 text-sm text-fg-muted uppercase tracking-wider">{t('stats.prices')}:</h3>
+          <h3 className="font-semibold mb-2 text-sm text-fg-muted">{t('stats.prices')}:</h3>
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-surface-2/50 border border-line rounded-lg p-2 text-center">
               <span className="block text-xs text-gray-500">{t('common.usd')}</span>
@@ -146,8 +146,8 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
 
       {card.legalities && !isToken && !hidePriceAndLegality && (
         <div className="border-t border-line pt-4 mt-1">
-          <h3 className="font-bold mb-3 text-xs text-fg-muted uppercase tracking-widest flex items-center gap-1.5">
-            <FaShieldAlt className="text-accent text-xs shrink-0" />
+          <h3 className="font-semibold mb-3 text-xs text-fg-muted flex items-center gap-1.5">
+            <LuShield className="text-accent text-xs shrink-0" />
             <span>{t('cardDetails.legality')}</span>
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -182,14 +182,12 @@ export function CardDetailData({ card, currentFace, hidePriceAndLegality, isToke
                   key={deckFormat}
                   className={`flex flex-col justify-center px-2.5 py-1.5 rounded-xl border transition-all duration-200 hover:brightness-105 hover:shadow-xs ${bgClass}`}
                 >
-                  <span className="text-[10px] font-bold text-fg-muted uppercase tracking-wider leading-none">
+                  <span className="text-[11px] font-semibold text-fg-muted leading-none">
                     {t(formatLabelKey(deckFormat))}
                   </span>
                   <div className="flex items-center gap-1.5 mt-1 shrink-0">
                     <span className={`w-1.5 h-1.5 rounded-full inline-block ${dotClass}`} />
-                    <span className="text-[10px] font-extrabold uppercase tracking-wide select-none leading-none">
-                      {label}
-                    </span>
+                    <span className="text-[11px] font-semibold select-none leading-none">{label}</span>
                   </div>
                 </div>
               );

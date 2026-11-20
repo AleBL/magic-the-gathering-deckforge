@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaBoxOpen, FaLayerGroup, FaHeart, FaDollarSign, FaInfoCircle } from 'react-icons/fa';
+import { LuDollarSign, LuHeart, LuInfo, LuLayers, LuPackageOpen } from 'react-icons/lu';
 import { Currency } from '../../types/Collection';
 import { CollectionSummary, formatCurrency } from '../../utils/collectionMath';
 import { CollectionView } from '../../hooks/useCollection';
@@ -31,7 +31,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
     <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface-1 border border-line shadow-sm">
       <span className="text-accent shrink-0">{icon}</span>
       <div className="flex flex-col leading-tight">
-        <span className="text-sm font-bold text-fg tabular-nums">{value}</span>
+        <span className="text-sm font-semibold text-fg tabular-nums">{value}</span>
         <span className="text-[11px] text-fg-muted">{label}</span>
       </div>
     </div>
@@ -45,18 +45,18 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
         {isWishlist ? (
           // On the wishlist a "unique printings" chip would just repeat the count: each wanted
           // card is one printing, and quantity has no meaning there.
-          stat(<FaHeart className="text-base" />, t('collection.wishlistCards'), String(summary.wishlistCount))
+          stat(
+            <LuHeart fill="currentColor" className="text-base" />,
+            t('collection.wishlistCards'),
+            String(summary.wishlistCount)
+          )
         ) : (
           <>
-            {stat(<FaBoxOpen className="text-base" />, t('collection.totalCards'), String(summary.totalCopies))}
-            {stat(
-              <FaLayerGroup className="text-base" />,
-              t('collection.uniquePrintings'),
-              String(summary.uniquePrintings)
-            )}
+            {stat(<LuPackageOpen className="text-base" />, t('collection.totalCards'), String(summary.totalCopies))}
+            {stat(<LuLayers className="text-base" />, t('collection.uniquePrintings'), String(summary.uniquePrintings))}
           </>
         )}
-        {stat(<FaDollarSign className="text-base" />, valueLabel, formatCurrency(value, currency))}
+        {stat(<LuDollarSign className="text-base" />, valueLabel, formatCurrency(value, currency))}
 
         <div className="col-span-2 w-fit sm:col-span-1 flex items-center rounded-full bg-surface-1 border border-line p-0.5 shadow-sm">
           {(['usd', 'eur'] as const).map((code) => (
@@ -65,7 +65,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
               type="button"
               onClick={() => onCurrencyChange(code)}
               aria-pressed={currency === code}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 currency === code
                   ? 'bg-primary text-on-primary shadow'
                   : 'text-gray-500 dark:text-gray-400 hover:text-fg '
@@ -81,7 +81,7 @@ export function CollectionSummaryBar({ summary, currency, onCurrencyChange, view
           English printing's price as an estimate, say so. */}
       {summary.fallbackPricedCount > 0 ? (
         <p className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-          <FaInfoCircle className="text-accent shrink-0" />
+          <LuInfo className="text-accent shrink-0" />
           {t('collection.priceFallbackNote', { count: summary.fallbackPricedCount })}
         </p>
       ) : null}

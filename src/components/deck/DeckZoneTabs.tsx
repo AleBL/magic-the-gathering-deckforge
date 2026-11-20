@@ -31,10 +31,10 @@ function DeckZoneTabs({
     return [
       'px-3 py-1.5 rounded-t-lg transition-all text-xs font-semibold relative',
       isActive
-        ? 'bg-primary text-on-primary font-extrabold shadow-sm'
+        ? 'bg-primary text-on-primary font-semibold shadow-sm'
         : 'bg-transparent text-gray-500 hover:text-fg-secondary',
       isDragTarget
-        ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 bg-accent-soft text-accent font-extrabold scale-105 shadow-lg'
+        ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 bg-accent-soft text-accent font-semibold scale-105 shadow-lg'
         : ''
     ].join(' ');
   };

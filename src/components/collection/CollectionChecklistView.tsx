@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { LuHeart } from 'react-icons/lu';
 import { CollectionEntry } from '../../types/Collection';
 import { Card } from '../../types/Card';
 import { toggleWishlist } from '../../services/collectionService';
@@ -51,7 +51,7 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
                 : 'bg-surface-1 border-line-strong text-fg-muted hover:border-danger/40 hover:text-danger'
             }`}
           >
-            {entry.wishlist ? <FaHeart className="text-sm" /> : <FaRegHeart className="text-sm" />}
+            {entry.wishlist ? <LuHeart fill="currentColor" className="text-sm" /> : <LuHeart className="text-sm" />}
           </button>
 
           <button
@@ -65,10 +65,10 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
           {/* Full set name where there is room; the code once the row gets tight. */}
           <span className="shrink-0 text-[11px] text-fg-muted hidden sm:inline max-w-[160px] truncate">
             <span className="hidden lg:inline">{entry.card.set_name || entry.set?.toUpperCase()}</span>
-            <span className="lg:hidden uppercase">{entry.set}</span>
+            <span className="lg:hidden">{entry.set}</span>
           </span>
           <span
-            className={`shrink-0 w-8 text-right text-xs font-bold tabular-nums ${
+            className={`shrink-0 w-8 text-right text-xs font-semibold tabular-nums ${
               entry.quantity > 0 ? 'text-fg ' : 'text-gray-300 dark:text-slate-600'
             }`}
           >

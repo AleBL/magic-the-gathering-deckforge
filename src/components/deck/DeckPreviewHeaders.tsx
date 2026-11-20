@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaBolt, FaExclamationTriangle, FaFileAlt, FaPencilAlt } from 'react-icons/fa';
+import { LuFileText, LuPencil, LuTriangleAlert, LuZap } from 'react-icons/lu';
 import { Deck } from '../../types/Deck';
 import { formatLabelKey } from '../../utils/formatLabel';
 
@@ -21,8 +21,8 @@ export function SavedDeckHeader({ deck, onEditInfo }: SavedDeckHeaderProps) {
   return (
     <>
       <div className="flex items-center gap-2 min-w-0">
-        <h3 className="text-fg text-xl font-bold transition-colors duration-300 flex items-center gap-2 min-w-0">
-          <FaFileAlt className="text-accent shrink-0" />
+        <h3 className="text-fg text-xl font-semibold transition-colors duration-300 flex items-center gap-2 min-w-0">
+          <LuFileText className="text-accent shrink-0" />
           <span className="truncate">{deck.name}</span>
         </h3>
         {onEditInfo ? (
@@ -33,7 +33,7 @@ export function SavedDeckHeader({ deck, onEditInfo }: SavedDeckHeaderProps) {
             title={t('deck.editDeckInfo')}
             aria-label={t('deck.editDeckInfo')}
           >
-            <FaPencilAlt className="text-xs" />
+            <LuPencil className="text-xs" />
           </button>
         ) : null}
       </div>
@@ -65,12 +65,12 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
       <>
         <div className="flex items-center gap-2 mb-0.5">
           <span className="editing-mode-badge">
-            <FaBolt className="text-[9px] shrink-0" />
+            <LuZap className="text-[9px] shrink-0" />
             {t('deck.activeEditingMode')}
           </span>
         </div>
         {cardCount > 0 ? (
-          <h3 className="text-fg text-xl font-bold transition-colors duration-300 text-left truncate">
+          <h3 className="text-fg text-xl font-semibold transition-colors duration-300 text-left truncate">
             {cardCount} {t('common.cards')}
           </h3>
         ) : (
@@ -87,7 +87,7 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
       </h3>
       {cardCount > 0 ? (
         <span className="unsaved-deck-chip">
-          <FaExclamationTriangle className="text-danger text-[9px] shrink-0" />
+          <LuTriangleAlert className="text-danger text-[9px] shrink-0" />
           <span>{t('deck.temporaryUnsavedDeck')}</span>
         </span>
       ) : null}

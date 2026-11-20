@@ -1,17 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  FaCopy,
-  FaClipboardList,
-  FaDownload,
-  FaDiceD20,
-  FaEdit,
-  FaLink,
-  FaTimes,
-  FaPrint,
-  FaFileExport,
-  FaChevronDown
-} from 'react-icons/fa';
+  LuChevronDown,
+  LuClipboardList,
+  LuCopy,
+  LuDices,
+  LuDownload,
+  LuFileOutput,
+  LuLink,
+  LuPrinter,
+  LuSquarePen,
+  LuX
+} from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { Deck } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
@@ -166,9 +166,9 @@ function DeckActionBar({
                 className={`${BAR_BUTTON} ${BAR_SECONDARY} ${showExportMenu ? 'bg-surface-2' : ''}`}
                 aria-label={t('deck.export')}
               >
-                <FaFileExport className="text-sm shrink-0" />
+                <LuFileOutput className="text-sm shrink-0" />
                 <span className="hidden lg:inline">{t('deck.export')}</span>
-                <FaChevronDown
+                <LuChevronDown
                   className={`text-[10px] transition-transform duration-200 ${showExportMenu ? 'rotate-180' : ''}`}
                 />
               </button>
@@ -185,7 +185,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaLink className="text-accent shrink-0" />
+                  <LuLink className="text-accent shrink-0" />
                   {t('export.copyLink')}
                 </button>
                 <button
@@ -196,7 +196,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaDownload className="text-accent shrink-0" />
+                  <LuDownload className="text-accent shrink-0" />
                   {t('strategy.downloadDec')} (.dec)
                 </button>
                 <button
@@ -207,7 +207,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaDownload className="text-success shrink-0" />
+                  <LuDownload className="text-success shrink-0" />
                   {t('export.downloadJson') || 'Download'} (.json)
                 </button>
                 <button
@@ -218,7 +218,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaClipboardList className="text-warning shrink-0" />
+                  <LuClipboardList className="text-warning shrink-0" />
                   {t('strategy.exportArena')} (Arena)
                 </button>
                 <button
@@ -229,7 +229,7 @@ function DeckActionBar({
                   }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-fg-secondary hover:bg-surface-2 flex items-center gap-2 cursor-pointer"
                 >
-                  <FaCopy className="text-accent shrink-0" />
+                  <LuCopy className="text-accent shrink-0" />
                   {t('deck.copyList')} (.txt)
                 </button>
               </div>
@@ -245,7 +245,7 @@ function DeckActionBar({
                 className={`${BAR_BUTTON} ${BAR_SECONDARY}`}
                 aria-label={t('print.printProxies')}
               >
-                <FaPrint className="text-sm shrink-0" />
+                <LuPrinter className="text-sm shrink-0" />
                 <span className="hidden lg:inline">{t('print.printProxies')}</span>
               </button>
               <ActionTooltip label={t('print.printProxies')} />
@@ -262,7 +262,7 @@ function DeckActionBar({
               className={`${BAR_BUTTON} ${BAR_PRIMARY}`}
               aria-label={t('playtest.playtest')}
             >
-              <FaDiceD20 className="text-sm shrink-0" />
+              <LuDices className="text-sm shrink-0" />
               <span className="hidden lg:inline">{t('playtest.playtest')}</span>
             </button>
             <ActionTooltip label={t('playtest.playtest')} />
@@ -278,7 +278,7 @@ function DeckActionBar({
             className={`${BAR_BUTTON} ${BAR_SECONDARY}`}
             aria-label={t('common.edit')}
           >
-            <FaEdit className="text-sm shrink-0" />
+            <LuSquarePen className="text-sm shrink-0" />
             <span className="hidden lg:inline">{t('common.edit')}</span>
           </button>
           <ActionTooltip label={t('common.edit')} />
@@ -293,7 +293,7 @@ function DeckActionBar({
             className={`${BAR_BUTTON} ${BAR_GHOST}`}
             aria-label={t('common.cancel')}
           >
-            <FaTimes className="text-sm shrink-0" />
+            <LuX className="text-sm shrink-0" />
             <span className="hidden lg:inline">{t('common.cancel')}</span>
           </button>
           <ActionTooltip label={t('common.cancel')} />

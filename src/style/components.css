@@ -9,7 +9,7 @@
    ─────────────────────────────────────────────────────────── */
 
 .deck-content-tab-bar {
-  @apply flex flex-wrap border-b border-line mb-4 text-xs font-bold gap-1 select-none;
+  @apply flex flex-wrap border-b border-line mb-4 text-xs font-semibold gap-1 select-none;
 }
 
 /* Reads as a real tab: padded hit area, rounded top, and a hover background so
@@ -21,7 +21,7 @@
 }
 
 .deck-content-tab-active {
-  @apply border-accent/50 text-accent font-extrabold bg-accent-soft;
+  @apply border-accent/50 text-accent font-semibold bg-accent-soft;
 }
 
 /* ── Option Toggle Button (View Mode / Group By / Sort By) ──
@@ -33,12 +33,12 @@
 }
 
 .option-toggle-btn-active {
-  @apply bg-surface-3 border-accent text-fg shadow-md font-black scale-[1.02];
+  @apply bg-surface-3 border-accent text-fg shadow-md font-semibold scale-[1.02];
 }
 
 /* Compact variant for Group By and Sort By (smaller padding) */
 .option-toggle-btn-compact {
-  @apply py-2 px-1 text-[10px] truncate font-extrabold rounded-xl border transition-all cursor-pointer text-center bg-surface-1 border-line text-fg-secondary hover:text-fg hover:bg-surface-2 hover:border-line-strong shadow-sm;
+  @apply py-2 px-1 text-[10px] truncate font-semibold rounded-xl border transition-all cursor-pointer text-center bg-surface-1 border-line text-fg-secondary hover:text-fg hover:bg-surface-2 hover:border-line-strong shadow-sm;
 }
 
 .option-toggle-btn-compact-active {
@@ -50,7 +50,7 @@
    ─────────────────────────────────────────────────────────── */
 
 .display-settings-btn {
-  @apply flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs cursor-pointer border shadow-sm active:scale-95 bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
+  @apply flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 font-semibold text-xs cursor-pointer border shadow-sm active:scale-95 bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
 }
 
 .display-settings-btn-active {
@@ -60,11 +60,11 @@
 /* Deck manager toolbar buttons — share the display-settings surface so the
    whole toolbar reads as one system instead of washed-out chips. */
 .deck-toolbar-btn {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong;
 }
 
 .deck-toolbar-btn-accent {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-surface-3 hover:shadow-md;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-surface-3 hover:shadow-md;
 }
 
 .display-settings-dropdown {
@@ -82,7 +82,7 @@ html.dark .display-settings-dropdown {
 }
 
 .display-settings-section-label {
-  @apply text-[10px] font-extrabold text-fg-muted uppercase tracking-wider block;
+  @apply text-[11px] font-semibold text-fg-muted block;
 }
 
 /* ── Empty Deck State ───────────────────────────────────────
@@ -127,7 +127,7 @@ html.dark .import-export-dropdown {
 }
 
 .import-export-dropdown-section {
-  @apply px-3 pt-2 pb-1 text-[10px] font-extrabold text-fg-muted uppercase tracking-wider;
+  @apply px-3 pt-2 pb-1 text-[11px] font-semibold text-fg-muted;
 }
 
 .import-export-dropdown-divider {
@@ -151,7 +151,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .unsaved-deck-chip {
-  @apply bg-danger-soft text-danger border border-danger/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold mt-1.5 inline-flex items-center gap-1 shadow-sm;
+  @apply bg-danger-soft text-danger border border-danger/40 px-2.5 py-0.5 rounded-full text-[10px] font-semibold mt-1.5 inline-flex items-center gap-1 shadow-sm;
 }
 
 /* ── Active Editing Mode Badge ──────────────────────────────
@@ -159,7 +159,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .editing-mode-badge {
-  @apply inline-flex items-center gap-1.5 bg-warning-soft border border-warning/40 text-warning px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider animate-pulse;
+  @apply inline-flex items-center gap-1.5 bg-warning-soft border border-warning/40 text-warning px-2 py-0.5 rounded-full text-[11px] font-semibold animate-pulse;
 }
 
 /* ─── Deck List Item ─────────────────────────────────────── */
@@ -177,7 +177,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-format-badge {
-  @apply text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase;
+  @apply text-[11px] px-2 py-0.5 rounded-full font-semibold;
 }
 
 .deck-list-item-format-badge-selected {
@@ -194,7 +194,7 @@ html.dark .import-export-dropdown {
 
 .deck-list-action-btn {
   /* min 44px tap height below sm (reverts on desktop); already flex-centered. */
-  @apply flex-1 sm:flex-none flex justify-center gap-1 items-center min-h-[44px] sm:min-h-0 py-1.5 px-2.5 rounded-lg font-bold text-xs shadow-sm transition-all;
+  @apply flex-1 sm:flex-none flex justify-center gap-1 items-center min-h-[44px] sm:min-h-0 py-1.5 px-2.5 rounded-lg font-semibold text-xs shadow-sm transition-all;
 }
 
 /* ─── Export dialog option rows ────────────────────────────────── */
@@ -254,7 +254,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-title-compact {
-  @apply truncate text-sm font-bold text-fg;
+  @apply truncate text-sm font-semibold text-fg;
 }
 
 @media (min-width: 1024px) {
@@ -272,7 +272,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-box-title {
-  @apply truncate text-sm font-bold text-white drop-shadow;
+  @apply truncate text-sm font-semibold text-white drop-shadow;
 }
 
 .deck-box-footer {
@@ -292,7 +292,7 @@ html.dark .import-export-dropdown {
 }
 
 .deck-edit-mobile-tab {
-  @apply flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface-1 text-sm font-bold text-fg-secondary transition-all;
+  @apply flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface-1 text-sm font-semibold text-fg-secondary transition-all;
 }
 
 .deck-edit-mobile-tab-active {
@@ -391,7 +391,7 @@ html.dark .import-export-dropdown {
 }
 
 .token-card-add-btn {
-  @apply mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm;
+  @apply mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-semibold transition-all flex items-center gap-1 shadow-sm;
 }
 
 /* Stat panels (budget / deck doctor / mana base) share one tile + label treatment.
@@ -401,5 +401,5 @@ html.dark .import-export-dropdown {
 }
 
 .stat-tile-label {
-  @apply text-[9px] uppercase tracking-wider text-gray-400 block font-bold;
+  @apply text-[11px] text-gray-400 block font-semibold;
 }

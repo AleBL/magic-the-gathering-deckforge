@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { FaChevronDown, FaTimes } from 'react-icons/fa';
+import { LuChevronDown, LuX } from 'react-icons/lu';
 
 interface ProfileMenuBackHeaderProps {
   readonly title: ReactNode;
@@ -12,11 +12,11 @@ export function ProfileMenuBackHeader({ title, onBack, onClose }: ProfileMenuBac
   return (
     <div className="profile-menu-back-header">
       <button type="button" onClick={onBack} className="profile-back-btn">
-        <FaChevronDown className="rotate-90 text-xs" />
-        <span className="text-sm font-bold text-fg">{title}</span>
+        <LuChevronDown className="rotate-90 text-xs" />
+        <span className="text-sm font-semibold text-fg">{title}</span>
       </button>
       <button type="button" onClick={onClose} className="text-gray-400 hover:text-fg-secondary p-1 rounded">
-        <FaTimes className="text-xs" />
+        <LuX className="text-xs" />
       </button>
     </div>
   );

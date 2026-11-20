@@ -1,6 +1,6 @@
 import { lazy, Suspense, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChartBar, FaTimes } from 'react-icons/fa';
+import { LuChartColumn, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
@@ -44,11 +44,11 @@ export default function DeckStatsModal({
       >
         <div className="flex items-center justify-between mb-4">
           <h3 id="deck-stats-modal-title" className="modal-title">
-            <FaChartBar className="text-accent" />
+            <LuChartColumn className="text-accent" />
             {t('stats.deckStats')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 

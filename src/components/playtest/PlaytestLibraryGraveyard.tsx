@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaSkull, FaBan } from 'react-icons/fa';
+import { LuBan, LuSkull } from 'react-icons/lu';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
 import { PlaytestDragData } from '../../types/Playtest';
@@ -76,15 +76,15 @@ export function PlaytestLibraryGraveyard() {
               alt={library[0].isFaceDown !== false ? 'MTG Card Back' : library[0].card.name}
               className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-cover rounded-[10px]"
             />
-            <span className="absolute bottom-3 text-[10px] uppercase font-black tracking-widest text-white bg-slate-950/70 px-2 py-0.5 rounded backdrop-blur-xs group-hover:bg-slate-950/90 transition-colors shadow shadow-black/30">
+            <span className="absolute bottom-3 text-[11px] font-semibold text-white bg-slate-950/70 px-2 py-0.5 rounded backdrop-blur-xs group-hover:bg-slate-950/90 transition-colors shadow shadow-black/30">
               {t('playtest.draw').toUpperCase()}
             </span>
-            <div className="absolute -top-2 -right-2 bg-surface-3 text-fg font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow z-10">
+            <div className="absolute -top-2 -right-2 bg-surface-3 text-fg font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow z-10">
               {library.length}
             </div>
           </>
         ) : (
-          <span className="text-[10px] font-black uppercase text-slate-500">{t('common.empty').toUpperCase()}</span>
+          <span className="text-[11px] font-semibold text-slate-500">{t('common.empty').toUpperCase()}</span>
         )}
       </div>
 
@@ -136,21 +136,17 @@ export function PlaytestLibraryGraveyard() {
               loading="lazy"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-              <FaSkull className="text-danger text-lg mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-[8px] uppercase font-black tracking-widest text-slate-350">
-                {t('playtest.graveyard').toUpperCase()}
-              </span>
+              <LuSkull className="text-danger text-lg mb-1 group-hover:scale-110 transition-transform" />
+              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.graveyard').toUpperCase()}</span>
             </div>
-            <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
+            <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
               {graveyard.length}
             </div>
           </>
         ) : (
           <>
-            <FaSkull className="text-slate-800 text-lg mb-1" />
-            <span className="text-[8px] uppercase font-black tracking-widest text-slate-650">
-              {t('playtest.graveyard').toUpperCase()}
-            </span>
+            <LuSkull className="text-slate-800 text-lg mb-1" />
+            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.graveyard').toUpperCase()}</span>
           </>
         )}
       </div>
@@ -200,21 +196,17 @@ export function PlaytestLibraryGraveyard() {
               loading="lazy"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-              <FaBan className="text-gray-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-[8px] uppercase font-black tracking-widest text-slate-350">
-                {t('playtest.exile').toUpperCase()}
-              </span>
+              <LuBan className="text-gray-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
+              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.exile').toUpperCase()}</span>
             </div>
-            <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-extrabold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
+            <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
               {exile.length}
             </div>
           </>
         ) : (
           <>
-            <FaBan className="text-slate-800 text-lg mb-1" />
-            <span className="text-[8px] uppercase font-black tracking-widest text-slate-650">
-              {t('playtest.exile').toUpperCase()}
-            </span>
+            <LuBan className="text-slate-800 text-lg mb-1" />
+            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.exile').toUpperCase()}</span>
           </>
         )}
       </div>

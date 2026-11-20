@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaUser, FaGithub } from 'react-icons/fa';
+import { LuGithub, LuUser } from 'react-icons/lu';
 import { APP_VERSION, AUTHOR_NAME, GITHUB_REPO_URL, APP_NAME } from '../../constants';
 import { ProfileMenuBackHeader } from './ProfileMenuBackHeader';
 
@@ -18,10 +18,10 @@ export function ProfileMenuAboutSection({ onBack, onClose }: ProfileMenuAboutSec
       <div className="p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="profile-avatar-lg">
-            <FaUser className="text-sm" />
+            <LuUser className="text-sm" />
           </div>
           <div>
-            <p className="font-bold text-fg text-sm">{APP_NAME}</p>
+            <p className="font-semibold text-fg text-sm">{APP_NAME}</p>
             <p className="text-xs text-fg-muted">
               {t('strategy.version')} {APP_VERSION} · MIT
             </p>
@@ -35,7 +35,7 @@ export function ProfileMenuAboutSection({ onBack, onClose }: ProfileMenuAboutSec
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-xs font-semibold text-accent hover:underline"
         >
-          <FaGithub />
+          <LuGithub />
           {t('strategy.gitHub')}
         </a>
       </div>

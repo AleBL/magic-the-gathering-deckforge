@@ -3,7 +3,7 @@
 }
 
 .deck-stack-zone-title {
-  @apply text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 pb-1.5 border-b select-none text-left;
+  @apply text-xs font-semibold flex items-center gap-1.5 pb-1.5 border-b select-none text-left;
 }
 
 .deck-stack-zone-frontline {
@@ -39,7 +39,7 @@
 }
 
 .deck-stack-zone-count {
-  @apply text-[10px] px-2 py-0.5 rounded-full font-bold border;
+  @apply text-[10px] px-2 py-0.5 rounded-full font-semibold border;
 }
 
 .deck-stack-zone-frontline .deck-stack-zone-count {
@@ -122,11 +122,11 @@
 }
 
 .deck-stack-count-badge {
-  @apply absolute bottom-1.5 right-1.5 bg-primary border border-accent/50 text-on-primary text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
+  @apply absolute bottom-1.5 right-1.5 bg-primary border border-accent/50 text-on-primary text-[10px] font-semibold px-1.5 py-0.5 rounded-full shadow-md z-10 select-none pointer-events-none;
 }
 
 .deck-stack-status-badge {
-  @apply absolute top-1.5 left-1.5 z-10 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-bold shadow-lg flex items-center gap-0.5 select-none pointer-events-none;
+  @apply absolute top-1.5 left-1.5 z-10 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-semibold shadow-lg flex items-center gap-0.5 select-none pointer-events-none;
 }
 
 .deck-stack-status-badge-banned {

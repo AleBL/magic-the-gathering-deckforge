@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { FaBoxOpen, FaCheckCircle, FaChevronDown, FaTimes } from 'react-icons/fa';
+import { LuChevronDown, LuCircleCheck, LuPackageOpen, LuX } from 'react-icons/lu';
 import { db } from '../../db/database';
 import { Card } from '../../types/Card';
 import { CollectionEntry } from '../../types/Collection';
@@ -45,9 +45,9 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
     >
       <div className="flex items-center gap-2 flex-wrap">
         {complete ? (
-          <FaCheckCircle className="text-success shrink-0" />
+          <LuCircleCheck className="text-success shrink-0" />
         ) : (
-          <FaBoxOpen className="text-warning shrink-0" />
+          <LuPackageOpen className="text-warning shrink-0" />
         )}
         <span className="text-sm font-semibold text-fg">
           {complete
@@ -65,10 +65,10 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
             type="button"
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
-            className="ml-auto flex items-center gap-1 text-xs font-bold text-warning hover:underline"
+            className="ml-auto flex items-center gap-1 text-xs font-semibold text-warning hover:underline"
           >
             {t('collection.deckShoppingList')}
-            <FaChevronDown className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`} />
+            <LuChevronDown className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`} />
           </button>
         ) : null}
         <button
@@ -78,7 +78,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
           aria-label={t('collection.deckGapHide')}
           className={`${complete || missingRows.length === 0 ? 'ml-auto' : 'ml-1'} shrink-0 p-1 rounded text-gray-400 hover:text-fg-secondary hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
         >
-          <FaTimes className="text-[11px]" />
+          <LuX className="text-[11px]" />
         </button>
       </div>
 
@@ -87,7 +87,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
           {missingRows.map((row) => (
             <li key={row.name} className="flex items-center justify-between text-xs text-fg-secondary">
               <span className="truncate">
-                <span className="font-bold tabular-nums">{row.missing}×</span> {row.name}
+                <span className="font-semibold tabular-nums">{row.missing}×</span> {row.name}
               </span>
               <span className="tabular-nums text-fg-muted shrink-0 ml-2">
                 {row.unitPrice !== null ? formatCurrency(row.missingValue, currency) : '—'}

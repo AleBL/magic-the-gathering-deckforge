@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { LuTriangleAlert } from 'react-icons/lu';
 
 function OfflineIndicator() {
   const { t } = useTranslation();
@@ -10,7 +10,7 @@ function OfflineIndicator() {
       role="status"
       aria-live="polite"
     >
-      <FaExclamationTriangle className="text-xs shrink-0" />
+      <LuTriangleAlert className="text-xs shrink-0" />
       <span>{t('common.offlineIndicator')}</span>
     </div>
   );

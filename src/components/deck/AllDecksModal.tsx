@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaLayerGroup, FaTimes } from 'react-icons/fa';
+import { LuLayers, LuX } from 'react-icons/lu';
 import DeckList, { DeckListProps } from './DeckList';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
@@ -37,11 +37,11 @@ function AllDecksModal({ onClose, ...deckListProps }: AllDecksModalProps) {
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
           <h3 id="all-decks-title" className="modal-title">
-            <FaLayerGroup className="text-accent" />
+            <LuLayers className="text-accent" />
             {t('deck.savedDecks')} ({deckListProps.decks.length})
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 

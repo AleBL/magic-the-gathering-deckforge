@@ -1,6 +1,6 @@
 import { useMemo, useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFistRaised, FaMagic, FaBolt, FaTint, FaPalette } from 'react-icons/fa';
+import { LuDroplet, LuPalette, LuSwords, LuWandSparkles, LuZap } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckZone } from '../../types/enums';
@@ -78,7 +78,7 @@ const DeckStackView = memo(function DeckStackView({
     () => [
       {
         sectionId: 'frontline',
-        icon: FaFistRaised,
+        icon: LuSwords,
         title: t('strategy.frontline'),
         subtitle: `${t('search.creature')} & ${t('search.planeswalker')}`,
         cards: frontlineCards,
@@ -87,7 +87,7 @@ const DeckStackView = memo(function DeckStackView({
       },
       {
         sectionId: 'backline',
-        icon: FaMagic,
+        icon: LuWandSparkles,
         title: t('strategy.backline'),
         subtitle: `${t('search.artifact')} & ${t('search.enchantment')}`,
         cards: backlineCards,
@@ -96,7 +96,7 @@ const DeckStackView = memo(function DeckStackView({
       },
       {
         sectionId: 'spells',
-        icon: FaBolt,
+        icon: LuZap,
         title: t('common.spells'),
         subtitle: `${t('search.instant')} & ${t('search.sorcery')}`,
         cards: spellCards,
@@ -105,7 +105,7 @@ const DeckStackView = memo(function DeckStackView({
       },
       {
         sectionId: 'lands',
-        icon: FaTint,
+        icon: LuDroplet,
         title: t('strategy.resourceLands'),
         subtitle: t('search.land'),
         cards: landCards,
@@ -138,7 +138,7 @@ const DeckStackView = memo(function DeckStackView({
       <div className="deck-stack-container">
         <section className="space-y-3">
           <h4 className="deck-stack-zone-title deck-stack-zone-frontline animate-fadeIn">
-            <FaPalette className="shrink-0 text-xs text-accent animate-pulse" />
+            <LuPalette className="shrink-0 text-xs text-accent animate-pulse" />
             <span>{t('tokens.relatedTokens')}</span>
             <span className="deck-stack-zone-count">{allCardsInDeck.length}</span>
           </h4>

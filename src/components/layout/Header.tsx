@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
+import { LuLayers, LuPackageOpen, LuSearch } from 'react-icons/lu';
 import pwLogo from '../../assets/pw-logo.svg';
 import ProfileMenu from './ProfileMenu';
 import MobilePageMenu from './MobilePageMenu';
@@ -47,7 +47,7 @@ function Header({
             className={`tab-button ${activeTab === 'search' ? 'tab-button-active' : ''}`}
             aria-label={t('common.searchTab')}
           >
-            <FaSearch className="tab-button-icon" />
+            <LuSearch className="tab-button-icon" />
             <span>{t('common.searchTab')}</span>
           </button>
           <button
@@ -55,7 +55,7 @@ function Header({
             className={`tab-button ${activeTab === 'deck' ? 'tab-button-active' : ''}`}
             aria-label={t('common.decksTab')}
           >
-            <FaLayerGroup className="tab-button-icon" />
+            <LuLayers className="tab-button-icon" />
             <span>{t('common.decksTab')}</span>
             {currentDeckLength > 0 && (
               <span key={currentDeckLength} className="count-badge animate-pop relative">
@@ -74,7 +74,7 @@ function Header({
             className={`tab-button ${activeTab === 'collection' ? 'tab-button-active' : ''}`}
             aria-label={t('collection.title')}
           >
-            <FaBoxOpen className="tab-button-icon" />
+            <LuPackageOpen className="tab-button-icon" />
             <span>{t('collection.tab')}</span>
           </button>
         </nav>

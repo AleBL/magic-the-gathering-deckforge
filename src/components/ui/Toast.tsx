@@ -1,4 +1,4 @@
-import { FaCheckCircle, FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
+import { LuCircleCheck, LuInfo, LuTriangleAlert } from 'react-icons/lu';
 import type { ToastVariant, ToastAction } from '../../types/Toast';
 
 interface ToastProps {
@@ -9,10 +9,10 @@ interface ToastProps {
 
 function Toast({ message, variant = 'success', action }: ToastProps) {
   const iconMap = {
-    success: <FaCheckCircle className="text-lg shrink-0 text-success" />,
-    error: <FaExclamationTriangle className="text-lg shrink-0 text-danger" />,
-    warning: <FaExclamationTriangle className="text-lg shrink-0 text-warning" />,
-    info: <FaInfoCircle className="text-lg shrink-0 text-accent" />
+    success: <LuCircleCheck className="text-lg shrink-0 text-success" />,
+    error: <LuTriangleAlert className="text-lg shrink-0 text-danger" />,
+    warning: <LuTriangleAlert className="text-lg shrink-0 text-warning" />,
+    info: <LuInfo className="text-lg shrink-0 text-accent" />
   };
 
   const borderMap = {
@@ -40,7 +40,7 @@ function Toast({ message, variant = 'success', action }: ToastProps) {
         {action ? (
           <button
             onClick={action.onClick}
-            className="shrink-0 px-3 py-1 text-xs font-bold rounded-md bg-surface-1/20 hover:bg-surface-1/30 text-accent transition-colors"
+            className="shrink-0 px-3 py-1 text-xs font-semibold rounded-md bg-surface-1/20 hover:bg-surface-1/30 text-accent transition-colors"
           >
             {action.label}
           </button>

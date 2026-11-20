@@ -44,8 +44,8 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
       <h2
         className={
           compact
-            ? 'text-xs font-bold text-fg-secondary text-balance'
-            : 'text-2xl font-black text-fg mb-3 tracking-tight text-balance'
+            ? 'text-xs font-semibold text-fg-secondary text-balance'
+            : 'text-2xl font-semibold text-fg mb-3 tracking-tight text-balance'
         }
       >
         {title}
@@ -63,7 +63,7 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
       {action && (
         <button
           onClick={action.onClick}
-          className="px-6 py-2.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-bold shadow-lg transition-all duration-300 active:scale-95 mb-8"
+          className="px-6 py-2.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 mb-8"
         >
           {action.label}
         </button>
@@ -71,15 +71,13 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
 
       {suggestions && suggestions.length > 0 && (
         <div className="flex flex-col items-center gap-3 w-full mt-4">
-          <span className="text-[10px] text-fg-muted uppercase font-extrabold tracking-widest">
-            {t('common.suggestions')}
-          </span>
+          <span className="text-[11px] text-fg-muted font-semibold">{t('common.suggestions')}</span>
           <div className="flex flex-wrap justify-center gap-2.5">
             {suggestions.map((suggestion, idx) => (
               <button
                 key={idx}
                 onClick={suggestion.onClick}
-                className="px-4 py-2 bg-surface-1 border border-line rounded-xl text-sm font-mono font-bold text-fg-secondary hover:border-accent/50 hover:text-accent hover:shadow-md transition-all active:scale-95"
+                className="px-4 py-2 bg-surface-1 border border-line rounded-xl text-sm font-mono font-semibold text-fg-secondary hover:border-accent/50 hover:text-accent hover:shadow-md transition-all active:scale-95"
               >
                 {suggestion.label}
               </button>

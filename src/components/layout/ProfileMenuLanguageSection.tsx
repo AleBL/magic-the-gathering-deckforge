@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCheck } from 'react-icons/fa';
+import { LuCheck } from 'react-icons/lu';
 import { ProfileMenuBackHeader } from './ProfileMenuBackHeader';
 import { PROFILE_MENU_LANGUAGES, ProfileMenuLanguageOption } from './profileMenuLanguages';
 
@@ -34,7 +34,7 @@ export function ProfileMenuLanguageSection({
             <img src={lang.iconPath} alt={lang.label} className="w-5 h-5 rounded-full object-cover shadow-sm" />
             <span className="font-medium text-fg">{lang.label}</span>
           </div>
-          {currentLang.key === lang.key ? <FaCheck className="text-accent text-xs" /> : null}
+          {currentLang.key === lang.key ? <LuCheck className="text-accent text-xs" /> : null}
         </button>
       ))}
     </>

@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { FaChartBar } from 'react-icons/fa';
+import { LuChartColumn } from 'react-icons/lu';
 import { DeckStatistics, StatFilter } from '../../utils/deckStatistics';
 import { CHART_BAR_RADIUS_VERTICAL, CHART_SEQUENTIAL, CHART_TICK_STYLE } from './chartTheme';
 import { ChartFrame, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
@@ -37,8 +37,8 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
 
   return (
     <div className="space-y-4 min-w-0">
-      <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-        <FaChartBar className="text-accent" />
+      <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+        <LuChartColumn className="text-accent" />
         {t('stats.manaCurve')}
       </h4>
 
@@ -46,7 +46,7 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
         <ChartSkeleton height="h-40" />
       ) : totalSpells === 0 ? (
         <ChartFrame height="h-64 sm:h-72" className="flex items-center justify-center">
-          <EmptyState icon={<FaChartBar />} title={t('stats.noCurveData')} />
+          <EmptyState icon={<LuChartColumn />} title={t('stats.noCurveData')} />
         </ChartFrame>
       ) : (
         <ChartFrame height="h-40">
@@ -99,7 +99,7 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
 
       <div className="text-xs text-fg-muted text-center">
         {t('stats.averageCmc')}:{' '}
-        <span className="font-bold text-fg tabular-nums">{stats.averageConvertedManaCost}</span>
+        <span className="font-semibold text-fg tabular-nums">{stats.averageConvertedManaCost}</span>
       </div>
     </div>
   );

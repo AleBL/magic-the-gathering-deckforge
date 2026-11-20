@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { FaFileInvoice } from 'react-icons/fa';
+import { LuReceipt } from 'react-icons/lu';
 import { DeckStatistics, StatFilter } from '../../utils/deckStatistics';
 import { CHART_BAR_RADIUS_HORIZONTAL, CHART_CATEGORICAL, CHART_TICK_STYLE } from './chartTheme';
 import { ChartFrame, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
@@ -43,8 +43,8 @@ export function TypesBreakdownPanel({ stats, activeFilter, setActiveFilter }: Ty
 
   return (
     <div className="space-y-4 min-w-0">
-      <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-        <FaFileInvoice className="text-success" />
+      <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+        <LuReceipt className="text-success" />
         {t('stats.typesBreakdown')}
       </h4>
 
@@ -52,7 +52,7 @@ export function TypesBreakdownPanel({ stats, activeFilter, setActiveFilter }: Ty
         <ChartSkeleton height="h-40" />
       ) : chartData.length === 0 ? (
         <ChartFrame height="h-32" className="flex items-center justify-center">
-          <EmptyState icon={<FaFileInvoice />} title={t('stats.noTypeData')} />
+          <EmptyState icon={<LuReceipt />} title={t('stats.noTypeData')} />
         </ChartFrame>
       ) : (
         <ChartFrame style={{ height: rowHeight }}>

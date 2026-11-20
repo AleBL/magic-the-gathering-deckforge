@@ -12,15 +12,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import {
-  FaStethoscope,
-  FaExclamationTriangle,
-  FaExclamationCircle,
-  FaInfoCircle,
-  FaCheckCircle,
-  FaDiceD20,
-  FaFish
-} from 'react-icons/fa';
+import { LuCircleAlert, LuCircleCheck, LuDices, LuFish, LuInfo, LuStethoscope, LuTriangleAlert } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { analyzeDeck, ConsistencyScore, DeckRecommendation, ScoreComponent } from '../../utils/deckDoctor';
 import { DeckStatistics, landDrawProbabilities } from '../../utils/deckStatistics';
@@ -57,8 +49,8 @@ function OpeningHandChart({ stats }: { stats: DeckStatistics }) {
 
   return (
     <div>
-      <span className="text-[9px] uppercase tracking-wider text-gray-400 font-bold mb-1.5 flex items-center gap-1.5">
-        <FaDiceD20 className="text-accent" />
+      <span className="text-[11px] text-gray-400 font-semibold mb-1.5 flex items-center gap-1.5">
+        <LuDices className="text-accent" />
         {t('stats.consistency')}
       </span>
       <p className="text-[10px] text-fg-muted mb-2">{t('stats.consistencyDesc')}</p>
@@ -124,19 +116,19 @@ function scoreColor(total: number): string {
 const SEVERITY_STYLE: Record<DeckRecommendation['severity'], { wrap: string; icon: ReactNode }> = {
   critical: {
     wrap: 'bg-danger-soft border-danger/40 text-danger',
-    icon: <FaExclamationCircle className="text-danger shrink-0 mt-0.5" />
+    icon: <LuCircleAlert className="text-danger shrink-0 mt-0.5" />
   },
   warning: {
     wrap: 'bg-warning-soft border-warning/40 text-warning',
-    icon: <FaExclamationTriangle className="text-warning shrink-0 mt-0.5" />
+    icon: <LuTriangleAlert className="text-warning shrink-0 mt-0.5" />
   },
   info: {
     wrap: 'bg-accent-soft border-line-strong text-accent',
-    icon: <FaInfoCircle className="text-accent shrink-0 mt-0.5" />
+    icon: <LuInfo className="text-accent shrink-0 mt-0.5" />
   },
   good: {
     wrap: 'bg-success-soft border-success/40 text-success',
-    icon: <FaCheckCircle className="text-success shrink-0 mt-0.5" />
+    icon: <LuCircleCheck className="text-success shrink-0 mt-0.5" />
   }
 };
 
@@ -144,7 +136,7 @@ function StatTile({ label, value, tone }: { label: string; value: string; tone?:
   return (
     <div className="stat-tile">
       <span className="stat-tile-label">{label}</span>
-      <span className={`text-base font-extrabold tabular-nums ${tone ?? 'text-fg-secondary '}`}>{value}</span>
+      <span className={`text-base font-semibold tabular-nums ${tone ?? 'text-fg-secondary '}`}>{value}</span>
     </div>
   );
 }
@@ -189,8 +181,8 @@ function ScoreGauge({ score }: { score: ConsistencyScore }) {
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <span className="text-4xl font-extrabold tabular-nums text-fg">{score.total}</span>
-        <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color }}>
+        <span className="text-4xl font-semibold tabular-nums text-fg">{score.total}</span>
+        <span className="text-[11px] font-semibold" style={{ color }}>
           {t(`deckDoctor.rating.${score.rating}`)}
         </span>
       </div>
@@ -247,8 +239,8 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
 
   return (
     <div className="md:col-span-3 space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
-      <h4 className="font-bold text-sm text-accent uppercase tracking-wider flex items-center gap-2">
-        <FaStethoscope className="text-accent" />
+      <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
+        <LuStethoscope className="text-accent" />
         {t('deckDoctor.title')}
       </h4>
       <p className="text-xs text-fg-muted">{t('deckDoctor.desc')}</p>
@@ -257,7 +249,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
         <ChartSkeleton height="h-40" />
       ) : !hasData ? (
         <ChartFrame height="h-32" className="flex items-center justify-center">
-          <EmptyState icon={<FaStethoscope />} title={t('deckDoctor.noData')} />
+          <EmptyState icon={<LuStethoscope />} title={t('deckDoctor.noData')} />
         </ChartFrame>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -275,8 +267,8 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
           {/* Goldfish + land odds + color sources */}
           <div className="space-y-4">
             <div>
-              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold mb-1.5 flex items-center gap-1.5">
-                <FaFish className="text-accent" />
+              <span className="text-[11px] text-gray-400 block font-semibold mb-1.5 flex items-center gap-1.5">
+                <LuFish className="text-accent" />
                 {t('deckDoctor.openingHands')}
               </span>
               <p className="text-[10px] text-fg-muted mb-2">
@@ -304,9 +296,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
 
             {/* Land odds by turn — hypergeometric, on the play */}
             <div>
-              <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold mb-1.5">
-                {t('deckDoctor.landOdds')}
-              </span>
+              <span className="text-[11px] text-gray-400 block font-semibold mb-1.5">{t('deckDoctor.landOdds')}</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <StatTile label={t('deckDoctor.keepable')} value={percent(landOdds.keepableProb)} />
                 <StatTile
@@ -329,7 +319,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
             {/* Color source sufficiency */}
             {colorSources.length > 0 ? (
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold mb-1.5">
+                <span className="text-[11px] text-gray-400 block font-semibold mb-1.5">
                   {t('deckDoctor.colorSources')}
                 </span>
                 <div className="space-y-1.5">
@@ -348,7 +338,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
                           <span className="text-fg-muted">
                             {t('deckDoctor.sourcesOfIdeal', { sources: diag.sources, ideal: diag.idealSources })}
                           </span>
-                          <span className={short ? 'text-warning font-bold' : 'text-success font-bold'}>
+                          <span className={short ? 'text-warning font-semibold' : 'text-success font-semibold'}>
                             {percent(diag.openingHandProb)}
                           </span>
                         </span>

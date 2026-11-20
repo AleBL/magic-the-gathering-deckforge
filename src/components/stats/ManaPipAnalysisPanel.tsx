@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { FaTint } from 'react-icons/fa';
+import { LuDroplet } from 'react-icons/lu';
 import { getSymbolUrl, parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DeckStatistics, MANA_COLORS } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
@@ -67,8 +67,8 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-500/5 dark:bg-amber-950/10 transition-colors duration-300">
-      <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-        <FaTint className="text-amber-500 animate-pulse" />
+      <h4 className="font-semibold text-sm text-amber-700 dark:text-amber-400 flex items-center gap-2">
+        <LuDroplet className="text-amber-500 animate-pulse" />
         {t('stats.manaPipAnalysis')}
       </h4>
       <p className="text-xs text-fg-muted">{t('stats.manaPipAnalysisDesc')}</p>
@@ -77,7 +77,7 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
         <ChartSkeleton height="h-40" />
       ) : chartData.length === 0 ? (
         <ChartFrame height="h-32" className="flex items-center justify-center">
-          <EmptyState icon={<FaTint />} title={t('stats.noPipData')} />
+          <EmptyState icon={<LuDroplet />} title={t('stats.noPipData')} />
         </ChartFrame>
       ) : (
         <>

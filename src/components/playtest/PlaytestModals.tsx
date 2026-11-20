@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaSkull, FaBan } from 'react-icons/fa';
+import { LuBan, LuSkull } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { PlaytestBattlefieldContextMenu } from './PlaytestBattlefieldContextMenu';
 import PileExplorerModal from './PileExplorerModal';
@@ -113,7 +113,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                   setContextMenu(null);
                 }}
               >
-                <FaSkull className="text-xs" />
+                <LuSkull className="text-xs" />
                 {t('playtest.discardCard')}
               </button>
               <button
@@ -124,7 +124,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                   setContextMenu(null);
                 }}
               >
-                <FaBan className="text-xs" />
+                <LuBan className="text-xs" />
                 {t('playtest.moveToExile')}
               </button>
             </>
@@ -182,7 +182,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
             aria-labelledby="scry-surveil-prompt-title"
             className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
           >
-            <h3 id="scry-surveil-prompt-title" className="text-lg font-bold text-slate-200">
+            <h3 id="scry-surveil-prompt-title" className="text-lg font-semibold text-slate-200">
               {t('playtest.promptAmount', { action: t(`playtest.${scrySurveilPrompt.type}`) })}
             </h3>
             <form
@@ -234,7 +234,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
             aria-labelledby="position-prompt-title"
             className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
           >
-            <h3 id="position-prompt-title" className="text-lg font-bold text-slate-200">
+            <h3 id="position-prompt-title" className="text-lg font-semibold text-slate-200">
               {t('playtest.toLibraryPosition')}
             </h3>
             <p className="text-sm text-slate-400">{t('export.positionPrompt')}</p>

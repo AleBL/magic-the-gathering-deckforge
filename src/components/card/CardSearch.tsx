@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaFilter } from 'react-icons/fa';
+import { LuFilter, LuSearch } from 'react-icons/lu';
 import CardGrid from './CardGrid';
 import CardSizeSelector from './CardSizeSelector';
 import CollectionFilterSelector from './CollectionFilterSelector';
@@ -98,7 +98,7 @@ function CardSearch({
           <div className="flex flex-row gap-2 sm:gap-3">
             <div className="relative flex-1 group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-accent transition-colors">
-                <FaSearch className="text-lg" />
+                <LuSearch className="text-lg" />
               </div>
               <input
                 ref={searchInputRef}
@@ -117,7 +117,7 @@ function CardSearch({
             </div>
             <button
               onClick={() => loadFirstPage(buildQuery(searchQuery))}
-              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-bold shadow-lg transition-all duration-300 active:scale-95 whitespace-nowrap"
+              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 whitespace-nowrap"
             >
               {t('search.searchButton')}
             </button>
@@ -131,7 +131,7 @@ function CardSearch({
               aria-label={t('search.advancedFilters')}
               title={t('search.advancedFilters')}
             >
-              <FaFilter />
+              <LuFilter />
             </button>
           </div>
 
@@ -154,7 +154,7 @@ function CardSearch({
                 setFilters={setFilters}
                 extraFilters={
                   <div>
-                    <span className="block text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5">
+                    <span className="block text-[11px] font-semibold text-fg-muted mb-1.5">
                       {t('search.ownership')}
                     </span>
                     <CollectionFilterSelector value={ownership} onChange={setOwnership} />
@@ -164,7 +164,7 @@ function CardSearch({
                   <div className="space-y-3">
                     <CardFilterBar filters={filters} setFilters={setFilters} mobileLayout />
                     <div className="pt-2 border-t border-line">
-                      <span className="block text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5">
+                      <span className="block text-[11px] font-semibold text-fg-muted mb-1.5">
                         {t('search.cardSize')}
                       </span>
                       <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />
@@ -199,7 +199,7 @@ function CardSearch({
 
           {!isLoadingInitial && !error && visibleCards.length === 0 && (
             <EmptyState
-              icon={<FaSearch />}
+              icon={<LuSearch />}
               title={t('search.noResults')}
               description={t('search.tryAdjustingFilters')}
               suggestions={[
