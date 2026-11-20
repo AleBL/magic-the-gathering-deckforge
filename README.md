@@ -122,6 +122,8 @@ yarn test:e2e          # end-to-end journeys (Playwright)
 yarn test:e2e:ui       # the same journeys in Playwright's interactive runner
 yarn test:e2e:bench    # collection scale benchmark (add BENCH_PROD=1 for the production bundle)
 yarn test:e2e:electron # desktop boot journeys against the real Electron process
+yarn test:e2e:visual   # screenshots of the main screens, light and dark, desktop and phone, into visual-results/
+yarn style:check       # counts banned styling signals against ceilings that only go down (see DESIGN.md)
 ```
 
 The E2E suite starts its own dev server on port 5199 and stubs every Scryfall request, so
