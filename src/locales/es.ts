@@ -603,6 +603,17 @@ const es = {
       landsToAdd: 'Por agregar',
       suggestedDistribution: 'Distribución sugerida'
     },
+    deckCompare: {
+      title: 'Comparar mazos',
+      compareWith: 'Comparar con…',
+      versus: 'vs',
+      none: 'Nada',
+      needTwo: 'Guarda otro mazo para comparar',
+      shared_one: '{{count}} carta en común con la misma cantidad',
+      shared_other: '{{count}} cartas en común con la misma cantidad',
+      onlyIn: 'Solo en {{name}}',
+      differentCounts: 'Cantidades distintas'
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} puntos',
       title: 'Deck Doctor',

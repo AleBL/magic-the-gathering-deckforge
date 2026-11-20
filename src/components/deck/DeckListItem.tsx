@@ -1,7 +1,17 @@
 import { memo, useState, useRef, useEffect, useMemo, type MouseEvent as ReactMouseEvent } from 'react';
 import { useDropDirection } from '../../hooks/useDropDirection';
 import { useTranslation } from 'react-i18next';
-import { LuCopyPlus, LuDownload, LuEllipsis, LuImage, LuLayers, LuPlus, LuSquarePen, LuTrash2 } from 'react-icons/lu';
+import {
+  LuCopyPlus,
+  LuDownload,
+  LuEllipsis,
+  LuGitCompareArrows,
+  LuImage,
+  LuLayers,
+  LuPlus,
+  LuSquarePen,
+  LuTrash2
+} from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
@@ -34,6 +44,7 @@ interface DeckListItemProps {
   onNewFrom: (deck: Deck) => void;
   onDelete: (deck: Deck) => void;
   onChangeCover: (deck: Deck) => void;
+  onCompare?: (deck: Deck) => void;
 }
 
 export const DeckListItem = memo(function DeckListItem({
@@ -47,7 +58,8 @@ export const DeckListItem = memo(function DeckListItem({
   onDuplicate,
   onNewFrom,
   onDelete,
-  onChangeCover
+  onChangeCover,
+  onCompare
 }: DeckListItemProps) {
   const { t } = useTranslation();
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -218,6 +230,12 @@ export const DeckListItem = memo(function DeckListItem({
               <LuImage className="shrink-0" />
               {t('deck.setCover')}
             </button>
+            {onCompare ? (
+              <button type="button" role="menuitem" onClick={runFromMenu(() => onCompare(deck))} className={MENU_ITEM}>
+                <LuGitCompareArrows className="shrink-0" />
+                {t('deckCompare.compareWith')}
+              </button>
+            ) : null}
             {/* Destructive, so it sits apart at the end and asks for confirmation upstream. */}
             <div className="my-1 h-px bg-line" role="separator" />
             <button

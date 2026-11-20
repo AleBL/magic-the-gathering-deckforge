@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
+import DeckCompareModal from './DeckCompareModal';
 import { SAMPLE_DECK_TEXT } from '../../constants/sampleDeck';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
@@ -94,6 +95,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const [deckToExport, setDeckToExport] = useState<Deck | null>(null);
   const [deckForCover, setDeckForCover] = useState<Deck | null>(null);
+  const [deckToCompare, setDeckToCompare] = useState<Deck | null>(null);
   // Deck whose name/format is being edited via the reused save dialog.
   const {
     deckInfoEdit,
@@ -553,6 +555,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
             onNewFromDeck={handleNewDeckFromThis}
             onDeleteDeck={confirmDeleteDeck}
             onChangeCover={setDeckForCover}
+            onCompareDeck={setDeckToCompare}
             deckPreview={deckPreviewElement}
           />
         )}
@@ -626,6 +629,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
         fileImportError={fileImportError}
         onCloseFileImportModal={closeFileImportModal}
       />
+      <DeckCompareModal baseDeck={deckToCompare} decks={savedDecks} onClose={() => setDeckToCompare(null)} />
     </div>
   );
 }

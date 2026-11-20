@@ -597,6 +597,17 @@ const en = {
       landsToAdd: 'To add',
       suggestedDistribution: 'Suggested distribution'
     },
+    deckCompare: {
+      title: 'Compare decks',
+      compareWith: 'Compare with…',
+      versus: 'vs',
+      none: 'Nothing',
+      needTwo: 'Save another deck to compare with',
+      shared_one: '{{count}} card in common at the same count',
+      shared_other: '{{count}} cards in common at the same count',
+      onlyIn: 'Only in {{name}}',
+      differentCounts: 'Different counts'
+    },
     deckDoctor: {
       pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',
