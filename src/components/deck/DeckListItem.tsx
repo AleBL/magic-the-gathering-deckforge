@@ -140,14 +140,14 @@ export const DeckListItem = memo(function DeckListItem({
         </div>
         <div className="deck-list-item-meta pointer-events-none">
           {identity.length > 0 && (
-            <span className="flex items-center gap-0.5" aria-label={identity.join('')}>
+            <span className="flex shrink-0 items-center gap-0.5" aria-label={identity.join('')}>
               {identity.map((color) => (
                 <img key={color} src={getSymbolUrl(`{${color}}`)} alt="" className="w-3.5 h-3.5" />
               ))}
             </span>
           )}
-          <span className="text-xs text-fg-secondary">{t(formatLabelKey(deck.format))}</span>
-          <span className="text-xs text-fg-muted">{deck.cards.length}</span>
+          <span className="min-w-0 truncate text-xs text-fg-secondary">{t(formatLabelKey(deck.format))}</span>
+          <span className="shrink-0 text-xs text-fg-muted">{deck.cards.length}</span>
           <DeckValidationBadge
             validation={validation}
             formatKey={deck.format || DeckFormatType.FREEFORM}
