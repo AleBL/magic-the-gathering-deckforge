@@ -117,7 +117,7 @@ function CardSearch({
             </div>
             <button
               onClick={() => loadFirstPage(buildQuery(searchQuery))}
-              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 whitespace-nowrap"
+              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl font-medium transition-colors duration-150 active:scale-[0.98] whitespace-nowrap"
             >
               {t('search.searchButton')}
             </button>
