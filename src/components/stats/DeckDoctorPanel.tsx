@@ -242,7 +242,7 @@ export function DeckDoctorPanel({ currentDeck, stats }: DeckDoctorPanelProps) {
   const { score, openingHands, landOdds, colorSources, recommendations, hasData } = report;
 
   return (
-    <div className="md:col-span-3 space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
+    <div className="md:col-span-3 space-y-4 p-4 rounded-xl border border-line bg-surface-1">
       <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
         <LuStethoscope className="text-accent" />
         {t('deckDoctor.title')}

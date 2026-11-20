@@ -35,7 +35,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
   const rowHeight = Math.max(chartData.length, 1) * 32 + 16;
 
   return (
-    <div className="space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
+    <div className="space-y-4 p-4 rounded-xl border border-line bg-surface-1">
       <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
         <LuInfo className="text-accent" />
         {t('stats.manaBaseOptimizer')}
