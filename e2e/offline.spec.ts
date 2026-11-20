@@ -37,7 +37,7 @@ async function goOffline(page: Page) {
  * pane, switch zone — the shortest path to the two token journeys below.
  */
 async function openTokensTab(page: Page, cardName: string) {
-  await page.getByRole('textbox', { name: 'Search cards...' }).fill(cardName);
+  await page.getByRole('combobox', { name: 'Search cards...' }).fill(cardName);
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('button', { name: 'Add copy' }).first().click();
   await page.getByRole('button', { name: 'My Decks' }).click();
@@ -66,7 +66,7 @@ test.describe('offline', () => {
     await appPage.goto('/');
     await goOffline(appPage);
 
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
 
     // Deliberately not `offline|No cards found`: the empty state is the failure this test
@@ -79,7 +79,7 @@ test.describe('offline', () => {
   // to put one there — on a search result there is nothing to report against.
   test('the editions control reports a failed lookup rather than showing none', async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Add copy' }).first().click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();

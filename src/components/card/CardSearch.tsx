@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { SearchSuggestInput } from './SearchSuggestInput';
+import { rememberSearch } from '../../utils/recentSearches';
 import { useTranslation } from 'react-i18next';
 import { LuFilter, LuSearch } from 'react-icons/lu';
 import CardGrid from './CardGrid';
@@ -98,27 +100,17 @@ function CardSearch({
         <div className="w-full space-y-2 sm:space-y-4">
           {/* Main Search Input */}
           <div className="flex flex-row gap-2 sm:gap-3">
-            <div className="relative flex-1 group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-accent transition-colors">
-                <LuSearch className="text-lg" />
-              </div>
-              <input
-                ref={searchInputRef}
-                id="search-input"
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    loadFirstPage(buildQuery(searchQuery));
-                  }
-                }}
-                placeholder={t('search.searchPlaceholder')}
-                className="w-full pl-11 pr-4 py-3.5 bg-surface-1 border border-line-strong rounded-xl text-base text-fg placeholder:text-fg-muted focus:outline-none focus:border-fg-muted focus-visible:outline-2 focus-visible:outline-focus transition-colors duration-150"
-              />
-            </div>
+            <SearchSuggestInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSubmit={(text) => loadFirstPage(buildQuery(text))}
+              inputRef={searchInputRef}
+            />
             <button
-              onClick={() => loadFirstPage(buildQuery(searchQuery))}
+              onClick={() => {
+                rememberSearch(searchQuery);
+                loadFirstPage(buildQuery(searchQuery));
+              }}
               className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl font-medium transition-colors duration-150 active:scale-[0.98] whitespace-nowrap"
             >
               {t('search.searchButton')}
