@@ -54,6 +54,9 @@ export const NESTED_CARD_DETAIL_Z_INDEX = 300;
 export const PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX = 10;
 
 export const PLAYTEST_CARD_SIZE_CLASSES = 'w-28 sm:w-32 md:w-36 lg:w-40 xl:w-48 aspect-[5/7]';
+// The hand is one row that scrolls sideways, so its cards stay smaller than the battlefield's
+// and the table keeps most of the height.
+export const PLAYTEST_HAND_CARD_SIZE_CLASSES = 'w-24 sm:w-28 xl:w-32 aspect-[5/7]';
 
 // lg+ piles stay small: library, graveyard and exile stack in a rail beside the battlefield
 // and must fit above the hand at 1280x720.

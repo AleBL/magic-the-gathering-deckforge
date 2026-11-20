@@ -4,7 +4,7 @@ import { LuEllipsis, LuInfo } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
 import { PlaytestCard, PlaytestDragData } from '../../types/Playtest';
-import { PLAYTEST_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
+import { PLAYTEST_HAND_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
 import { clampMenuYToViewport } from '../../utils/contextMenuPosition';
 
 const PlaytestHandCard = memo(
@@ -62,7 +62,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-4 hover:scale-105 hover:border-accent/50'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
+          className={`relative ${PLAYTEST_HAND_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-[transform,border-color] duration-150 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-1 hover:border-accent'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
         >
           {imageUrl ? (
             <img
@@ -186,11 +186,11 @@ export function PlaytestHand() {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] p-2 bg-surface-2 rounded-xl border border-line">
+      <div className="flex items-start justify-start min-h-[140px] p-2 pt-3 bg-surface-2 rounded-xl border border-line overflow-x-auto">
         {hand.length === 0 ? (
           <p className="text-xs text-slate-600 italic py-4">{t('playtest.handEmpty')}</p>
         ) : (
-          <div className="flex flex-wrap gap-4 items-start justify-start w-full">
+          <div className="flex flex-nowrap gap-3 items-start justify-start">
             {hand.map((playtestCard) => (
               <PlaytestHandCard
                 key={playtestCard.playtestId}

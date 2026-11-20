@@ -30,7 +30,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleNextTurn();
           }}
           disabled={isMulliganPhase}
-          className="ripple-container bg-surface-3 hover:bg-surface-3 text-fg font-semibold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.nextTurn')} (T)`}
         >
           <LuArrowRight className="text-[10px]" />
@@ -44,7 +44,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleDrawCard();
           }}
           disabled={library.length === 0 || isMulliganPhase}
-          className="ripple-container bg-surface-3 hover:bg-surface-3 text-fg font-semibold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.drawCard')} (D)`}
         >
           <LuLayers className="text-[10px]" />
@@ -100,7 +100,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleMulligan();
           }}
           disabled={deckCards.length === 0 || isMulliganPhase}
-          className="ripple-container bg-warning hover:bg-warning text-white font-semibold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
           <LuUndo2 className="text-[10px] rotate-90" />
           {t('playtest.mulligan')}
