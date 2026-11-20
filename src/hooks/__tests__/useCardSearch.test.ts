@@ -472,6 +472,24 @@ describe('useCardSearch.buildQuery', () => {
     expect(result.current.buildQuery('')).toBe('cmc=3');
   });
 
+  // Sorting rides on Scryfall's own keyword so every further page arrives in the same order.
+  it('appends the chosen order as a Scryfall order term', async () => {
+    const result = await withFilters({ rarity: 'rare' });
+    await act(async () => {
+      result.current.setSortOrder('cmc');
+    });
+    expect(result.current.buildQuery('bolt')).toBe('bolt r:rare order:cmc');
+  });
+
+  it('adds no term for the default name order, and keeps the default query alone', async () => {
+    const result = await withFilters({});
+    expect(result.current.buildQuery('')).toBe('c>=1');
+    await act(async () => {
+      result.current.setSortOrder('usd');
+    });
+    expect(result.current.buildQuery('')).toBe('c>=1 order:usd');
+  });
+
   it('combines typed text with every filter, single-spaced', async () => {
     const result = await withFilters({ colors: ['R'], types: ['instant'], rarity: 'common', cmc: '1' });
     expect(result.current.buildQuery('bolt')).toBe('bolt c:R t:instant r:common cmc=1');

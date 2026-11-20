@@ -83,6 +83,18 @@ const pt = {
       black: 'Preto',
       blue: 'Azul',
       cardSize: 'Tamanho das cartas:',
+      resultCount_one: '{{count}} carta',
+      resultCount_other: '{{count}} cartas',
+      resultCountMore: '{{count}}+ cartas',
+      sortBy: 'Ordenar por',
+      sortOrders: {
+        name: 'Nome',
+        cmc: 'Valor de mana',
+        released: 'Mais recentes',
+        rarity: 'Raridade',
+        usd: 'Preço',
+        edhrec: 'Popularidade (EDHREC)'
+      },
       ownership: 'Coleção',
       loadingMoreFiltered: 'Carregando mais resultados para filtrar…',
       ownershipAll: 'Todas',

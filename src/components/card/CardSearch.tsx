@@ -10,7 +10,7 @@ import CardSkeleton from './CardSkeleton';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
-import { useCardSearch } from '../../hooks/useCardSearch';
+import { SEARCH_SORT_ORDERS, SearchSortOrder, useCardSearch } from '../../hooks/useCardSearch';
 import { dispatchPendingAction, usePendingAction } from '../../hooks/usePendingAction';
 import { useCollectionOwnership, OwnershipFilter } from '../../hooks/useCollectionOwnership';
 import ErrorState from '../ui/ErrorState';
@@ -47,6 +47,8 @@ function CardSearch({
     error,
     filters,
     setFilters,
+    sortOrder,
+    setSortOrder,
     hasMore,
     loadFirstPage,
     loadNextPage,
@@ -174,6 +176,29 @@ function CardSearch({
               />
               <div className="w-px h-6 bg-surface-3 hidden sm:block"></div>
               <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />
+              <div className="flex items-center gap-3 ml-auto">
+                {!isLoadingInitial && !error && cards.length > 0 && (
+                  <span className="text-sm text-fg-muted" aria-live="polite">
+                    {hasMore
+                      ? t('search.resultCountMore', { count: visibleCards.length })
+                      : t('search.resultCount', { count: visibleCards.length })}
+                  </span>
+                )}
+                <label className="flex items-center gap-2 text-sm text-fg-secondary">
+                  <span>{t('search.sortBy')}</span>
+                  <select
+                    value={sortOrder}
+                    onChange={(event) => setSortOrder(event.target.value as SearchSortOrder)}
+                    className="h-9 px-2.5 rounded-lg bg-surface-1 border border-line-strong text-sm text-fg cursor-pointer"
+                  >
+                    {SEARCH_SORT_ORDERS.map((order) => (
+                      <option key={order} value={order}>
+                        {t(`search.sortOrders.${order}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
         </div>

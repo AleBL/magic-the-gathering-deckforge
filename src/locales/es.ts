@@ -83,6 +83,18 @@ const es = {
       black: 'Negro',
       blue: 'Azul',
       cardSize: 'Tamaño de cartas:',
+      resultCount_one: '{{count}} carta',
+      resultCount_other: '{{count}} cartas',
+      resultCountMore: '{{count}}+ cartas',
+      sortBy: 'Ordenar por',
+      sortOrders: {
+        name: 'Nombre',
+        cmc: 'Valor de maná',
+        released: 'Más recientes',
+        rarity: 'Rareza',
+        usd: 'Precio',
+        edhrec: 'Popularidad (EDHREC)'
+      },
       ownership: 'Colección',
       loadingMoreFiltered: 'Cargando más resultados para filtrar…',
       ownershipAll: 'Todas',

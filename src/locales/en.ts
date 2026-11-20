@@ -83,6 +83,18 @@ const en = {
       black: 'Black',
       blue: 'Blue',
       cardSize: 'Card size:',
+      resultCount_one: '{{count}} card',
+      resultCount_other: '{{count}} cards',
+      resultCountMore: '{{count}}+ cards',
+      sortBy: 'Sort by',
+      sortOrders: {
+        name: 'Name',
+        cmc: 'Mana value',
+        released: 'Newest',
+        rarity: 'Rarity',
+        usd: 'Price',
+        edhrec: 'Popularity (EDHREC)'
+      },
       ownership: 'Collection',
       loadingMoreFiltered: 'Loading more results to filter…',
       ownershipAll: 'All',
