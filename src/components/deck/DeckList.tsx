@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { hasTag, tagsInUse } from '../../utils/deckTags';
 import { useTranslation } from 'react-i18next';
 import { LuLayers, LuSearch } from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
@@ -38,6 +39,7 @@ export interface DeckListProps {
   onDeleteDeck: (deck: Deck) => void;
   onChangeCover: (deck: Deck) => void;
   onCompareDeck?: (deck: Deck) => void;
+  onEditDeckTags?: (deck: Deck) => void;
   /** `column` for the 300px sidebar lane; `grid` for the all-decks modal. */
   layout?: 'column' | 'grid';
   /** The modal supplies its own dialog title, so the list's heading would repeat it. */
@@ -57,19 +59,28 @@ function DeckList({
   onDeleteDeck,
   onChangeCover,
   onCompareDeck,
+  onEditDeckTags,
   layout = 'column',
   hideHeading = false
 }: DeckListProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<DeckSort>('recent');
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const libraryTags = useMemo(() => tagsInUse(decks), [decks]);
   const showTools = decks.length >= TOOLS_FROM;
 
   const visibleDecks = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    const matching = needle ? decks.filter((deck) => deck.name.toLowerCase().includes(needle)) : decks;
+    const matching = decks.filter(
+      (deck) =>
+        (!activeTag || hasTag(deck, activeTag)) &&
+        (!needle ||
+          deck.name.toLowerCase().includes(needle) ||
+          (deck.tags ?? []).some((tag) => tag.toLowerCase().includes(needle)))
+    );
     return sortDecks(matching, sort);
-  }, [decks, query, sort]);
+  }, [decks, query, sort, activeTag]);
 
   return (
     <div className="deck-list-section">
@@ -104,6 +115,26 @@ function DeckList({
               <option value="format">{t('deck.sortFormat')}</option>
             </select>
           </label>
+        </div>
+      )}
+      {libraryTags.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-1.5" role="group" aria-label={t('deckTags.filter')}>
+          {[null, ...libraryTags].map((tag) => {
+            const isActive = activeTag === tag;
+            return (
+              <button
+                key={tag ?? 'all'}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActiveTag(tag)}
+                className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+                  isActive ? 'border-fg bg-primary text-on-primary' : 'border-line text-fg-secondary hover:bg-surface-2'
+                }`}
+              >
+                {tag ?? t('deckTags.all')}
+              </button>
+            );
+          })}
         </div>
       )}
       {/* `column` is the sidebar lane at lg+, but below lg the same list expands to the full
@@ -144,6 +175,7 @@ function DeckList({
               onDelete={onDeleteDeck}
               onChangeCover={onChangeCover}
               onCompare={decks.length > 1 ? onCompareDeck : undefined}
+              onEditTags={onEditDeckTags}
             />
           ))
         )}

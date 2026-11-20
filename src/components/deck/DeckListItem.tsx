@@ -10,6 +10,7 @@ import {
   LuLayers,
   LuPlus,
   LuSquarePen,
+  LuTag,
   LuTrash2
 } from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
@@ -45,6 +46,7 @@ interface DeckListItemProps {
   onDelete: (deck: Deck) => void;
   onChangeCover: (deck: Deck) => void;
   onCompare?: (deck: Deck) => void;
+  onEditTags?: (deck: Deck) => void;
 }
 
 export const DeckListItem = memo(function DeckListItem({
@@ -59,7 +61,8 @@ export const DeckListItem = memo(function DeckListItem({
   onNewFrom,
   onDelete,
   onChangeCover,
-  onCompare
+  onCompare,
+  onEditTags
 }: DeckListItemProps) {
   const { t } = useTranslation();
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -165,6 +168,9 @@ export const DeckListItem = memo(function DeckListItem({
             formatKey={deck.format || DeckFormatType.FREEFORM}
             variant="compact"
           />
+          {deck.tags?.length ? (
+            <span className="min-w-0 truncate text-xs text-fg-muted">{deck.tags.join(', ')}</span>
+          ) : null}
         </div>
       </div>
 
@@ -230,6 +236,12 @@ export const DeckListItem = memo(function DeckListItem({
               <LuImage className="shrink-0" />
               {t('deck.setCover')}
             </button>
+            {onEditTags ? (
+              <button type="button" role="menuitem" onClick={runFromMenu(() => onEditTags(deck))} className={MENU_ITEM}>
+                <LuTag className="shrink-0" />
+                {t('deckTags.edit')}
+              </button>
+            ) : null}
             {onCompare ? (
               <button type="button" role="menuitem" onClick={runFromMenu(() => onCompare(deck))} className={MENU_ITEM}>
                 <LuGitCompareArrows className="shrink-0" />
