@@ -149,7 +149,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .unsaved-deck-chip {
-  @apply bg-danger-soft text-danger border border-danger/40 px-2.5 py-0.5 rounded-full text-[10px] font-semibold mt-1.5 inline-flex items-center gap-1 shadow-sm;
+  @apply bg-surface-2 text-fg-secondary border border-line px-2.5 py-0.5 rounded-full text-xs mt-1.5 inline-flex items-center gap-1;
 }
 
 /* ── Active Editing Mode Badge ──────────────────────────────

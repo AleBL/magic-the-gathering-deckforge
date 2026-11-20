@@ -219,7 +219,8 @@ const pt = {
       addCardsMessage: 'Adicione cartas ao deck atual ou selecione um deck salvo',
       analyzeDeck: 'Analisar Deck',
       clearDeckNamed: 'Limpar Deck "{{name}}"',
-      clearTemporaryDeck: 'Limpar Deck Temporário',
+      clearDraft: 'Limpar rascunho',
+      draft: 'Rascunho',
       clearDeckConfirmationMessage:
         'Tem certeza que deseja limpar o deck atual? Todas as alterações não salvas serão perdidas.',
       clearDeckConfirmationTitle: 'Limpar Deck',
@@ -310,7 +311,7 @@ const pt = {
       sortCmc: 'CMC',
       sortName: 'Nome',
       sortRarity: 'Raridade',
-      temporaryUnsavedDeck: 'Deck Temporário (Não Salvo)'
+      draftNotSaved: 'Ainda não salvo como deck'
     },
     collection: {
       title: 'Minha Coleção',

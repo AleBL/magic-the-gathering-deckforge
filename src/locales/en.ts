@@ -219,7 +219,8 @@ const en = {
       addCardsMessage: 'Add cards to the current deck or select a saved deck',
       analyzeDeck: 'Analyze Deck',
       clearDeckNamed: 'Clear Deck "{{name}}"',
-      clearTemporaryDeck: 'Clear Temporary Deck',
+      clearDraft: 'Clear draft',
+      draft: 'Draft',
       clearDeckConfirmationMessage:
         'Are you sure you want to clear the current deck? All unsaved changes will be lost.',
       clearDeckConfirmationTitle: 'Clear Deck',
@@ -310,7 +311,7 @@ const en = {
       sortCmc: 'CMC',
       sortName: 'Name',
       sortRarity: 'Rarity',
-      temporaryUnsavedDeck: 'Temporary Deck (Unsaved)'
+      draftNotSaved: 'Not saved as a deck yet'
     },
     collection: {
       title: 'My Collection',

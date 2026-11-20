@@ -221,7 +221,8 @@ const es = {
       addCardsMessage: 'Añade cartas al mazo actual o selecciona un mazo guardado',
       analyzeDeck: 'Analizar Mazo',
       clearDeckNamed: 'Limpiar Mazo "{{name}}"',
-      clearTemporaryDeck: 'Limpiar Mazo Temporal',
+      clearDraft: 'Vaciar borrador',
+      draft: 'Borrador',
       clearDeckConfirmationMessage:
         '¿Estás seguro de que quieres limpiar el mazo actual? Todos los cambios no guardados se perderán.',
       clearDeckConfirmationTitle: 'Limpiar Mazo',
@@ -312,7 +313,7 @@ const es = {
       sortCmc: 'CMC',
       sortName: 'Nombre',
       sortRarity: 'Rareza',
-      temporaryUnsavedDeck: 'Mazo Temporal (No Guardado)'
+      draftNotSaved: 'Aún no guardado como mazo'
     },
     collection: {
       title: 'Mi Colección',
