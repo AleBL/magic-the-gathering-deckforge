@@ -2,6 +2,7 @@ import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   LuBook,
+  LuChevronDown,
   LuColumns2,
   LuFileInput,
   LuHistory,
@@ -123,7 +124,7 @@ export function DeckManagerToolbar({
                 <button
                   type="button"
                   onClick={onOpenSuggestions}
-                  className="deck-toolbar-btn-accent"
+                  className="deck-toolbar-btn"
                   title={t('deck.suggestionsTitle')}
                 >
                   <LuWandSparkles className="text-xs shrink-0" />
@@ -147,7 +148,7 @@ export function DeckManagerToolbar({
                   <button
                     type="button"
                     onClick={onSaveAsNew}
-                    className={`success-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    className={`secondary-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                     aria-label={t('deck.saveAsNew')}
                     title={t('deck.saveAsNew')}
                   >
@@ -157,7 +158,7 @@ export function DeckManagerToolbar({
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className={`danger-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    className={`ghost-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                     aria-label={t('common.cancel')}
                     title={t('common.cancel')}
                   >
@@ -171,7 +172,7 @@ export function DeckManagerToolbar({
                   type="button"
                   onClick={onOpenSaveDialog}
                   disabled={currentDeckCount === 0}
-                  className={`success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                  className={`primary-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                   aria-label={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
                   title={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
                 >
@@ -187,7 +188,7 @@ export function DeckManagerToolbar({
                 type="button"
                 onClick={onClearDeck}
                 disabled={currentDeckCount === 0}
-                className={`danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                className={`secondary-button text-xs py-1.5 px-3 text-danger hover:text-danger ${responsiveActionClasses}`}
                 aria-label={clearLabel}
                 title={clearLabel}
               >
@@ -201,11 +202,11 @@ export function DeckManagerToolbar({
                   <button
                     type="button"
                     onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
-                    className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
+                    className="secondary-button text-xs py-1.5 px-3"
                   >
                     <LuFileInput className="text-xs shrink-0" />
                     <span className={labelClasses}>{t('deck.importExport')}</span>
-                    <span className="text-[10px] opacity-75">▼</span>
+                    <LuChevronDown className="text-xs shrink-0" aria-hidden="true" />
                   </button>
                   {showImportExportDropdown ? (
                     <>
@@ -216,7 +217,7 @@ export function DeckManagerToolbar({
                         aria-hidden="true"
                       />
                       <div className="import-export-dropdown">
-                        <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
+                        <span className="import-export-dropdown-section">{t('common.import')}</span>
                         <button
                           type="button"
                           onClick={() => {
@@ -246,7 +247,7 @@ export function DeckManagerToolbar({
                         {hasSavedDecks ? (
                           <>
                             <div className="import-export-dropdown-divider" />
-                            <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
+                            <span className="import-export-dropdown-section">{t('deck.export')}</span>
                             <button
                               type="button"
                               onClick={() => {
