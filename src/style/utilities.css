@@ -32,7 +32,7 @@
 
 /* Editing Deck Banner */
 .editing-banner {
-  @apply bg-gradient-to-r from-primary to-blue-700 dark:from-slate-800 dark:to-slate-900 dark:border-y dark:border-line-strong text-white px-4 py-2 flex items-center justify-between text-xs sm:text-sm transition-all duration-300 shadow-sm;
+  @apply bg-surface-2 border-b border-line text-fg px-4 py-2 flex items-center justify-between text-xs sm:text-sm;
 }
 
 .banner-status-dot {
@@ -99,15 +99,15 @@
 }
 
 .deck-quick-action-add {
-  @apply bg-success-soft border border-success/40 text-success dark:text-success hover:bg-success hover:text-white;
+  @apply bg-success-soft border border-success/40 text-success dark:text-success hover:bg-success hover:text-on-success;
 }
 
 .deck-quick-action-remove {
-  @apply bg-warning-soft border border-warning/40 text-warning dark:text-warning hover:bg-warning hover:text-white;
+  @apply bg-warning-soft border border-warning/40 text-warning dark:text-warning hover:bg-warning hover:text-on-warning;
 }
 
 .deck-quick-action-delete {
-  @apply bg-danger-soft border border-danger/40 text-danger dark:text-danger hover:bg-danger hover:text-white;
+  @apply bg-danger-soft border border-danger/40 text-danger dark:text-danger hover:bg-danger hover:text-on-danger;
 }
 
 @utility scrollbar-hide {

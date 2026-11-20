@@ -116,25 +116,6 @@
   }
 }
 
-/* ── Ambient glow ─────────────────────────────────────────── */
-.ambient-glow-layer {
-  transition: opacity 2000ms var(--ease-out);
-}
-
-.ambient-glow-pulse {
-  animation: ambientPulse 3.4s ease-in-out infinite;
-}
-
-@keyframes ambientPulse {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.85;
-  }
-}
-
 /* ── Playtest event particle burst ────────────────────────── */
 .particle-burst {
   position: absolute;

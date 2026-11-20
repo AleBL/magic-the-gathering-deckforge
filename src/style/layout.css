@@ -10,7 +10,7 @@ html.dark .surface-glass {
 }
 
 .page-container {
-  @apply flex flex-col bg-surface-1 transition-colors duration-300;
+  @apply flex flex-col bg-surface-0;
   /* dvh tracks the *visible* mobile viewport (URL bar shown/hidden), so the
      bottom tab bar is never pushed off-screen; vh first as the fallback. */
   height: 100vh;
@@ -32,17 +32,7 @@ html.dark .header-container {
 
 /* Modals (canonical .modal-overlay lives in components.css) */
 .modal-container {
-  @apply rounded-lg p-6 transition-colors duration-300 mx-4;
-  background-color: var(--glass-fill-light);
-  border: 1px solid var(--glass-border-light);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  box-shadow: var(--shadow-2xl);
-}
-
-html.dark .modal-container {
-  background-color: var(--glass-fill-dark);
-  border-color: var(--glass-border-dark);
+  @apply rounded-xl p-6 mx-4 bg-surface-1 border border-line shadow-2xl;
 }
 
 /* The heading row inside a modal. The previous definition (serif, text-heading) had no
@@ -126,12 +116,7 @@ html.dark .modal-container {
    makes it travel 16px of padding first, and a negative `top` makes it slide under the edge;
    both read as the panel jolting on the first scroll. */
 .panel-header-sticky {
-  @apply sticky top-0 z-30 -mx-4 -mt-4 px-4 pt-4 rounded-t-xl;
-  background-color: var(--glass-fill-light);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-bottom: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 4px 12px -6px rgba(15, 23, 42, 0.18);
+  @apply sticky top-0 z-30 -mx-4 -mt-4 px-4 pt-4 rounded-t-xl bg-surface-1 border-b border-line;
 }
 
 html.dark .panel-header-sticky {
@@ -165,37 +150,11 @@ html.dark .panel-header-sticky {
 
 /* Specialized deck lists and grids in desktop columns */
 .deck-list-section {
-  @apply lg:col-span-1 order-2 lg:order-1 rounded-xl p-4 transition-all duration-300 h-fit;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
-  border: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-html.dark .deck-list-section {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    0 1px 2px rgba(0, 0, 0, 0.15);
+  @apply lg:col-span-1 order-2 lg:order-1 rounded-xl p-4 h-fit bg-surface-1 border border-line shadow-xs dark:shadow-none;
 }
 
 .deck-preview-section {
-  @apply lg:col-span-2 order-1 lg:order-2 rounded-xl p-4 transition-all duration-300 min-w-0;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
-  border: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-html.dark .deck-preview-section {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    0 1px 2px rgba(0, 0, 0, 0.15);
+  @apply lg:col-span-2 order-1 lg:order-2 rounded-xl p-4 min-w-0 bg-surface-1 border border-line shadow-xs dark:shadow-none;
 }
 
 .deck-list-item {
@@ -300,8 +259,7 @@ html.dark .deck-preview-section {
 
 /* Mana Curve & Stats styles */
 .deck-stats-container {
-  @apply mt-6 p-5 rounded-xl border border-line bg-surface-2/50 backdrop-blur-md transition-colors duration-300;
-  box-shadow: var(--shadow-md);
+  @apply mt-6 p-5 rounded-xl border border-line bg-surface-1;
 }
 
 /* Compact Deck List View Styles */
@@ -401,20 +359,14 @@ html.dark .deck-preview-section {
   @apply relative w-8 h-8 flex items-center justify-center shrink-0;
 }
 
-.app-brand-logo-glow {
-  @apply absolute inset-0 bg-accent-soft dark:bg-accent-soft rounded-lg blur-xs animate-pulse;
-}
-
 .app-brand-logo-image {
-  @apply relative w-8 h-8 object-contain transition-transform duration-300 ease-out hover:scale-110;
-  filter: drop-shadow(0 0 10px rgb(59 130 246 / 0.7)) drop-shadow(0 0 3px rgb(99 102 241 / 0.55));
+  @apply relative w-7 h-7 object-contain dark:invert;
 }
 
-/* Brighter, higher-contrast gradient plus a soft glow — the previous ramp sat
-   too close to the header background and read as washed out. */
+/* The product name in the display face, solid ink: no gradient, glow or
+   tracked capitals. */
 .app-brand-title {
-  @apply text-xl font-serif font-extrabold tracking-[0.18em] leading-none transition-all duration-300 hidden md:block select-none uppercase bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-blue-500 to-violet-600 dark:from-blue-300 dark:via-sky-200 dark:to-indigo-300;
-  filter: drop-shadow(0 1px 6px rgb(59 130 246 / 0.4));
+  @apply text-lg font-serif font-semibold leading-none text-fg hidden md:block select-none;
 }
 
 .tab-button-icon {
@@ -440,25 +392,25 @@ html.dark .deck-preview-section {
 }
 
 .profile-avatar {
-  @apply w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0;
+  @apply w-7 h-7 rounded-full bg-surface-3 text-fg-secondary flex items-center justify-center flex-shrink-0;
 }
 
 .profile-avatar-lg {
-  @apply w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md flex-shrink-0;
+  @apply w-10 h-10 rounded-full bg-surface-3 text-fg-secondary flex items-center justify-center flex-shrink-0;
 }
 
 .profile-menu-panel {
   @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden border border-line z-[var(--z-modal)] origin-top-right;
   /* More opaque than the shared --glass-fill-* tokens: the dropdown sits
      over busy card art, so a stronger fill keeps its content readable. */
-  background-color: rgb(255 255 255 / 0.96);
+  background-color: rgb(253 251 247 / 0.97);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--shadow-2xl);
 }
 
 html.dark .profile-menu-panel {
-  background-color: rgb(15 23 42 / 0.96);
+  background-color: rgb(28 26 24 / 0.97);
 }
 
 .profile-menu-divider {

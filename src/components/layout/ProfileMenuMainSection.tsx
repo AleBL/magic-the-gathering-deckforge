@@ -50,7 +50,7 @@ export function ProfileMenuMainSection({
       <div className="profile-menu-header">
         <div className="flex items-center gap-3">
           <div className="profile-avatar-lg">
-            <FaUser className="text-sm text-white" />
+            <FaUser className="text-sm" />
           </div>
           <div>
             <p className="text-sm font-bold text-fg">{APP_NAME}</p>

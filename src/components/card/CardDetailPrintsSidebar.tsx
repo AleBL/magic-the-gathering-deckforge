@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 
 const RARITY_STYLES: Record<string, string> = {
-  mythic:
-    'border-warning bg-gradient-to-b from-orange-500/20 to-orange-600/5 text-warning shadow-[0_0_8px_rgba(249,115,22,0.15)]',
-  rare: 'border-warning bg-gradient-to-b from-amber-400/15 to-amber-500/5 text-warning dark:text-warning',
-  uncommon: 'border-slate-400/50 bg-gradient-to-b from-slate-400/10 to-slate-500/5 text-fg-secondary',
+  mythic: 'border-warning bg-warning-soft text-warning',
+  rare: 'border-warning/50 bg-surface-2 text-warning',
+  uncommon: 'border-line-strong bg-surface-2 text-fg',
   common: 'border-line-strong bg-surface-2 text-fg-secondary'
 };
 

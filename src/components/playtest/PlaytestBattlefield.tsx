@@ -133,7 +133,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToGraveyard(playtestId);
             }}
             title={t('playtest.sendToGraveyard')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-danger border border-slate-700 hover:bg-danger hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-danger border border-slate-700 hover:bg-danger hover:text-on-danger transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
             <FaSkull />
           </button>
