@@ -59,7 +59,7 @@ export function stubCard(options: StubCardOptions = {}) {
 /** 1×1 transparent GIF — keeps <img> elements loading without touching the network. */
 const PIXEL = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
 
-export async function mockScryfall(page: Page, cards = [stubCard()]) {
+export async function mockScryfall(page: Page, cards: object[] = [stubCard()]) {
   // Playwright uses the *last* matching route, so the catch-all goes first. It 404s rather
   // than letting an unstubbed path reach the real API.
   await page.route('**/api.scryfall.com/**', (route) =>

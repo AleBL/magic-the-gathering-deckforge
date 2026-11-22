@@ -186,6 +186,8 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
       <button
         type="button"
         onClick={onClose}
+        aria-label={t('common.close')}
+        title={t('common.close')}
         className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200 p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow"
       >
         <FaTimes />
