@@ -33,12 +33,9 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
   };
 
   return (
-    <ul className="rounded-xl border border-gray-200 dark:border-slate-700 divide-y divide-gray-100 dark:divide-slate-800 overflow-hidden">
+    <ul className="rounded-xl border border-line divide-y divide-line overflow-hidden">
       {sorted.map((entry) => (
-        <li
-          key={entry.id}
-          className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
-        >
+        <li key={entry.id} className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface-2 transition-colors">
           {/* A bordered control rather than a bare glyph: as a faint outline it read as
               decoration and people did not realise the row could be ticked at all. */}
           <button
@@ -50,8 +47,8 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
             aria-label={`${t('collection.wishlist')} — ${entry.card.printed_name || entry.name}`}
             className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
               entry.wishlist
-                ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-500 dark:text-rose-400'
-                : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-600 text-gray-400 dark:text-slate-500 hover:border-rose-300 hover:text-rose-400'
+                ? 'bg-danger-soft border-danger/40 text-danger '
+                : 'bg-surface-1 border-line-strong text-fg-muted hover:border-danger/40 hover:text-danger'
             }`}
           >
             {entry.wishlist ? <FaHeart className="text-sm" /> : <FaRegHeart className="text-sm" />}
@@ -60,19 +57,19 @@ export function CollectionChecklistView({ entries, onSelectCard }: CollectionChe
           <button
             type="button"
             onClick={() => onSelectCard(entry.card)}
-            className="flex-1 min-w-0 text-left text-sm font-medium text-gray-800 dark:text-gray-100 truncate hover:text-primary dark:hover:text-blue-400"
+            className="flex-1 min-w-0 text-left text-sm font-medium text-fg truncate hover:text-accent"
           >
             {entry.card.printed_name || entry.name}
           </button>
 
           {/* Full set name where there is room; the code once the row gets tight. */}
-          <span className="shrink-0 text-[11px] text-gray-400 dark:text-gray-500 hidden sm:inline max-w-[160px] truncate">
+          <span className="shrink-0 text-[11px] text-fg-muted hidden sm:inline max-w-[160px] truncate">
             <span className="hidden lg:inline">{entry.card.set_name || entry.set?.toUpperCase()}</span>
             <span className="lg:hidden uppercase">{entry.set}</span>
           </span>
           <span
             className={`shrink-0 w-8 text-right text-xs font-bold tabular-nums ${
-              entry.quantity > 0 ? 'text-gray-800 dark:text-gray-100' : 'text-gray-300 dark:text-slate-600'
+              entry.quantity > 0 ? 'text-fg ' : 'text-gray-300 dark:text-slate-600'
             }`}
           >
             {entry.quantity}

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
 import { AppTab } from '../../types';
 import Header from './Header';
-import AmbientGlow from '../ui/AmbientGlow';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import Toast from '../ui/Toast';
 import CustomDialog from '../ui/CustomDialog';
@@ -68,7 +67,6 @@ export default function RootLayout({
 
   return (
     <div className="page-container">
-      <AmbientGlow />
       {!isOnline && <OfflineIndicator />}
       <Header
         activeTab={activeTab}

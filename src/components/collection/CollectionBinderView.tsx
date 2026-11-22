@@ -126,7 +126,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
                     key={entry.id}
                     type="button"
                     onClick={() => onSelectCard(entry.card)}
-                    className="relative aspect-[5/7] rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:ring-2 hover:ring-primary transition-all"
+                    className="relative aspect-[5/7] rounded-lg overflow-hidden border border-line bg-surface-2 hover:ring-2 hover:ring-focus transition-all"
                     aria-label={`${entry.card.printed_name || entry.name} — ${entry.quantity}x`}
                   >
                     {artOf(entry.card) ? (
@@ -137,7 +137,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
                         className="w-full h-full object-cover pointer-events-none select-none"
                       />
                     ) : (
-                      <span className="absolute inset-0 flex items-center justify-center p-2 text-[10px] font-bold text-center text-gray-600 dark:text-gray-300">
+                      <span className="absolute inset-0 flex items-center justify-center p-2 text-[10px] font-bold text-center text-fg-secondary">
                         {entry.card.printed_name || entry.name}
                       </span>
                     )}
@@ -152,13 +152,13 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
                   <div
                     key={`empty-${index}`}
                     aria-hidden="true"
-                    className="aspect-[5/7] rounded-lg border border-dashed border-gray-200 dark:border-slate-700/70 bg-gray-50/60 dark:bg-slate-900/40"
+                    className="aspect-[5/7] rounded-lg border border-dashed border-line bg-surface-2/60"
                   />
                 )
               )}
             </div>
             {/* Each sheet says which page it is, so a spread of three is not a puzzle. */}
-            <span className="text-center text-[11px] font-semibold text-gray-400 dark:text-gray-500 tabular-nums">
+            <span className="text-center text-[11px] font-semibold text-fg-muted tabular-nums">
               {t('collection.binderSheet', { page: binderPage.number })}
             </span>
           </div>
@@ -171,11 +171,11 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
           onClick={() => setPage((current) => Math.max(0, current - pagesPerSpread))}
           disabled={spread === 0}
           aria-label={t('collection.binderPrevious', { count: pagesPerSpread })}
-          className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-lg border border-line text-fg-secondary disabled:opacity-40 hover:bg-surface-2 transition-colors"
         >
           <FaChevronLeft className="text-xs" />
         </button>
-        <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 tabular-nums">
+        <span className="text-xs font-semibold text-fg-secondary tabular-nums">
           {t('collection.binderPages', {
             count: visiblePages.length,
             pages: visiblePageLabel,
@@ -187,7 +187,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
           onClick={() => setPage((current) => Math.min((spreadCount - 1) * pagesPerSpread, current + pagesPerSpread))}
           disabled={spread >= spreadCount - 1}
           aria-label={t('collection.binderNext', { count: pagesPerSpread })}
-          className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-lg border border-line text-fg-secondary disabled:opacity-40 hover:bg-surface-2 transition-colors"
         >
           <FaChevronRight className="text-xs" />
         </button>

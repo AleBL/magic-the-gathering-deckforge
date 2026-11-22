@@ -37,7 +37,7 @@ function AllDecksModal({ onClose, ...deckListProps }: AllDecksModalProps) {
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
           <h3 id="all-decks-title" className="modal-title">
-            <FaLayerGroup className="text-primary" />
+            <FaLayerGroup className="text-accent" />
             {t('deck.savedDecks')} ({deckListProps.decks.length})
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>

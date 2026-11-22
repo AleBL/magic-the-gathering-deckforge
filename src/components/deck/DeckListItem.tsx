@@ -101,7 +101,7 @@ export const DeckListItem = memo(function DeckListItem({
           else onSelect(deck);
         }
       }}
-      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
+      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-focus ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
     >
       {/*
         Below lg the list sits above the deck in page flow, so a cover per deck turns choosing
@@ -130,9 +130,7 @@ export const DeckListItem = memo(function DeckListItem({
 
       <div className="deck-box-footer">
         <div className="deck-list-item-meta pointer-events-none">
-          <span
-            className={`text-xs ${isSelected ? 'text-blue-700 dark:text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}
-          >
+          <span className={`text-xs ${isSelected ? 'text-accent ' : 'text-fg-muted '}`}>
             {deck.cards.length} {t('common.cards')}
           </span>
           <span
@@ -161,7 +159,7 @@ export const DeckListItem = memo(function DeckListItem({
                 deck.relatedTokens
               );
             }}
-            className={`button-small deck-list-action-btn bg-primary hover:bg-primary-hover text-white flex items-center justify-center min-w-[32px]`}
+            className={`button-small deck-list-action-btn bg-primary hover:bg-primary-hover text-on-primary flex items-center justify-center min-w-[32px]`}
             title={t('common.edit')}
             aria-label={`${t('common.edit')} ${deck.name}`}
           >
@@ -173,7 +171,7 @@ export const DeckListItem = memo(function DeckListItem({
               e.stopPropagation();
               onExport(deck);
             }}
-            className="button-small deck-list-action-btn bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center min-w-[32px]"
+            className="button-small deck-list-action-btn bg-success hover:bg-success text-on-success flex items-center justify-center min-w-[32px]"
             title={t('deck.export')}
             aria-label={`${t('deck.export')} ${deck.name}`}
           >
@@ -198,7 +196,7 @@ export const DeckListItem = memo(function DeckListItem({
             {showExportMenu ? (
               <div
                 role="menu"
-                className={`absolute right-0 z-[var(--z-dropdown)] min-w-[190px] rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg py-1 ${
+                className={`absolute right-0 z-[var(--z-dropdown)] min-w-[190px] rounded-lg border border-line bg-surface-1 shadow-lg py-1 ${
                   dropDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
                 }`}
               >
@@ -210,7 +208,7 @@ export const DeckListItem = memo(function DeckListItem({
                     setShowExportMenu(false);
                     onDuplicate(deck);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
                   <FaClone className="text-xs shrink-0" />
                   {t('deck.duplicateDeck')}
@@ -223,7 +221,7 @@ export const DeckListItem = memo(function DeckListItem({
                     setShowExportMenu(false);
                     onNewFrom(deck);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
                   <FaPlus className="text-xs shrink-0" />
                   {t('deck.newDeckFromThis')}
@@ -236,7 +234,7 @@ export const DeckListItem = memo(function DeckListItem({
                     setShowExportMenu(false);
                     onChangeCover(deck);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
                   <FaImage className="text-xs shrink-0" />
                   {t('deck.setCover')}

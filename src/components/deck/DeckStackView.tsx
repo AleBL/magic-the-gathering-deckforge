@@ -138,7 +138,7 @@ const DeckStackView = memo(function DeckStackView({
       <div className="deck-stack-container">
         <section className="space-y-3">
           <h4 className="deck-stack-zone-title deck-stack-zone-frontline animate-fadeIn">
-            <FaPalette className="shrink-0 text-xs text-indigo-400 animate-pulse" />
+            <FaPalette className="shrink-0 text-xs text-accent animate-pulse" />
             <span>{t('tokens.relatedTokens')}</span>
             <span className="deck-stack-zone-count">{allCardsInDeck.length}</span>
           </h4>

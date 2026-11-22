@@ -30,7 +30,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleNextTurn();
           }}
           disabled={isMulliganPhase}
-          className="ripple-container bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-3 hover:bg-surface-3 text-fg font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.nextTurn')} (T)`}
         >
           <FaArrowRight className="text-[10px]" />
@@ -44,7 +44,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleDrawCard();
           }}
           disabled={library.length === 0 || isMulliganPhase}
-          className="ripple-container bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-3 hover:bg-surface-3 text-fg font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.drawCard')} (D)`}
         >
           <FaLayerGroup className="text-[10px]" />
@@ -100,7 +100,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleMulligan();
           }}
           disabled={deckCards.length === 0 || isMulliganPhase}
-          className="ripple-container bg-warning hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-warning hover:bg-warning text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
           <FaUndo className="text-[10px] rotate-90" />
           {t('playtest.mulligan')}

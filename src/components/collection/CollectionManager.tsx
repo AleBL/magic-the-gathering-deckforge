@@ -122,8 +122,8 @@ function CollectionManager() {
       // `relative` is load-bearing: .count-badge is absolute and would escape to the page edge.
       className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-bold transition-all ${
         view === value
-          ? 'bg-primary text-white shadow-md shadow-blue-500/25'
-          : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+          ? 'bg-primary text-on-primary shadow-md '
+          : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '
       }`}
     >
       {icon}
@@ -137,8 +137,8 @@ function CollectionManager() {
       <div ref={scrollRef} className="workspace-body">
         <div className="flex flex-col gap-4 p-4">
           <div className="panel-header relative z-10 flex-col items-start gap-3 md:flex-row md:items-center">
-            <h2 className="text-gray-900 dark:text-white text-xl font-serif font-semibold flex items-center gap-2 shrink-0">
-              <FaBoxOpen className="text-primary shrink-0" />
+            <h2 className="text-fg text-xl font-serif font-semibold flex items-center gap-2 shrink-0">
+              <FaBoxOpen className="text-accent shrink-0" />
               {t('collection.title')}
             </h2>
 
@@ -158,7 +158,7 @@ function CollectionManager() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isImporting}
-                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors disabled:opacity-50"
               >
                 <FaFileImport className="text-xs shrink-0" />
                 <span className="truncate">{isImporting ? t('collection.importing') : t('collection.importCsv')}</span>
@@ -166,7 +166,7 @@ function CollectionManager() {
               <button
                 type="button"
                 onClick={exportCsv}
-                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors"
               >
                 <FaFileExport className="text-xs shrink-0" />
                 <span className="truncate">{t('collection.exportCsv')}</span>
@@ -175,7 +175,7 @@ function CollectionManager() {
                 type="button"
                 onClick={handleClear}
                 disabled={entries.length === 0}
-                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-gray-200 dark:border-slate-700 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-danger border border-line hover:bg-danger-soft transition-colors disabled:opacity-50"
               >
                 <FaTrashAlt className="text-xs shrink-0" />
                 <span className="truncate">{t('collection.clear')}</span>
@@ -196,7 +196,7 @@ function CollectionManager() {
                 aria-expanded={areToolsOpen}
                 aria-controls="collection-tools"
                 title={areToolsOpen ? t('collection.hideTools') : t('collection.showTools')}
-                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors"
               >
                 <FaChevronUp
                   className={`text-xs shrink-0 transition-transform duration-200 ${areToolsOpen ? '' : 'rotate-180'}`}
@@ -223,22 +223,20 @@ function CollectionManager() {
               one disabled button and no sign that anything was happening. */}
           {isImporting && (
             <div className="modal-overlay" role="status" aria-live="polite">
-              <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center gap-3 text-center">
-                <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
-                <h3 className="text-sm font-bold text-gray-800 dark:text-slate-100 uppercase tracking-wider">
-                  {t('collection.importingTitle')}
-                </h3>
+              <div className="bg-surface-1 border border-line rounded-2xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center gap-3 text-center">
+                <FaSpinner className="text-3xl text-accent animate-spin" />
+                <h3 className="text-sm font-bold text-fg uppercase tracking-wider">{t('collection.importingTitle')}</h3>
                 {importProgress && importProgress.total > 0 ? (
                   <>
-                    <p className="text-xs font-semibold text-gray-600 dark:text-slate-300 tabular-nums">
+                    <p className="text-xs font-semibold text-fg-secondary tabular-nums">
                       {t('collection.importingProgress', {
                         done: importProgress.done,
                         total: importProgress.total
                       })}
                     </p>
-                    <div className="w-full h-2 rounded-full bg-gray-200 dark:bg-slate-800 overflow-hidden">
+                    <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
                       <div
-                        className="h-full bg-indigo-500 transition-[width] duration-300"
+                        className="h-full bg-surface-3 transition-[width] duration-300"
                         style={{
                           width: `${Math.round((importProgress.done / importProgress.total) * 100)}%`
                         }}
@@ -246,11 +244,9 @@ function CollectionManager() {
                     </div>
                   </>
                 ) : (
-                  <p className="text-xs font-semibold text-gray-600 dark:text-slate-300">{t('collection.importing')}</p>
+                  <p className="text-xs font-semibold text-fg-secondary">{t('collection.importing')}</p>
                 )}
-                <p className="text-[11px] text-gray-400 dark:text-slate-500 leading-snug">
-                  {t('collection.importingHint')}
-                </p>
+                <p className="text-[11px] text-fg-muted leading-snug">{t('collection.importingHint')}</p>
               </div>
             </div>
           )}
@@ -260,7 +256,7 @@ function CollectionManager() {
           <div id="collection-tools" className={areToolsOpen ? 'flex flex-col gap-4' : 'hidden'}>
             <CollectionSummaryBar summary={summary} currency={currency} onCurrencyChange={setCurrency} view={view} />
 
-            <div className="flex flex-col gap-3 p-3 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-gray-100 dark:border-slate-700">
+            <div className="flex flex-col gap-3 p-3 rounded-2xl bg-surface-1/60 border border-line">
               {/* Mirrors the search tab exactly: the colour/type quick filters on their own row
                 above, the advanced panel behind its button below. Below `sm` the quick filters
                 move into the sheet, which is why they are hidden rather than duplicated. */}
@@ -279,22 +275,22 @@ function CollectionManager() {
                 />
                 {/* Capped: as a `flex-1` it grew to fill the row on wide screens, which made a
                   short card name look like a form field for an essay. */}
-                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 sm:flex-1 sm:min-w-[200px] sm:max-w-[320px]">
+                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-fg-secondary sm:flex-1 sm:min-w-[200px] sm:max-w-[320px]">
                   <span className="sr-only sm:not-sr-only">{t('collection.searchLabel')}</span>
                   <input
                     type="search"
                     value={nameQuery}
                     onChange={(event) => setNameQuery(event.target.value)}
                     placeholder={t('collection.searchPlaceholder')}
-                    className="flex-1 min-w-0 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100 placeholder:font-normal placeholder:text-gray-400"
+                    className="flex-1 min-w-0 rounded-lg border border-line-strong bg-surface-1 px-2.5 py-1.5 text-xs font-medium text-fg placeholder:font-normal placeholder:text-gray-400"
                   />
                 </label>
-                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
+                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-fg-secondary">
                   {t('search.rarity')}
                   <select
                     value={filters.rarity}
                     onChange={(e) => setFilters((prev) => ({ ...prev, rarity: e.target.value }))}
-                    className="flex-1 sm:flex-none max-w-[60%] sm:max-w-none rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100"
+                    className="flex-1 sm:flex-none max-w-[60%] sm:max-w-none rounded-lg border border-line-strong bg-surface-1 px-2.5 py-1.5 text-xs font-medium text-fg"
                   >
                     {rarities.map((rarity) => (
                       <option key={rarity.value} value={rarity.value}>
@@ -303,12 +299,12 @@ function CollectionManager() {
                     ))}
                   </select>
                 </label>
-                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
+                <label className="flex items-center justify-between sm:justify-start gap-2 text-xs font-semibold text-fg-secondary">
                   {t('collection.set')}
                   <select
                     value={setFilter}
                     onChange={(e) => setSetFilter(e.target.value)}
-                    className="flex-1 sm:flex-none max-w-[60%] sm:max-w-[220px] rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-gray-800 dark:text-gray-100"
+                    className="flex-1 sm:flex-none max-w-[60%] sm:max-w-[220px] rounded-lg border border-line-strong bg-surface-1 px-2.5 py-1.5 text-xs font-medium text-fg"
                   >
                     <option value="">{t('search.all')}</option>
                     {availableSets.map((set) => (

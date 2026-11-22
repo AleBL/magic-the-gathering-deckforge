@@ -56,7 +56,7 @@ export function TokenSearchModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="token-search-modal-title"
-        className="modal-sheet-panel bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 text-gray-800 dark:text-white rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all"
+        className="modal-sheet-panel bg-surface-1 border border-line text-fg rounded-t-2xl sm:rounded-2xl sm:max-w-3xl shadow-2xl flex flex-col overflow-hidden transition-all"
         style={panelStyle}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -65,21 +65,21 @@ export function TokenSearchModal({
         {/* Grab handle: purely a visual affordance now — drag-to-close works
             from anywhere on the sheet (see useSwipeToClose), not just here. */}
         <div className="sm:hidden flex justify-center pt-2.5 pb-1" aria-hidden="true">
-          <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
+          <div className="w-10 h-1.5 rounded-full bg-surface-3" />
         </div>
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/40">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-line bg-surface-2">
           <h3
             id="token-search-modal-title"
-            className="text-base font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"
+            className="text-base font-bold text-fg uppercase tracking-wider flex items-center gap-2"
           >
-            <FaPalette className="text-indigo-500" />
+            <FaPalette className="text-accent" />
             {t('tokens.searchTokensTitle')}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
           >
             <FaTimes />
           </button>
@@ -95,14 +95,14 @@ export function TokenSearchModal({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('tokens.searchTokenPlaceholder')}
-                className="w-full text-sm py-2 px-3 pl-9 bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-slate-100 border border-gray-300 dark:border-slate-850 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all"
               />
               <FaSearch className="absolute left-3 top-3 text-xs text-gray-400" />
             </div>
             <button
               type="submit"
               disabled={isSearching || !searchTerm.trim()}
-              className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               {isSearching ? <FaSpinner className="animate-spin text-xs" /> : <FaSearch className="text-xs" />}
               {t('search.searchButton')}
@@ -111,8 +111,8 @@ export function TokenSearchModal({
 
           {/* Quick Presets Section */}
           <div className="space-y-2.5">
-            <h4 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 border-b border-gray-150 dark:border-slate-850 pb-1 select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+            <h4 className="text-xs font-bold text-fg-muted uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1 select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-surface-3" />
               <span>{t('tokens.quickPresets')}</span>
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -121,16 +121,16 @@ export function TokenSearchModal({
                   key={preset.id}
                   type="button"
                   onClick={() => onPresetClick(preset)}
-                  className="bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-100 border border-gray-200 dark:border-slate-600 rounded-full px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-102"
+                  className="bg-surface-2 hover:bg-surface-3 text-fg-secondary border border-line-strong rounded-full px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-102"
                 >
                   {preset.imageUrl && (
-                    <div className="w-4 h-4 rounded-full overflow-hidden border border-gray-300 dark:border-slate-600 bg-slate-900 shrink-0">
+                    <div className="w-4 h-4 rounded-full overflow-hidden border border-line-strong bg-slate-900 shrink-0">
                       <img src={preset.imageUrl} alt="" className="w-full h-full object-cover" />
                     </div>
                   )}
                   <span>{t(`tokens.${preset.localeKey}`)}</span>
                   {preset.power && preset.toughness && (
-                    <span className="text-[10px] text-gray-400 dark:text-slate-500 font-bold">
+                    <span className="text-[10px] text-fg-muted font-bold">
                       {preset.power}/{preset.toughness}
                     </span>
                   )}
@@ -141,24 +141,22 @@ export function TokenSearchModal({
 
           {/* Search Results Area */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 border-b border-gray-150 dark:border-slate-850 pb-1 select-none">
+            <h4 className="text-xs font-bold text-fg-muted uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1 select-none">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
               <span>{t('tokens.searchResults')}</span>
             </h4>
 
             {isSearching ? (
               <div className="h-48 flex flex-col items-center justify-center gap-2.5 text-gray-400">
-                <FaSpinner className="text-2xl text-indigo-500 animate-spin" />
+                <FaSpinner className="text-2xl text-accent animate-spin" />
                 <span className="text-xs font-semibold">{t('tokens.searching')}</span>
               </div>
             ) : searchError ? (
-              <div className="h-48 flex items-center justify-center text-xs font-bold text-red-500">{searchError}</div>
+              <div className="h-48 flex items-center justify-center text-xs font-bold text-danger">{searchError}</div>
             ) : searchResults.length === 0 ? (
-              <div className="h-48 flex flex-col items-center justify-center text-gray-400 dark:text-slate-500 gap-1">
+              <div className="h-48 flex flex-col items-center justify-center text-fg-muted gap-1">
                 <span className="text-xs font-bold">{t('tokens.noTokensFoundSearch')}</span>
-                <span className="text-[10px] text-gray-400/80 dark:text-slate-600">
-                  {t('tokens.searchInstructions')}
-                </span>
+                <span className="text-[10px] text-fg-muted">{t('tokens.searchInstructions')}</span>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -179,9 +177,9 @@ export function TokenSearchModal({
                           onSelectToken(token);
                         }
                       }}
-                      className="border border-gray-200 dark:border-slate-850 bg-gray-50/50 dark:bg-slate-900/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-indigo-500/50 group"
+                      className="border border-line bg-surface-2/50 rounded-xl p-3 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 hover:scale-102 hover:shadow-lg hover:border-accent/50 group"
                     >
-                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 bg-slate-950 mb-2 shadow-md flex items-center justify-center relative shrink-0">
+                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-line bg-slate-950 mb-2 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
                           <img
                             src={imgUrl}
@@ -191,7 +189,7 @@ export function TokenSearchModal({
                           />
                         ) : (
                           <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                            <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
+                            <FaPalette className="text-accent text-xs shrink-0" />
                             <span className="text-[8px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
                               {token.name}
                             </span>
@@ -205,12 +203,10 @@ export function TokenSearchModal({
                       </div>
 
                       <div className="w-full min-w-0">
-                        <h5 className="text-xs font-bold text-gray-700 dark:text-slate-200 truncate leading-tight group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                        <h5 className="text-xs font-bold text-fg-secondary truncate leading-tight group-hover:text-accent transition-colors">
                           {token.name}
                         </h5>
-                        <p className="text-[9px] text-gray-400 dark:text-slate-500 truncate mt-0.5">
-                          {token.type_line}
-                        </p>
+                        <p className="text-[9px] text-fg-muted truncate mt-0.5">{token.type_line}</p>
                       </div>
 
                       <button
@@ -219,7 +215,7 @@ export function TokenSearchModal({
                           e.stopPropagation();
                           onConfirmAdd(token);
                         }}
-                        className="mt-3 w-full justify-center bg-indigo-650/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <FaPlus className="text-[8px]" />
                         {t('tokens.add')}
@@ -233,11 +229,11 @@ export function TokenSearchModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3.5 border-t border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950/40 flex justify-end">
+        <div className="px-6 py-3.5 border-t border-line bg-surface-2 flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="bg-gray-200 hover:bg-gray-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-750 dark:text-slate-200 font-extrabold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
+            className="bg-surface-3 hover:bg-surface-3 text-fg-secondary font-extrabold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
           >
             {t('common.close')}
           </button>

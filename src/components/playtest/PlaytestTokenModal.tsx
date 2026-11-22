@@ -175,13 +175,13 @@ export function PlaytestTokenModal({
   if (!isOpen) return null;
 
   const getColorClass = (colors: string[]) => {
-    if (colors.length === 0) return 'border-slate-700 bg-slate-800/40 text-slate-300';
-    if (colors.includes('W')) return 'border-yellow-500/50 bg-yellow-500/5 text-yellow-300';
-    if (colors.includes('U')) return 'border-blue-500/50 bg-blue-500/5 text-blue-300';
-    if (colors.includes('B')) return 'border-purple-950 bg-purple-950/10 text-purple-400';
-    if (colors.includes('R')) return 'border-red-500/50 bg-red-500/5 text-red-400';
-    if (colors.includes('G')) return 'border-green-500/50 bg-green-500/5 text-green-400';
-    return 'border-slate-700 bg-slate-800/40 text-slate-300';
+    if (colors.length === 0) return 'border-line-strong bg-surface-2 text-fg-secondary';
+    if (colors.includes('W')) return 'border-warning bg-warning-soft text-warning';
+    if (colors.includes('U')) return 'border-accent/50 bg-accent-soft text-accent';
+    if (colors.includes('B')) return 'border-accent/50 bg-accent-soft text-accent';
+    if (colors.includes('R')) return 'border-danger bg-danger-soft text-danger';
+    if (colors.includes('G')) return 'border-success bg-success-soft text-success';
+    return 'border-line-strong bg-surface-2 text-fg-secondary';
   };
 
   return (
@@ -204,9 +204,9 @@ export function PlaytestTokenModal({
         <div className="modal-header">
           <h3
             id="playtest-token-modal-title"
-            className="text-base font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"
+            className="text-base font-bold text-fg uppercase tracking-wider flex items-center gap-2"
           >
-            <FaPlus className="text-indigo-500" />
+            <FaPlus className="text-accent" />
             {t('tokens.tokenPool')}
           </h3>
           <button onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
@@ -219,8 +219,8 @@ export function PlaytestTokenModal({
           {/* Deck Specific Tokens */}
           {uniqueDeckTokens.length > 0 ? (
             <div className="space-y-3">
-              <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-850 pb-1.5 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
+              <h4 className="text-xs font-bold text-accent uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1.5 select-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-surface-3 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
                 <span>{t('tokens.deckRelatedTokens')}</span>
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -244,7 +244,7 @@ export function PlaytestTokenModal({
                         }
                       }}
                     >
-                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 mb-3 shadow-md flex items-center justify-center relative shrink-0">
+                      <div className="w-20 h-28 rounded-lg overflow-hidden border border-line-strong bg-surface-0 mb-3 shadow-md flex items-center justify-center relative shrink-0">
                         {imgUrl ? (
                           <img
                             src={imgUrl}
@@ -253,27 +253,27 @@ export function PlaytestTokenModal({
                             loading="lazy"
                           />
                         ) : (
-                          <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                            <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
-                            <span className="text-[8px] text-slate-400 font-bold leading-tight break-words line-clamp-3 select-none">
+                          <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-surface-1 border border-line rounded-lg">
+                            <FaPalette className="text-accent text-xs shrink-0" />
+                            <span className="text-[8px] text-fg-muted font-bold leading-tight break-words line-clamp-3 select-none">
                               {tokenCard.name}
                             </span>
                           </div>
                         )}
                         {tokenCard.power && tokenCard.toughness && (
-                          <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-300 shadow">
+                          <div className="absolute bottom-1 right-1 bg-surface-1 border border-line-strong rounded px-1 text-[8px] font-bold text-fg-secondary shadow">
                             {tokenCard.power}/{tokenCard.toughness}
                           </div>
                         )}
                       </div>
 
                       <div className="w-full min-w-0">
-                        <h4 className="text-xs font-bold text-slate-200 truncate leading-tight group-hover:text-indigo-400 transition-colors">
+                        <h4 className="text-xs font-bold text-fg truncate leading-tight group-hover:text-accent transition-colors">
                           {tokenCard.printed_name || tokenCard.name}
                         </h4>
-                        <p className="text-[8px] text-slate-500 truncate mt-1">
+                        <p className="text-[8px] text-fg-muted truncate mt-1">
                           {t('common.generatedBy')}:{' '}
-                          <span className="font-extrabold text-indigo-400">{generatorCardName}</span>
+                          <span className="font-extrabold text-accent">{generatorCardName}</span>
                         </p>
                       </div>
 
@@ -294,9 +294,9 @@ export function PlaytestTokenModal({
               </div>
             </div>
           ) : (
-            <div className="h-64 flex flex-col items-center justify-center text-slate-400 gap-2 text-center py-6">
+            <div className="h-64 flex flex-col items-center justify-center text-fg-muted gap-2 text-center py-6">
               <span className="text-sm font-bold">{t('tokens.noTokensFound')}</span>
-              <span className="text-xs text-slate-500">{t('playtest.playtestNoTokensTip')}</span>
+              <span className="text-xs text-fg-muted">{t('playtest.playtestNoTokensTip')}</span>
             </div>
           )}
         </div>

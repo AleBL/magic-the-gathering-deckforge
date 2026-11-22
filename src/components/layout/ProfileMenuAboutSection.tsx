@@ -18,22 +18,22 @@ export function ProfileMenuAboutSection({ onBack, onClose }: ProfileMenuAboutSec
       <div className="p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="profile-avatar-lg">
-            <FaUser className="text-sm text-white" />
+            <FaUser className="text-sm" />
           </div>
           <div>
-            <p className="font-bold text-gray-900 dark:text-white text-sm">{APP_NAME}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="font-bold text-fg text-sm">{APP_NAME}</p>
+            <p className="text-xs text-fg-muted">
               {t('strategy.version')} {APP_VERSION} · MIT
             </p>
           </div>
         </div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{t('strategy.appDescription')}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-500">{AUTHOR_NAME}</p>
+        <p className="text-xs text-fg-secondary leading-relaxed">{t('strategy.appDescription')}</p>
+        <p className="text-xs text-fg-muted">{AUTHOR_NAME}</p>
         <a
           href={GITHUB_REPO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-xs font-semibold text-primary dark:text-blue-400 hover:underline"
+          className="flex items-center gap-2 text-xs font-semibold text-accent hover:underline"
         >
           <FaGithub />
           {t('strategy.gitHub')}

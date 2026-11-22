@@ -71,7 +71,7 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
           <h3 id="deck-suggestions-title" className="modal-title">
-            <FaMagic className="text-primary" />
+            <FaMagic className="text-accent" />
             {t('deck.suggestionsTitle')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
@@ -80,9 +80,9 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
         </div>
 
         {isLoading ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">{t('deck.suggestionsLoading')}</p>
+          <p className="text-sm text-fg-muted text-center py-8">{t('deck.suggestionsLoading')}</p>
         ) : suggestions.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">{t('deck.suggestionsEmpty')}</p>
+          <p className="text-sm text-fg-muted text-center py-8">{t('deck.suggestionsEmpty')}</p>
         ) : (
           // `min-h-0` is what lets this pane shrink inside the flex column; without it the
           // grid dictates the height and the cap above never applies.
@@ -91,10 +91,7 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
                 if its rules text is readable, which the four-across grid was not. */}
             <ul className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(13rem,1fr))] gap-3">
               {suggestions.map((card) => (
-                <li
-                  key={card.id}
-                  className="rounded-lg overflow-hidden bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700"
-                >
+                <li key={card.id} className="rounded-lg overflow-hidden bg-surface-1 border border-line">
                   <button
                     type="button"
                     onClick={() => setDetailCard(card)}
@@ -119,7 +116,7 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
                     type="button"
                     onClick={() => handleAdd(card)}
                     disabled={added.has(card.id)}
-                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-bold text-primary hover:bg-primary/10 disabled:opacity-50 disabled:cursor-default transition-all cursor-pointer"
+                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-bold text-accent hover:bg-accent-soft disabled:opacity-50 disabled:cursor-default transition-all cursor-pointer"
                   >
                     <FaPlus className="text-[10px] shrink-0" />
                     {added.has(card.id) ? t('deck.suggestionAdded') : t('deck.addSuggestion')}

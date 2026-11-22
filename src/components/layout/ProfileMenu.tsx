@@ -73,10 +73,10 @@ function ProfileMenu({ isDarkMode, setIsDarkMode }: ProfileMenuProps) {
         title={t('strategy.profileMenu')}
       >
         <div className="profile-avatar">
-          <FaUser className="text-xs text-white" />
+          <FaUser className="text-xs" />
         </div>
         <FaChevronDown
-          className={`text-gray-500 dark:text-gray-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`text-fg-muted text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 

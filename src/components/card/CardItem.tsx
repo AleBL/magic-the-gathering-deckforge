@@ -108,9 +108,9 @@ function CardItem({
     isToken && card.isActive === false
       ? 'opacity-40 grayscale-[40%] brightness-[75%] shadow-[0_0_10px_rgba(30,41,59,0.3)] rounded-[4.5%]'
       : isBanned
-        ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
+        ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-danger shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
         : isRestricted
-          ? 'border-2 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
+          ? 'border-2 border-warning shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
           : 'rounded-[4.5%]'
   }`;
 
@@ -123,7 +123,7 @@ function CardItem({
 
   return (
     <div
-      className={`card-item-wrapper group relative ${isBanned ? 'border-red-500/50' : ''} ${isToken && card.isActive === false ? 'opacity-75' : ''} ${isDraggable || canAddDrag ? 'cursor-grab active:cursor-grabbing' : ''}`}
+      className={`card-item-wrapper group relative ${isBanned ? 'border-danger' : ''} ${isToken && card.isActive === false ? 'opacity-75' : ''} ${isDraggable || canAddDrag ? 'cursor-grab active:cursor-grabbing' : ''}`}
       draggable={isDraggable || canAddDrag}
       onDragStart={
         isDraggable

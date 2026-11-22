@@ -13,13 +13,9 @@ export function ProfileMenuBackHeader({ title, onBack, onClose }: ProfileMenuBac
     <div className="profile-menu-back-header">
       <button type="button" onClick={onBack} className="profile-back-btn">
         <FaChevronDown className="rotate-90 text-xs" />
-        <span className="text-sm font-bold text-gray-900 dark:text-white">{title}</span>
+        <span className="text-sm font-bold text-fg">{title}</span>
       </button>
-      <button
-        type="button"
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded"
-      >
+      <button type="button" onClick={onClose} className="text-gray-400 hover:text-fg-secondary p-1 rounded">
         <FaTimes className="text-xs" />
       </button>
     </div>

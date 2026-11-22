@@ -164,7 +164,7 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
       <button
         type="button"
         onClick={handleButtonClick}
-        className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 active:scale-95 transition-all duration-200 cursor-pointer"
+        className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl text-fg-secondary hover:bg-surface-2 active:scale-95 transition-all duration-200 cursor-pointer"
         aria-label={activeTab === 'search' ? t('search.advancedFilters') : t('common.pageMenu')}
         aria-haspopup="dialog"
         aria-expanded={activeTab === 'deck' ? isOpen : undefined}
@@ -174,10 +174,7 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
 
       {activeTab === 'deck' && (
         <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
-          <h3
-            id="page-menu-title"
-            className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3"
-          >
+          <h3 id="page-menu-title" className="text-xs font-extrabold uppercase tracking-wider text-fg-muted mb-3">
             {t('common.pageMenu')} — {t('common.decksTab')}
           </h3>
           <div className="flex flex-col gap-1 pb-2">
@@ -187,9 +184,9 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
                 type="button"
                 disabled={item.disabled}
                 onClick={() => handleItemClick(item.action)}
-                className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-fg hover:bg-surface-2 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
-                <span className="text-slate-400 dark:text-slate-500 shrink-0 w-5 flex justify-center">{item.icon}</span>
+                <span className="text-fg-muted shrink-0 w-5 flex justify-center">{item.icon}</span>
                 <span className="truncate">{item.label}</span>
               </button>
             ))}

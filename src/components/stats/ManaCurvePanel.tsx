@@ -37,8 +37,8 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
 
   return (
     <div className="space-y-4 min-w-0">
-      <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
-        <FaChartBar className="text-blue-500" />
+      <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
+        <FaChartBar className="text-accent" />
         {t('stats.manaCurve')}
       </h4>
 
@@ -97,11 +97,9 @@ export function ManaCurvePanel({ stats, activeFilter, setActiveFilter }: ManaCur
         </ChartFrame>
       )}
 
-      <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+      <div className="text-xs text-fg-muted text-center">
         {t('stats.averageCmc')}:{' '}
-        <span className="font-bold text-gray-800 dark:text-gray-200 tabular-nums">
-          {stats.averageConvertedManaCost}
-        </span>
+        <span className="font-bold text-fg tabular-nums">{stats.averageConvertedManaCost}</span>
       </div>
     </div>
   );

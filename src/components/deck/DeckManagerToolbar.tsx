@@ -76,12 +76,12 @@ export function DeckManagerToolbar({
   return (
     <div className="workspace-header">
       <div className="manager-title-row">
-        <h2 className="text-gray-900 dark:text-white text-xl lg:text-2xl font-serif font-bold transition-colors duration-300 flex items-center gap-2">
-          <FaBook className="text-primary text-xl shrink-0" />
+        <h2 className="text-fg text-xl lg:text-2xl font-serif font-bold transition-colors duration-300 flex items-center gap-2">
+          <FaBook className="text-accent text-xl shrink-0" />
           {t('deck.deckManager')}
           <div className="manager-info-tooltip-trigger group/tooltip">
             <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>
-              <FaLightbulb className="text-yellow-500 text-base" />
+              <FaLightbulb className="text-warning text-base" />
             </button>
             <div className="manager-info-tooltip-panel">
               <p className="font-medium leading-relaxed">{t('validation.savedLocationNote')}</p>

@@ -1,6 +1,51 @@
 @theme {
-  --color-slate-800: rgb(30 41 59);
-  --color-slate-900: rgb(15 23 42);
+  /* ── Neutral ramp: warm graphite ───────────────────────
+     Every Tailwind grey family (gray, slate, zinc, neutral, stone) resolves to
+     one warm ramp, from paper (50) to graphite (950). Components should use the
+     semantic roles below; the remap keeps any raw grey that is left inside the
+     same palette instead of drifting back to Tailwind's blue-grey slate. */
+  --color-gray-50: #f7f4ee;
+  --color-gray-100: #efe9df;
+  --color-gray-200: #e3dcd0;
+  --color-gray-300: #cfc7b9;
+  --color-gray-400: #a39b8e;
+  --color-gray-500: #7d7468;
+  --color-gray-600: #5e564b;
+  --color-gray-700: #3d3832;
+  --color-gray-800: #282623;
+  --color-gray-900: #1c1a18;
+  --color-gray-950: #121110;
+  --color-slate-50: var(--color-gray-50);
+  --color-slate-100: var(--color-gray-100);
+  --color-slate-200: var(--color-gray-200);
+  --color-slate-300: var(--color-gray-300);
+  --color-slate-400: var(--color-gray-400);
+  --color-slate-500: var(--color-gray-500);
+  --color-slate-600: var(--color-gray-600);
+  --color-slate-700: var(--color-gray-700);
+  --color-slate-800: var(--color-gray-800);
+  --color-slate-900: var(--color-gray-900);
+  --color-slate-950: var(--color-gray-950);
+  --color-zinc-400: var(--color-gray-400);
+  --color-zinc-500: var(--color-gray-500);
+  --color-zinc-600: var(--color-gray-600);
+  --color-zinc-700: var(--color-gray-700);
+  --color-zinc-800: var(--color-gray-800);
+  --color-zinc-900: var(--color-gray-900);
+
+  /* ── Semantic roles (light values; html.dark below swaps them) ──
+     surface-0 page · surface-1 card/panel/modal · surface-2 raised (input,
+     hover, active row) · surface-3 pressed/selected. Three text roles. Lines
+     are the primary text at low alpha so they read on any surface. */
+  --color-surface-0: #f7f4ee;
+  --color-surface-1: #fdfbf7;
+  --color-surface-2: #f1ece3;
+  --color-surface-3: #e7e0d4;
+  --color-fg: #1f1b16;
+  --color-fg-secondary: #5e554a;
+  --color-fg-muted: #6c6357;
+  --color-line: rgb(31 27 22 / 0.11);
+  --color-line-strong: rgb(31 27 22 / 0.2);
 
   /* Font families
      Tailwind v4's font namespace is --font-*, NOT --font-family-*. Using the
@@ -27,50 +72,66 @@
   --text-caption--line-height: 1.4;
   --text-caption--letter-spacing: 0.02em;
 
-  /* ── Liquid-glass surface material ─────────────────────
-     Subtle glassmorphism: a translucent fill + hairline border designed to
+  /* ── Glass material (overlays only) ────────────────────
+     For the command palette and menus that float over content; modals and
+     panels are solid surfaces. A translucent fill + hairline border designed to
      sit over a backdrop-blur. Fills stay high-opacity (~0.8) so text keeps
      AA contrast in both themes. Pair with a --shadow-* elevation. */
   --glass-blur: 16px;
-  --glass-fill-light: rgb(255 255 255 / 0.8);
-  --glass-fill-dark: rgb(15 23 42 / 0.8);
-  --glass-border-light: rgb(255 255 255 / 0.55);
-  --glass-border-dark: rgb(255 255 255 / 0.08);
+  --glass-fill-light: rgb(253 251 247 / 0.86);
+  --glass-fill-dark: rgb(28 26 24 / 0.88);
+  --glass-border-light: rgb(31 27 22 / 0.1);
+  --glass-border-dark: rgb(239 233 222 / 0.09);
 
-  /* Harmonious and Theme Colors */
-  --color-primary: var(--color-blue-600);
-  --color-primary-hover: var(--color-blue-700);
-  --color-secondary: var(--color-gray-500);
-  --color-secondary-hover: var(--color-gray-600);
-  --color-success: var(--color-green-600);
-  --color-success-hover: var(--color-green-700);
-  --color-danger: var(--color-red-600);
-  --color-danger-hover: var(--color-red-700);
-  --color-warning: var(--color-amber-600);
-  --color-warning-hover: var(--color-amber-700);
+  /* ── Action and state colours ───────────────────────────
+     Primary is ink: near-black on paper, near-white on graphite, with
+     on-primary as its text. The brass accent marks selection and keyboard
+     focus only. Blue, red, green, yellow and purple already mean mana, so the
+     chrome never uses them as brand colour. Status colours are toned to sit
+     in the palette and always travel with a label or an icon. */
+  --color-primary: #1f1b16;
+  --color-primary-hover: #3a332a;
+  --color-on-primary: #fdfbf7;
+  --color-accent: #7d5e24;
+  --color-accent-soft: rgb(176 132 52 / 0.14);
+  --color-focus: #a4782a;
+  --color-secondary: var(--color-surface-2);
+  --color-secondary-hover: var(--color-surface-3);
+  --color-success: #2f7d4f;
+  --color-success-hover: #256640;
+  --color-success-soft: rgb(47 125 79 / 0.12);
+  --color-on-success: #ffffff;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  --color-on-danger: #ffffff;
+  --color-danger-soft: rgb(185 28 28 / 0.1);
+  --color-warning: #92580a;
+  --color-warning-hover: #7a4a08;
+  --color-on-warning: #ffffff;
+  --color-warning-soft: rgb(176 112 20 / 0.14);
 
   /* ── Z-Index Scale ─────────────────────────────────────
      Use these named layers to prevent stacking conflicts.
      Always reference a variable instead of a raw number.
   ─────────────────────────────────────────────────────── */
-  --z-base:     0;     /* Normal document flow              */
-  --z-raised:   10;    /* Card hover lifts, active list items */
-  --z-sticky:   100;   /* Sticky header                     */
-  --z-backdrop: 100;   /* Full-screen click-outside backdrop */
-  --z-dropdown: 110;   /* Dropdowns, tooltips, context menus */
-  --z-modal:    200;   /* Profile menu, side panels         */
-  --z-overlay:  250;   /* Modal overlays (dim bg)           */
-  --z-dialog:   300;   /* Alert/Confirm dialogs             */
-  --z-toast:    400;   /* Toast notifications (always on top) */
-  --z-header:   150;   /* Sticky app header (above page content/dropdowns, BELOW modal overlays so backdrops dim it; its own dropdowns stack inside the header's context) */
-  --z-preview:  9999;  /* Floating card preview             */
+  --z-base: 0; /* Normal document flow              */
+  --z-raised: 10; /* Card hover lifts, active list items */
+  --z-sticky: 100; /* Sticky header                     */
+  --z-backdrop: 100; /* Full-screen click-outside backdrop */
+  --z-dropdown: 110; /* Dropdowns, tooltips, context menus */
+  --z-modal: 200; /* Profile menu, side panels         */
+  --z-overlay: 250; /* Modal overlays (dim bg)           */
+  --z-dialog: 300; /* Alert/Confirm dialogs             */
+  --z-toast: 400; /* Toast notifications (always on top) */
+  --z-header: 150; /* Sticky app header (above page content/dropdowns, BELOW modal overlays so backdrops dim it; its own dropdowns stack inside the header's context) */
+  --z-preview: 9999; /* Floating card preview             */
 
   /* The playtest simulator is a full-screen takeover that opens its
      own stacking context. The two layers below order elements *inside*
      that context relative to each other, not to the global scale above. */
-  --z-playtest:        99999; /* Fullscreen playtest simulator overlay */
-  --z-playtest-dialog: 3000;  /* Prompts / pile explorer inside playtest */
-  --z-playtest-menu:   3100;  /* Context menus inside playtest         */
+  --z-playtest: 99999; /* Fullscreen playtest simulator overlay */
+  --z-playtest-dialog: 3000; /* Prompts / pile explorer inside playtest */
+  --z-playtest-menu: 3100; /* Context menus inside playtest         */
 
   /* Spacing Scale (8px base)
      Named --space-, not --spacing-: Tailwind v4 treats any --spacing-KEY
@@ -101,17 +162,55 @@
   --radius-full: 9999px;
 
   /* ── Elevation / Shadow Scale ──────────────────────────
-     Premium layered elevations: each rung stacks a tight contact
-     shadow with a softer ambient spread, tinted with slate-950
-     (15 23 42) instead of pure black for a cooler, less muddy feel.
+     Layered elevations: each rung stacks a tight contact shadow with a
+     softer ambient spread, tinted with graphite-950 (18 17 16) so shadows
+     stay inside the warm ramp. Dark mode leans on surface steps and
+     hairlines; shadows there are only for things that float.
      These override Tailwind's built-in shadow-* utilities. */
-  --shadow-xs:   0 1px 2px 0 rgb(15 23 42 / 0.04);
-  --shadow-sm:   0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 3px 0 rgb(15 23 42 / 0.06);
-  --shadow-base: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 2px 4px 0 rgb(15 23 42 / 0.06);
-  --shadow-md:   0 2px 4px -1px rgb(15 23 42 / 0.05), 0 4px 8px -1px rgb(15 23 42 / 0.07), 0 8px 16px -2px rgb(15 23 42 / 0.05);
-  --shadow-lg:   0 2px 4px -1px rgb(15 23 42 / 0.04), 0 8px 16px -3px rgb(15 23 42 / 0.08), 0 16px 32px -4px rgb(15 23 42 / 0.08);
-  --shadow-xl:   0 4px 8px -2px rgb(15 23 42 / 0.05), 0 12px 24px -4px rgb(15 23 42 / 0.09), 0 24px 48px -6px rgb(15 23 42 / 0.11);
-  --shadow-2xl:  0 8px 16px -4px rgb(15 23 42 / 0.07), 0 24px 48px -8px rgb(15 23 42 / 0.13), 0 40px 80px -12px rgb(15 23 42 / 0.15);
+  --shadow-xs: 0 1px 2px 0 rgb(18 17 16 / 0.04);
+  --shadow-sm: 0 1px 2px 0 rgb(18 17 16 / 0.05), 0 1px 3px 0 rgb(18 17 16 / 0.06);
+  --shadow-base: 0 1px 2px 0 rgb(18 17 16 / 0.05), 0 2px 4px 0 rgb(18 17 16 / 0.06);
+  --shadow-md:
+    0 2px 4px -1px rgb(18 17 16 / 0.05), 0 4px 8px -1px rgb(18 17 16 / 0.07), 0 8px 16px -2px rgb(18 17 16 / 0.05);
+  --shadow-lg:
+    0 2px 4px -1px rgb(18 17 16 / 0.04), 0 8px 16px -3px rgb(18 17 16 / 0.08), 0 16px 32px -4px rgb(18 17 16 / 0.08);
+  --shadow-xl:
+    0 4px 8px -2px rgb(18 17 16 / 0.05), 0 12px 24px -4px rgb(18 17 16 / 0.09), 0 24px 48px -6px rgb(18 17 16 / 0.11);
+  --shadow-2xl:
+    0 8px 16px -4px rgb(18 17 16 / 0.07), 0 24px 48px -8px rgb(18 17 16 / 0.13), 0 40px 80px -12px rgb(18 17 16 / 0.15);
+}
+
+/* Dark values for the semantic roles. Utilities read var(--color-*), so the
+   swap re-themes every role-based class without a `dark:` pair. */
+html.dark {
+  --color-surface-0: #141312;
+  --color-surface-1: #1c1a18;
+  --color-surface-2: #262421;
+  --color-surface-3: #302d29;
+  --color-fg: #efe9de;
+  --color-fg-secondary: #b0a99d;
+  --color-fg-muted: #948d82;
+  --color-line: rgb(239 233 222 / 0.09);
+  --color-line-strong: rgb(239 233 222 / 0.16);
+
+  --color-primary: #efe9de;
+  --color-primary-hover: #ffffff;
+  --color-on-primary: #161513;
+  --color-accent: #d6ae62;
+  --color-accent-soft: rgb(214 174 98 / 0.16);
+  --color-focus: #d6ae62;
+  --color-success: #4cc38a;
+  --color-success-hover: #6fd3a3;
+  --color-success-soft: rgb(76 195 138 / 0.14);
+  --color-on-success: #161513;
+  --color-danger: #f06a6a;
+  --color-danger-hover: #f58a8a;
+  --color-on-danger: #161513;
+  --color-danger-soft: rgb(240 106 106 / 0.14);
+  --color-warning: #e0a43a;
+  --color-warning-hover: #ebb85c;
+  --color-on-warning: #161513;
+  --color-warning-soft: rgb(224 164 58 / 0.14);
 }
 
 /* ── Motion tokens ──────────────────────────────────────────

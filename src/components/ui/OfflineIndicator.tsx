@@ -6,7 +6,7 @@ function OfflineIndicator() {
 
   return (
     <div
-      className="flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-semibold text-amber-900 dark:text-amber-100 bg-amber-400/95 dark:bg-amber-600/90 shrink-0"
+      className="flex items-center justify-center gap-2 py-1.5 px-3 text-xs font-semibold text-warning bg-warning shrink-0"
       role="status"
       aria-live="polite"
     >

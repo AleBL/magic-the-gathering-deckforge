@@ -83,7 +83,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
                 placeholder={t('common.searchCards')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-focus w-full sm:w-64"
               />
             </div>
             <button

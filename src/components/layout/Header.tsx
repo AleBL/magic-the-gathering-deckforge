@@ -36,7 +36,6 @@ function Header({
       <div className="header-toolbar">
         <div className="app-brand">
           <div className="app-brand-logo-wrapper">
-            <div className="app-brand-logo-glow"></div>
             <img src={pwLogo} alt="MTG Deck Forge Logo" className="app-brand-logo-image" />
           </div>
           <h1 className="app-brand-title">{t('common.appTitle')}</h1>
@@ -63,8 +62,8 @@ function Header({
                 {currentDeckLength}
                 {currentDeckLength === 1 && activeTab === 'search' && (
                   <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-warning"></span>
                   </span>
                 )}
               </span>

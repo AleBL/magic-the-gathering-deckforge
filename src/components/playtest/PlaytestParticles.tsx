@@ -103,7 +103,7 @@ export function PlaytestParticles() {
       {particles.map((particle) => (
         <div
           key={particle.id}
-          className="absolute rounded-full bg-indigo-500/20 dark:bg-indigo-400/10 blur-[1px]"
+          className="absolute rounded-full bg-accent-soft blur-[1px]"
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,

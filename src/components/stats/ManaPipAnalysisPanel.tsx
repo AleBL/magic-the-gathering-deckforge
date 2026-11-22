@@ -71,7 +71,7 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
         <FaTint className="text-amber-500 animate-pulse" />
         {t('stats.manaPipAnalysis')}
       </h4>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{t('stats.manaPipAnalysisDesc')}</p>
+      <p className="text-xs text-fg-muted">{t('stats.manaPipAnalysisDesc')}</p>
 
       {!ready ? (
         <ChartSkeleton height="h-40" />

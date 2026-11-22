@@ -44,7 +44,7 @@ export default function DeckStatsModal({
       >
         <div className="flex items-center justify-between mb-4">
           <h3 id="deck-stats-modal-title" className="modal-title">
-            <FaChartBar className="text-primary" />
+            <FaChartBar className="text-accent" />
             {t('stats.deckStats')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
@@ -52,9 +52,7 @@ export default function DeckStatsModal({
           </button>
         </div>
 
-        <Suspense
-          fallback={<div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>}
-        >
+        <Suspense fallback={<div className="p-8 text-center text-fg-muted">{t('common.loading')}...</div>}>
           <DeckStats
             currentDeck={cards}
             onApplySuggestedLands={onApplySuggestedLands}

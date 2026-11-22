@@ -275,13 +275,13 @@ function CardDetailModal({
           {/* Grab handle: purely a visual affordance now — drag-to-close works
               from anywhere on the sheet (see useSwipeToClose), not just here. */}
           <div className="sm:hidden -mt-6 -mx-6 flex justify-center pt-2.5 pb-1" aria-hidden="true">
-            <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
+            <div className="w-10 h-1.5 rounded-full bg-surface-3" />
           </div>
           {/* Desktop only: the phone sheet has a drag handle and closes on a tap outside. */}
           <button
             type="button"
             onClick={requestClose}
-            className="absolute top-3 right-3 z-10 hidden sm:block text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60"
+            className="absolute top-3 right-3 z-10 hidden sm:block text-gray-400 hover:text-fg-secondary transition-colors p-1.5 rounded-lg hover:bg-surface-2"
             aria-label={t('common.close')}
           >
             <FaTimes className="text-base" />

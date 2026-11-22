@@ -63,10 +63,10 @@ function CustomDialog({
   if (!isOpen) return null;
 
   const iconMap = {
-    [AlertVariant.DANGER]: <FaExclamationTriangle className="text-red-500 text-3xl shrink-0" />,
-    [AlertVariant.WARNING]: <FaExclamationTriangle className="text-amber-500 text-3xl shrink-0" />,
-    [AlertVariant.SUCCESS]: <FaCheckCircle className="text-green-500 text-3xl shrink-0" />,
-    [AlertVariant.INFO]: <FaInfoCircle className="text-blue-500 text-3xl shrink-0" />
+    [AlertVariant.DANGER]: <FaExclamationTriangle className="text-danger text-3xl shrink-0" />,
+    [AlertVariant.WARNING]: <FaExclamationTriangle className="text-warning text-3xl shrink-0" />,
+    [AlertVariant.SUCCESS]: <FaCheckCircle className="text-success text-3xl shrink-0" />,
+    [AlertVariant.INFO]: <FaInfoCircle className="text-accent text-3xl shrink-0" />
   };
 
   return createPortal(
@@ -89,19 +89,19 @@ function CustomDialog({
         <div
           className={`absolute top-0 left-0 right-0 h-1.5 ${
             variant === AlertVariant.DANGER
-              ? 'bg-red-500'
+              ? 'bg-danger'
               : variant === AlertVariant.WARNING
-                ? 'bg-amber-500'
+                ? 'bg-warning'
                 : variant === AlertVariant.SUCCESS
-                  ? 'bg-green-500'
-                  : 'bg-blue-500'
+                  ? 'bg-success'
+                  : 'bg-surface-3'
           }`}
         />
 
         <button
           type="button"
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-fg-secondary transition-colors"
           aria-label={t('common.close')}
         >
           <FaTimes className="text-base" />
@@ -110,13 +110,10 @@ function CustomDialog({
         <div className="flex gap-4 pt-2">
           {iconMap[variant]}
           <div className="flex-1 space-y-2">
-            <h3
-              id="dialog-title"
-              className="text-lg font-bold text-gray-900 dark:text-white transition-colors duration-300"
-            >
+            <h3 id="dialog-title" className="text-lg font-bold text-fg transition-colors duration-300">
               {title}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 whitespace-pre-line leading-relaxed">
+            <p className="text-sm text-fg-secondary transition-colors duration-300 whitespace-pre-line leading-relaxed">
               {message}
             </p>
           </div>

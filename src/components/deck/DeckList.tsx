@@ -49,7 +49,7 @@ function DeckList({
   return (
     <div className="deck-list-section">
       {hideHeading ? null : (
-        <h3 className="text-gray-900 dark:text-white text-xl font-bold mb-4 transition-colors duration-300">
+        <h3 className="text-fg text-xl font-bold mb-4 transition-colors duration-300">
           {t('deck.savedDecks')} ({decks.length})
         </h3>
       )}
@@ -68,10 +68,10 @@ function DeckList({
           <div className="empty-deck-list-state group">
             <div className="empty-deck-list-state-bg" />
             <div className="empty-deck-list-state-icon-wrapper">
-              <FaLayerGroup className="text-xl text-purple-500 dark:text-purple-400" />
+              <FaLayerGroup className="text-xl text-accent" />
             </div>
-            <p className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-1">{t('deck.noSavedDecks')}</p>
-            <p className="text-xs text-gray-500 dark:text-slate-400">{t('deck.addCardsMessage')}</p>
+            <p className="text-sm font-bold text-fg mb-1">{t('deck.noSavedDecks')}</p>
+            <p className="text-xs text-fg-muted">{t('deck.addCardsMessage')}</p>
           </div>
         ) : (
           decks.map((deck) => (

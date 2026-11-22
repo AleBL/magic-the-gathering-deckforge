@@ -24,13 +24,13 @@ const CHANGE_LABEL_KEY: Record<DeckVersionChangeType, string> = {
 };
 
 const CHANGE_TONE: Record<DeckVersionChangeType, string> = {
-  added: 'text-green-600 dark:text-green-400',
-  removed: 'text-red-600 dark:text-red-400',
-  increased: 'text-green-600 dark:text-green-400',
-  decreased: 'text-amber-600 dark:text-amber-400',
-  printing: 'text-blue-600 dark:text-blue-400',
-  commander: 'text-purple-600 dark:text-purple-400',
-  renamed: 'text-gray-600 dark:text-gray-300'
+  added: 'text-success',
+  removed: 'text-danger',
+  increased: 'text-success',
+  decreased: 'text-warning',
+  printing: 'text-accent',
+  commander: 'text-accent',
+  renamed: 'text-fg-secondary'
 };
 
 /** Human-readable right-hand detail for a change (counts, printings, names). */
@@ -92,17 +92,17 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
       >
         <div className="flex items-center justify-between mb-1">
           <h3 id="deck-history-title" className="modal-title">
-            <FaHistory className="text-primary" />
+            <FaHistory className="text-accent" />
             {t('deck.versionHistory')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
             <FaTimes />
           </button>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('deck.versionAutoHint')}</p>
+        <p className="text-xs text-fg-muted mb-4">{t('deck.versionAutoHint')}</p>
 
         {versions.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">{t('deck.noVersions')}</p>
+          <p className="text-sm text-fg-muted text-center py-6">{t('deck.noVersions')}</p>
         ) : (
           <ul className="space-y-2">
             {versions.map((version) => {
@@ -110,16 +110,13 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
               const isOpen = expanded === version.id;
 
               return (
-                <li
-                  key={version.id}
-                  className="rounded-lg bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700"
-                >
+                <li key={version.id} className="rounded-lg bg-surface-1 border border-line">
                   <div className="flex items-center justify-between gap-2 p-2.5">
                     <div className="min-w-0">
-                      <span className="block text-xs font-bold text-gray-800 dark:text-gray-200 truncate">
+                      <span className="block text-xs font-bold text-fg truncate">
                         {new Date(version.createdAt).toLocaleString()}
                       </span>
-                      <span className="block text-[11px] text-gray-500 dark:text-gray-400">
+                      <span className="block text-[11px] text-fg-muted">
                         {t('deck.versionCards', { n: version.cards.length })}
                       </span>
                     </div>
@@ -128,7 +125,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => setExpanded(isOpen ? null : version.id)}
                         aria-expanded={isOpen}
-                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 text-xs font-bold transition-all cursor-pointer"
+                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-fg-secondary hover:bg-surface-2 text-xs font-bold transition-all cursor-pointer"
                       >
                         {t('deck.versionChanges')}
                         <FaChevronDown className={`text-[10px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -136,7 +133,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                       <button
                         type="button"
                         onClick={() => onRestore(version)}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft text-accent text-xs font-bold transition-all cursor-pointer"
                       >
                         <FaUndo className="text-xs" />
                         {t('deck.restoreVersion')}
@@ -145,7 +142,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => handleDelete(version.id)}
                         aria-label={t('deck.deleteVersion')}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-danger hover:bg-danger-soft transition-all cursor-pointer"
                       >
                         <FaTrash className="text-xs" />
                       </button>
@@ -153,11 +150,11 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                   </div>
 
                   {isOpen && (
-                    <div className="border-t border-gray-200 dark:border-slate-700 p-2.5">
+                    <div className="border-t border-line p-2.5">
                       {changes === null ? (
-                        <p className="text-[11px] text-gray-500 dark:text-gray-400">{t('deck.versionFirst')}</p>
+                        <p className="text-[11px] text-fg-muted">{t('deck.versionFirst')}</p>
                       ) : changes.length === 0 ? (
-                        <p className="text-[11px] text-gray-500 dark:text-gray-400">{t('deck.versionNoChanges')}</p>
+                        <p className="text-[11px] text-fg-muted">{t('deck.versionNoChanges')}</p>
                       ) : (
                         <ul className="space-y-1 max-h-56 overflow-y-auto pr-1">
                           {changes.map((change, index) => (
@@ -169,7 +166,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                                 <span className={`font-bold ${CHANGE_TONE[change.type]}`}>
                                   {t(CHANGE_LABEL_KEY[change.type])}
                                 </span>
-                                <span className="text-gray-700 dark:text-gray-300"> — {change.name}</span>
+                                <span className="text-fg-secondary"> — {change.name}</span>
                               </span>
                               <span className="tabular-nums text-gray-500 shrink-0">{changeDetail(change)}</span>
                             </li>
