@@ -32,7 +32,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onRemoveFromDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-danger hover:scale-110 transition-all pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-danger transition pointer-events-auto"
           title={t('cardDetails.remove')}
         >
           <LuMinus />
@@ -46,7 +46,7 @@ export function CardItemHoverControls({
               e.stopPropagation();
               onUpdateCardZone(card.id, DeckZone.MAIN);
             }}
-            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition-all ${
+            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition ${
               card.zone === DeckZone.MAIN
                 ? 'bg-primary text-on-primary ring-2 ring-white/50'
                 : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -61,7 +61,7 @@ export function CardItemHoverControls({
               e.stopPropagation();
               onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
             }}
-            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition-all ${
+            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition ${
               card.zone === DeckZone.SIDEBOARD
                 ? 'bg-surface-3 text-fg ring-2 ring-white/50'
                 : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -76,7 +76,7 @@ export function CardItemHoverControls({
               e.stopPropagation();
               onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
             }}
-            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition-all ${
+            className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition ${
               card.zone === DeckZone.MAYBEBOARD
                 ? 'bg-warning text-white ring-2 ring-white/50'
                 : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'
@@ -94,7 +94,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onAddToDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-primary-hover hover:scale-110 transition-all pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-primary-hover transition pointer-events-auto"
           title={t('cardDetails.addCopy')}
         >
           <LuPlus />

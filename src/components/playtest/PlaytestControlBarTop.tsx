@@ -44,14 +44,14 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={handleUntapAll}
-            className="bg-surface-3 hover:bg-surface-3 text-fg text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-surface-3 hover:bg-surface-3 text-fg text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.untapAll')}
           </button>
           <button
             type="button"
             onClick={handleNextTurn}
-            className="bg-primary hover:bg-primary-hover text-on-primary text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-primary hover:bg-primary-hover text-on-primary text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.nextTurn')}
           </button>
@@ -62,7 +62,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               onClick={handleUndo}
               disabled={!canUndo}
               title={`${t('playtest.undo')} (Ctrl+Z)`}
-              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
               <LuUndo2 />
             </button>
@@ -71,7 +71,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               onClick={handleRedo}
               disabled={!canRedo}
               title={`${t('playtest.redo')} (Ctrl+Y)`}
-              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
+              className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
               <LuRedo2 />
             </button>
@@ -82,7 +82,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev - 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-on-danger transition-all text-xs font-semibold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-on-danger transition text-xs font-semibold cursor-pointer"
             >
               <LuMinus className="text-[11px] sm:text-[8px]" />
             </button>
@@ -92,7 +92,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev + 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-on-success transition-all text-xs font-semibold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-on-success transition text-xs font-semibold cursor-pointer"
             >
               <LuPlus className="text-[11px] sm:text-[8px]" />
             </button>
@@ -142,7 +142,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => setIsLogOpen((prev: boolean) => !prev)}
             title={t('playtest.toggleLogPanel')}
-            className={`p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border transition text-xs flex items-center justify-center gap-1.5 cursor-pointer ${
               isLogOpen
                 ? 'bg-accent-soft border-line-strong text-accent '
                 : 'bg-surface-2 border-line text-fg-muted hover:text-fg-secondary '
@@ -156,7 +156,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => setIsShortcutsOpen((prev: boolean) => !prev)}
             title={`${t('playtest.shortcuts')} (?)`}
-            className="p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border bg-surface-2 border-line text-fg-muted hover:text-fg-secondary transition-all text-xs flex items-center justify-center cursor-pointer"
+            className="p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border bg-surface-2 border-line text-fg-muted hover:text-fg-secondary transition text-xs flex items-center justify-center cursor-pointer"
           >
             <LuKeyboard className="text-xs shrink-0" />
           </button>
@@ -185,7 +185,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
         onClick={onClose}
         aria-label={t('common.close')}
         title={t('common.close')}
-        className="absolute top-3 right-3 text-fg-muted hover:text-fg-secondary p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg hover:bg-surface-2 transition-all cursor-pointer z-50 bg-surface-1/80 backdrop-blur shadow"
+        className="absolute top-3 right-3 text-fg-muted hover:text-fg-secondary p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg hover:bg-surface-2 transition cursor-pointer z-50 bg-surface-1/80 backdrop-blur shadow"
       >
         <LuX />
       </button>

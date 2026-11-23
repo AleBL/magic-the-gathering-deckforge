@@ -68,7 +68,7 @@ export function ManaPipAnalysisPanel({ stats, colorLabels }: ManaPipAnalysisPane
   return (
     <div className="space-y-4 p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-500/5 dark:bg-amber-950/10 transition-colors duration-300">
       <h4 className="font-semibold text-sm text-amber-700 dark:text-amber-400 flex items-center gap-2">
-        <LuDroplet className="text-amber-500 animate-pulse" />
+        <LuDroplet className="text-fg-muted" />
         {t('stats.manaPipAnalysis')}
       </h4>
       <p className="text-xs text-fg-muted">{t('stats.manaPipAnalysisDesc')}</p>

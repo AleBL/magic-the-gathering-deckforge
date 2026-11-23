@@ -22,8 +22,8 @@ export function CardItemStatusBadges({
   return (
     <>
       {isCommander && (
-        <div className="absolute top-2 left-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-lg border border-warning flex items-center gap-1 animate-pulse select-none">
-          <LuCrown className="text-warning text-xs shrink-0 animate-pulse" />
+        <div className="absolute top-2 left-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-lg border border-warning flex items-center gap-1 select-none">
+          <LuCrown className="text-warning text-xs shrink-0" />
           {t('cardDetails.commanderBadge')}
         </div>
       )}

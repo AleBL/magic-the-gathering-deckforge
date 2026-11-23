@@ -128,7 +128,7 @@ function CollectionManager() {
       onClick={() => setView(value)}
       aria-pressed={view === value}
       // `relative` is load-bearing: .count-badge is absolute and would escape to the page edge.
-      className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-semibold transition-all ${
+      className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-semibold transition ${
         view === value
           ? 'bg-primary text-on-primary shadow-md '
           : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '

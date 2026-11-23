@@ -129,7 +129,7 @@ function CardSearch({
             <button
               type="button"
               onClick={() => dispatchPendingAction('open-search-filters')}
-              className="sm:hidden shrink-0 w-14 flex items-center justify-center rounded-2xl bg-surface-2 border border-line text-fg-secondary active:scale-95 transition-all"
+              className="sm:hidden shrink-0 w-14 flex items-center justify-center rounded-2xl bg-surface-2 border border-line text-fg-secondary active:scale-95 transition"
               aria-label={t('search.advancedFilters')}
               title={t('search.advancedFilters')}
             >

@@ -44,7 +44,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
   };
 
   return (
-    <div className="space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
+    <div className="space-y-4 p-4 rounded-xl border border-line bg-surface-1">
       <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
         <LuCoins className="text-accent" />
         {t('stats.budgetEstimator')}

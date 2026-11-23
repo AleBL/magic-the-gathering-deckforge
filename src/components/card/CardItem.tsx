@@ -73,12 +73,14 @@ function CardItem({
   const canFlip = faceImages !== null;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // The tilt is part of the effects package: off with the toggle or reduced motion.
+    if (!motionEnabled) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const rotateY = (x / rect.width - 0.5) * 18;
-    const rotateX = (y / rect.height - 0.5) * -18;
+    const rotateY = (x / rect.width - 0.5) * 10;
+    const rotateX = (y / rect.height - 0.5) * -10;
 
     const glareX = (x / rect.width) * 100;
     const glareY = (y / rect.height) * 100;
@@ -106,7 +108,7 @@ function CardItem({
   // draggable deck card (whose drag means "move between zones").
   const canAddDrag = isAddDraggable && !isDraggable;
 
-  const imageClassName = `card-image-content transition-all duration-300 ${
+  const imageClassName = `card-image-content transition duration-300 ${
     isToken && card.isActive === false
       ? 'opacity-40 grayscale-[40%] brightness-[75%] shadow-[0_0_10px_rgba(30,41,59,0.3)] rounded-[4.5%]'
       : isBanned
@@ -165,7 +167,7 @@ function CardItem({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
-          transform: `perspective(800px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) ${glare.opacity > 0 ? 'scale3d(1.04, 1.04, 1.04)' : 'scale3d(1, 1, 1)'}`,
+          transform: `perspective(800px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
           transition: glare.opacity === 0 ? 'transform 0.4s ease-out' : 'transform 0.1s ease-out',
           transformStyle: 'preserve-3d'
         }}

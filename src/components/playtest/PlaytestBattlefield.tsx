@@ -33,7 +33,7 @@ const PlaytestBattlefieldCard = memo(
 
     return (
       <div
-        className="group relative transition-all duration-300 flex items-center justify-center"
+        className="group relative transition duration-300 flex items-center justify-center"
         draggable
         onDragStart={(event) => {
           event.dataTransfer.setData('text/plain', JSON.stringify({ id: playtestId, source: 'battlefield' }));
@@ -57,7 +57,7 @@ const PlaytestBattlefieldCard = memo(
               }
             }}
             onContextMenu={(event) => onContextMenu(event, playtestId)}
-            className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition-all duration-300 ${isTapped ? 'border-warning ring-2 ring-warning/40 rotate-90 scale-90' : 'border-slate-800 hover:scale-105 hover:border-accent/50'}`}
+            className={`absolute w-full h-full rounded-xl overflow-hidden shadow-lg border bg-slate-900 cursor-pointer select-none transition duration-300 ${isTapped ? 'border-warning ring-2 ring-warning/40 rotate-90 scale-90' : 'border-slate-800 hover:border-accent/50'}`}
           >
             {isFaceDown ? (
               <img src={cardBack} alt="Card Back" className="w-full h-full object-cover pointer-events-none" />
@@ -80,7 +80,7 @@ const PlaytestBattlefieldCard = memo(
             )}
 
             {isTapped && (
-              <div className="absolute top-1.5 right-1.5 bg-warning text-slate-950 text-[6px] font-semibold px-1 rounded shadow animate-pulse">
+              <div className="absolute top-1.5 right-1.5 bg-warning text-slate-950 text-[6px] font-semibold px-1 rounded shadow">
                 {t('playtest.tapped')}
               </div>
             )}
@@ -92,7 +92,7 @@ const PlaytestBattlefieldCard = memo(
           </div>
         </div>
 
-        <div className="absolute -top-5 sm:-top-4 left-1/2 -translate-x-1/2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-1.5 sm:px-2 py-1 shadow-2xl backdrop-blur-sm no-active-scale">
+        <div className="absolute -top-5 sm:-top-4 left-1/2 -translate-x-1/2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition duration-200 flex items-center gap-1 sm:gap-1.5 z-30 bg-slate-900/95 border border-slate-700/80 rounded-full px-1.5 sm:px-2 py-1 shadow-2xl backdrop-blur-sm no-active-scale">
           <button
             type="button"
             onClick={(event) => {
@@ -100,7 +100,7 @@ const PlaytestBattlefieldCard = memo(
               onShowDetails(card);
             }}
             title={t('cardDetails.viewCardDetails')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuInfo />
           </button>
@@ -111,7 +111,7 @@ const PlaytestBattlefieldCard = memo(
               onTap(playtestId);
             }}
             title={t('playtest.tapUntap')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-warning border border-slate-700 hover:bg-warning hover:text-slate-950 transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-warning border border-slate-700 hover:bg-warning hover:text-slate-950 transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuRefreshCw />
           </button>
@@ -122,7 +122,7 @@ const PlaytestBattlefieldCard = memo(
               onReturnToHand(playtestId, 'battlefield');
             }}
             title={t('playtest.returnToHand')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuInbox />
           </button>
@@ -133,7 +133,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToGraveyard(playtestId);
             }}
             title={t('playtest.sendToGraveyard')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-danger border border-slate-700 hover:bg-danger hover:text-on-danger transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-danger border border-slate-700 hover:bg-danger hover:text-on-danger transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuSkull />
           </button>
@@ -144,7 +144,7 @@ const PlaytestBattlefieldCard = memo(
               onSendToExile(playtestId);
             }}
             title={t('playtest.moveToExile')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuBan />
           </button>
@@ -155,7 +155,7 @@ const PlaytestBattlefieldCard = memo(
               onContextMenu(event, playtestId);
             }}
             title={t('common.moreActions')}
-            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
+            className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition text-[10px] sm:text-[9px] cursor-pointer"
           >
             <LuEllipsis />
           </button>
@@ -192,7 +192,7 @@ export function PlaytestBattlefield() {
 
   return (
     <div
-      className={`flex-1 border rounded-2xl p-3 sm:p-4 min-h-[200px] sm:min-h-[240px] lg:min-h-0 lg:overflow-y-auto flex flex-col transition-all duration-300 ${
+      className={`flex-1 border rounded-2xl p-3 sm:p-4 min-h-[200px] sm:min-h-[240px] lg:min-h-0 lg:overflow-y-auto flex flex-col transition duration-300 ${
         dragOverZone === 'battlefield'
           ? 'border-2 border-dashed border-accent/50 bg-accent-soft shadow-lg ring-2 ring-focus'
           : 'border-line bg-surface-1 '

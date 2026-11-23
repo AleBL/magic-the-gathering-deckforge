@@ -86,7 +86,7 @@ function DeckProxyPrint({
               type="button"
               onClick={onClose}
               aria-label={t('common.close')}
-              className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
+              className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition cursor-pointer"
             >
               <LuX />
             </button>
@@ -145,7 +145,7 @@ function DeckProxyPrint({
                 chunkedCards.map((pageCards, pageIndex) => (
                   <div
                     key={pageIndex}
-                    className="bg-white text-slate-950 shadow-2xl border border-line-strong relative flex flex-col shrink-0 select-none rounded-lg p-6 transition-all duration-300 transform hover:scale-[1.01]"
+                    className="bg-white text-slate-950 shadow-2xl border border-line-strong relative flex flex-col shrink-0 select-none rounded-lg p-6 transition duration-300 transform hover:scale-[1.01]"
                     style={{
                       width: orientation === 'portrait' ? '170mm' : '240mm',
                       aspectRatio: orientation === 'portrait' ? '210/297' : '297/210',

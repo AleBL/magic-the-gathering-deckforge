@@ -171,7 +171,7 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
               type="button"
               disabled={item.disabled}
               onClick={() => handleItemClick(item.action)}
-              className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-fg hover:bg-surface-2 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-fg hover:bg-surface-2 active:scale-[0.99] transition duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               <span className="text-fg-muted shrink-0 w-5 flex justify-center">{item.icon}</span>
               <span className="truncate">{item.label}</span>

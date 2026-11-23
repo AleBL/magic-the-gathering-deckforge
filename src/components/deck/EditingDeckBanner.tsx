@@ -129,7 +129,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
           >
             <LuX className="text-xs shrink-0" />
           </button>
-          <div className="absolute right-0 top-full mt-2 w-32 p-2 bg-slate-900 dark:bg-slate-950 text-white text-xs text-center rounded-lg shadow-xl border border-slate-700 dark:border-slate-800 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-all duration-300 z-50 transform translate-y-1 group-hover/tooltip:translate-y-0">
+          <div className="absolute right-0 top-full mt-2 w-32 p-2 bg-slate-900 dark:bg-slate-950 text-white text-xs text-center rounded-lg shadow-xl border border-slate-700 dark:border-slate-800 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition duration-300 z-50 transform translate-y-1 group-hover/tooltip:translate-y-0">
             <p className="font-medium leading-none">{t('deck.exitEditMode')}</p>
           </div>
         </div>

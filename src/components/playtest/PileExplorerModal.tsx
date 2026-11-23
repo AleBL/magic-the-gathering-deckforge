@@ -107,7 +107,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
                   <img
                     src={item.card.image_uris?.normal || item.card.card_faces?.[0]?.image_uris?.normal || ''}
                     alt={item.card.name}
-                    className="w-full rounded-xl shadow-md transition-transform hover:scale-105"
+                    className="w-full rounded-xl shadow-md transition-transform"
                   />
                 </div>
               ))}

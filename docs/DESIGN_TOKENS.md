@@ -158,13 +158,21 @@ built-in size scale and break `max-w-sm`/`max-w-lg`).
 | `--space-sm` | `0.5rem`  |     | `--space-xl`  | `2rem`   |
 | `--space-md` | `1rem`    |     | `--space-2xl` | `3rem`   |
 
-## Transitions
+## Motion
 
-| Token               | Value                                |
-| ------------------- | ------------------------------------ |
-| `--transition-fast` | `150ms cubic-bezier(0.4, 0, 0.2, 1)` |
-| `--transition-base` | `300ms cubic-bezier(0.4, 0, 0.2, 1)` |
-| `--transition-slow` | `500ms cubic-bezier(0.4, 0, 0.2, 1)` |
+One curve everywhere, `cubic-bezier(0.22, 1, 0.36, 1)`: it is `--ease-out`, the default for
+every Tailwind `transition-*` utility (`--default-transition-timing-function`) and the curve
+of the tokens below. Transitions name what they animate (`transition-colors`,
+`transition-[transform,opacity]`, or plain `transition`, which leaves layout properties
+alone); `transition-all` is not used. Looping animation is kept for loading skeletons only,
+hover moves at most 2px and never scales, and everything decorative checks `motionEnabled`
+(the effects toggle folded with `prefers-reduced-motion`).
+
+| Token               | Value   | Use                   |
+| ------------------- | ------- | --------------------- |
+| `--transition-fast` | `150ms` | Hover, press, toggles |
+| `--transition-base` | `220ms` | Menus, popovers       |
+| `--transition-slow` | `400ms` | Entrances, sheets     |
 
 ## Data visualization (charts)
 

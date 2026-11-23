@@ -86,7 +86,7 @@
 .deck-stack-shadow {
   width: calc(var(--stack-card-width) - var(--stack-trim));
   height: calc(var(--stack-card-height) - var(--stack-trim));
-  @apply absolute rounded-lg shadow-sm pointer-events-none transition-all duration-300;
+  @apply absolute rounded-lg shadow-sm pointer-events-none transition duration-300;
 }
 
 .deck-stack-shadow-level-one {
@@ -110,7 +110,7 @@
 }
 
 .deck-stack-main-card {
-  @apply absolute inset-y-0 left-0 rounded-lg overflow-hidden border bg-slate-900 shadow-md transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl;
+  @apply absolute inset-y-0 left-0 rounded-lg overflow-hidden border bg-slate-900 shadow-md transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-xl;
   width: var(--stack-card-width);
   height: var(--stack-card-height);
   z-index: 3;
@@ -153,7 +153,7 @@
   left: 0;
   width: calc(100% - var(--grid-stack-trim));
   height: calc(100% - var(--grid-stack-trim));
-  @apply absolute rounded-[4.5%] shadow-sm pointer-events-none transition-all duration-300 bg-surface-3 border border-gray-400/80 dark:border-slate-800/80;
+  @apply absolute rounded-[4.5%] shadow-sm pointer-events-none transition duration-300 bg-surface-3 border border-gray-400/80 dark:border-slate-800/80;
 }
 
 .card-grid-stack-shadow-one {

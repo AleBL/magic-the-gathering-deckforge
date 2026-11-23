@@ -163,7 +163,7 @@ export function ProxyPrintSettingsBar({
       </div>
 
       <div
-        className={`proxy-setting-group transition-all duration-200 ${useRealSize ? 'opacity-40 pointer-events-none' : ''}`}
+        className={`proxy-setting-group transition duration-200 ${useRealSize ? 'opacity-40 pointer-events-none' : ''}`}
       >
         <label className="proxy-setting-label">{t('print.cardsPerRow')}</label>
         <div className="flex gap-1">

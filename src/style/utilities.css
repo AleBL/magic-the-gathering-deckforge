@@ -2,7 +2,7 @@
 
 /* Badges */
 .status-badge {
-  @apply px-2.5 py-0.5 rounded-full text-xs font-semibold transition-all duration-150;
+  @apply px-2.5 py-0.5 rounded-full text-xs font-semibold transition duration-150;
 }
 
 .status-badge-success {
@@ -20,7 +20,7 @@
 
 /* Alerts and Banners */
 .alert-banner {
-  @apply p-3 rounded-lg border text-sm transition-all duration-300;
+  @apply p-3 rounded-lg border text-sm transition duration-300;
 }
 
 .alert-banner-success {
@@ -37,7 +37,7 @@
 }
 
 .banner-status-dot {
-  @apply font-semibold flex h-2 w-2 rounded-full bg-success animate-pulse;
+  @apply font-semibold flex h-2 w-2 rounded-full bg-success;
 }
 
 .text-muted {
@@ -62,7 +62,7 @@
 .deck-card-status-chip-banned,
 .deck-card-status-chip-invalid,
 .deck-card-status-chip-restricted {
-  @apply ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded shrink-0 shadow-sm transition-all duration-200;
+  @apply ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded shrink-0 shadow-sm transition duration-200;
 }
 
 .deck-card-status-chip-commander {
@@ -70,7 +70,7 @@
 }
 
 .deck-card-status-chip-banned {
-  @apply text-[9px] font-semibold bg-danger-soft text-danger border border-danger/40 animate-pulse;
+  @apply text-[9px] font-semibold bg-danger-soft text-danger border border-danger/40;
 }
 
 /* Violet, not red or amber: "this card cannot be in this deck at all" is a different problem
@@ -88,7 +88,7 @@
 .deck-quick-action-add,
 .deck-quick-action-remove,
 .deck-quick-action-delete {
-  @apply w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-semibold shadow-sm hover:scale-110;
+  @apply w-6 h-6 rounded-full flex items-center justify-center transition duration-200 font-semibold shadow-sm;
 }
 
 .deck-quick-action-commander {

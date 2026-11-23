@@ -112,7 +112,7 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={() => setShowPrintsSidebar((prev) => !prev)}
-              className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition-all ${
+              className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition ${
                 showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
               }`}
             >
@@ -125,7 +125,7 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleConfirmArtChange}
-              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
+              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition"
             >
               <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
@@ -139,7 +139,7 @@ export function CardDetailEditControls({
           <button
             type="button"
             onClick={() => setShowPrintsSidebar((prev) => !prev)}
-            className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition-all ${
+            className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition ${
               showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
             }`}
           >
@@ -151,7 +151,7 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleConfirmArtChange}
-              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
+              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition"
             >
               <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
