@@ -20,6 +20,8 @@ export interface Deck {
   /** Non-indexed on purpose: Dexie persists unlisted fields as-is, so this needs no schema
    *  bump. Unset falls back to the commander or the best available art. */
   coverCardId?: string;
+  /** Free-form labels for the library filter. Non-indexed like coverCardId: no schema bump. */
+  tags?: string[];
 }
 
 export interface DeckVersion {

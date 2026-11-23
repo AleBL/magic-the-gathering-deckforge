@@ -1,4 +1,5 @@
 import { Card } from '../types/Card';
+import { normalizeTags } from './deckTags';
 import { Deck, DeckRelatedToken } from '../types/Deck';
 import { DeckFormatType } from '../types/enums';
 import { ScryfallCardPart, ScryfallNotFoundIdentifier } from '../types/Scryfall';
@@ -99,6 +100,10 @@ export const toImportedDeck = (value: unknown): Omit<Deck, 'id'> | null => {
 
   if (isNonEmptyString(value.notes)) deck.notes = value.notes;
   if (isNonEmptyString(value.coverCardId)) deck.coverCardId = value.coverCardId;
+  if (Array.isArray(value.tags)) {
+    const tags = normalizeTags(value.tags.filter((tag): tag is string => typeof tag === 'string'));
+    if (tags.length > 0) deck.tags = tags;
+  }
 
   const relatedTokens = toDeckRelatedTokens(value.relatedTokens);
   if (relatedTokens.length > 0) deck.relatedTokens = relatedTokens;

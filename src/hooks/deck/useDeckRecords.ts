@@ -88,5 +88,8 @@ export function useDeckRecords({ onDeckDeleted }: DeckRecordsArgs) {
   const setDeckCover = (deckId: string, coverCardId: string) =>
     write(() => db.decks.update(deckId, { coverCardId }), 'Failed to set deck cover:', 'deck.saveError');
 
-  return { deleteDeck, restoreDeck, duplicateDeck, saveTokensToDeck, setDeckCover };
+  const setDeckTags = (deckId: string, tags: string[]) =>
+    write(() => db.decks.update(deckId, { tags }), 'Failed to set deck tags:', 'deck.saveError');
+
+  return { deleteDeck, restoreDeck, duplicateDeck, saveTokensToDeck, setDeckCover, setDeckTags };
 }

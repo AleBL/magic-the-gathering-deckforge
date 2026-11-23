@@ -651,6 +651,15 @@ const pt = {
         energy: 'Remover energia de {{name}}'
       }
     },
+    deckTags: {
+      edit: 'Editar tags',
+      title: 'Tags de {{name}}',
+      label: 'Separe as tags com vírgulas',
+      placeholder: 'aggro, barato, papel',
+      save: 'Salvar tags',
+      filter: 'Filtrar por tag',
+      all: 'Todos'
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} pontos',
       title: 'Deck Doctor',

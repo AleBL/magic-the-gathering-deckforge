@@ -68,6 +68,7 @@ export default function useDeckManager(
     duplicateDeck: records.duplicateDeck,
     saveTokensToDeck: records.saveTokensToDeck,
     setDeckCover: records.setDeckCover,
+    setDeckTags: records.setDeckTags,
     restoreDeck: records.restoreDeck,
     fileMissingCards: fileImport.fileMissingCards,
     fileImportError: fileImport.fileImportError,

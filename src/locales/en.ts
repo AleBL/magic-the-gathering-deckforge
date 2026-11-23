@@ -649,6 +649,15 @@ const en = {
         energy: 'Remove energy from {{name}}'
       }
     },
+    deckTags: {
+      edit: 'Edit tags',
+      title: 'Tags for {{name}}',
+      label: 'Separate tags with commas',
+      placeholder: 'aggro, budget, paper',
+      save: 'Save tags',
+      filter: 'Filter by tag',
+      all: 'All'
+    },
     deckDoctor: {
       pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',

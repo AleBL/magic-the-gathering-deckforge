@@ -655,6 +655,15 @@ const es = {
         energy: 'Quitar energía a {{name}}'
       }
     },
+    deckTags: {
+      edit: 'Editar etiquetas',
+      title: 'Etiquetas de {{name}}',
+      label: 'Separa las etiquetas con comas',
+      placeholder: 'aggro, económico, papel',
+      save: 'Guardar etiquetas',
+      filter: 'Filtrar por etiqueta',
+      all: 'Todos'
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} puntos',
       title: 'Deck Doctor',
