@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import SampleHandPanel from './SampleHandPanel';
 import { useTranslation } from 'react-i18next';
 import { LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
@@ -35,6 +36,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
     <div className="deck-stats-container">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <DeckDoctorPanel currentDeck={currentDeck} stats={stats} />
+        <SampleHandPanel currentDeck={currentDeck} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

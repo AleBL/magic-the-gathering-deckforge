@@ -292,9 +292,9 @@ function DeckPreview({
         ) : (
           <DeckNotesEditor initialNotes={editingDeckNotes} isEditable={true} onSave={onUpdateNotes} />
         )
-      ) : selectedDeck && activeNoteTab === 'stats' ? (
-        /* Inline for a saved deck. The working deck sends the same tab to a modal instead
-           (see noteTabHeader), which is why this branch is guarded by `selectedDeck`. */
+      ) : (selectedDeck || !editingDeckId) && activeNoteTab === 'stats' ? (
+        /* Inline for a saved deck and for the draft. Only the two-pane editor sends the tab
+           to a modal instead (see onSelectStatsTab), where the list beside it has no room. */
         <Suspense fallback={<div className="p-8 text-center text-fg-muted">{t('common.loading')}...</div>}>
           <DeckStats currentDeck={activeCards} renderFilteredCards={renderStatsFilteredCards} />
         </Suspense>
