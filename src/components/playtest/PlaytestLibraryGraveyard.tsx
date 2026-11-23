@@ -25,7 +25,7 @@ export function PlaytestLibraryGraveyard() {
   } = usePlaytestContext();
 
   return (
-    <div className="flex flex-row lg:flex-col gap-4 items-center justify-center p-3 sm:p-4 border-2 border-dashed border-line-strong rounded-xl bg-surface-1/40 backdrop-blur-sm w-full lg:w-48 shrink-0">
+    <div className="flex flex-row lg:flex-col gap-3 items-center justify-center lg:justify-start p-3 border border-line rounded-xl bg-surface-1 w-full lg:w-28 xl:w-32 shrink-0 lg:min-h-0 lg:overflow-y-auto">
       {/* Library Pile */}
       <div
         role="button"
@@ -77,14 +77,14 @@ export function PlaytestLibraryGraveyard() {
               className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-cover rounded-[10px]"
             />
             <span className="absolute bottom-3 text-[11px] font-semibold text-white bg-slate-950/70 px-2 py-0.5 rounded backdrop-blur-xs group-hover:bg-slate-950/90 transition-colors shadow shadow-black/30">
-              {t('playtest.draw').toUpperCase()}
+              {t('playtest.draw')}
             </span>
             <div className="absolute -top-2 -right-2 bg-surface-3 text-fg font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow z-10">
               {library.length}
             </div>
           </>
         ) : (
-          <span className="text-[11px] font-semibold text-slate-500">{t('common.empty').toUpperCase()}</span>
+          <span className="text-[11px] font-semibold text-slate-500">{t('common.empty')}</span>
         )}
       </div>
 
@@ -137,7 +137,7 @@ export function PlaytestLibraryGraveyard() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
               <LuSkull className="text-danger text-lg mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.graveyard').toUpperCase()}</span>
+              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.graveyard')}</span>
             </div>
             <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
               {graveyard.length}
@@ -146,7 +146,7 @@ export function PlaytestLibraryGraveyard() {
         ) : (
           <>
             <LuSkull className="text-slate-800 text-lg mb-1" />
-            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.graveyard').toUpperCase()}</span>
+            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.graveyard')}</span>
           </>
         )}
       </div>
@@ -197,7 +197,7 @@ export function PlaytestLibraryGraveyard() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
               <LuBan className="text-gray-500/70 text-lg mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.exile').toUpperCase()}</span>
+              <span className="text-[11px] font-semibold text-slate-350">{t('playtest.exile')}</span>
             </div>
             <div className="absolute -top-2 -right-2 bg-slate-800 text-slate-300 font-semibold text-[9px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900 shadow">
               {exile.length}
@@ -206,7 +206,7 @@ export function PlaytestLibraryGraveyard() {
         ) : (
           <>
             <LuBan className="text-slate-800 text-lg mb-1" />
-            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.exile').toUpperCase()}</span>
+            <span className="text-[11px] font-semibold text-slate-650">{t('playtest.exile')}</span>
           </>
         )}
       </div>

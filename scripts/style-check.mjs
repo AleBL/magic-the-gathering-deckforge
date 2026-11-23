@@ -55,6 +55,10 @@ const SIGNALS = {
     pattern: /\buppercase\b/g,
     why: 'labels set in capitals'
   },
+  jsUppercase: {
+    pattern: /\bt\([^)]*\)\.toUpperCase\(\)/g,
+    why: 'translated labels forced into capitals in code'
+  },
   wideTracking: {
     pattern: /\btracking-(?:wide|wider|widest)\b/g,
     why: 'tracked capitals'

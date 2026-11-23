@@ -128,14 +128,14 @@ export function DeckStackPlaymatCard({
         {isBanned ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
             <LuBan className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.banned').toUpperCase()}</span>
+            <span>{t('cardDetails.banned')}</span>
           </div>
         ) : null}
 
         {isRestricted ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
             <LuTriangleAlert className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.restricted').toUpperCase()}</span>
+            <span>{t('cardDetails.restricted')}</span>
           </div>
         ) : null}
 
@@ -145,7 +145,7 @@ export function DeckStackPlaymatCard({
             title={t('cardDetails.invalidInFormatHint')}
           >
             <LuCircleX className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.invalidInFormat').toUpperCase()}</span>
+            <span>{t('cardDetails.invalidInFormat')}</span>
           </div>
         ) : null}
 
