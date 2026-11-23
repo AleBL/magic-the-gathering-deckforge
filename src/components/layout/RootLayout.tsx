@@ -1,4 +1,6 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { APP_EVENTS, onAppEvent } from '../../constants/appEvents';
+import LifeCounter from '../table/LifeCounter';
 import { useTranslation } from 'react-i18next';
 import { LuLayers, LuPackageOpen, LuSearch } from 'react-icons/lu';
 import { AppTab } from '../../types';
@@ -64,9 +66,13 @@ export default function RootLayout({
   const currentDeckLength = useDeckStore((state) => state.currentDeck.length);
   const editingDeck = useDeckStore((state) => state.editingDeck);
   const cancelEdit = useDeckStore((state) => state.cancelEdit);
+  const [isLifeCounterOpen, setIsLifeCounterOpen] = useState(false);
+
+  useEffect(() => onAppEvent(APP_EVENTS.openLifeCounter, () => setIsLifeCounterOpen(true)), []);
 
   return (
     <div className="page-container">
+      {isLifeCounterOpen ? <LifeCounter onClose={() => setIsLifeCounterOpen(false)} /> : null}
       {!isOnline && <OfflineIndicator />}
       <Header
         activeTab={activeTab}

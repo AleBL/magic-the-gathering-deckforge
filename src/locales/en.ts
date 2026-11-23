@@ -622,6 +622,33 @@ const en = {
       onlyIn: 'Only in {{name}}',
       differentCounts: 'Different counts'
     },
+    lifeCounter: {
+      title: 'Life counter',
+      players: 'Players',
+      startingLife: 'Starting life',
+      newGame: 'New game',
+      out: 'Out',
+      playerName: 'Player {{number}}',
+      playerCount_one: '{{count}} player',
+      playerCount_other: '{{count}} players',
+      lifeOption: '{{life}} life',
+      loseLife: '{{name}} loses 1 life',
+      gainLife: '{{name}} gains 1 life',
+      poison: 'Poison',
+      energy: 'Energy',
+      commanderFrom: 'From {{name}}',
+      addCommanderDamage: '{{name}} takes 1 commander damage from {{source}}',
+      removeCommanderDamage: 'Remove 1 commander damage from {{source}} for {{name}}',
+      noWakeLock: 'This browser cannot keep the screen on; change the screen timeout if it dims',
+      add: {
+        poison: 'Add poison to {{name}}',
+        energy: 'Add energy to {{name}}'
+      },
+      remove: {
+        poison: 'Remove poison from {{name}}',
+        energy: 'Remove energy from {{name}}'
+      }
+    },
     deckDoctor: {
       pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',

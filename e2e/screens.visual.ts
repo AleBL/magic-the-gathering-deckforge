@@ -67,7 +67,7 @@ async function capture(page: Page, mode: string, name: string) {
 }
 
 async function restoreSeed(page: Page) {
-  await page.getByRole('button', { name: 'Profile & Settings' }).click();
+  await page.getByRole('button', { name: 'Profile & settings' }).click();
   await page.getByRole('menuitem', { name: 'Backup' }).click();
   await page.getByRole('menu').locator('input[type="file"]').setInputFiles(SEED);
   await page.getByRole('button', { name: 'Replace everything' }).click();
@@ -147,7 +147,7 @@ test.describe('visual baseline', () => {
       await page.reload();
 
       await step(page, 'profile menu', async () => {
-        await page.getByRole('button', { name: 'Profile & Settings' }).click();
+        await page.getByRole('button', { name: 'Profile & settings' }).click();
         await capture(page, mode.name, '05-profile-menu');
         await page.keyboard.press('Escape');
       });
@@ -215,6 +215,13 @@ test.describe('visual baseline', () => {
         await page.keyboard.press('Shift+Slash');
         await page.waitForTimeout(300);
         await capture(page, mode.name, '12-shortcuts');
+        await page.keyboard.press('Escape');
+      });
+
+      await step(page, 'life counter', async () => {
+        await page.getByRole('button', { name: 'Profile & settings' }).click();
+        await page.getByRole('menuitem', { name: 'Life counter' }).click();
+        await capture(page, mode.name, '13-life-counter');
         await page.keyboard.press('Escape');
       });
 

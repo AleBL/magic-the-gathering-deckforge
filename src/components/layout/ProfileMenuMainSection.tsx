@@ -10,7 +10,8 @@ import {
   LuShield,
   LuSun,
   LuUser,
-  LuWandSparkles
+  LuWandSparkles,
+  LuSwords
 } from 'react-icons/lu';
 import { APP_VERSION, APP_NAME } from '../../constants';
 import { ProfileMenuLanguageOption } from './profileMenuLanguages';
@@ -27,6 +28,7 @@ interface ProfileMenuMainSectionProps {
   readonly onOpenBackup: () => void;
   readonly onOpenAbout: () => void;
   readonly onOpenHelp: () => void;
+  readonly onOpenLifeCounter: () => void;
 }
 
 /** The profile menu's landing list: theme/effects toggles and links into the other sections. */
@@ -41,7 +43,8 @@ export function ProfileMenuMainSection({
   onOpenLanguage,
   onOpenBackup,
   onOpenAbout,
-  onOpenHelp
+  onOpenHelp,
+  onOpenLifeCounter
 }: ProfileMenuMainSectionProps) {
   const { t } = useTranslation();
 
@@ -96,7 +99,7 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenLanguage} role="menuitem">
         <div className="flex items-center gap-2">
-          <LuEarth className="text-accent text-sm shrink-0" />
+          <LuEarth className="text-fg-muted text-sm shrink-0" />
           <span>{t('common.language')}</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -109,7 +112,7 @@ export function ProfileMenuMainSection({
       {canInstall ? (
         <button type="button" className="profile-menu-item" onClick={onInstall} role="menuitem">
           <div className="flex items-center gap-2">
-            <LuDownload className="text-accent text-sm shrink-0" />
+            <LuDownload className="text-fg-muted text-sm shrink-0" />
             <span>{t('common.installApp')}</span>
           </div>
         </button>
@@ -119,7 +122,7 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenBackup} role="menuitem">
         <div className="flex items-center gap-2">
-          <LuShield className="text-accent text-sm shrink-0" />
+          <LuShield className="text-fg-muted text-sm shrink-0" />
           <span>{t('backup.title')}</span>
         </div>
         <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
@@ -127,17 +130,24 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenAbout} role="menuitem">
         <div className="flex items-center gap-2">
-          <LuInfo className="text-accent text-sm shrink-0" />
+          <LuInfo className="text-fg-muted text-sm shrink-0" />
           <span>{t('strategy.aboutApp')}</span>
         </div>
         <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
+      </button>
+
+      <button type="button" className="profile-menu-item" onClick={onOpenLifeCounter} role="menuitem">
+        <div className="flex items-center gap-2">
+          <LuSwords className="text-fg-muted text-sm shrink-0" />
+          <span>{t('lifeCounter.title')}</span>
+        </div>
       </button>
 
       {/* Keyboard-shortcuts reference — hidden below sm: no physical
           keyboard on phone-width screens, so the shortcuts are unusable there. */}
       <button type="button" className="profile-menu-item hidden sm:flex" onClick={onOpenHelp} role="menuitem">
         <div className="flex items-center gap-2">
-          <LuKeyboard className="text-success text-sm shrink-0" />
+          <LuKeyboard className="text-fg-muted text-sm shrink-0" />
           <span>{t('common.help')}</span>
         </div>
         <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
