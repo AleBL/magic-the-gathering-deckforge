@@ -321,6 +321,17 @@ const es = {
       draftNotSaved: 'Aún no guardado como mazo'
     },
     collection: {
+      quickAddLabel: 'Agregar por set y número',
+      quickAddPlaceholder: 'mh3 123',
+      quickAddButton: 'Agregar',
+      quickAddAdding: 'Agregando…',
+      quickAddHint:
+        'Código del set y número de coleccionista, como en la carta. Agrega una cantidad como 4 mh3 123; Shift+Enter para más líneas.',
+      quickAddNothing: 'Escribe un código de set y un número, como mh3 123',
+      quickAddDone_one: '{{count}} carta agregada',
+      quickAddDone_other: '{{count}} cartas agregadas',
+      quickAddPartial_one: '{{count}} carta agregada. No encontradas: {{missing}}',
+      quickAddPartial_other: '{{count}} cartas agregadas. No encontradas: {{missing}}',
       title: 'Mi colección',
       tab: 'Colección',
       owned: 'Tengo',

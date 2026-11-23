@@ -320,6 +320,17 @@ const en = {
       draftNotSaved: 'Not saved as a deck yet'
     },
     collection: {
+      quickAddLabel: 'Add by set and number',
+      quickAddPlaceholder: 'mh3 123',
+      quickAddButton: 'Add',
+      quickAddAdding: 'Adding…',
+      quickAddHint:
+        'Set code and collector number, as printed on the card. Add a count like 4 mh3 123; Shift+Enter for more lines.',
+      quickAddNothing: 'Type a set code and a collector number, like mh3 123',
+      quickAddDone_one: 'Added {{count}} card',
+      quickAddDone_other: 'Added {{count}} cards',
+      quickAddPartial_one: 'Added {{count}} card. Not found: {{missing}}',
+      quickAddPartial_other: 'Added {{count}} cards. Not found: {{missing}}',
       title: 'My collection',
       tab: 'Collection',
       owned: 'Owned',

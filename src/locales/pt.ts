@@ -320,6 +320,17 @@ const pt = {
       draftNotSaved: 'Ainda não salvo como deck'
     },
     collection: {
+      quickAddLabel: 'Adicionar por coleção e número',
+      quickAddPlaceholder: 'mh3 123',
+      quickAddButton: 'Adicionar',
+      quickAddAdding: 'Adicionando…',
+      quickAddHint:
+        'Código da coleção e número de colecionador, como impresso na carta. Informe a quantidade como 4 mh3 123; Shift+Enter para mais linhas.',
+      quickAddNothing: 'Digite um código de coleção e um número, como mh3 123',
+      quickAddDone_one: '{{count}} carta adicionada',
+      quickAddDone_other: '{{count}} cartas adicionadas',
+      quickAddPartial_one: '{{count}} carta adicionada. Não encontradas: {{missing}}',
+      quickAddPartial_other: '{{count}} cartas adicionadas. Não encontradas: {{missing}}',
       title: 'Minha coleção',
       tab: 'Coleção',
       owned: 'Tenho',

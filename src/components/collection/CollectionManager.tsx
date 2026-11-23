@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState, ChangeEvent } from 'react';
+import CollectionQuickAdd from './CollectionQuickAdd';
 import { useTranslation } from 'react-i18next';
 import {
   LuChevronUp,
@@ -268,6 +269,8 @@ function CollectionManager() {
               block, and the binder wants that height for pockets. */}
           <div id="collection-tools" className={areToolsOpen ? 'flex flex-col gap-4' : 'hidden'}>
             <CollectionSummaryBar summary={summary} currency={currency} onCurrencyChange={setCurrency} view={view} />
+
+            {view === 'owned' ? <CollectionQuickAdd /> : null}
 
             <div className="flex flex-col gap-3 p-3 rounded-2xl bg-surface-1/60 border border-line">
               {/* Mirrors the search tab exactly: the colour/type quick filters on their own row
