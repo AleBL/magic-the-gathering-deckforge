@@ -37,6 +37,7 @@ export interface DeckListProps {
   onNewFromDeck: (deck: Deck) => void;
   onDeleteDeck: (deck: Deck) => void;
   onChangeCover: (deck: Deck) => void;
+  onCompareDeck?: (deck: Deck) => void;
   /** `column` for the 300px sidebar lane; `grid` for the all-decks modal. */
   layout?: 'column' | 'grid';
   /** The modal supplies its own dialog title, so the list's heading would repeat it. */
@@ -55,6 +56,7 @@ function DeckList({
   onNewFromDeck,
   onDeleteDeck,
   onChangeCover,
+  onCompareDeck,
   layout = 'column',
   hideHeading = false
 }: DeckListProps) {
@@ -141,6 +143,7 @@ function DeckList({
               onNewFrom={onNewFromDeck}
               onDelete={onDeleteDeck}
               onChangeCover={onChangeCover}
+              onCompare={decks.length > 1 ? onCompareDeck : undefined}
             />
           ))
         )}
