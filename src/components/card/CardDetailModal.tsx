@@ -40,6 +40,7 @@ import { CardDetailActions } from './CardDetailActions';
 import { CardDetailData } from './CardDetailData';
 import { CardDetailEditControls } from './CardDetailEditControls';
 import { CardDetailRelatedTokens } from './CardDetailRelatedTokens';
+import { CardDetailRulings } from './CardDetailRulings';
 
 /** Scryfall layouts whose faces are printed on one physical side (never flip). */
 const SAME_SIDE_LAYOUTS = new Set(['split', 'aftermath', 'flip', 'adventure']);
@@ -330,6 +331,8 @@ function CardDetailModal({
 
               {/* Related tokens section */}
               <CardDetailRelatedTokens relatedTokens={relatedTokens} onCardClick={setSelectedToken} />
+
+              {!isToken ? <CardDetailRulings cardId={card.id} oracleId={card.oracle_id} /> : null}
 
               {/* Edit and Copy controls for Deck Cards */}
               <div className="w-full mt-auto">
