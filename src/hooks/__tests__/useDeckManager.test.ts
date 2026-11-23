@@ -445,7 +445,7 @@ describe('useDeckManager', () => {
     // Scryfall's own failures have to arrive as themselves: "the deck could not be imported"
     // over a rate limit sends the user back to a file that was never the problem.
     it.each([
-      ['ScryfallOffline', 'search.scryfallOffline'],
+      ['ScryfallOffline', 'search.scryfallUnavailable'],
       ['ScryfallRateLimited', 'search.rateLimited'],
       ['Scryfall API error', 'deck.importError']
     ])('reports a %s from the card lookup under its own message', async (thrown, messageKey) => {

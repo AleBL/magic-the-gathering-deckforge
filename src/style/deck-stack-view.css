@@ -59,7 +59,7 @@
 }
 
 .deck-stack-empty-zone {
-  @apply text-xs text-fg-muted italic py-4 text-left;
+  @apply text-sm text-fg-muted py-4 text-left;
 }
 
 .deck-stack-cards-row {

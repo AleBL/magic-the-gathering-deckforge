@@ -71,7 +71,7 @@ test.describe('offline', () => {
 
     // Deliberately not `offline|No cards found`: the empty state is the failure this test
     // exists to catch, so tolerating it would make the assertion unfalsifiable.
-    await expect(appPage.getByText(/Scryfall is currently offline/)).toBeVisible({ timeout: 20_000 });
+    await expect(appPage.getByText(/No connection\. Check your internet/)).toBeVisible({ timeout: 20_000 });
     await expect(appPage.getByText('No cards found')).toHaveCount(0);
   });
 
@@ -105,7 +105,7 @@ test.describe('offline', () => {
     await expect(appPage.getByRole('dialog')).toBeVisible();
     // Not a toast: the message sits where the editions button would have been, because an
     // absent control is exactly what reads as "this card has only one printing".
-    await expect(appPage.getByText('Failed to load other printings.')).toBeVisible({ timeout: 20_000 });
+    await expect(appPage.getByText('Failed to load other printings')).toBeVisible({ timeout: 20_000 });
   });
 
   test('a text import that cannot resolve cards reports it', async ({ appPage }) => {
@@ -126,7 +126,7 @@ test.describe('offline', () => {
 
     // Specifically not "check the names": offline, no name was ever looked up.
     // Shown twice — inline in the dialog and in the error dialog it raises.
-    await expect(appPage.getByText(/Scryfall is currently offline/).first()).toBeVisible({ timeout: 20_000 });
+    await expect(appPage.getByText(/No connection\. Check your internet/).first()).toBeVisible({ timeout: 20_000 });
     await expect(appPage.getByText(/check the names/)).toHaveCount(0);
   });
 
@@ -147,8 +147,8 @@ test.describe('offline', () => {
     await dialog.getByRole('textbox').first().fill('goblin');
     await dialog.getByRole('button', { name: 'Search', exact: true }).click();
 
-    await expect(dialog.getByText(/Scryfall is currently offline/)).toBeVisible({ timeout: 20_000 });
-    await expect(dialog.getByText('No tokens found with this name.')).toHaveCount(0);
+    await expect(dialog.getByText(/No connection\. Check your internet/)).toBeVisible({ timeout: 20_000 });
+    await expect(dialog.getByText('No tokens found with this name')).toHaveCount(0);
   });
 
   // Deck analysis resolves each generator's tokens over the network. With none reachable it
@@ -165,7 +165,7 @@ test.describe('offline', () => {
     await goOffline(appPage);
     await analyze.click();
 
-    await expect(appPage.getByRole('alert').getByText(/Scryfall is currently offline/)).toBeVisible({
+    await expect(appPage.getByRole('alert').getByText(/No connection\. Check your internet/)).toBeVisible({
       timeout: 20_000
     });
   });

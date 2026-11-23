@@ -188,7 +188,7 @@ export function PlaytestHand() {
 
       <div className="flex items-start justify-start min-h-[140px] p-2 pt-3 bg-surface-2 rounded-xl border border-line overflow-x-auto">
         {hand.length === 0 ? (
-          <p className="text-xs text-slate-600 italic py-4">{t('playtest.handEmpty')}</p>
+          <p className="text-sm text-fg-muted py-4">{t('playtest.handEmpty')}</p>
         ) : (
           <div className="flex flex-nowrap gap-3 items-start justify-start">
             {hand.map((playtestCard) => (

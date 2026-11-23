@@ -35,7 +35,7 @@ export function useImportProgressModal() {
   // imported" over a rate limit sends the user back to a file that was never the problem.
   const failFromScryfall = (error: unknown) => {
     if (error instanceof Error && error.message === 'ScryfallOffline') {
-      failImport('search.scryfallOffline');
+      failImport('search.scryfallUnavailable');
     } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
       failImport('search.rateLimited');
     } else {

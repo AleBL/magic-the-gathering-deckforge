@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
+import { APP_EVENTS, emitAppEvent } from '../../constants/appEvents';
 import { useTranslation } from 'react-i18next';
 import { LuLayers } from 'react-icons/lu';
 import { Card } from '../../types/Card';
@@ -305,11 +306,16 @@ function DeckPreview({
           action={{
             label: t('search.searchForCards'),
             onClick: () => {
-              // In the two-pane editor the search is already on screen — just
-              // focus it rather than switching to the standalone search tab.
-              dispatchPendingAction('focus-search');
+              // In the two-pane editor the search is already on screen, so focus it there.
+              // Outside it there is no search pane to focus: go to the search tab instead.
+              if (editingDeckId) dispatchPendingAction('focus-search');
+              else emitAppEvent(APP_EVENTS.navigateTab, 'search');
             }
           }}
+          secondaryActions={[
+            { label: t('deck.importDeck'), onClick: () => dispatchPendingAction('import-deck-text') },
+            { label: t('deck.trySampleDeck'), onClick: () => dispatchPendingAction('import-sample-deck') }
+          ]}
         />
       ) : (
         // Only the working deck's cards can be removed from here.

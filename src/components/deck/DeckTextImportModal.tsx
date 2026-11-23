@@ -8,11 +8,20 @@ interface DeckTextImportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onImport: (text: string) => void;
+  /** Pre-fills the list when the modal opens, e.g. with the sample deck. */
+  initialText?: string;
   isImporting: boolean;
   errorMsg: string | null;
 }
 
-function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg }: DeckTextImportModalProps) {
+function DeckTextImportModal({
+  isOpen,
+  onClose,
+  onImport,
+  isImporting,
+  errorMsg,
+  initialText = ''
+}: DeckTextImportModalProps) {
   const { t } = useTranslation();
   const [textDeckList, setTextDeckList] = useState('');
   // Mounted even while closed (it renders null), so both are gated on isOpen.
@@ -20,10 +29,8 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
   useEscapeKey(onClose, isOpen);
 
   useEffect(() => {
-    if (!isOpen) {
-      setTextDeckList('');
-    }
-  }, [isOpen]);
+    setTextDeckList(isOpen ? initialText : '');
+  }, [isOpen, initialText]);
 
   if (!isOpen) return null;
 

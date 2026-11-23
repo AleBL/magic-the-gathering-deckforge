@@ -83,6 +83,7 @@ export type PendingAction =
   | 'export-deck'
   | 'export-all-decks'
   | 'import-deck-text'
+  | 'import-sample-deck'
   | 'import-deck-file'
   | 'edit-selected-deck'
   | 'show-saved-decks'
