@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaInfoCircle, FaEllipsisH } from 'react-icons/fa';
+import { LuEllipsis, LuInfo } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
 import { PlaytestCard, PlaytestDragData } from '../../types/Playtest';
-import { PLAYTEST_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
+import { PLAYTEST_HAND_CARD_SIZE_CLASSES, PLAYTEST_CONTEXT_MENU_EDGE_MARGIN_PX } from '../../constants';
 import { clampMenuYToViewport } from '../../utils/contextMenuPosition';
 
 const PlaytestHandCard = memo(
@@ -62,7 +62,7 @@ const PlaytestHandCard = memo(
             (event.currentTarget as HTMLElement).style.opacity = '1';
           }}
           onContextMenu={(event) => onContextMenu(event, playtestId)}
-          className={`relative ${PLAYTEST_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-all duration-300 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-amber-400' : 'hover:-translate-y-4 hover:scale-105 hover:border-indigo-500'} ${isSelected ? 'border-amber-500 ring-2 ring-amber-500/50 scale-95 opacity-80' : 'border-slate-300 dark:border-slate-800'}`}
+          className={`relative ${PLAYTEST_HAND_CARD_SIZE_CLASSES} rounded-xl overflow-hidden shadow-lg border bg-slate-900 transition-[transform,border-color] duration-150 select-none cursor-pointer ${isMulliganPhase ? 'hover:border-warning' : 'hover:-translate-y-0.5 hover:border-accent'} ${isSelected ? 'border-warning ring-2 ring-warning/40 scale-95 opacity-80' : 'border-line-strong '}`}
         >
           {imageUrl ? (
             <img
@@ -73,10 +73,10 @@ const PlaytestHandCard = memo(
             />
           ) : (
             <div className="w-full h-full p-2 flex flex-col justify-between text-left bg-slate-800">
-              <span className="text-[11px] font-black text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
+              <span className="text-[11px] font-semibold text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
                 {card.printed_name || card.name}
               </span>
-              <span className="text-[9px] font-bold text-slate-400 capitalize">
+              <span className="text-[9px] font-semibold text-slate-400 capitalize">
                 {t(`search.${card.rarity}`, { defaultValue: card.rarity })}
               </span>
             </div>
@@ -84,10 +84,10 @@ const PlaytestHandCard = memo(
 
           {isMulliganPhase ? (
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500/20' : 'bg-black/10 hover:bg-black/0'}`}
+              className={`absolute inset-0 flex items-center justify-center transition ${isSelected ? 'bg-warning-soft' : 'bg-black/10 hover:bg-black/0'}`}
             >
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border ${isSelected ? 'bg-amber-500 border-warning text-slate-950 animate-pulse' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-semibold text-xs border ${isSelected ? 'bg-warning border-warning text-slate-950' : 'bg-slate-900/80 border-slate-700 text-slate-400'}`}
               >
                 {isSelected ? '✓' : ''}
               </div>
@@ -104,9 +104,9 @@ const PlaytestHandCard = memo(
                 onShowDetails(card);
               }}
               title={t('cardDetails.viewCardDetails')}
-              className="touch-hitarea absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/30 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
+              className="touch-hitarea absolute -top-3 -left-2.5 sm:-top-2.5 sm:-left-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-accent hover:border-line-strong opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
-              <FaInfoCircle />
+              <LuInfo />
             </button>
             <button
               type="button"
@@ -117,7 +117,7 @@ const PlaytestHandCard = memo(
               title={t('common.moreActions')}
               className="touch-hitarea absolute -top-3 -right-2.5 sm:-top-2.5 sm:-right-2 w-7 h-7 sm:w-5.5 sm:h-5.5 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 shadow-lg text-slate-400 hover:text-slate-200 hover:border-slate-600 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-20 text-[9px] sm:text-[8px] cursor-pointer"
             >
-              <FaEllipsisH />
+              <LuEllipsis />
             </button>
           </>
         ) : null}
@@ -153,10 +153,10 @@ export function PlaytestHand() {
 
   return (
     <div
-      className={`border rounded-2xl p-3 sm:p-4 transition-all duration-300 ${
+      className={`shrink-0 border rounded-2xl p-3 transition-colors duration-150 ${
         dragOverZone === 'hand'
-          ? 'border-2 border-dashed border-emerald-400 bg-emerald-500/5 shadow-lg ring-2 ring-emerald-400/30'
-          : 'border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/10'
+          ? 'border-2 border-dashed border-success bg-success-soft shadow-lg ring-2 ring-success/40'
+          : 'border-line bg-surface-1 '
       }`}
       onDragOver={(event) => {
         event.preventDefault();
@@ -175,22 +175,22 @@ export function PlaytestHand() {
         }
       }}
     >
-      <div className="flex items-center justify-between mb-2 sm:mb-3 text-[10px] sm:text-xs uppercase font-extrabold tracking-widest text-slate-500 select-none">
+      <div className="flex items-center justify-between mb-2 sm:mb-3 text-[11px] sm:text-xs font-semibold text-slate-500 select-none">
         <span>
           {t('playtest.hand')} ({hand.length})
         </span>
         {!isMulliganPhase && hand.length > 0 ? (
-          <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-600 normal-case font-normal">
+          <span className="text-[9px] sm:text-[10px] text-fg-muted normal-case font-normal">
             {t('playtest.clickCardHint')}
           </span>
         ) : null}
       </div>
 
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-start justify-start min-h-[140px] sm:min-h-[170px] p-2 bg-slate-50 dark:bg-slate-950/15 rounded-xl border border-slate-200 dark:border-slate-900/30">
+      <div className="flex items-start justify-start min-h-[140px] p-2 pt-3 bg-surface-2 rounded-xl border border-line overflow-x-auto">
         {hand.length === 0 ? (
-          <p className="text-xs text-slate-600 italic py-4">{t('playtest.handEmpty')}</p>
+          <p className="text-sm text-fg-muted py-4">{t('playtest.handEmpty')}</p>
         ) : (
-          <div className="flex flex-wrap gap-4 items-start justify-start w-full">
+          <div className="flex flex-nowrap gap-3 items-start justify-start">
             {hand.map((playtestCard) => (
               <PlaytestHandCard
                 key={playtestCard.playtestId}

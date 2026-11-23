@@ -1,9 +1,10 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { APP_EVENTS, onAppEvent } from '../../constants/appEvents';
+import LifeCounter from '../table/LifeCounter';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup, FaBoxOpen } from 'react-icons/fa';
+import { LuLayers, LuPackageOpen, LuSearch } from 'react-icons/lu';
 import { AppTab } from '../../types';
 import Header from './Header';
-import AmbientGlow from '../ui/AmbientGlow';
 import OfflineIndicator from '../ui/OfflineIndicator';
 import Toast from '../ui/Toast';
 import CustomDialog from '../ui/CustomDialog';
@@ -65,10 +66,13 @@ export default function RootLayout({
   const currentDeckLength = useDeckStore((state) => state.currentDeck.length);
   const editingDeck = useDeckStore((state) => state.editingDeck);
   const cancelEdit = useDeckStore((state) => state.cancelEdit);
+  const [isLifeCounterOpen, setIsLifeCounterOpen] = useState(false);
+
+  useEffect(() => onAppEvent(APP_EVENTS.openLifeCounter, () => setIsLifeCounterOpen(true)), []);
 
   return (
     <div className="page-container">
-      <AmbientGlow />
+      {isLifeCounterOpen ? <LifeCounter onClose={() => setIsLifeCounterOpen(false)} /> : null}
       {!isOnline && <OfflineIndicator />}
       <Header
         activeTab={activeTab}
@@ -90,7 +94,7 @@ export default function RootLayout({
           aria-label={t('common.searchTab')}
           aria-current={activeTab === 'search' ? 'page' : undefined}
         >
-          <FaSearch className="bottom-tab-button-icon" />
+          <LuSearch className="bottom-tab-button-icon" />
           <span>{t('common.searchTab')}</span>
         </button>
         <button
@@ -100,7 +104,7 @@ export default function RootLayout({
           aria-label={t('common.decksTab')}
           aria-current={activeTab === 'deck' ? 'page' : undefined}
         >
-          <FaLayerGroup className="bottom-tab-button-icon" />
+          <LuLayers className="bottom-tab-button-icon" />
           <span>{t('common.decksTab')}</span>
           {currentDeckLength > 0 && (
             <span className="count-badge absolute top-1 right-[calc(50%-22px)]">{currentDeckLength}</span>
@@ -113,7 +117,7 @@ export default function RootLayout({
           aria-label={t('collection.title')}
           aria-current={activeTab === 'collection' ? 'page' : undefined}
         >
-          <FaBoxOpen className="bottom-tab-button-icon" />
+          <LuPackageOpen className="bottom-tab-button-icon" />
           <span>{t('collection.tab')}</span>
         </button>
       </nav>

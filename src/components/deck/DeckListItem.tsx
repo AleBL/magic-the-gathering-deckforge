@@ -1,13 +1,29 @@
-import { memo, useState, useRef, useEffect } from 'react';
+import { memo, useState, useRef, useEffect, useMemo, type MouseEvent as ReactMouseEvent } from 'react';
 import { useDropDirection } from '../../hooks/useDropDirection';
 import { useTranslation } from 'react-i18next';
-import { FaEdit, FaDownload, FaTrash, FaEllipsisV, FaClone, FaPlus, FaLayerGroup, FaImage } from 'react-icons/fa';
+import {
+  LuCopyPlus,
+  LuDownload,
+  LuEllipsis,
+  LuGitCompareArrows,
+  LuImage,
+  LuLayers,
+  LuPlus,
+  LuSquarePen,
+  LuTag,
+  LuTrash2
+} from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
 import { formatLabelKey } from '../../utils/formatLabel';
 import { resolveDeckCoverArt } from '../../utils/deckCover';
+import { getSymbolUrl } from '../../utils/symbolHelper';
 import DeckValidationBadge from './DeckValidationBadge';
+
+const COLOR_ORDER = ['W', 'U', 'B', 'R', 'G'];
+const MENU_ITEM =
+  'w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2 hover:text-fg';
 
 interface DeckListItemProps {
   deck: Deck;
@@ -29,6 +45,8 @@ interface DeckListItemProps {
   onNewFrom: (deck: Deck) => void;
   onDelete: (deck: Deck) => void;
   onChangeCover: (deck: Deck) => void;
+  onCompare?: (deck: Deck) => void;
+  onEditTags?: (deck: Deck) => void;
 }
 
 export const DeckListItem = memo(function DeckListItem({
@@ -42,7 +60,9 @@ export const DeckListItem = memo(function DeckListItem({
   onDuplicate,
   onNewFrom,
   onDelete,
-  onChangeCover
+  onChangeCover,
+  onCompare,
+  onEditTags
 }: DeckListItemProps) {
   const { t } = useTranslation();
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -85,6 +105,19 @@ export const DeckListItem = memo(function DeckListItem({
 
   const validation = validateDeck(deck.cards, deck.format || DeckFormatType.FREEFORM);
   const coverArt = resolveDeckCoverArt(deck);
+  const identity = useMemo(
+    () =>
+      COLOR_ORDER.filter((color) =>
+        deck.cards.some((card) => (card.color_identity ?? card.colors ?? []).includes(color))
+      ),
+    [deck.cards]
+  );
+
+  const runFromMenu = (action: () => void) => (event: ReactMouseEvent) => {
+    event.stopPropagation();
+    setShowExportMenu(false);
+    action();
+  };
 
   return (
     <div
@@ -101,162 +134,133 @@ export const DeckListItem = memo(function DeckListItem({
           else onSelect(deck);
         }
       }}
-      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
+      className={`deck-box cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-focus ${isSelected ? 'deck-box-active' : 'deck-box-inactive'} ${showExportMenu ? 'z-50' : 'z-0'}`}
     >
-      {/*
-        Below lg the list sits above the deck in page flow, so a cover per deck turns choosing
-        one into a long scroll past pictures — the art is dropped there and each deck is a
-        compact row. From lg up it is a sidebar and the cover returns as the deck-box identity.
+      {/* A small crop of the cover keeps each deck recognisable while the whole library fits
+          on screen; below lg the row drops it and stays text only. */}
+      <div className="deck-box-art hidden lg:block">
+        {coverArt ? (
+          <img src={coverArt} alt="" loading="lazy" className="deck-box-art-image" />
+        ) : (
+          <div className="deck-box-art-placeholder">
+            <LuLayers />
+          </div>
+        )}
+      </div>
 
-        The title is rendered once and repositioned, not duplicated: two copies put the deck
-        name in the accessible name twice and left tests matching a hidden node.
-      */}
-      <div className="relative">
-        <div className="deck-box-art hidden lg:block">
-          {coverArt ? (
-            <img src={coverArt} alt="" loading="lazy" className="deck-box-art-image" />
-          ) : (
-            <div className="deck-box-art-placeholder">
-              <FaLayerGroup />
-            </div>
-          )}
-          <div className="deck-box-art-scrim" />
-        </div>
-        <div className="deck-box-title-row-compact">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
           <p className="deck-box-title-compact">{deck.name}</p>
           {isEditing && <span className="deck-list-item-editing-badge" title={t('deck.editingDeck')} />}
         </div>
-      </div>
-
-      <div className="deck-box-footer">
         <div className="deck-list-item-meta pointer-events-none">
-          <span
-            className={`text-xs ${isSelected ? 'text-blue-700 dark:text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}
-          >
-            {deck.cards.length} {t('common.cards')}
-          </span>
-          <span
-            className={`format-badge deck-list-item-format-badge ${isSelected ? 'deck-list-item-format-badge-selected' : 'deck-list-item-format-badge-default'}`}
-          >
-            {t(formatLabelKey(deck.format))}
-          </span>
+          {identity.length > 0 && (
+            <span className="flex shrink-0 items-center gap-0.5" aria-label={identity.join('')}>
+              {identity.map((color) => (
+                <img key={color} src={getSymbolUrl(`{${color}}`)} alt="" className="w-3.5 h-3.5" />
+              ))}
+            </span>
+          )}
+          <span className="min-w-0 truncate text-xs text-fg-secondary">{t(formatLabelKey(deck.format))}</span>
+          <span className="shrink-0 text-xs text-fg-muted">{deck.cards.length}</span>
           <DeckValidationBadge
             validation={validation}
             formatKey={deck.format || DeckFormatType.FREEFORM}
             variant="compact"
           />
+          {deck.tags?.length ? (
+            <span className="min-w-0 truncate text-xs text-fg-muted">{deck.tags.join(', ')}</span>
+          ) : null}
         </div>
+      </div>
 
-        <div className="deck-list-item-actions pointer-events-auto">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(
-                deck.id,
-                deck.name,
-                deck.format || DeckFormatType.FREEFORM,
-                deck.cards,
-                deck.notes,
-                deck.relatedTokens
-              );
-            }}
-            className={`button-small deck-list-action-btn bg-primary hover:bg-primary-hover text-white flex items-center justify-center min-w-[32px]`}
-            title={t('common.edit')}
-            aria-label={`${t('common.edit')} ${deck.name}`}
+      <div className="relative shrink-0 pointer-events-auto" ref={exportMenuRef}>
+        <button
+          ref={menuTriggerRef}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowExportMenu((open) => !open);
+          }}
+          aria-haspopup="menu"
+          aria-expanded={showExportMenu}
+          className="flex h-8 w-8 items-center justify-center rounded-md text-fg-muted hover:bg-surface-3 hover:text-fg transition-colors duration-150"
+          title={t('common.moreActions')}
+          aria-label={`${t('common.moreActions')} ${deck.name}`}
+        >
+          <LuEllipsis className="text-base" />
+        </button>
+        {showExportMenu ? (
+          <div
+            role="menu"
+            className={`absolute right-0 z-[var(--z-dropdown)] min-w-[200px] rounded-lg border border-line bg-surface-1 shadow-lg py-1 ${
+              dropDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
+            }`}
           >
-            <FaEdit className="text-sm" />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onExport(deck);
-            }}
-            className="button-small deck-list-action-btn bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center min-w-[32px]"
-            title={t('deck.export')}
-            aria-label={`${t('deck.export')} ${deck.name}`}
-          >
-            <FaDownload className="text-sm" />
-          </button>
-          <div className="relative" ref={exportMenuRef}>
             <button
-              ref={menuTriggerRef}
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowExportMenu((open) => !open);
-              }}
-              aria-haspopup="menu"
-              aria-expanded={showExportMenu}
-              className="button-small deck-list-action-btn bg-slate-500 hover:bg-slate-600 text-white flex items-center justify-center min-w-[32px]"
-              title={t('common.moreActions')}
-              aria-label={`${t('common.moreActions')} ${deck.name}`}
+              role="menuitem"
+              onClick={runFromMenu(() =>
+                onEdit(
+                  deck.id,
+                  deck.name,
+                  deck.format || DeckFormatType.FREEFORM,
+                  deck.cards,
+                  deck.notes,
+                  deck.relatedTokens
+                )
+              )}
+              className={MENU_ITEM}
             >
-              <FaEllipsisV className="text-sm" />
+              <LuSquarePen className="shrink-0" />
+              {t('common.edit')}
             </button>
-            {showExportMenu ? (
-              <div
-                role="menu"
-                className={`absolute right-0 z-[var(--z-dropdown)] min-w-[190px] rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg py-1 ${
-                  dropDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
-                }`}
-              >
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowExportMenu(false);
-                    onDuplicate(deck);
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FaClone className="text-xs shrink-0" />
-                  {t('deck.duplicateDeck')}
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowExportMenu(false);
-                    onNewFrom(deck);
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FaPlus className="text-xs shrink-0" />
-                  {t('deck.newDeckFromThis')}
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowExportMenu(false);
-                    onChangeCover(deck);
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FaImage className="text-xs shrink-0" />
-                  {t('deck.setCover')}
-                </button>
-              </div>
+            <button type="button" role="menuitem" onClick={runFromMenu(() => onExport(deck))} className={MENU_ITEM}>
+              <LuDownload className="shrink-0" />
+              {t('deck.export')}
+            </button>
+            <button type="button" role="menuitem" onClick={runFromMenu(() => onDuplicate(deck))} className={MENU_ITEM}>
+              <LuCopyPlus className="shrink-0" />
+              {t('deck.duplicateDeck')}
+            </button>
+            <button type="button" role="menuitem" onClick={runFromMenu(() => onNewFrom(deck))} className={MENU_ITEM}>
+              <LuPlus className="shrink-0" />
+              {t('deck.newDeckFromThis')}
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={runFromMenu(() => onChangeCover(deck))}
+              className={MENU_ITEM}
+            >
+              <LuImage className="shrink-0" />
+              {t('deck.setCover')}
+            </button>
+            {onEditTags ? (
+              <button type="button" role="menuitem" onClick={runFromMenu(() => onEditTags(deck))} className={MENU_ITEM}>
+                <LuTag className="shrink-0" />
+                {t('deckTags.edit')}
+              </button>
             ) : null}
+            {onCompare ? (
+              <button type="button" role="menuitem" onClick={runFromMenu(() => onCompare(deck))} className={MENU_ITEM}>
+                <LuGitCompareArrows className="shrink-0" />
+                {t('deckCompare.compareWith')}
+              </button>
+            ) : null}
+            {/* Destructive, so it sits apart at the end and asks for confirmation upstream. */}
+            <div className="my-1 h-px bg-line" role="separator" />
+            <button
+              type="button"
+              role="menuitem"
+              onClick={runFromMenu(() => onDelete(deck))}
+              className={`${MENU_ITEM} text-danger hover:text-danger`}
+            >
+              <LuTrash2 className="shrink-0" />
+              {t('deck.delete')}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(deck);
-            }}
-            className={`button-small deck-list-action-btn danger-button flex items-center justify-center min-w-[32px]`}
-            title={t('deck.delete')}
-            aria-label={`${t('deck.delete')} ${deck.name}`}
-          >
-            <FaTrash className="text-sm" />
-          </button>
-        </div>
+        ) : null}
       </div>
     </div>
   );

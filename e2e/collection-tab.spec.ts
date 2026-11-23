@@ -8,7 +8,7 @@ test.describe('collection tab', () => {
       stubCard({ name: 'Counterspell', id: 'counterspell' })
     ]);
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('a');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('a');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await expect(appPage.getByRole('button', { name: 'Lightning Bolt' })).toBeVisible();
     // Search only overlays the collection controls at the larger card sizes — at S/M

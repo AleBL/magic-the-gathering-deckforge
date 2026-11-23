@@ -36,10 +36,10 @@ describe('DeckStats', () => {
 
     const { getByText, queryByText, getAllByText } = render(<DeckStats currentDeck={deck} />);
 
-    // Tests run under the app's default locale, pt.
-    expect(getByText('Simulação Turno a Turno')).toBeTruthy();
-    expect(queryByText(/ao menos sete cartas/)).toBeNull();
-    expect(getByText('Taxa de mulligan')).toBeTruthy();
+    // Tests run in jsdom's en-US, which the app now follows on a first visit.
+    expect(getByText('Turn-by-turn simulation')).toBeTruthy();
+    expect(queryByText(/at least seven cards/)).toBeNull();
+    expect(getByText('Mulligan rate')).toBeTruthy();
     // A percentage actually rendered, rather than a panel that mounted empty.
     expect(getAllByText(/^\d+%$/).length).toBeGreaterThan(0);
   });

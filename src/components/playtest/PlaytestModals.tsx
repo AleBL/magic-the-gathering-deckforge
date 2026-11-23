@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaSkull, FaBan } from 'react-icons/fa';
+import { LuBan, LuSkull } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { PlaytestBattlefieldContextMenu } from './PlaytestBattlefieldContextMenu';
 import PileExplorerModal from './PileExplorerModal';
@@ -107,13 +107,13 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
               <div className="h-px bg-slate-800 my-1"></div>
               <button
                 type="button"
-                className="w-full text-left px-4 py-2 hover:bg-slate-800 text-sm text-red-400 font-medium transition-colors flex items-center gap-2 cursor-pointer"
+                className="w-full text-left px-4 py-2 hover:bg-slate-800 text-sm text-danger font-medium transition-colors flex items-center gap-2 cursor-pointer"
                 onClick={() => {
                   handleDiscardFromHand(contextMenu.playtestId);
                   setContextMenu(null);
                 }}
               >
-                <FaSkull className="text-xs" />
+                <LuSkull className="text-xs" />
                 {t('playtest.discardCard')}
               </button>
               <button
@@ -124,7 +124,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                   setContextMenu(null);
                 }}
               >
-                <FaBan className="text-xs" />
+                <LuBan className="text-xs" />
                 {t('playtest.moveToExile')}
               </button>
             </>
@@ -182,7 +182,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
             aria-labelledby="scry-surveil-prompt-title"
             className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
           >
-            <h3 id="scry-surveil-prompt-title" className="text-lg font-bold text-slate-200">
+            <h3 id="scry-surveil-prompt-title" className="text-lg font-semibold text-slate-200">
               {t('playtest.promptAmount', { action: t(`playtest.${scrySurveilPrompt.type}`) })}
             </h3>
             <form
@@ -202,7 +202,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                 type="number"
                 min="1"
                 defaultValue="1"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-focus"
               />
               <div className="flex gap-3 justify-end mt-2">
                 <button
@@ -214,7 +214,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-surface-3 hover:bg-surface-3 text-fg shadow-lg transition-colors cursor-pointer"
                 >
                   {t('common.confirm')}
                 </button>
@@ -234,7 +234,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
             aria-labelledby="position-prompt-title"
             className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 flex flex-col gap-4"
           >
-            <h3 id="position-prompt-title" className="text-lg font-bold text-slate-200">
+            <h3 id="position-prompt-title" className="text-lg font-semibold text-slate-200">
               {t('playtest.toLibraryPosition')}
             </h3>
             <p className="text-sm text-slate-400">{t('export.positionPrompt')}</p>
@@ -255,7 +255,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                 type="number"
                 min="1"
                 defaultValue="1"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-slate-200 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-focus"
               />
               <div className="flex gap-3 justify-end mt-2">
                 <button
@@ -267,7 +267,7 @@ export function PlaytestModals({ deckRelatedTokens }: { deckRelatedTokens: DeckR
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-surface-3 hover:bg-surface-3 text-fg shadow-lg transition-colors cursor-pointer"
                 >
                   {t('common.confirm')}
                 </button>

@@ -96,5 +96,7 @@ export interface Card {
   collector_number?: string;
   artist?: string;
   lang?: string;
+  /** Scryfall's scan state; `placeholder`/`missing` mean the printing shows a stand-in image. */
+  image_status?: string;
   isActive?: boolean;
 }

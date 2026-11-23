@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync, FaRedo } from 'react-icons/fa';
+import { LuRedo2, LuRefreshCw } from 'react-icons/lu';
 import { Card, CardFace } from '../../types/Card';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { CardFaceImages } from '../../utils/cardFaces';
@@ -101,7 +101,7 @@ export function CardDetailImagePanel({
               src={visibleImageUrl}
               alt={currentFace ? currentFace.name : card.name}
               style={isRotated ? { transform: 'rotate(90deg)' } : undefined}
-              className={`card-detail-image transition-all duration-300 ${
+              className={`card-detail-image transition duration-300 ${
                 isPreloading ? 'opacity-70 scale-[0.98] brightness-90' : 'opacity-100 scale-100'
               }`}
             />
@@ -115,11 +115,11 @@ export function CardDetailImagePanel({
             className="absolute top-4 left-4 z-20 p-3 rounded-full
               bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20
               text-white shadow-xl
-              transition-all duration-300 transform hover:scale-110 active:scale-95
+              transition duration-300 transform active:scale-95
               flex items-center justify-center opacity-80 hover:opacity-100"
             title={t('cardDetails.flipAction')}
           >
-            <FaSync
+            <LuRefreshCw
               className={`text-xl transition-transform duration-500 ${showBackFace ? '-rotate-180' : 'rotate-0'}`}
             />
           </button>
@@ -131,12 +131,12 @@ export function CardDetailImagePanel({
             className="absolute top-4 left-4 z-20 p-3 rounded-full
               bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20
               text-white shadow-xl
-              transition-all duration-300 transform hover:scale-110 active:scale-95
+              transition duration-300 transform active:scale-95
               flex items-center justify-center opacity-80 hover:opacity-100"
             title={t('cardDetails.rotateAction')}
             aria-pressed={isRotated}
           >
-            <FaRedo className="text-xl" />
+            <LuRedo2 className="text-xl" />
           </button>
         )}
 

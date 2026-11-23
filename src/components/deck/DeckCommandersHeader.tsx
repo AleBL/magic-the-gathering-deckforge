@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaPlus, FaMinus, FaTrash } from 'react-icons/fa';
+import { LuCrown, LuMinus, LuPlus, LuTrash2 } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { groupCardsByUnique } from '../../utils/deckGrouping';
@@ -40,14 +40,12 @@ function DeckCommandersHeader({
   if (commanders.length === 0) return null;
 
   const countBadge = (
-    <span className="text-xs bg-amber-200/50 dark:bg-amber-900/50 px-2 py-0.5 rounded-full text-amber-800 dark:text-amber-300">
-      {commanders.length}
-    </span>
+    <span className="text-xs bg-warning-soft px-2 py-0.5 rounded-full text-warning">{commanders.length}</span>
   );
 
   const header = (
-    <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-amber-255 dark:border-amber-900/50 pb-1.5 select-none">
-      <FaCrown className="text-amber-500 shrink-0 text-sm animate-pulse" />
+    <h4 className="text-sm font-semibold text-warning flex items-center gap-1.5 border-b border-warning/40 pb-1.5 select-none">
+      <LuCrown className="text-warning shrink-0 text-sm" />
       <span>{t('cardDetails.commanders')}</span>
       {countBadge}
     </h4>
@@ -55,7 +53,7 @@ function DeckCommandersHeader({
 
   if (viewMode === 'grid') {
     return (
-      <div className="space-y-3 mb-6 bg-amber-500/5 dark:bg-amber-950/10 p-4 rounded-xl border border-amber-300/40 dark:border-amber-900/40 shadow-sm">
+      <div className="space-y-3 mb-6 bg-warning-soft p-4 rounded-xl border border-warning/40 shadow-sm">
         {header}
         <CardGrid
           cards={commanders}
@@ -75,7 +73,7 @@ function DeckCommandersHeader({
   const uniqueCommanders = groupCardsByUnique(commanders);
 
   return (
-    <div className="space-y-2 mb-6 bg-amber-500/5 dark:bg-amber-950/10 p-4 rounded-xl border border-amber-300/40 dark:border-amber-900/40 shadow-sm text-left">
+    <div className="space-y-2 mb-6 bg-warning-soft p-4 rounded-xl border border-warning/40 shadow-sm text-left">
       {header}
       <div className="deck-list-compact">
         {uniqueCommanders.map(({ count, card }) => {
@@ -85,7 +83,7 @@ function DeckCommandersHeader({
                 role="button"
                 tabIndex={0}
                 aria-label={card.printed_name || card.name}
-                className="deck-list-row border-l-2 border-amber-400 group bg-amber-500/5 dark:bg-amber-950/5 hover:bg-amber-500/10 dark:hover:bg-amber-950/15"
+                className="deck-list-row border-l-2 border-warning group bg-warning-soft hover:bg-warning-soft"
                 onClick={() => onCardSelect(card)}
                 onKeyDown={(e) => {
                   if (e.target !== e.currentTarget) return;
@@ -99,14 +97,12 @@ function DeckCommandersHeader({
                 onMouseLeave={onHoverLeave}
               >
                 <div className="flex items-center min-w-0 pr-2">
-                  <span className="quantity-badge bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-900">
-                    {count}x
-                  </span>
-                  <span className="font-semibold truncate text-sm text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-blue-400 transition-colors">
+                  <span className="quantity-badge bg-warning-soft text-warning border-warning/40">{count}x</span>
+                  <span className="font-semibold truncate text-sm text-fg hover:text-accent transition-colors">
                     {card.printed_name || card.name}
                   </span>
-                  <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 shrink-0 shadow-sm animate-pulse">
-                    <FaCrown className="text-amber-500 dark:text-amber-400 shrink-0 text-[10px]" />
+                  <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-warning-soft text-warning border border-warning/40 shrink-0 shadow-sm">
+                    <LuCrown className="text-warning shrink-0 text-[10px]" />
                     {t('cardDetails.commanderBadge')}
                   </span>
                 </div>
@@ -126,28 +122,28 @@ function DeckCommandersHeader({
                       <button
                         type="button"
                         onClick={() => onToggleCommander(card)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-100 dark:bg-amber-900/50 border border-amber-350 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-500 hover:text-white transition-all shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-warning-soft border border-warning text-warning hover:bg-warning hover:text-on-warning transition shadow-sm"
                         title={t('cardDetails.removeAsCommander')}
                       >
-                        <FaCrown className="text-[10px]" />
+                        <LuCrown className="text-[10px]" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => onAddToDeck(card)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-green-50 dark:bg-green-950/60 border border-green-300 dark:border-green-900/60 text-success dark:text-green-400 hover:bg-green-500 hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-success-soft border border-success/40 text-success dark:text-success hover:bg-success hover:text-on-success transition font-semibold shadow-sm"
                         title={t('cardDetails.addCopy')}
                       >
-                        <FaPlus className="text-[8px]" />
+                        <LuPlus className="text-[8px]" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => onRemoveFromDeck(card)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-900/60 text-warning dark:text-amber-400 hover:bg-amber-500 hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-warning-soft border border-warning/40 text-warning dark:text-warning hover:bg-warning hover:text-on-warning transition font-semibold shadow-sm"
                         title={t('cardDetails.removeCopy')}
                       >
-                        <FaMinus className="text-[8px]" />
+                        <LuMinus className="text-[8px]" />
                       </button>
 
                       <button
@@ -157,10 +153,10 @@ function DeckCommandersHeader({
                             onRemoveFromDeck(card);
                           }
                         }}
-                        className="w-6 h-6 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-900/60 text-danger dark:text-red-400 hover:bg-danger hover:text-white transition-all font-bold shadow-sm"
+                        className="w-6 h-6 rounded-full flex items-center justify-center bg-danger-soft border border-danger/40 text-danger dark:text-danger hover:bg-danger hover:text-on-danger transition font-semibold shadow-sm"
                         title={t('cardDetails.deleteCard')}
                       >
-                        <FaTrash className="text-[8px]" />
+                        <LuTrash2 className="text-[8px]" />
                       </button>
                     </div>
                   )}

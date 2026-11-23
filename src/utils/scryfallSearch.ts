@@ -37,21 +37,25 @@ export function mergeLanguageResults(preferred: Card[], english: Card[]): Card[]
  * act on. Scryfall answers a rate limit and an outage with statuses the SDK sometimes reports
  * as a status and sometimes only inside the message, so both are read.
  */
-export function scryfallSearchErrorKey(error: unknown): 'search.rateLimited' | 'search.scryfallOffline' | null {
+export type ScryfallSearchErrorKey = 'search.rateLimited' | 'search.scryfallUnavailable' | 'search.scryfallSlow';
+
+/**
+ * Names a failure only as far as the evidence goes. A timeout is a slow answer, which can be
+ * this machine or the network as much as Scryfall, so it never reads as Scryfall being down.
+ */
+export function scryfallSearchErrorKey(error: unknown): ScryfallSearchErrorKey | null {
   const { status, message } = readRequestError(error);
   const lowerMessage = message.toLowerCase();
 
   if (status === 429 || message.includes('429')) return 'search.rateLimited';
+  if (status === 504 || message.includes('504') || lowerMessage.includes('timed out')) return 'search.scryfallSlow';
   if (
     status === 503 ||
-    status === 504 ||
     message.includes('503') ||
-    message.includes('504') ||
     lowerMessage.includes('offline') ||
-    lowerMessage.includes('maintenance') ||
-    lowerMessage.includes('timed out')
+    lowerMessage.includes('maintenance')
   ) {
-    return 'search.scryfallOffline';
+    return 'search.scryfallUnavailable';
   }
   return null;
 }

@@ -15,14 +15,14 @@ function ErrorState({ title, message, onRetry, retryLabel }: ErrorStateProps) {
 
   return (
     <div className="flex flex-col items-center justify-center py-20 px-4 gap-4 animate-in fade-in duration-300">
-      <div className="bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 px-6 py-4 rounded-2xl border border-rose-200 dark:border-rose-800/50 shadow-sm text-center">
-        <h3 className="font-bold text-lg mb-2">{displayTitle}</h3>
+      <div className="bg-danger-soft text-danger px-6 py-4 rounded-2xl border border-danger/40 shadow-sm text-center">
+        <h3 className="font-semibold text-lg mb-2">{displayTitle}</h3>
         <p className="font-medium text-sm opacity-90">{message}</p>
       </div>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-6 py-2.5 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 rounded-xl font-bold hover:bg-rose-200 dark:hover:bg-rose-900/50 transition-colors active:scale-95"
+          className="px-6 py-2.5 bg-danger-soft text-danger rounded-xl font-semibold hover:bg-danger-soft transition-colors active:scale-95"
         >
           {displayRetryLabel}
         </button>

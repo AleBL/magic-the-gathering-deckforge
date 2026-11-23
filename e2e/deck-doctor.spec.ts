@@ -71,7 +71,7 @@ async function openDoctorFor(page: Page, deckName: string, cards: SeedCard[]) {
   await page.getByRole('button', { name: 'My Decks' }).click();
 
   await page.getByText(deckName, { exact: true }).first().click();
-  await page.getByRole('button', { name: /Deck Statistics/i }).click();
+  await page.getByRole('button', { name: /^Analysis$/i }).click();
 }
 
 test.describe('Deck Doctor', () => {

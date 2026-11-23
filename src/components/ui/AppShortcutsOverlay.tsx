@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaKeyboard, FaTimes } from 'react-icons/fa';
+import { LuKeyboard, LuX } from 'react-icons/lu';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
@@ -45,37 +45,34 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
         role="dialog"
         aria-modal="true"
         aria-labelledby="app-shortcuts-title"
-        className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-dropdownEnter"
+        className="bg-surface-1 border border-line rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-dropdownEnter"
       >
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-slate-800">
-          <h3
-            id="app-shortcuts-title"
-            className="text-sm font-bold text-gray-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"
-          >
-            <FaKeyboard className="text-indigo-500 dark:text-indigo-400" />
+        <div className="flex items-center justify-between px-5 py-3 border-b border-line">
+          <h3 id="app-shortcuts-title" className="text-sm font-semibold text-fg flex items-center gap-2">
+            <LuKeyboard className="text-accent" />
             {t('commandPalette.shortcutsTitle')}
           </h3>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+            className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition cursor-pointer"
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
         <div className="p-4 space-y-1.5">
           {SHORTCUTS.map((row) => (
             <div
               key={row.labelKey}
-              className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50"
+              className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-surface-2"
             >
-              <span className="text-sm text-gray-700 dark:text-slate-300">{t(row.labelKey)}</span>
+              <span className="text-sm text-fg-secondary">{t(row.labelKey)}</span>
               <span className="flex items-center gap-1">
                 {row.keys.map((key) => (
                   <kbd
                     key={key}
-                    className="min-w-6 text-center bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-200 text-[11px] font-mono font-bold px-1.5 py-0.5 rounded shadow-sm"
+                    className="min-w-6 text-center bg-surface-2 border border-line text-fg-secondary text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded shadow-sm"
                   >
                     {key}
                   </kbd>

@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaTimes } from 'react-icons/fa';
+import { LuCircleCheck, LuInfo, LuTriangleAlert, LuX } from 'react-icons/lu';
 import { AlertVariant } from '../../types';
 import { WindowWithElectronAPI } from '../../types/electron';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -63,10 +63,10 @@ function CustomDialog({
   if (!isOpen) return null;
 
   const iconMap = {
-    [AlertVariant.DANGER]: <FaExclamationTriangle className="text-red-500 text-3xl shrink-0" />,
-    [AlertVariant.WARNING]: <FaExclamationTriangle className="text-amber-500 text-3xl shrink-0" />,
-    [AlertVariant.SUCCESS]: <FaCheckCircle className="text-green-500 text-3xl shrink-0" />,
-    [AlertVariant.INFO]: <FaInfoCircle className="text-blue-500 text-3xl shrink-0" />
+    [AlertVariant.DANGER]: <LuTriangleAlert className="text-danger text-3xl shrink-0" />,
+    [AlertVariant.WARNING]: <LuTriangleAlert className="text-warning text-3xl shrink-0" />,
+    [AlertVariant.SUCCESS]: <LuCircleCheck className="text-success text-3xl shrink-0" />,
+    [AlertVariant.INFO]: <LuInfo className="text-accent text-3xl shrink-0" />
   };
 
   return createPortal(
@@ -89,34 +89,31 @@ function CustomDialog({
         <div
           className={`absolute top-0 left-0 right-0 h-1.5 ${
             variant === AlertVariant.DANGER
-              ? 'bg-red-500'
+              ? 'bg-danger'
               : variant === AlertVariant.WARNING
-                ? 'bg-amber-500'
+                ? 'bg-warning'
                 : variant === AlertVariant.SUCCESS
-                  ? 'bg-green-500'
-                  : 'bg-blue-500'
+                  ? 'bg-success'
+                  : 'bg-surface-3'
           }`}
         />
 
         <button
           type="button"
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-fg-secondary transition-colors"
           aria-label={t('common.close')}
         >
-          <FaTimes className="text-base" />
+          <LuX className="text-base" />
         </button>
 
         <div className="flex gap-4 pt-2">
           {iconMap[variant]}
           <div className="flex-1 space-y-2">
-            <h3
-              id="dialog-title"
-              className="text-lg font-bold text-gray-900 dark:text-white transition-colors duration-300"
-            >
+            <h3 id="dialog-title" className="text-lg font-semibold text-fg transition-colors duration-300">
               {title}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 whitespace-pre-line leading-relaxed">
+            <p className="text-sm text-fg-secondary transition-colors duration-300 whitespace-pre-line leading-relaxed">
               {message}
             </p>
           </div>

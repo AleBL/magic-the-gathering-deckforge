@@ -10,7 +10,7 @@ html.dark .surface-glass {
 }
 
 .page-container {
-  @apply flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300;
+  @apply flex flex-col bg-surface-0;
   /* dvh tracks the *visible* mobile viewport (URL bar shown/hidden), so the
      bottom tab bar is never pushed off-screen; vh first as the fallback. */
   height: 100vh;
@@ -18,7 +18,7 @@ html.dark .surface-glass {
 }
 
 .header-container {
-  @apply sticky top-0 bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border-b border-gray-200/40 dark:border-slate-800/60 shadow-[0_4px_30px_#0000000D] transition-all duration-300 flex flex-col w-full h-auto min-h-[64px];
+  @apply sticky top-0 bg-surface-1/75 backdrop-blur-xl border-b border-line shadow-[0_4px_30px_#0000000D] transition duration-300 flex flex-col w-full h-auto min-h-[64px];
   z-index: var(--z-header);
 }
 
@@ -32,24 +32,14 @@ html.dark .header-container {
 
 /* Modals (canonical .modal-overlay lives in components.css) */
 .modal-container {
-  @apply rounded-lg p-6 transition-colors duration-300 mx-4;
-  background-color: var(--glass-fill-light);
-  border: 1px solid var(--glass-border-light);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  box-shadow: var(--shadow-2xl);
-}
-
-html.dark .modal-container {
-  background-color: var(--glass-fill-dark);
-  border-color: var(--glass-border-dark);
+  @apply rounded-xl p-6 mx-4 bg-surface-1 border border-line shadow-2xl;
 }
 
 /* The heading row inside a modal. The previous definition (serif, text-heading) had no
    users at all — every modal hand-rolled this exact utility string instead — so the class
    now carries what the app actually renders rather than a look nothing adopted. */
 .modal-title {
-  @apply text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2;
+  @apply text-lg font-semibold text-fg flex items-center gap-2;
 }
 
 /* Card Grid Layouts */
@@ -107,7 +97,7 @@ html.dark .modal-container {
 
 /* Panel and Header layouts */
 .panel-header {
-  @apply flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-300 dark:border-gray-700 pb-3 mb-4 gap-3 transition-colors duration-300;
+  @apply flex flex-col sm:flex-row sm:items-center justify-between border-b border-line-strong pb-3 mb-4 gap-3 transition-colors duration-300;
 }
 
 /* The deck's header carries the view controls and the deck's identity, so it has to stay put
@@ -126,12 +116,7 @@ html.dark .modal-container {
    makes it travel 16px of padding first, and a negative `top` makes it slide under the edge;
    both read as the panel jolting on the first scroll. */
 .panel-header-sticky {
-  @apply sticky top-0 z-30 -mx-4 -mt-4 px-4 pt-4 rounded-t-xl;
-  background-color: var(--glass-fill-light);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-bottom: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 4px 12px -6px rgba(15, 23, 42, 0.18);
+  @apply sticky top-0 z-30 -mx-4 -mt-4 px-4 pt-4 rounded-t-xl bg-surface-1 border-b border-line;
 }
 
 html.dark .panel-header-sticky {
@@ -142,56 +127,38 @@ html.dark .panel-header-sticky {
 
 /* Workspace main areas */
 .workspace-container {
-  @apply flex flex-col h-full bg-white dark:bg-gray-900 transition-colors duration-300;
+  @apply flex flex-col h-full bg-surface-1 transition-colors duration-300;
 }
 
 .workspace-header {
-  @apply bg-gray-100 dark:bg-gray-800 p-4 space-y-4 transition-colors duration-300 w-full relative;
+  @apply bg-surface-2 p-4 space-y-4 transition-colors duration-300 w-full relative;
   z-index: var(--z-sticky);
 }
 
-.workspace-header>* {
+.workspace-header > * {
   @apply mx-auto w-full;
 }
 
 .workspace-body {
-  @apply flex-1 overflow-auto bg-white dark:bg-gray-900 transition-colors duration-300 w-full;
+  @apply flex-1 overflow-auto bg-surface-1 transition-colors duration-300 w-full;
   -webkit-overflow-scrolling: touch;
 }
 
-.workspace-body>* {
+.workspace-body > * {
   @apply mx-auto w-full;
 }
 
 /* Specialized deck lists and grids in desktop columns */
 .deck-list-section {
-  @apply lg:col-span-1 order-2 lg:order-1 rounded-xl p-4 transition-all duration-300 h-fit;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
-  border: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-html.dark .deck-list-section {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+  @apply lg:col-span-1 order-2 lg:order-1 rounded-xl p-4 h-fit bg-surface-1 border border-line shadow-xs dark:shadow-none;
 }
 
 .deck-preview-section {
-  @apply lg:col-span-2 order-1 lg:order-2 rounded-xl p-4 transition-all duration-300 min-w-0;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
-  border: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-html.dark .deck-preview-section {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.85));
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+  @apply lg:col-span-2 order-1 lg:order-2 rounded-xl p-4 min-w-0 bg-surface-1 border border-line shadow-xs dark:shadow-none;
 }
 
 .deck-list-item {
-  @apply p-3 rounded-lg transition-all duration-300 border bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-transparent hover:bg-gray-300 dark:hover:bg-gray-600;
+  @apply p-3 rounded-lg transition duration-300 border bg-surface-3 text-fg border-transparent hover:bg-surface-3;
 }
 
 /* Card layout details */
@@ -199,13 +166,17 @@ html.dark .deck-preview-section {
   @apply relative;
   content-visibility: auto;
   perspective: 1000px;
-  transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  transition:
+    transform 0.4s var(--ease-out),
+    opacity 0.4s var(--ease-out);
 }
 
 .card-image-button {
-  @apply w-full rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-gray-200 dark:bg-gray-800 border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 aspect-[5/7] border-0 p-0;
+  @apply w-full rounded-lg overflow-hidden shadow-lg transition duration-300 hover:shadow-2xl bg-surface-3 border border-transparent focus:outline-none focus:ring-2 focus:ring-focus aspect-[5/7] border-0 p-0;
   position: relative;
-  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.5s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.2, 1, 0.3, 1),
+    box-shadow 0.5s ease;
 }
 
 /* Elegant keyboard focus for the card hero — a token-colored ring that
@@ -229,7 +200,7 @@ html.dark .deck-preview-section {
 }
 
 .card-detail-info {
-  @apply flex-1 text-gray-900 dark:text-white space-y-3 transition-colors duration-300 text-left;
+  @apply flex-1 text-fg space-y-3 transition-colors duration-300 text-left;
 }
 
 .manager-title-row {
@@ -249,19 +220,21 @@ html.dark .deck-preview-section {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(45deg,
-      rgba(255, 255, 255, 0) 30%,
-      rgba(255, 255, 255, 0.15) 40%,
-      rgba(255, 255, 255, 0.3) 50%,
-      rgba(255, 255, 255, 0.15) 60%,
-      rgba(255, 255, 255, 0) 70%);
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0) 70%
+  );
   transform: translate(-100%, -100%) rotate(45deg);
   transition: transform 0.6s ease;
   pointer-events: none;
 }
 
 .card-item-wrapper:hover {
-  @apply z-10 shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20;
+  @apply z-10 shadow-2xl;
   transform: translateY(-6px) scale(1.03);
 }
 
@@ -272,13 +245,13 @@ html.dark .deck-preview-section {
 .modal-container-small {
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  @apply bg-white/95 dark:bg-gray-800/95;
+  @apply bg-surface-1/95;
 }
 
 .modal-container-medium {
   border-radius: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  @apply bg-white/95 dark:bg-gray-800/95 w-[calc(100%-2rem)] max-w-[1000px] mx-auto;
+  @apply bg-surface-1/95 w-[calc(100%-2rem)] max-w-[1000px] mx-auto;
 }
 
 /* Dialog Buttons */
@@ -288,8 +261,7 @@ html.dark .deck-preview-section {
 
 /* Mana Curve & Stats styles */
 .deck-stats-container {
-  @apply mt-6 p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 backdrop-blur-md transition-colors duration-300;
-  box-shadow: var(--shadow-md);
+  @apply mt-6 p-5 rounded-xl border border-line bg-surface-1;
 }
 
 /* Compact Deck List View Styles */
@@ -298,20 +270,20 @@ html.dark .deck-preview-section {
 }
 
 .deck-list-row {
-  @apply flex items-center justify-between p-2.5 rounded-lg border border-gray-300/60 dark:border-gray-700/60 bg-white dark:bg-gray-800 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all duration-200 cursor-pointer shadow-sm select-none;
+  @apply flex items-center justify-between p-2.5 rounded-lg border border-line-strong bg-surface-1 hover:bg-surface-2 transition duration-200 cursor-pointer shadow-sm select-none;
 }
 
 .deck-list-row:hover {
   transform: translateX(2px);
-  @apply border-blue-400/50 dark:border-blue-500/30 shadow-md;
+  @apply border-accent/50 shadow-md;
 }
 
 .quantity-badge {
-  @apply font-mono bg-primary/10 text-primary dark:bg-blue-400/10 dark:text-blue-400 border border-primary/20 dark:border-blue-400/20 px-2 py-0.5 rounded text-xs font-bold mr-2.5 inline-block shrink-0 shadow-sm;
+  @apply font-mono bg-accent-soft text-accent dark:bg-accent-soft border border-accent/20 dark:border-line-strong px-2 py-0.5 rounded text-xs font-semibold mr-2.5 inline-block shrink-0 shadow-sm;
 }
 
 .floating-card-preview {
-  @apply fixed pointer-events-none z-[var(--z-preview)] rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md transition-all duration-150 ease-out;
+  @apply fixed pointer-events-none z-[var(--z-preview)] rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md transition duration-150 ease-out;
   box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
   height: auto;
   aspect-ratio: 5/7;
@@ -334,13 +306,13 @@ html.dark .deck-preview-section {
 .header-toolbar {
   @apply grid gap-3 sm:gap-6 px-4 sm:px-6 py-3 w-full items-center;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "brand actions";
+  grid-template-areas: 'brand actions';
 }
 
 @media (min-width: 640px) {
   .header-toolbar {
     grid-template-columns: 1fr auto 1fr;
-    grid-template-areas: "brand tabs actions";
+    grid-template-areas: 'brand tabs actions';
   }
 }
 
@@ -359,7 +331,7 @@ html.dark .deck-preview-section {
    thumb-reachable bar anchored to the bottom of the viewport
    instead of squeezing into the top header row. */
 .bottom-tab-bar {
-  @apply sm:hidden flex items-stretch shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-gray-200/70 dark:border-slate-800/70;
+  @apply sm:hidden flex items-stretch shrink-0 bg-surface-1/95 backdrop-blur-xl border-t border-line;
   /* Above page content but BELOW modal overlays (--z-overlay): bottom sheets
      anchor to the viewport's bottom edge, and a higher bar would sit on top
      of them and swallow taps on their footer buttons. */
@@ -368,11 +340,11 @@ html.dark .deck-preview-section {
 }
 
 .bottom-tab-button {
-  @apply relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[56px] py-1.5 text-[11px] font-semibold text-gray-500 dark:text-gray-400 transition-colors active:scale-95;
+  @apply relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[56px] py-1.5 text-[11px] font-semibold text-fg-muted transition-colors active:scale-95;
 }
 
 .bottom-tab-button-active {
-  @apply text-primary dark:text-blue-400;
+  @apply text-accent;
 }
 
 .bottom-tab-button-icon {
@@ -389,20 +361,14 @@ html.dark .deck-preview-section {
   @apply relative w-8 h-8 flex items-center justify-center shrink-0;
 }
 
-.app-brand-logo-glow {
-  @apply absolute inset-0 bg-blue-500/20 dark:bg-primary/30 rounded-lg blur-xs animate-pulse;
-}
-
 .app-brand-logo-image {
-  @apply relative w-8 h-8 object-contain transition-transform duration-300 ease-out hover:scale-110;
-  filter: drop-shadow(0 0 10px rgb(59 130 246 / 0.7)) drop-shadow(0 0 3px rgb(99 102 241 / 0.55));
+  @apply relative w-7 h-7 object-contain dark:invert;
 }
 
-/* Brighter, higher-contrast gradient plus a soft glow — the previous ramp sat
-   too close to the header background and read as washed out. */
+/* The product name in the display face, solid ink: no gradient, glow or
+   tracked capitals. */
 .app-brand-title {
-  @apply text-xl font-serif font-extrabold tracking-[0.18em] leading-none transition-all duration-300 hidden md:block select-none uppercase bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-blue-500 to-violet-600 dark:from-blue-300 dark:via-sky-200 dark:to-indigo-300;
-  filter: drop-shadow(0 1px 6px rgb(59 130 246 / 0.4));
+  @apply text-lg font-serif font-semibold leading-none text-fg hidden md:block select-none;
 }
 
 .tab-button-icon {
@@ -410,11 +376,11 @@ html.dark .deck-preview-section {
 }
 
 .modal-header-container {
-  @apply flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
+  @apply flex items-center justify-between px-6 py-4 border-b border-line bg-surface-2/50;
 }
 
 .modal-footer-container {
-  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/20;
+  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-line bg-surface-2/50;
 }
 
 /* ─── Profile Menu ─────────────────────────────────────── */
@@ -424,37 +390,37 @@ html.dark .deck-preview-section {
 }
 
 .profile-menu-trigger {
-  @apply flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+  @apply flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-line bg-surface-1 hover:bg-surface-2 transition duration-200 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-focus;
 }
 
 .profile-avatar {
-  @apply w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0;
+  @apply w-7 h-7 rounded-full bg-surface-3 text-fg-secondary flex items-center justify-center flex-shrink-0;
 }
 
 .profile-avatar-lg {
-  @apply w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md flex-shrink-0;
+  @apply w-10 h-10 rounded-full bg-surface-3 text-fg-secondary flex items-center justify-center flex-shrink-0;
 }
 
 .profile-menu-panel {
-  @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden border border-gray-200/80 dark:border-slate-700/80 z-[var(--z-modal)] origin-top-right;
+  @apply absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden border border-line z-[var(--z-modal)] origin-top-right;
   /* More opaque than the shared --glass-fill-* tokens: the dropdown sits
      over busy card art, so a stronger fill keeps its content readable. */
-  background-color: rgb(255 255 255 / 0.96);
+  background-color: rgb(253 251 247 / 0.97);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--shadow-2xl);
 }
 
 html.dark .profile-menu-panel {
-  background-color: rgb(15 23 42 / 0.96);
+  background-color: rgb(28 26 24 / 0.97);
 }
 
 .profile-menu-divider {
-  @apply h-px bg-gray-100 dark:bg-slate-700/60 mx-0;
+  @apply h-px bg-surface-2 mx-0;
 }
 
 .profile-menu-item {
-  @apply w-full flex items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer text-left;
+  @apply w-full flex items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-fg-secondary hover:bg-surface-2 transition-colors duration-150 cursor-pointer text-left;
 }
 
 .profile-menu-row {
@@ -462,11 +428,11 @@ html.dark .profile-menu-panel {
 }
 
 .profile-menu-back-header {
-  @apply flex items-center justify-between px-4 py-3.5 bg-gray-50/80 dark:bg-slate-800/60;
+  @apply flex items-center justify-between px-4 py-3.5 bg-surface-2/80;
 }
 
 .profile-back-btn {
-  @apply flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer;
+  @apply flex items-center gap-2 text-fg-secondary hover:text-fg transition-colors cursor-pointer;
 }
 
 /* Dark mode toggle pill */
@@ -479,7 +445,7 @@ html.dark .profile-menu-panel {
 }
 
 .profile-toggle-off {
-  @apply bg-gray-200 dark:bg-slate-700;
+  @apply bg-surface-3;
 }
 
 .profile-toggle-thumb {
@@ -489,11 +455,11 @@ html.dark .profile-menu-panel {
 /* ─── Deck Proxy Print Modal ────────────────────────────── */
 
 .proxy-modal-container {
-  @apply bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700;
+  @apply bg-surface-1 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden border border-line;
 }
 
 .proxy-settings-bar {
-  @apply flex flex-wrap items-center gap-4 px-5 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-800/60;
+  @apply flex flex-wrap items-center gap-4 px-5 py-3 border-b border-line bg-surface-2/80;
 }
 
 .proxy-setting-group {
@@ -501,23 +467,23 @@ html.dark .profile-menu-panel {
 }
 
 .proxy-setting-label {
-  @apply text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap;
+  @apply text-xs font-semibold text-fg-muted whitespace-nowrap;
 }
 
 .proxy-select {
-  @apply text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg py-1 px-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer;
+  @apply text-xs bg-surface-1 border border-line rounded-lg py-1 px-2 text-fg-secondary focus:outline-none focus:ring-1 focus:ring-focus cursor-pointer;
 }
 
 .proxy-option-btn {
-  @apply px-2.5 py-1 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer;
+  @apply px-2.5 py-1 text-xs font-semibold rounded-lg border border-line bg-surface-1 text-fg-secondary hover:bg-surface-2 transition cursor-pointer;
 }
 
 .proxy-option-btn-active {
-  @apply bg-primary text-white border-primary hover:bg-primary-hover dark:bg-primary dark:text-white dark:border-primary;
+  @apply bg-primary text-on-primary border-accent hover:bg-primary-hover;
 }
 
 .proxy-preview-scroll {
-  @apply flex-1 overflow-auto p-6 bg-gray-100 dark:bg-gray-950/50;
+  @apply flex-1 overflow-auto p-6 bg-surface-2;
 }
 
 .proxy-card-cell {
@@ -536,10 +502,9 @@ html.dark .profile-menu-panel {
 /* ─── Print Media Query ─────────────────────────────────── */
 
 @media print {
-
   /* Hide everything via visibility (not display:none) so the print root
      images are already loaded when the print dialog opens */
-  body>* {
+  body > * {
     visibility: hidden !important;
   }
 

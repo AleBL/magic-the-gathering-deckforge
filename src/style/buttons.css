@@ -1,40 +1,50 @@
 /* Standard and reusable button classes */
 
-/* ── Interaction states, standardized ───────────────────────
-   Every solid button below shares one timing curve (--ease-out, see
-   variables.css) across hover/press so lift and sink feel like one
-   system instead of five one-off tweaks:
-   - hover:  lifts (-translate-y) + brightens (glow) + deeper shadow
-   - active: an explicit Tailwind `active:` variant (not just the
-     global `button:active` rule in index.css) so it wins the cascade
-     over the `hover:-translate-y` utility while the pointer is still
-     down — settles back to baseline and dims slightly ("afundar")
-   - focus-visible: the app-wide ring in index.css already covers
-     these; no per-button override needed. */
-.primary-button {
-  /* position+overflow (not part of the @apply list below) let the
-     app-wide ripple (useGlobalRipple) clip its expanding circle to the
-     button's rounded corners, same as the .ripple-container recipe. */
-  position: relative;
-  overflow: hidden;
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-primary text-white rounded-lg hover:bg-primary-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
-}
+/* ── One button system ──────────────────────────────────
+   Primary (ink), secondary (surface + hairline), ghost (text only) and
+   danger. Colour never encodes which action a button runs; position and
+   label do. Hover is a colour step, press a small scale; no lift, glow or
+   coloured shadow. The app-wide focus ring in index.css covers focus. */
+/* In the components layer so utilities on the element (text-xs, px-3, text-danger) win
+   over these defaults, as they would for any Tailwind component class. */
+@layer components {
+  .primary-button,
+  .secondary-button,
+  .ghost-button,
+  .danger-button,
+  .success-button {
+    /* position+overflow let the app-wide ripple (useGlobalRipple) clip its
+       circle to the button's rounded corners, same as .ripple-container. */
+    position: relative;
+    overflow: hidden;
+    @apply px-4 py-2 min-h-[44px] sm:min-h-0 rounded-lg font-medium flex items-center justify-center gap-2 text-sm cursor-pointer transition-[background-color,border-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100;
+  }
 
-.secondary-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-sm hover:shadow-md active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
-}
+  .primary-button {
+    @apply bg-primary text-on-primary hover:bg-primary-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
 
-.danger-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-danger text-white rounded-lg hover:bg-danger-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
-}
+  .secondary-button {
+    @apply bg-surface-1 text-fg border border-line-strong hover:bg-surface-2 disabled:opacity-50;
+  }
 
-.success-button {
-  @apply px-4 py-2 min-h-[44px] sm:min-h-0 bg-success text-white rounded-lg hover:bg-success-hover hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] active:brightness-95 transition-[transform,box-shadow,filter,background-color] duration-150 ease-[var(--ease-out)] shadow-md hover:shadow-lg active:shadow-sm font-semibold flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-md;
-}
+  .ghost-button {
+    @apply bg-transparent text-fg-secondary hover:bg-surface-2 hover:text-fg disabled:opacity-50;
+  }
 
-/* Modifiers using class composition */
-.button-small {
-  @apply px-2 py-1 text-xs rounded;
+  .danger-button {
+    @apply bg-danger text-on-danger hover:bg-danger-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
+
+  /* Kept for confirmations that read as "done"; same shape as primary. */
+  .success-button {
+    @apply bg-success text-on-success hover:bg-success-hover disabled:bg-surface-3 disabled:text-fg-muted;
+  }
+
+  /* Modifiers using class composition */
+  .button-small {
+    @apply px-2 py-1 text-xs rounded;
+  }
 }
 
 /* Navigation Tabs */
@@ -42,13 +52,13 @@
   /* hidden below sm: this rule loads after layout.css's .tab-group (hidden
      sm:flex), so restating `flex` here would resurrect the header pills on
      mobile and duplicate the bottom tab bar. Keep both display values in sync. */
-  @apply hidden sm:flex gap-1 p-1 bg-gray-200/50 dark:bg-slate-800/60 backdrop-blur-md rounded-xl border border-gray-300/40 dark:border-slate-700/50 justify-center w-full sm:w-auto;
+  @apply hidden sm:flex gap-1 p-1 bg-surface-2 rounded-xl border border-line justify-center w-full sm:w-auto;
 }
 
 .tab-button {
-  @apply px-3 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 bg-transparent text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white cursor-pointer relative flex items-center justify-center gap-2 select-none;
+  @apply px-3 sm:px-4 py-1.5 min-h-[44px] sm:min-h-0 rounded-lg font-medium text-xs sm:text-sm transition-colors duration-150 bg-transparent text-fg-secondary hover:text-fg border border-transparent cursor-pointer relative flex items-center justify-center gap-2 select-none;
 }
 
 .tab-button-active {
-  @apply bg-white dark:bg-slate-700 text-primary dark:text-blue-300 shadow-md font-extrabold border border-gray-300/30 dark:border-slate-600/50;
+  @apply bg-surface-1 text-fg shadow-xs border-line;
 }

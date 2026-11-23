@@ -18,7 +18,7 @@ async function confirmSaved(page: Page) {
 test.describe('deck building', () => {
   test.beforeEach(async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: search }).fill('bolt');
+    await appPage.getByRole('combobox', { name: search }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await expect(appPage.getByRole('button', { name: 'Lightning Bolt' })).toBeVisible();
   });
@@ -28,7 +28,7 @@ test.describe('deck building', () => {
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
     // The card count in the button label is the deck's own report of what it holds.
-    const saveButton = appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ });
+    const saveButton = appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i });
     await expect(saveButton).toBeEnabled();
     await saveButton.click();
 
@@ -42,13 +42,25 @@ test.describe('deck building', () => {
     // Saving hands the new deck straight to the editor, so the saved-decks list is no
     // longer on screen — the toolbar switching to "Save Deck <name>" is what says the
     // deck now exists and is open. (Persistence itself is the next test's job.)
-    await expect(appPage.getByRole('button', { name: /Save Deck "E2E Test Deck"/ })).toBeVisible();
+    await expect(appPage.getByRole('button', { name: /Save deck "E2E Test Deck"/ })).toBeVisible();
+  });
+
+  // The draft lives in localStorage: closing the window before saving must not lose it.
+  test('a draft survives a reload before it is saved', async ({ appPage }) => {
+    await appPage.getByRole('button', { name: 'Add copy' }).click();
+    await appPage.getByRole('button', { name: 'My Decks' }).click();
+    await expect(appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i })).toBeEnabled();
+
+    await appPage.reload();
+    await appPage.getByRole('button', { name: 'My Decks' }).click();
+    await expect(appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i })).toBeEnabled();
+    await expect(appPage.getByText(/Not saved as a deck yet/i).first()).toBeVisible();
   });
 
   test('a saved deck survives a reload', async ({ appPage }) => {
     await appPage.getByRole('button', { name: 'Add copy' }).click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
-    await appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ }).click();
+    await appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i }).click();
 
     const dialog = appPage.getByRole('dialog');
     await dialog.getByRole('textbox').first().fill('Persisted Deck');
@@ -60,7 +72,7 @@ test.describe('deck building', () => {
     // It also drops the in-memory editing state, so the saved-decks list comes back.
     await appPage.reload();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
-    await expect(appPage.getByRole('heading', { name: /Saved Decks \(1\)/ })).toBeVisible();
+    await expect(appPage.getByRole('heading', { name: /Saved decks \(1\)/ })).toBeVisible();
     await expect(appPage.getByText('Persisted Deck')).toBeVisible();
   });
 });

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaImage, FaTimes, FaCheck } from 'react-icons/fa';
+import { LuCheck, LuImage, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { Deck } from '../../types/Deck';
 import { cardArtCrop, resolveDeckCoverCard } from '../../utils/deckCover';
@@ -51,16 +51,16 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
       >
         <div className="flex items-center justify-between mb-4">
           <h3 id="deck-cover-title" className="modal-title">
-            <FaImage className="text-primary" />
+            <LuImage className="text-accent" />
             {t('deck.setCover')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
         {options.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">{t('deck.addCardsMessage')}</p>
+          <p className="text-sm text-fg-muted text-center py-6">{t('deck.addCardsMessage')}</p>
         ) : (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {options.map((card) => {
@@ -71,19 +71,19 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                   type="button"
                   onClick={() => onSelect(card.id)}
                   title={card.printed_name || card.name}
-                  className={`group relative overflow-hidden rounded-lg border-2 transition-all ${
-                    isActive ? 'border-blue-500 ring-2 ring-blue-500/40' : 'border-transparent hover:border-blue-400'
+                  className={`group relative overflow-hidden rounded-lg border-2 transition ${
+                    isActive ? 'border-accent/50 ring-2 ring-focus' : 'border-transparent hover:border-accent/50'
                   }`}
                 >
                   <img
                     src={cardArtCrop(card)}
                     alt={card.printed_name || card.name}
                     loading="lazy"
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-300"
                   />
                   {isActive && (
-                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white shadow">
-                      <FaCheck className="text-[10px]" />
+                    <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-3 text-fg shadow">
+                      <LuCheck className="text-[10px]" />
                     </span>
                   )}
                   <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1.5 py-1 text-[10px] font-semibold text-white">

@@ -1,6 +1,6 @@
 import { DragEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSearch, FaLayerGroup } from 'react-icons/fa';
+import { LuLayers, LuSearch } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { ADD_CARD_DRAG_TYPE } from '../card/CardItem';
 
@@ -52,7 +52,7 @@ export default function DeckEditWorkspace({ search, deck, onDropCard }: DeckEdit
           aria-pressed={mobileView === 'search'}
           className={`deck-edit-mobile-tab ${mobileView === 'search' ? 'deck-edit-mobile-tab-active' : ''}`}
         >
-          <FaSearch className="text-xs" /> {t('search.searchButton')}
+          <LuSearch className="text-xs" /> {t('search.searchButton')}
         </button>
         <button
           type="button"
@@ -60,7 +60,7 @@ export default function DeckEditWorkspace({ search, deck, onDropCard }: DeckEdit
           aria-pressed={mobileView === 'deck'}
           className={`deck-edit-mobile-tab ${mobileView === 'deck' ? 'deck-edit-mobile-tab-active' : ''}`}
         >
-          <FaLayerGroup className="text-xs" /> {t('deck.currentDeck')}
+          <LuLayers className="text-xs" /> {t('deck.currentDeck')}
         </button>
       </div>
 

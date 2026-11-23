@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlaytestCard } from '../../types/Playtest';
-import { FaTimes, FaSearch } from 'react-icons/fa';
+import { LuSearch, LuX } from 'react-icons/lu';
 
 import { PlaytestZone, LibraryPlacement } from '../../types/enums';
 import { useDismissTransition } from '../../hooks/useDismissTransition';
@@ -72,25 +72,25 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
           <div className="w-10 h-1.5 rounded-full bg-slate-700" />
         </div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white flex items-center gap-3">
             {title} <span className="text-slate-400 text-base sm:text-lg font-normal">({cards.length})</span>
           </h2>
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex-1 sm:flex-none">
-              <FaSearch className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <LuSearch className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder={t('common.searchCards')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-focus w-full sm:w-64"
               />
             </div>
             <button
               onClick={requestClose}
               className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0"
             >
-              <FaTimes className="w-5 h-5" />
+              <LuX className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function PileExplorerModal({ title, cards, onClose, onMoveCard }:
                   <img
                     src={item.card.image_uris?.normal || item.card.card_faces?.[0]?.image_uris?.normal || ''}
                     alt={item.card.name}
-                    className="w-full rounded-xl shadow-md transition-transform hover:scale-105"
+                    className="w-full rounded-xl shadow-md transition-transform"
                   />
                 </div>
               ))}

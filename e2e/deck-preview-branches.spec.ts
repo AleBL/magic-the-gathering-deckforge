@@ -10,7 +10,7 @@ import type { Page } from '@playwright/test';
  */
 
 async function searchAndAdd(page: Page) {
-  await page.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+  await page.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('button', { name: 'Add copy' }).first().click();
 }
@@ -23,7 +23,7 @@ test.describe('DeckPreview — working deck branch', () => {
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
     // Identity of this branch: it is a deck-in-progress, not a named deck.
-    await expect(appPage.getByText(/Temporary|Unsaved/i).first()).toBeVisible();
+    await expect(appPage.getByText(/Not saved as a deck yet/i).first()).toBeVisible();
 
     // Shared furniture that must survive the merge.
     await expect(appPage.getByRole('button', { name: /View Mode|Display/i }).first()).toBeVisible();

@@ -186,9 +186,9 @@ const DeckCardList = memo(function DeckCardList({
             const title = TRANSLATABLE_TITLES.includes(group.title) ? t(`search.${group.title}`) : group.title;
             return (
               <div key={group.title} className="space-y-2">
-                <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-1 flex justify-between items-center">
+                <h4 className="text-sm font-semibold text-fg-muted border-b border-line pb-1 flex justify-between items-center">
                   <span>{title}</span>
-                  <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
+                  <span className="text-xs bg-surface-3 px-2 py-0.5 rounded-full text-fg-secondary">
                     {group.cards.length}
                   </span>
                 </h4>
@@ -226,9 +226,9 @@ const DeckCardList = memo(function DeckCardList({
           return (
             <div key={group.title} className="space-y-2">
               {title && (
-                <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-1 flex justify-between items-center select-none">
+                <h4 className="text-sm font-semibold text-fg-muted border-b border-line pb-1 flex justify-between items-center select-none">
                   <span>{title}</span>
-                  <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
+                  <span className="text-xs bg-surface-3 px-2 py-0.5 rounded-full text-fg-secondary">
                     {group.cards.length}
                   </span>
                 </h4>

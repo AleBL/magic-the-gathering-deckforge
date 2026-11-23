@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCog } from 'react-icons/fa';
+import { LuSettings } from 'react-icons/lu';
 import { PrintZoneFilter } from '../../types/enums';
 import {
   SpacingOption,
@@ -56,18 +56,16 @@ export function ProxyPrintSettingsBar({
 
   return (
     <div className="proxy-settings-bar flex-wrap">
-      <div className="flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-gray-700 mr-2">
-        <FaCog className="text-gray-400 text-sm shrink-0" />
+      <div className="flex items-center gap-2 pr-2 border-r border-line mr-2">
+        <LuSettings className="text-gray-400 text-sm shrink-0" />
         <label className="flex items-center gap-1.5 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={useRealSize}
             onChange={(e) => setUseRealSize(e.target.checked)}
-            className="rounded border-gray-300 dark:border-gray-750 text-primary focus:ring-blue-500 w-3.5 h-3.5 cursor-pointer bg-white dark:bg-gray-800"
+            className="rounded border-line-strong text-accent focus:ring-focus w-3.5 h-3.5 cursor-pointer bg-surface-1"
           />
-          <span className="text-[11px] font-extrabold text-primary dark:text-blue-400 uppercase tracking-wider">
-            {t('print.printRealSize')}
-          </span>
+          <span className="text-[11px] font-semibold text-accent">{t('print.printRealSize')}</span>
         </label>
       </div>
 
@@ -165,7 +163,7 @@ export function ProxyPrintSettingsBar({
       </div>
 
       <div
-        className={`proxy-setting-group transition-all duration-200 ${useRealSize ? 'opacity-40 pointer-events-none' : ''}`}
+        className={`proxy-setting-group transition duration-200 ${useRealSize ? 'opacity-40 pointer-events-none' : ''}`}
       >
         <label className="proxy-setting-label">{t('print.cardsPerRow')}</label>
         <div className="flex gap-1">

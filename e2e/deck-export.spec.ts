@@ -16,9 +16,14 @@ test.describe('deck export', () => {
     await appPage.reload();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
-    const exportButton = appPage.getByRole('button', { name: /^Export Export Me$/i }).first();
-    await expect(exportButton).toBeVisible();
-    await exportButton.click();
+    // Library rows keep every action in one menu, so export sits behind "More actions".
+    await appPage
+      .getByRole('button', { name: /^More actions Export Me$/i })
+      .first()
+      .click();
+    const exportItem = appPage.getByRole('menuitem', { name: /^Export$/i });
+    await expect(exportItem).toBeVisible();
+    await exportItem.click();
 
     const dialog = appPage.getByRole('dialog');
     await expect(dialog).toBeVisible();

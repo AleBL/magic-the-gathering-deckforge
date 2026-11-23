@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
-import { FaPalette } from 'react-icons/fa';
+import { LuPalette } from 'react-icons/lu';
 import { parseTextWithSymbols } from '../../utils/symbolHelper';
 import { DeckStatistics, StatFilter } from '../../utils/deckStatistics';
 import { ColorLabel } from './colorLabels';
@@ -60,8 +60,8 @@ export function ColorDistributionPanel({
 
   return (
     <div className="space-y-4 relative z-10 min-w-0">
-      <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
-        <FaPalette className="text-purple-500" />
+      <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+        <LuPalette className="text-purple-500" />
         {t('stats.colorsDistribution')}
       </h4>
 
@@ -134,7 +134,7 @@ export function ColorDistributionPanel({
         </ChartFrame>
       ) : (
         <ChartFrame height="h-64 sm:h-72" className="flex items-center justify-center">
-          <EmptyState icon={<FaPalette />} title={t('export.noColorData')} />
+          <EmptyState icon={<LuPalette />} title={t('export.noColorData')} />
         </ChartFrame>
       )}
 

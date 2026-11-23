@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaArrowRight, FaLayerGroup, FaDiceD20, FaSync, FaPlus, FaUndo } from 'react-icons/fa';
+import { LuArrowRight, LuDices, LuLayers, LuPlus, LuRefreshCw, LuUndo2 } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { useRipple } from '../../hooks/useRipple';
 import { Card } from '../../types/Card';
@@ -21,7 +21,7 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
   } = usePlaytestContext();
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/60 pt-4">
+    <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -30,10 +30,10 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleNextTurn();
           }}
           disabled={isMulliganPhase}
-          className="ripple-container bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.nextTurn')} (T)`}
         >
-          <FaArrowRight className="text-[10px]" />
+          <LuArrowRight className="text-[10px]" />
           {t('playtest.nextTurn')}
         </button>
 
@@ -44,10 +44,10 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleDrawCard();
           }}
           disabled={library.length === 0 || isMulliganPhase}
-          className="ripple-container bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.drawCard')} (D)`}
         >
-          <FaLayerGroup className="text-[10px]" />
+          <LuLayers className="text-[10px]" />
           {t('playtest.drawCard')}
         </button>
 
@@ -58,10 +58,10 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleShuffleLibrary();
           }}
           disabled={library.length === 0 || isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
           title={`${t('playtest.shuffle')} (S)`}
         >
-          <FaDiceD20 className="text-[10px]" />
+          <LuDices className="text-[10px]" />
           {t('playtest.shuffle')}
         </button>
 
@@ -72,9 +72,9 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleUntapAll();
           }}
           disabled={battlefield.length === 0 || isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
-          <FaSync className="text-[10px]" />
+          <LuRefreshCw className="text-[10px]" />
           {t('playtest.untapAll')}
         </button>
 
@@ -85,9 +85,9 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             setIsTokenModalOpen(true);
           }}
           disabled={isMulliganPhase}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
-          <FaPlus className="text-[10px]" />
+          <LuPlus className="text-[10px]" />
           {t('tokens.summonToken')}
         </button>
       </div>
@@ -100,9 +100,9 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             handleMulligan();
           }}
           disabled={deckCards.length === 0 || isMulliganPhase}
-          className="ripple-container bg-warning hover:bg-amber-500 text-white font-extrabold text-xs py-2 px-5 rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-surface-1 hover:bg-surface-2 border border-line-strong text-fg font-medium text-xs py-2 px-5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 cursor-pointer"
         >
-          <FaUndo className="text-[10px] rotate-90" />
+          <LuUndo2 className="text-[10px] rotate-90" />
           {t('playtest.mulligan')}
         </button>
         <button
@@ -111,9 +111,9 @@ export function PlaytestControlBarBottom({ deckCards }: { deckCards: Card[] }) {
             createRipple(event);
             startSimulation();
           }}
-          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-2 px-5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+          className="ripple-container bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-2 px-5 rounded-xl transition flex items-center gap-1.5 cursor-pointer"
         >
-          <FaUndo className="text-[10px]" />
+          <LuUndo2 className="text-[10px]" />
           {t('playtest.resetSimulator')}
         </button>
       </div>

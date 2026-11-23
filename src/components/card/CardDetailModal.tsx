@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaTimes } from 'react-icons/fa';
+import { LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { useCardPrints } from '../../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../../hooks/useCardRelatedTokens';
@@ -40,6 +40,7 @@ import { CardDetailActions } from './CardDetailActions';
 import { CardDetailData } from './CardDetailData';
 import { CardDetailEditControls } from './CardDetailEditControls';
 import { CardDetailRelatedTokens } from './CardDetailRelatedTokens';
+import { CardDetailRulings } from './CardDetailRulings';
 
 /** Scryfall layouts whose faces are printed on one physical side (never flip). */
 const SAME_SIDE_LAYOUTS = new Set(['split', 'aftermath', 'flip', 'adventure']);
@@ -275,16 +276,16 @@ function CardDetailModal({
           {/* Grab handle: purely a visual affordance now — drag-to-close works
               from anywhere on the sheet (see useSwipeToClose), not just here. */}
           <div className="sm:hidden -mt-6 -mx-6 flex justify-center pt-2.5 pb-1" aria-hidden="true">
-            <div className="w-10 h-1.5 rounded-full bg-gray-300 dark:bg-slate-700" />
+            <div className="w-10 h-1.5 rounded-full bg-surface-3" />
           </div>
           {/* Desktop only: the phone sheet has a drag handle and closes on a tap outside. */}
           <button
             type="button"
             onClick={requestClose}
-            className="absolute top-3 right-3 z-10 hidden sm:block text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60"
+            className="absolute top-3 right-3 z-10 hidden sm:block text-gray-400 hover:text-fg-secondary transition-colors p-1.5 rounded-lg hover:bg-surface-2"
             aria-label={t('common.close')}
           >
-            <FaTimes className="text-base" />
+            <LuX className="text-base" />
           </button>
           {/* One scroller on phones, two lanes from md up: reading a long rules text used to
               scroll the card art and the edition list along with it. Each side gets its own
@@ -330,6 +331,8 @@ function CardDetailModal({
 
               {/* Related tokens section */}
               <CardDetailRelatedTokens relatedTokens={relatedTokens} onCardClick={setSelectedToken} />
+
+              {!isToken ? <CardDetailRulings cardId={card.id} oracleId={card.oracle_id} /> : null}
 
               {/* Edit and Copy controls for Deck Cards */}
               <div className="w-full mt-auto">

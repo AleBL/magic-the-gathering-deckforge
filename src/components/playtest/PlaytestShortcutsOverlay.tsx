@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaKeyboard, FaTimes } from 'react-icons/fa';
+import { LuKeyboard, LuX } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
@@ -45,20 +45,17 @@ export function PlaytestShortcutsOverlay() {
         className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-slate-950/40">
-          <h3
-            id="playtest-shortcuts-title"
-            className="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"
-          >
-            <FaKeyboard className="text-indigo-400" />
+          <h3 id="playtest-shortcuts-title" className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <LuKeyboard className="text-accent" />
             {t('playtest.shortcutsTitle')}
           </h3>
           <button
             type="button"
             onClick={() => setIsShortcutsOpen(false)}
             aria-label={t('common.close')}
-            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-all cursor-pointer"
+            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition cursor-pointer"
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
         <div className="p-4 space-y-1.5">
@@ -72,7 +69,7 @@ export function PlaytestShortcutsOverlay() {
                 {row.keys.map((key) => (
                   <kbd
                     key={key}
-                    className="min-w-6 text-center bg-slate-800 border border-slate-700 text-slate-200 text-[11px] font-mono font-bold px-1.5 py-0.5 rounded shadow-sm"
+                    className="min-w-6 text-center bg-slate-800 border border-slate-700 text-slate-200 text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded shadow-sm"
                   >
                     {key}
                   </kbd>

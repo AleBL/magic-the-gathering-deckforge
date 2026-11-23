@@ -16,8 +16,7 @@ export function useColorLabels(): Record<string, ColorLabel> {
       W: {
         name: t('search.white'),
         fill: 'bg-slate-200',
-        color:
-          'text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/50 border-slate-300 dark:border-slate-600'
+        color: 'text-fg bg-surface-2 border-line-strong'
       },
       U: {
         name: t('search.blue'),
@@ -27,7 +26,7 @@ export function useColorLabels(): Record<string, ColorLabel> {
       B: {
         name: t('search.black'),
         fill: 'bg-zinc-800',
-        color: 'text-zinc-900 dark:text-zinc-300 bg-zinc-300 dark:bg-zinc-900/80 border-zinc-500 dark:border-zinc-700'
+        color: 'text-fg bg-surface-3 border-zinc-500 dark:border-zinc-700'
       },
       R: {
         name: t('search.red'),
@@ -43,8 +42,7 @@ export function useColorLabels(): Record<string, ColorLabel> {
       C: {
         name: t('search.colorless'),
         fill: 'bg-slate-400',
-        color:
-          'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/20 border-slate-200 dark:border-slate-800/50'
+        color: 'text-fg-secondary bg-surface-2 border-line'
       }
     }),
     [t]

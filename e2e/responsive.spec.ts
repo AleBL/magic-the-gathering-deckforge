@@ -50,7 +50,7 @@ for (const viewport of VIEWPORTS) {
 test('an open modal does not overflow the narrowest phone', async ({ appPage }) => {
   await appPage.setViewportSize({ width: 320, height: 640 });
   await appPage.goto('/');
-  await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+  await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
   await appPage.getByRole('button', { name: 'Search', exact: true }).click();
   await appPage.getByRole('button', { name: 'Add copy' }).click();
 
@@ -103,7 +103,7 @@ test('touch targets meet the 24px minimum on a phone viewport', async ({ appPage
 test('search results reflow without overflow on the narrowest phone', async ({ appPage }) => {
   await appPage.setViewportSize({ width: 320, height: 640 });
   await appPage.goto('/');
-  await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+  await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
   await appPage.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(appPage.getByRole('button', { name: 'Lightning Bolt' })).toBeVisible();
 

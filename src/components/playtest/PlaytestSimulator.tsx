@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaExclamationTriangle, FaCheck } from 'react-icons/fa';
+import { LuCheck, LuTriangleAlert } from 'react-icons/lu';
 
 import { Card } from '../../types/Card';
 import { DeckRelatedToken } from '../../types/Deck';
@@ -15,7 +15,7 @@ import { PlaytestModals } from '../playtest/PlaytestModals';
 import { PlaytestFaceChoiceModal } from '../playtest/PlaytestFaceChoiceModal';
 import { PlaytestShortcutsOverlay } from '../playtest/PlaytestShortcutsOverlay';
 import { PlaytestParticles } from './PlaytestParticles';
-import AmbientGlow from '../ui/AmbientGlow';
+import LowLifeWash from '../ui/LowLifeWash';
 import { useRipple } from '../../hooks/useRipple';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useShortcutHandler } from '../../hooks/useShortcutHandler';
@@ -120,14 +120,14 @@ function PlaytestSimulatorContent({
         role="dialog"
         aria-modal="true"
         aria-label={t('playtest.playtestSimulator')}
-        className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition-all duration-300"
+        className="bg-surface-2 border border-line text-fg rounded-2xl w-full h-full max-w-none shadow-2xl flex flex-col overflow-hidden transition duration-300"
       >
         <PlaytestControlBarTop onClose={onClose} />
 
         {isMulliganPhase ? (
-          <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1.5 justify-center sm:justify-start">
-              <FaExclamationTriangle className="text-amber-500 shrink-0" />
+          <div className="bg-warning-soft border-b border-warning/40 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <span className="text-xs text-warning font-semibold flex items-center gap-1.5 justify-center sm:justify-start">
+              <LuTriangleAlert className="text-warning shrink-0" />
               <span>
                 {t('playtest.mulliganPhaseBanner', {
                   mulligans: String(mulligans),
@@ -143,9 +143,9 @@ function PlaytestSimulatorContent({
                     createRipple(event);
                     handleConfirmMulligan();
                   }}
-                  className="ripple-container bg-amber-500 hover:bg-warning text-slate-950 text-xs font-extrabold px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1 cursor-pointer"
+                  className="ripple-container bg-warning hover:bg-warning-hover text-on-warning text-xs font-medium px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                 >
-                  <FaCheck />
+                  <LuCheck />
                   {t('playtest.confirmMulligan')}
                 </button>
               ) : null}
@@ -155,7 +155,7 @@ function PlaytestSimulatorContent({
                   createRipple(event);
                   handleKeepHand();
                 }}
-                className="ripple-container bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer"
+                className="ripple-container bg-primary hover:bg-primary-hover text-on-primary text-xs font-medium px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 {t('playtest.keepHand')}
               </button>
@@ -164,13 +164,14 @@ function PlaytestSimulatorContent({
         ) : null}
 
         <div className="flex-1 flex flex-row overflow-hidden min-h-0 sm:min-h-[480px]">
-          <div className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-4 sm:gap-6 relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] bg-slate-50 dark:bg-slate-950">
-            <AmbientGlow lowLife={lifeTotal <= 5} intensity={1.4} positionClassName="absolute inset-0 z-0" />
+          {/* From lg up the table fits the window: the hand and the bottom bar keep their
+              height at the bottom and the battlefield takes what is left, scrolling inside
+              itself. Below lg the column scrolls as a whole. */}
+          <div className="flex-1 min-h-0 p-3 sm:p-4 overflow-y-auto lg:overflow-hidden flex flex-col gap-3 sm:gap-4 relative bg-surface-2">
+            <LowLifeWash active={lifeTotal <= 5} />
             <PlaytestParticles />
 
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-200/20 dark:to-slate-900/40 pointer-events-none" />
-
-            <div className="relative flex flex-col lg:flex-row gap-4 sm:gap-6 items-stretch z-10">
+            <div className="relative flex flex-col lg:flex-row gap-3 sm:gap-4 items-stretch z-10 lg:flex-1 lg:min-h-0">
               <PlaytestLibraryGraveyard />
               <PlaytestBattlefield />
             </div>

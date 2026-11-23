@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["e2e/**/*.spec.ts", "electron/index.ts", "electron/preload.ts", "scripts/*.mjs"],
+  "entry": ["e2e/**/*.spec.ts", "e2e/**/*.visual.ts", "e2e/**/*.bench.ts", "electron/index.ts", "electron/preload.ts", "scripts/*.mjs"],
   "project": ["src/**/*.{ts,tsx}", "electron/**/*.ts", "e2e/**/*.ts"],
   "ignoreDependencies": ["tailwindcss"],
   "ignoreExportsUsedInFile": true,

@@ -1,13 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "./style/variables.css";
-@import "./style/layout.css";
-@import "./style/buttons.css";
-@import "./style/forms.css";
-@import "./style/utilities.css";
-@import "./style/components.css";
-@import "./style/deck-stack-view.css";
-@import "./style/motion-effects.css";
+@import './style/variables.css';
+@import './style/layout.css';
+@import './style/buttons.css';
+@import './style/forms.css';
+@import './style/utilities.css';
+@import './style/components.css';
+@import './style/deck-stack-view.css';
+@import './style/motion-effects.css';
 
 /* Dark mode via class strategy */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -15,18 +15,14 @@
 /* Base styles */
 @layer base {
   code {
-    @apply mx-2 rounded bg-gray-200 px-1 py-0.5;
-  }
-
-  html.dark code {
-    @apply bg-gray-700;
+    @apply mx-2 rounded bg-surface-3 px-1 py-0.5;
   }
 
   .root {
     @apply min-h-screen;
   }
 
-  /* Crisper glyph edges for the premium type treatment */
+  /* Crisper glyph edges */
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -35,15 +31,20 @@
 
   body {
     font-family: var(--font-sans);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
-  html:not(.dark) body {
-    @apply bg-white text-gray-900;
+  body {
+    @apply bg-surface-0 text-fg;
+    /* One figure format everywhere: counts, prices, life and percentages line up
+       and do not jitter as they change. */
+    font-variant-numeric: tabular-nums;
   }
 
-  html.dark body {
-    @apply bg-gray-900 text-white;
+  html.dark {
+    color-scheme: dark;
   }
 
   /* Theme transitions — scoped to containers, not every DOM node */
@@ -76,24 +77,24 @@
 
   /* Prevent cursor override on disabled elements */
   button:disabled,
-  [role="button"][aria-disabled="true"],
+  [role='button'][aria-disabled='true'],
   input:disabled,
   select:disabled {
     cursor: not-allowed;
   }
 
-  /* ── Smooth focus rings for keyboard navigation ── */
-  /* Opaque blue-500: 3.68:1 on white / 4.85:1 on slate-900, both pass WCAG 2.2 SC 1.4.11 (3:1 min for UI/focus indicators). */
+  /* ── Focus ring for keyboard navigation ── */
+  /* Brass --color-focus: 3.6:1 on paper, 8:1 on graphite, both above WCAG 2.2
+     SC 1.4.11's 3:1 for focus indicators. Appears instantly. */
   :focus-visible {
-    outline: 2px solid rgb(59 130 246);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
     border-radius: 4px;
-    transition: outline-offset 150ms var(--ease-out);
   }
 
   /* ── Subtle active press feedback ── */
   button:not(:disabled):active,
-  [role="button"]:not([aria-disabled="true"]):not(.modal-overlay):not(.no-active-scale):active {
+  [role='button']:not([aria-disabled='true']):not(.modal-overlay):not(.no-active-scale):active {
     transform: scale(0.96);
     transition: transform 100ms var(--ease-out);
   }
@@ -105,8 +106,20 @@
 
   /* ── Text selection highlight ── */
   ::selection {
-    background-color: rgb(59 130 246 / 0.3);
+    background-color: var(--color-accent-soft);
     color: inherit;
+  }
+
+  /* Caret and native controls take the palette instead of browser blue. */
+  input,
+  textarea {
+    caret-color: var(--color-accent);
+  }
+
+  input[type='checkbox'],
+  input[type='radio'],
+  input[type='range'] {
+    accent-color: var(--color-primary);
   }
 
   /* ── Respect users who prefer reduced motion (accessibility) ── */
@@ -143,7 +156,6 @@
   .animate-toast-enter {
     animation: toastEnter 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
-
 }
 
 /* ── Modal / drawer enter-exit transitions ──────────────────
@@ -370,7 +382,8 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
 /* Drop zone glow pulse */
 @keyframes drop-zone-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2);
   }
   50% {

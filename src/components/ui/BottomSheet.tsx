@@ -53,7 +53,7 @@ export default function BottomSheet({ isOpen, onClose, labelledBy, className = '
         {/* Grab handle: purely a visual affordance now — drag-to-close works
             from anywhere on the sheet (see useSwipeToClose), not just here. */}
         <div className="sm:hidden -mt-6 -mx-6 mb-3 flex justify-center pt-2.5 pb-1 shrink-0" aria-hidden="true">
-          <div className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+          <div className="w-10 h-1.5 rounded-full bg-surface-3" />
         </div>
         <div className={`flex-1 min-h-0 overflow-y-auto overscroll-contain ${className}`}>{children}</div>
       </div>

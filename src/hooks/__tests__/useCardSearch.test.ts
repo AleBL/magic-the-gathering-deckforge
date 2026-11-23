@@ -144,7 +144,7 @@ describe('useCardSearch results', () => {
     try {
       const result = await withResults([]);
       expect(result.current.cards).toEqual([]);
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.noConnection'));
     } finally {
       Object.defineProperty(navigator, 'onLine', { value: true, configurable: true, writable: true });
     }
@@ -165,7 +165,7 @@ describe('useCardSearch results', () => {
       await act(async () => {
         await result.current.loadNextPage();
       });
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.noConnection'));
       expect(result.current.hasMore).toBe(false);
     } finally {
       Object.defineProperty(navigator, 'onLine', { value: true, configurable: true, writable: true });
@@ -263,7 +263,7 @@ describe('useCardSearch network endings', () => {
         await vi.advanceTimersByTimeAsync(6000);
       });
 
-      expect(result.current.error).toBe(i18n.t('search.scryfallOffline'));
+      expect(result.current.error).toBe(i18n.t('search.scryfallSlow'));
       expect(result.current.isLoadingInitial).toBe(false);
     } finally {
       vi.useRealTimers();
@@ -470,6 +470,24 @@ describe('useCardSearch.buildQuery', () => {
   it('emits cmc as an equality term', async () => {
     const result = await withFilters({ cmc: '3' });
     expect(result.current.buildQuery('')).toBe('cmc=3');
+  });
+
+  // Sorting rides on Scryfall's own keyword so every further page arrives in the same order.
+  it('appends the chosen order as a Scryfall order term', async () => {
+    const result = await withFilters({ rarity: 'rare' });
+    await act(async () => {
+      result.current.setSortOrder('cmc');
+    });
+    expect(result.current.buildQuery('bolt')).toBe('bolt r:rare order:cmc');
+  });
+
+  it('adds no term for the default name order, and keeps the default query alone', async () => {
+    const result = await withFilters({});
+    expect(result.current.buildQuery('')).toBe('c>=1');
+    await act(async () => {
+      result.current.setSortOrder('usd');
+    });
+    expect(result.current.buildQuery('')).toBe('c>=1 order:usd');
   });
 
   it('combines typed text with every filter, single-spaced', async () => {

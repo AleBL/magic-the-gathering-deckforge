@@ -146,7 +146,7 @@ export function useDeckTokenAnalysis({ cards, localTokens, addTokens, onTokensLo
       // reached no one ends exactly like a deck that makes no tokens — and the empty state
       // then states that as fact. Say a lookup failed, whether none or only some got through.
       if (lookupFailed) {
-        dispatchToast(isBrowserOffline() ? t('search.scryfallOffline') : t('tokens.analysisError'), 'error');
+        dispatchToast(isBrowserOffline() ? t('search.noConnection') : t('tokens.analysisError'), 'error');
       }
 
       const partIds = Array.from(partIdToGenerator.keys());
@@ -159,7 +159,7 @@ export function useDeckTokenAnalysis({ cards, localTokens, addTokens, onTokensLo
       // A batch that never came back used to vanish quietly, leaving the tab looking like
       // Scryfall had answered with fewer tokens than the deck actually makes.
       if (printingsFailed && !lookupFailed) {
-        dispatchToast(isBrowserOffline() ? t('search.scryfallOffline') : t('tokens.analysisError'), 'error');
+        dispatchToast(isBrowserOffline() ? t('search.noConnection') : t('tokens.analysisError'), 'error');
       }
 
       const translated = await translateCards(printings, i18n.language || 'en');

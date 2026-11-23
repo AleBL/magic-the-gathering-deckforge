@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaSlidersH, FaTh, FaList, FaBook, FaCheckSquare, FaFolderOpen } from 'react-icons/fa';
+import { LuBook, LuFolderOpen, LuGrid3X3, LuList, LuSlidersHorizontal, LuSquareCheck } from 'react-icons/lu';
 import { CardSize } from '../../types';
 import type { BinderLayout } from './CollectionBinderView';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -65,11 +65,11 @@ export function CollectionViewOptions({
 
   const modes = (
     [
-      { mode: 'grid', label: t('collection.viewGrid'), icon: FaTh },
-      { mode: 'list', label: t('collection.viewList'), icon: FaList },
-      { mode: 'binder', label: t('collection.viewBinder'), icon: FaBook },
-      { mode: 'checklist', label: t('collection.viewChecklist'), icon: FaCheckSquare },
-      { mode: 'bySet', label: t('collection.viewBySet'), icon: FaFolderOpen }
+      { mode: 'grid', label: t('collection.viewGrid'), icon: LuGrid3X3 },
+      { mode: 'list', label: t('collection.viewList'), icon: LuList },
+      { mode: 'binder', label: t('collection.viewBinder'), icon: LuBook },
+      { mode: 'checklist', label: t('collection.viewChecklist'), icon: LuSquareCheck },
+      { mode: 'bySet', label: t('collection.viewBySet'), icon: LuFolderOpen }
     ] as const
   ).filter((entry) => entry.mode !== 'binder' || canUseBinder);
 
@@ -85,7 +85,7 @@ export function CollectionViewOptions({
         className={`display-settings-btn ${isOpen ? 'display-settings-btn-active' : ''}`}
         title={t('common.viewMode')}
       >
-        <FaSlidersH className="text-xs shrink-0 text-blue-500 dark:text-blue-400" />
+        <LuSlidersHorizontal className="text-xs shrink-0 text-accent" />
         <span>{activeLabel}</span>
         <span
           className="text-[9px] opacity-60 transition-transform duration-200"

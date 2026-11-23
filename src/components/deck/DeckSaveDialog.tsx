@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCheck, FaTimes, FaInfoCircle } from 'react-icons/fa';
+import { LuCheck, LuInfo, LuX } from 'react-icons/lu';
 import { DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -48,16 +48,13 @@ function DeckSaveDialog({
         className="modal-container modal-container-medium w-full flex flex-col !p-0 overflow-hidden animate-fadeIn mx-auto"
       >
         <div className="p-6 md:p-8 flex-1 overflow-y-auto flex flex-col">
-          <h3 id="deck-save-title" className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <h3 id="deck-save-title" className="text-xl font-semibold text-fg mb-4">
             {title ?? t('deck.saveDeck')}
           </h3>
 
           <div className="space-y-4 mb-6">
             <div>
-              <label
-                htmlFor="deck-name-input"
-                className="form-label block mb-1 font-semibold text-gray-700 dark:text-gray-300"
-              >
+              <label htmlFor="deck-name-input" className="form-label block mb-1 font-semibold text-fg-secondary">
                 {t('deck.deckNamePlaceholder')}
               </label>
               <input
@@ -66,18 +63,16 @@ function DeckSaveDialog({
                 value={deckName}
                 onChange={(e) => onDeckNameChange(e.target.value)}
                 placeholder={t('deck.deckNamePlaceholder')}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-focus"
               />
             </div>
 
             <div>
-              <span className="form-label block mb-1 font-semibold text-gray-700 dark:text-gray-300">
-                {t('validation.format')}
-              </span>
+              <span className="form-label block mb-1 font-semibold text-fg-secondary">{t('validation.format')}</span>
               <select
                 value={deckFormat}
                 onChange={(e) => onDeckFormatChange((e.target.value as DeckFormat) || DeckFormatType.FREEFORM)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg bg-surface-1 text-fg focus:ring-2 focus:ring-focus"
               >
                 {DECK_FORMATS.map((fmt) => (
                   <option key={fmt.value} value={fmt.value}>
@@ -87,27 +82,27 @@ function DeckSaveDialog({
               </select>
             </div>
 
-            <div className="flex gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-lg text-sm">
-              <FaInfoCircle className="shrink-0 mt-0.5" />
+            <div className="flex gap-2 p-3 bg-accent-soft text-accent rounded-lg text-sm">
+              <LuInfo className="shrink-0 mt-0.5" />
               <span>{t('validation.deckRulesExplanation')}</span>
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4 mt-auto border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 pt-4 mt-auto border-t border-line">
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-surface-3 hover:bg-surface-3 text-fg rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <FaTimes />
+              <LuX />
               {t('common.cancel')}
             </button>
             <button
               type="button"
               onClick={onSave}
-              className="flex-1 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <FaCheck />
+              <LuCheck />
               {t('deck.save')}
             </button>
           </div>

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaHeart, FaRegHeart, FaPlus, FaMinus } from 'react-icons/fa';
+import { LuHeart, LuMinus, LuPlus } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { useCardCollection } from '../../hooks/useCardCollection';
 
@@ -31,11 +31,11 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
 
   if (variant === 'panel') {
     return (
-      <div className="flex items-center justify-between gap-3 w-full mt-3 p-3 rounded-xl bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700">
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+      <div className="flex items-center justify-between gap-3 w-full mt-3 p-3 rounded-xl bg-surface-2 border border-line">
+        <span className="text-sm font-semibold text-fg-secondary">
           {t('collection.inCollection')}
           {ownsOtherPrintings ? (
-            <span className="block text-[11px] font-medium text-gray-500 dark:text-gray-400">
+            <span className="block text-[11px] font-medium text-fg-muted">
               {t('collection.ownsOtherPrinting', { count: totalOwned })}
             </span>
           ) : null}
@@ -48,32 +48,30 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
             title={t('collection.wishlist')}
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
               wishlist
-                ? 'bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300'
-                : 'bg-white text-gray-400 hover:text-rose-500 dark:bg-slate-700 dark:text-slate-400 border border-gray-200 dark:border-slate-600'
+                ? 'bg-danger-soft text-danger '
+                : 'bg-surface-1 text-fg-muted hover:text-danger border border-line-strong '
             }`}
           >
-            {wishlist ? <FaHeart className="text-sm" /> : <FaRegHeart className="text-sm" />}
+            {wishlist ? <LuHeart fill="currentColor" className="text-sm" /> : <LuHeart className="text-sm" />}
           </button>
-          <div className="flex items-center gap-2 rounded-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 px-1.5 py-1">
+          <div className="flex items-center gap-2 rounded-full bg-surface-1 border border-line-strong px-1.5 py-1">
             <button
               type="button"
               onClick={decrement}
               disabled={quantity === 0}
               aria-label={t('collection.decrement')}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-fg-secondary hover:bg-gray-100 dark:hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              <FaMinus className="text-[10px]" />
+              <LuMinus className="text-[10px]" />
             </button>
-            <span className="min-w-[2ch] text-center text-sm font-bold text-gray-900 dark:text-white tabular-nums">
-              {quantity}
-            </span>
+            <span className="min-w-[2ch] text-center text-sm font-semibold text-fg tabular-nums">{quantity}</span>
             <button
               type="button"
               onClick={increment}
               aria-label={t('collection.increment')}
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white hover:bg-blue-500 transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-primary-hover transition-colors"
             >
-              <FaPlus className="text-[10px]" />
+              <LuPlus className="text-[10px]" />
             </button>
           </div>
         </div>
@@ -96,7 +94,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
           were constant, so editing lives in the detail panel — but the count itself is the
           point of the collection tab, so it shows read-only. */}
       {totalOwned > 0 ? (
-        <span className="sm:hidden pointer-events-none rounded-full bg-black/70 backdrop-blur-md border border-white/20 px-2 py-0.5 text-[11px] font-extrabold text-white tabular-nums shadow-md">
+        <span className="sm:hidden pointer-events-none rounded-full bg-black/70 backdrop-blur-md border border-white/20 px-2 py-0.5 text-[11px] font-semibold text-white tabular-nums shadow-md">
           {quantity > 0 ? `${quantity}x` : t('collection.ownsOtherPrinting', { count: totalOwned })}
         </span>
       ) : null}
@@ -114,9 +112,9 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               aria-label={t('collection.decrement')}
               className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
             >
-              <FaMinus className="text-[9px]" />
+              <LuMinus className="text-[9px]" />
             </button>
-            <span className="min-w-[2ch] text-center text-xs font-extrabold text-white tabular-nums">{quantity}</span>
+            <span className="min-w-[2ch] text-center text-xs font-semibold text-white tabular-nums">{quantity}</span>
             <button
               type="button"
               onClick={(e) => {
@@ -125,9 +123,9 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               }}
               title={t('collection.increment')}
               aria-label={t('collection.increment')}
-              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-white hover:bg-blue-500 transition-colors"
+              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-primary-hover transition-colors"
             >
-              <FaPlus className="text-[9px]" />
+              <LuPlus className="text-[9px]" />
             </button>
           </div>
         ) : (
@@ -141,9 +139,9 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
             }}
             title={t('collection.markOwned')}
             aria-label={t('collection.markOwned')}
-            className="flex items-center gap-1.5 h-8 sm:h-7 pl-2.5 pr-3 rounded-full bg-black/65 text-white text-[11px] sm:text-[10px] font-bold shadow-md backdrop-blur-md border border-white/20 hover:bg-primary transition-colors pointer-events-auto"
+            className="flex items-center gap-1.5 h-8 sm:h-7 pl-2.5 pr-3 rounded-full bg-black/65 text-white text-[11px] sm:text-[10px] font-semibold shadow-md backdrop-blur-md border border-white/20 hover:bg-primary hover:text-on-primary transition-colors pointer-events-auto"
           >
-            <FaPlus className="text-[9px] shrink-0" />
+            <LuPlus className="text-[9px] shrink-0" />
             {t('collection.tab')}
           </button>
         )}
@@ -159,11 +157,11 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
           aria-label={t('collection.wishlist')}
           className={`w-8 h-8 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-md backdrop-blur-md border transition-colors pointer-events-auto ${
             wishlist
-              ? 'bg-rose-500/90 text-white border-rose-400'
-              : 'bg-black/65 text-white/90 border-white/20 hover:bg-rose-500/80 hover:text-white'
+              ? 'bg-danger text-on-danger border-danger'
+              : 'bg-black/65 text-white/90 border-white/20 hover:bg-danger hover:text-on-danger'
           }`}
         >
-          {wishlist ? <FaHeart className="text-xs" /> : <FaRegHeart className="text-xs" />}
+          {wishlist ? <LuHeart fill="currentColor" className="text-xs" /> : <LuHeart className="text-xs" />}
         </button>
       </div>
     </div>

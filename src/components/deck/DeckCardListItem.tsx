@@ -1,15 +1,6 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  FaCrown,
-  FaBan,
-  FaExclamationTriangle,
-  FaTimesCircle,
-  FaPalette,
-  FaPlus,
-  FaMinus,
-  FaTrash
-} from 'react-icons/fa';
+import { LuBan, LuCircleX, LuCrown, LuMinus, LuPalette, LuPlus, LuTrash2, LuTriangleAlert } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckFormat } from '../../types/Deck';
 import { getCardArtCropUrl } from '../../utils/deckGrouping';
@@ -72,12 +63,12 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         role="button"
         tabIndex={0}
         aria-label={displayName}
-        className={`group relative overflow-hidden transition-all duration-200 h-11 border-b border-gray-300 dark:border-gray-800 cursor-pointer ${
+        className={`group relative overflow-hidden transition duration-200 h-11 border-b border-line-strong cursor-pointer ${
           isBanned
-            ? 'ring-1 ring-inset ring-red-500 bg-red-50 dark:bg-red-950/40'
+            ? 'ring-1 ring-inset ring-danger/40 bg-danger-soft '
             : isRestricted
-              ? 'ring-1 ring-inset ring-amber-500 bg-amber-50 dark:bg-amber-950/40'
-              : 'bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800'
+              ? 'ring-1 ring-inset ring-warning/40 bg-warning-soft '
+              : 'bg-surface-1 hover:bg-surface-2 '
         }`}
         draggable={isRemovable && !isTokenZone}
         onDragStart={(e) => {
@@ -126,38 +117,38 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         <div className="relative z-20 flex items-center justify-between h-full px-2">
           <div className="flex items-center min-w-0 pr-2">
             <span
-              className={`font-black w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-slate-700 dark:text-slate-300'}`}
+              className={`font-semibold w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-danger ' : 'text-fg-secondary '}`}
             >
               {count}
             </span>
             <span
-              className={`font-semibold truncate text-sm hover:text-primary dark:hover:text-blue-400 transition-colors drop-shadow-sm ${isBanned ? 'text-red-800 dark:text-red-300 font-extrabold' : 'text-gray-900 dark:text-white'}`}
+              className={`font-semibold truncate text-sm hover:text-accent transition-colors drop-shadow-sm ${isBanned ? 'text-danger font-semibold' : 'text-fg '}`}
             >
               {displayName}
             </span>
 
             {card.isCommander && (
-              <span className="deck-card-status-chip-commander animate-pulse ml-2">
-                <FaCrown className="text-amber-500 dark:text-amber-400 shrink-0 text-[10px]" />
+              <span className="deck-card-status-chip-commander ml-2">
+                <LuCrown className="text-warning shrink-0 text-[10px]" />
                 {t('cardDetails.commanderBadge')}
               </span>
             )}
             {isBanned && (
               <span className="deck-card-status-chip-banned ml-2">
-                <FaBan className="text-red-500 dark:text-red-400 text-[9px] shrink-0" />
-                {t('cardDetails.banned').toUpperCase()}
+                <LuBan className="text-danger text-[9px] shrink-0" />
+                {t('cardDetails.banned')}
               </span>
             )}
             {isRestricted && (
               <span className="deck-card-status-chip-restricted ml-2">
-                <FaExclamationTriangle className="text-amber-500 dark:text-amber-400 text-[9px] shrink-0" />
-                {t('cardDetails.restricted').toUpperCase()}
+                <LuTriangleAlert className="text-warning text-[9px] shrink-0" />
+                {t('cardDetails.restricted')}
               </span>
             )}
             {isInvalid && (
               <span className="deck-card-status-chip-invalid ml-2" title={t('cardDetails.invalidInFormatHint')}>
-                <FaTimesCircle className="text-violet-500 dark:text-violet-400 text-[9px] shrink-0" />
-                {t('cardDetails.invalidInFormat').toUpperCase()}
+                <LuCircleX className="text-accent text-[9px] shrink-0" />
+                {t('cardDetails.invalidInFormat')}
               </span>
             )}
           </div>
@@ -187,7 +178,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-commander"
                     title={card.isCommander ? t('cardDetails.removeAsCommander') : t('cardDetails.setAsCommander')}
                   >
-                    <FaCrown className="text-[10px]" />
+                    <LuCrown className="text-[10px]" />
                   </button>
                 )}
 
@@ -201,7 +192,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-art"
                     title={t('cardDetails.changeArt')}
                   >
-                    <FaPalette className="text-[9px]" />
+                    <LuPalette className="text-[9px]" />
                   </button>
                 )}
 
@@ -211,7 +202,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                   className="deck-quick-action-add"
                   title={t('cardDetails.addCopy')}
                 >
-                  <FaPlus className="text-[8px]" />
+                  <LuPlus className="text-[8px]" />
                 </button>
 
                 {!isTokenZone && (
@@ -221,7 +212,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-remove"
                     title={t('cardDetails.removeCopy')}
                   >
-                    <FaMinus className="text-[8px]" />
+                    <LuMinus className="text-[8px]" />
                   </button>
                 )}
 
@@ -239,7 +230,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                   className="deck-quick-action-delete"
                   title={isTokenZone ? t('tokens.deleteToken') : t('cardDetails.deleteCard')}
                 >
-                  <FaTrash className="text-[8px]" />
+                  <LuTrash2 className="text-[8px]" />
                 </button>
               </div>
             )}

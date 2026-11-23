@@ -1,7 +1,7 @@
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import locales from '../../locales';
-import { scryfallNamedImageUrl } from '../../constants/urls';
+import { scryfallNamedImageUrl, scryfallPrintingUrl } from '../../constants/urls';
 
 export const getGlowColor = (rarity: string | undefined): string => {
   switch (rarity?.toLowerCase()) {
@@ -42,8 +42,23 @@ const getBasicLandNamesMap = (): Record<string, string> => {
 
 const BASIC_LAND_NAMES = getBasicLandNamesMap();
 
+const IMAGE_VERSION: Record<CardSize, string> = { small: 'small', medium: 'normal', large: 'large', xlarge: 'png' };
+
+/**
+ * A localized printing whose scan Scryfall does not have shows the "Localized image not
+ * available" stand-in. The English scan of the same printing is a better picture of the card.
+ */
+function englishScanFallback(card: Card, size: CardSize): string | null {
+  const isStandIn = card.image_status === 'placeholder' || card.image_status === 'missing';
+  if (!isStandIn || !card.lang || card.lang === 'en' || !card.set || !card.collector_number) return null;
+  return `${scryfallPrintingUrl(card.set, card.collector_number, 'en')}?format=image&version=${IMAGE_VERSION[size]}`;
+}
+
 export function getCardItemImageUrl(card: Card, size: CardSize): string {
   if (card.selectedPrintImageUri) return card.selectedPrintImageUri;
+
+  const fallback = englishScanFallback(card, size);
+  if (fallback) return fallback;
 
   const imageUris = card.image_uris ?? card.card_faces?.[0]?.image_uris;
   if (!imageUris) {

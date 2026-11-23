@@ -68,7 +68,7 @@ export function useCardSearchPaging(language: string) {
         // erroring, which is indistinguishable from a query nothing matches: the grid said
         // "No cards found" and offered to adjust filters that were never the problem.
         if (results.length === 0 && isBrowserOffline()) {
-          setError(t('search.scryfallOffline'));
+          setError(t('search.noConnection'));
         }
 
         setCards(deduplicateCards(results, language));
@@ -102,7 +102,7 @@ export function useCardSearchPaging(language: string) {
         // Same silent ending as the first page: with no connection the emitter completes
         // empty, and the list simply stopped growing with nothing said about why.
         if (isBrowserOffline()) {
-          setError(t('search.scryfallOffline'));
+          setError(t('search.noConnection'));
         }
         setHasMore(false);
         return;

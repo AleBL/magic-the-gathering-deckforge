@@ -29,12 +29,12 @@ function DeckZoneTabs({
     const isDragTarget = dragOverZone === zone;
 
     return [
-      'px-3 py-1.5 rounded-t-lg transition-all text-xs font-semibold relative',
+      'px-3 py-1.5 rounded-t-lg transition text-xs font-semibold relative',
       isActive
-        ? 'bg-primary text-white font-extrabold shadow-sm'
-        : 'bg-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
+        ? 'bg-primary text-on-primary font-semibold shadow-sm'
+        : 'bg-transparent text-gray-500 hover:text-fg-secondary',
       isDragTarget
-        ? 'ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-slate-900 bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-extrabold scale-105 shadow-lg shadow-indigo-500/20'
+        ? 'ring-2 ring-focus ring-offset-1 dark:ring-offset-slate-900 bg-accent-soft text-accent font-semibold scale-105 shadow-lg'
         : ''
     ].join(' ');
   };
@@ -61,7 +61,7 @@ function DeckZoneTabs({
   };
 
   return (
-    <div className="flex flex-wrap border-b border-gray-200 dark:border-slate-800 mb-4 text-xs font-semibold gap-1.5 select-none">
+    <div className="flex flex-wrap border-b border-line mb-4 text-xs font-semibold gap-1.5 select-none">
       <button
         type="button"
         onClick={() => onZoneChange('main')}
@@ -71,7 +71,7 @@ function DeckZoneTabs({
         onDrop={(e) => handleDrop(e, 'main')}
       >
         {dragOverZone === 'main' && (
-          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-indigo-400 animate-pulse pointer-events-none" />
+          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-accent/50 pointer-events-none" />
         )}
         {t('strategy.mainDeck')} ({mainCount})
       </button>
@@ -84,7 +84,7 @@ function DeckZoneTabs({
         onDrop={(e) => handleDrop(e, 'sideboard')}
       >
         {dragOverZone === 'sideboard' && (
-          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-purple-400 animate-pulse pointer-events-none" />
+          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-accent/50 pointer-events-none" />
         )}
         {t('strategy.sideboard')} ({sideCount})
       </button>
@@ -97,7 +97,7 @@ function DeckZoneTabs({
         onDrop={(e) => handleDrop(e, 'maybeboard')}
       >
         {dragOverZone === 'maybeboard' && (
-          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-amber-400 animate-pulse pointer-events-none" />
+          <span className="absolute inset-0 rounded-t-lg border-2 border-dashed border-warning pointer-events-none" />
         )}
         {t('strategy.maybeboard')} ({maybeCount})
       </button>

@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaPlus, FaMinus, FaBan, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
+import { LuBan, LuCircleX, LuMinus, LuPlus, LuTriangleAlert } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckZone } from '../../types/enums';
 import { DeckFormat } from '../../types/Deck';
@@ -58,10 +58,10 @@ export function DeckStackPlaymatCard({
         <div
           className={`deck-stack-shadow deck-stack-shadow-level-one ${
             isBanned
-              ? 'bg-red-950/60 border border-red-900/60'
+              ? 'bg-danger border border-danger'
               : isRestricted
-                ? 'bg-amber-100/60 dark:bg-amber-950/60 border border-amber-300/60 dark:border-amber-900/60'
-                : 'bg-gray-300 dark:bg-slate-950 border border-gray-400/80 dark:border-slate-800/80'
+                ? 'bg-warning-soft border border-warning/40 '
+                : 'bg-surface-3 border border-gray-400/80 dark:border-slate-800/80'
           }`}
         />
       ) : null}
@@ -70,10 +70,10 @@ export function DeckStackPlaymatCard({
         <div
           className={`deck-stack-shadow deck-stack-shadow-level-two ${
             isBanned
-              ? 'bg-red-950/40 border border-red-900/40'
+              ? 'bg-danger-soft border border-danger/40'
               : isRestricted
-                ? 'bg-amber-100/40 dark:bg-amber-950/40 border border-amber-300/40 dark:border-amber-900/40'
-                : 'bg-gray-200 dark:bg-slate-950 border border-gray-300/80 dark:border-slate-800/80'
+                ? 'bg-warning-soft border border-warning/40 '
+                : 'bg-surface-3 border border-line-strong '
           }`}
         />
       ) : null}
@@ -84,10 +84,10 @@ export function DeckStackPlaymatCard({
         aria-label={card.printed_name || card.name}
         className={`deck-stack-main-card ${
           isBanned
-            ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
+            ? 'border-danger shadow-[0_0_10px_rgba(239,68,68,0.5)]'
             : isRestricted
-              ? 'border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
-              : 'border-gray-300 dark:border-slate-800/50 hover:border-blue-500/80'
+              ? 'border-warning shadow-[0_0_10px_rgba(245,158,11,0.4)]'
+              : 'border-line-strong hover:border-accent/50'
         }`}
         data-has-stack={count > 1 ? 'true' : 'false'}
         onClick={() => onSelectCard(card)}
@@ -106,46 +106,46 @@ export function DeckStackPlaymatCard({
           <img
             src={imageUrl}
             alt={card.name}
-            className={`w-full h-full object-cover pointer-events-none select-none transition-all duration-300 ${
+            className={`w-full h-full object-cover pointer-events-none select-none transition duration-300 ${
               isBanned ? 'opacity-50 grayscale-[40%] brightness-[75%]' : ''
             }`}
           />
         ) : (
           <div
-            className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-red-100 dark:bg-red-950/20' : 'bg-gray-100 dark:bg-slate-850'}`}
+            className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-danger-soft ' : 'bg-surface-2 '}`}
           >
             <span
-              className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-red-700 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}
+              className={`text-[10px] font-semibold block leading-tight truncate-2-lines ${isBanned ? 'text-danger ' : 'text-fg '}`}
             >
               {card.printed_name || card.name}
             </span>
-            <span className="text-[9px] text-yellow-500 font-mono font-bold">{card.mana_cost}</span>
+            <span className="text-[9px] text-warning font-mono font-semibold">{card.mana_cost}</span>
           </div>
         )}
 
         {count > 1 ? <span className="deck-stack-count-badge">{count}x</span> : null}
 
         {isBanned ? (
-          <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
-            <FaBan className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.banned').toUpperCase()}</span>
+          <div className="deck-stack-status-badge deck-stack-status-badge-banned">
+            <LuBan className="text-white text-[8px] shrink-0" />
+            <span>{t('cardDetails.banned')}</span>
           </div>
         ) : null}
 
         {isRestricted ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
-            <FaExclamationTriangle className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.restricted').toUpperCase()}</span>
+            <LuTriangleAlert className="text-white text-[8px] shrink-0" />
+            <span>{t('cardDetails.restricted')}</span>
           </div>
         ) : null}
 
         {isInvalid ? (
           <div
-            className="deck-stack-status-badge bg-violet-600/90 border border-violet-500"
+            className="deck-stack-status-badge bg-surface-3 border border-accent/50"
             title={t('cardDetails.invalidInFormatHint')}
           >
-            <FaTimesCircle className="text-white text-[8px] shrink-0" />
-            <span>{t('cardDetails.invalidInFormat').toUpperCase()}</span>
+            <LuCircleX className="text-white text-[8px] shrink-0" />
+            <span>{t('cardDetails.invalidInFormat')}</span>
           </div>
         ) : null}
 
@@ -158,10 +158,10 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onAddToDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-green-500 hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-success transition pointer-events-auto"
                 title={t('cardDetails.addCopy')}
               >
-                <FaPlus className="text-[10px]" />
+                <LuPlus className="text-[10px]" />
               </button>
               <button
                 type="button"
@@ -169,10 +169,10 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onRemoveFromDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-red-500 hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-danger transition pointer-events-auto"
                 title={t('cardDetails.removeCopy')}
               >
-                <FaMinus className="text-[10px]" />
+                <LuMinus className="text-[10px]" />
               </button>
             </div>
 
@@ -184,10 +184,10 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAIN);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.MAIN
-                      ? 'bg-primary text-white ring-1 ring-white/50'
-                      : 'bg-slate-700/80 text-gray-300 hover:bg-blue-500 hover:text-white'
+                      ? 'bg-primary text-on-primary ring-1 ring-white/50'
+                      : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
                   }`}
                   title={t('deck.printFilters.main')}
                 >
@@ -199,10 +199,10 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.SIDEBOARD
-                      ? 'bg-purple-600 text-white ring-1 ring-white/50'
-                      : 'bg-slate-700/80 text-gray-300 hover:bg-purple-500 hover:text-white'
+                      ? 'bg-surface-3 text-fg ring-1 ring-white/50'
+                      : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
                   }`}
                   title={t('deck.printFilters.sideboard')}
                 >
@@ -214,10 +214,10 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.MAYBEBOARD
                       ? 'bg-warning text-white ring-1 ring-white/50'
-                      : 'bg-slate-700/80 text-gray-300 hover:bg-amber-500 hover:text-white'
+                      : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'
                   }`}
                   title={t('deck.printFilters.maybeboard')}
                 >

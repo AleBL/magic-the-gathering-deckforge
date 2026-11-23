@@ -1,18 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { APP_EVENTS, emitAppEvent } from '../../constants/appEvents';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  FaSearch,
-  FaBook,
-  FaBoxOpen,
-  FaSave,
-  FaFlask,
-  FaTrash,
-  FaSun,
-  FaMoon,
-  FaKeyboard,
-  FaGlobe
-} from 'react-icons/fa';
+  LuBook,
+  LuFlaskConical,
+  LuGlobe,
+  LuKeyboard,
+  LuMoon,
+  LuPackageOpen,
+  LuSave,
+  LuSearch,
+  LuSun,
+  LuTrash2,
+  LuSwords
+} from 'react-icons/lu';
 import { dispatchPendingAction } from '../../hooks/usePendingAction';
 import { SUPPORTED_LANGUAGES } from '../../constants';
 import { AppTab } from '../../types';
@@ -63,7 +65,7 @@ export default function CommandPalette({
       {
         id: 'search',
         label: t('commandPalette.goToSearch'),
-        icon: <FaSearch />,
+        icon: <LuSearch />,
         keywords: 'search buscar cards cartas find',
         run: () => {
           setActiveTab('search');
@@ -73,14 +75,14 @@ export default function CommandPalette({
       {
         id: 'decks',
         label: t('commandPalette.goToDecks'),
-        icon: <FaBook />,
+        icon: <LuBook />,
         keywords: 'deck decks mazo manager',
         run: () => setActiveTab('deck')
       },
       {
         id: 'collection',
         label: t('commandPalette.goToCollection'),
-        icon: <FaBoxOpen />,
+        icon: <LuPackageOpen />,
         keywords: 'collection coleccion coleção owned wishlist have',
         run: () => setActiveTab('collection')
       },
@@ -88,7 +90,7 @@ export default function CommandPalette({
         id: 'save',
         label: t('commandPalette.saveDeck'),
         hint: 'Ctrl+S',
-        icon: <FaSave />,
+        icon: <LuSave />,
         keywords: 'save salvar guardar deck',
         run: () => {
           setActiveTab('deck');
@@ -99,7 +101,7 @@ export default function CommandPalette({
         id: 'playtest',
         label: t('commandPalette.playtest'),
         hint: 'Ctrl+P',
-        icon: <FaFlask />,
+        icon: <LuFlaskConical />,
         keywords: 'playtest simular test jugar jogar',
         run: () => {
           setActiveTab('deck');
@@ -110,7 +112,7 @@ export default function CommandPalette({
         id: 'clear',
         label: t('commandPalette.clearDeck'),
         hint: 'Ctrl+Shift+N',
-        icon: <FaTrash />,
+        icon: <LuTrash2 />,
         keywords: 'clear limpar limpiar deck reset',
         run: () => {
           setActiveTab('deck');
@@ -120,15 +122,22 @@ export default function CommandPalette({
       {
         id: 'theme',
         label: isDarkMode ? t('commandPalette.lightMode') : t('commandPalette.darkMode'),
-        icon: isDarkMode ? <FaSun /> : <FaMoon />,
+        icon: isDarkMode ? <LuSun /> : <LuMoon />,
         keywords: 'theme tema dark light claro escuro modo',
         run: () => setIsDarkMode((prev) => !prev)
+      },
+      {
+        id: 'life-counter',
+        label: t('lifeCounter.title'),
+        icon: <LuSwords />,
+        keywords: 'life counter vida contador table mesa poison veneno commander',
+        run: () => emitAppEvent(APP_EVENTS.openLifeCounter)
       },
       {
         id: 'shortcuts',
         label: t('commandPalette.shortcuts'),
         hint: '?',
-        icon: <FaKeyboard />,
+        icon: <LuKeyboard />,
         keywords: 'shortcuts atalhos atajos keyboard teclado help',
         run: onShowShortcuts
       }
@@ -137,7 +146,7 @@ export default function CommandPalette({
     const languageCommands: Command[] = SUPPORTED_LANGUAGES.map((lng) => ({
       id: `lang-${lng}`,
       label: `${t('commandPalette.language')}: ${LANGUAGE_LABELS[lng] ?? lng}`,
-      icon: <FaGlobe />,
+      icon: <LuGlobe />,
       keywords: `language idioma ${lng} ${LANGUAGE_LABELS[lng] ?? ''}`,
       run: () => i18n.changeLanguage(lng)
     }));
@@ -198,19 +207,19 @@ export default function CommandPalette({
         role="dialog"
         aria-modal="true"
         aria-label={t('commandPalette.title')}
-        className={`w-full max-w-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dropdownEnter'}`}
+        className={`w-full max-w-lg bg-surface-1/80 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden ${isClosing ? 'motion-dialog-closing' : 'animate-dropdownEnter'}`}
         onKeyDown={handleKeyDown}
       >
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-slate-800">
-          <FaSearch className="text-gray-400 shrink-0 text-sm" />
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-line">
+          <LuSearch className="text-gray-400 shrink-0 text-sm" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('commandPalette.placeholder')}
-            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+            className="flex-1 bg-transparent text-sm text-fg placeholder-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent/50"
           />
-          <kbd className="text-[10px] font-mono font-bold text-gray-400 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded px-1.5 py-0.5">
+          <kbd className="text-[10px] font-mono font-semibold text-gray-400 bg-surface-2 border border-line rounded px-1.5 py-0.5">
             ESC
           </kbd>
         </div>
@@ -226,15 +235,13 @@ export default function CommandPalette({
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => run(command.run)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer ${
-                  index === selectedIndex
-                    ? 'bg-indigo-50 dark:bg-indigo-600/20 text-indigo-700 dark:text-indigo-300'
-                    : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/60'
+                  index === selectedIndex ? 'bg-accent-soft text-accent ' : 'text-fg-secondary hover:bg-surface-2 '
                 }`}
               >
                 <span className="text-sm shrink-0 opacity-80">{command.icon}</span>
                 <span className="flex-1 text-sm font-medium">{command.label}</span>
                 {command.hint && (
-                  <kbd className="text-[10px] font-mono font-bold text-gray-400 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded px-1.5 py-0.5">
+                  <kbd className="text-[10px] font-mono font-semibold text-gray-400 bg-surface-2 border border-line rounded px-1.5 py-0.5">
                     {command.hint}
                   </kbd>
                 )}

@@ -73,7 +73,7 @@ export function useCollectionImportExport(entries: CollectionEntry[]) {
           // Nothing landed, so the cause is the whole story.
           const reason =
             failure === 'offline'
-              ? t('search.scryfallOffline')
+              ? t('search.scryfallUnavailable')
               : failure === 'rateLimited'
                 ? t('search.rateLimited')
                 : t('collection.importError');
@@ -98,7 +98,7 @@ export function useCollectionImportExport(entries: CollectionEntry[]) {
       } catch (error) {
         logger.error('Failed to import collection:', error);
         if (error instanceof Error && error.message === 'ScryfallOffline') {
-          dispatchToast(t('search.scryfallOffline'), 'error');
+          dispatchToast(t('search.scryfallUnavailable'), 'error');
         } else if (error instanceof Error && error.message === 'ScryfallRateLimited') {
           dispatchToast(t('search.rateLimited'), 'error');
         } else {

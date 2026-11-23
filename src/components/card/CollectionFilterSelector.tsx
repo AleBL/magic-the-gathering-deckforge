@@ -20,7 +20,7 @@ function CollectionFilterSelector({ value, onChange }: CollectionFilterSelectorP
     <div
       role="radiogroup"
       aria-label={t('search.ownership')}
-      className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-slate-800/70 p-1"
+      className="flex items-center gap-1 rounded-xl bg-surface-2 p-1"
     >
       {OPTIONS.map((option) => {
         const isActive = option.value === value;
@@ -31,10 +31,10 @@ function CollectionFilterSelector({ value, onChange }: CollectionFilterSelectorP
             role="radio"
             aria-checked={isActive}
             onClick={() => onChange(option.value)}
-            className={`min-h-[36px] px-3 rounded-lg text-xs font-bold transition-all ${
+            className={`min-h-[36px] px-3 rounded-lg text-xs font-semibold transition ${
               isActive
-                ? 'bg-white dark:bg-slate-600 text-primary dark:text-blue-200 shadow-sm ring-1 ring-black/5 dark:ring-white/10'
-                : 'text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
+                ? 'bg-white dark:bg-slate-600 text-accent shadow-sm ring-1 ring-line '
+                : 'text-fg-secondary hover:text-fg '
             }`}
           >
             {t(option.labelKey)}

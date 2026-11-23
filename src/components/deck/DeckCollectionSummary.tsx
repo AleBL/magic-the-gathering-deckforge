@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { FaBoxOpen, FaCheckCircle, FaChevronDown, FaTimes } from 'react-icons/fa';
+import { LuChevronDown, LuCircleCheck, LuPackageOpen, LuX } from 'react-icons/lu';
 import { db } from '../../db/database';
 import { Card } from '../../types/Card';
 import { CollectionEntry } from '../../types/Collection';
@@ -40,18 +40,16 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
   return (
     <div
       className={`rounded-xl border p-3 ${
-        complete
-          ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/50'
-          : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/50'
+        complete ? 'bg-success-soft border-success/40 ' : 'bg-warning-soft border-warning/40 '
       }`}
     >
       <div className="flex items-center gap-2 flex-wrap">
         {complete ? (
-          <FaCheckCircle className="text-emerald-500 shrink-0" />
+          <LuCircleCheck className="text-success shrink-0" />
         ) : (
-          <FaBoxOpen className="text-amber-500 shrink-0" />
+          <LuPackageOpen className="text-warning shrink-0" />
         )}
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+        <span className="text-sm font-semibold text-fg">
           {complete
             ? t('collection.deckComplete')
             : t('collection.deckMissing', {
@@ -59,7 +57,7 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
                 value: formatCurrency(gap.missingValue, currency)
               })}
         </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-fg-muted">
           {t('collection.deckOwnedOf', { owned: gap.totalOwned, total: gap.totalNeeded })}
         </span>
         {!complete && missingRows.length > 0 ? (
@@ -67,10 +65,10 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
             type="button"
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
-            className="ml-auto flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline"
+            className="ml-auto flex items-center gap-1 text-xs font-semibold text-warning hover:underline"
           >
             {t('collection.deckShoppingList')}
-            <FaChevronDown className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`} />
+            <LuChevronDown className={`text-[10px] transition-transform ${expanded ? 'rotate-180' : ''}`} />
           </button>
         ) : null}
         <button
@@ -78,20 +76,20 @@ export function DeckCollectionSummary({ cards }: DeckCollectionSummaryProps) {
           onClick={() => setShowDeckGap(false)}
           title={t('collection.deckGapHide')}
           aria-label={t('collection.deckGapHide')}
-          className={`${complete || missingRows.length === 0 ? 'ml-auto' : 'ml-1'} shrink-0 p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
+          className={`${complete || missingRows.length === 0 ? 'ml-auto' : 'ml-1'} shrink-0 p-1 rounded text-gray-400 hover:text-fg-secondary hover:bg-black/5 dark:hover:bg-white/10 transition-colors`}
         >
-          <FaTimes className="text-[11px]" />
+          <LuX className="text-[11px]" />
         </button>
       </div>
 
       {expanded && !complete ? (
-        <ul className="mt-2 pt-2 border-t border-amber-200/70 dark:border-amber-800/40 flex flex-col gap-1">
+        <ul className="mt-2 pt-2 border-t border-warning/40 flex flex-col gap-1">
           {missingRows.map((row) => (
-            <li key={row.name} className="flex items-center justify-between text-xs text-gray-700 dark:text-gray-200">
+            <li key={row.name} className="flex items-center justify-between text-xs text-fg-secondary">
               <span className="truncate">
-                <span className="font-bold tabular-nums">{row.missing}×</span> {row.name}
+                <span className="font-semibold tabular-nums">{row.missing}×</span> {row.name}
               </span>
-              <span className="tabular-nums text-gray-500 dark:text-gray-400 shrink-0 ml-2">
+              <span className="tabular-nums text-fg-muted shrink-0 ml-2">
                 {row.unitPrice !== null ? formatCurrency(row.missingValue, currency) : '—'}
               </span>
             </li>

@@ -88,7 +88,7 @@ describe('useDeckTextImport', () => {
       await result.current.importTextDeck('4 Lightning Bolt');
     });
 
-    await waitFor(() => expect(result.current.errorMsg).toBe(i18n.t('search.scryfallOffline')));
+    await waitFor(() => expect(result.current.errorMsg).toBe(i18n.t('search.noConnection')));
     expect(result.current.errorMsg).not.toBe(i18n.t('deck.importError'));
   });
 
@@ -100,7 +100,7 @@ describe('useDeckTextImport', () => {
       await result.current.importTextDeck('4 Lightning Bolt');
     });
 
-    await waitFor(() => expect(result.current.errorMsg).toBe(i18n.t('search.scryfallOffline')));
+    await waitFor(() => expect(result.current.errorMsg).toBe(i18n.t('search.scryfallUnavailable')));
   });
 
   it('reports rate limiting distinctly, since retrying later is the fix', async () => {

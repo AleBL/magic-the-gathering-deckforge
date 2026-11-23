@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaPalette, FaMinus, FaPlus, FaSync } from 'react-icons/fa';
+import { LuMinus, LuPalette, LuPlus, LuRefreshCw } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 
 interface CardDetailEditControlsProps {
@@ -39,17 +39,17 @@ export function CardDetailEditControls({
   if (!isDeckCard || !isEditMode) return null;
 
   return (
-    <div className="border-t border-gray-100 dark:border-gray-800 pt-4 mt-auto space-y-4">
-      <h3 className="font-bold text-[11px] text-gray-400 dark:text-gray-500 uppercase tracking-wider flex items-center gap-2 select-none">
-        <FaPalette className="text-indigo-400/70" />
+    <div className="border-t border-line pt-4 mt-auto space-y-4">
+      <h3 className="font-semibold text-[11px] text-fg-muted flex items-center gap-2 select-none">
+        <LuPalette className="text-accent" />
         <span>{t('cardDetails.copiesAndArt')}</span>
       </h3>
 
-      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl p-3 flex flex-row items-center justify-between shadow-sm">
+      <div className="bg-surface-1 border border-line rounded-xl p-3 flex flex-row items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('cardDetails.inDeck')}</span>
-            <span className="text-base font-bold text-gray-800 dark:text-gray-200">
+            <span className="text-xs font-medium text-fg-muted">{t('cardDetails.inDeck')}</span>
+            <span className="text-base font-semibold text-fg">
               {copiesCount} {copiesCount === 1 ? t('cardDetails.copyCountSingular') : t('cardDetails.copyCountPlural')}
             </span>
           </div>
@@ -60,30 +60,30 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleDecrementCopies}
-              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-danger dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors border border-red-100 dark:border-red-900/30"
+              className="px-3 py-1.5 flex items-center gap-1.5 text-xs font-medium text-danger dark:text-danger bg-danger-soft hover:bg-danger-soft rounded-lg transition-colors border border-danger/40"
             >
               {t('cardDetails.remove')}
             </button>
           ) : (
-            <div className="flex items-center bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden shrink-0">
+            <div className="flex items-center bg-surface-2 border border-line rounded-lg overflow-hidden shrink-0">
               <button
                 type="button"
                 onClick={handleDecrementCopies}
-                className="w-9 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary hover:bg-surface-3 transition-colors"
                 title={t('cardDetails.removeCopy')}
               >
-                <FaMinus className="text-[10px]" />
+                <LuMinus className="text-[10px]" />
               </button>
-              <div className="w-8 h-8 flex items-center justify-center font-bold text-sm text-gray-800 dark:text-gray-200 border-x border-gray-200 dark:border-slate-700">
+              <div className="w-8 h-8 flex items-center justify-center font-semibold text-sm text-fg border-x border-line">
                 {copiesCount}
               </div>
               <button
                 type="button"
                 onClick={handleIncrementCopies}
-                className="w-9 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary hover:bg-surface-3 transition-colors"
                 title={t('cardDetails.addCopy')}
               >
-                <FaPlus className="text-[10px]" />
+                <LuPlus className="text-[10px]" />
               </button>
             </div>
           )}
@@ -92,10 +92,10 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleIncrementCopies}
-              className="w-9 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors ml-1"
+              className="w-9 h-8 flex items-center justify-center text-fg-muted hover:text-fg-secondary bg-surface-2 border border-line rounded-lg hover:bg-surface-3 transition-colors ml-1"
               title={t('cardDetails.addCopy')}
             >
-              <FaPlus className="text-[10px]" />
+              <LuPlus className="text-[10px]" />
             </button>
           )}
         </div>
@@ -106,19 +106,17 @@ export function CardDetailEditControls({
           {/* Said here rather than in a toast: with the lookup failed there is no editions
               button, and an absent control looks like a card with a single printing. */}
           {printsError ? (
-            <p className="w-full text-xs font-semibold text-amber-600 dark:text-amber-400">
-              {t('common.printsLoadError')}
-            </p>
+            <p className="w-full text-xs font-semibold text-warning">{t('common.printsLoadError')}</p>
           ) : null}
           {prints.length > 1 && (
             <button
               type="button"
               onClick={() => setShowPrintsSidebar((prev) => !prev)}
-              className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-gray-200 dark:border-gray-700 transition-all ${
-                showPrintsSidebar ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30' : ''
+              className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition ${
+                showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
               }`}
             >
-              <FaPalette className="text-xs shrink-0" />
+              <LuPalette className="text-xs shrink-0" />
               {t('cardDetails.showEditions')}
             </button>
           )}
@@ -127,9 +125,9 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleConfirmArtChange}
-              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
+              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition"
             >
-              <FaSync className="text-xs shrink-0 animate-spin-slow" />
+              <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
             </button>
           )}
@@ -141,11 +139,11 @@ export function CardDetailEditControls({
           <button
             type="button"
             onClick={() => setShowPrintsSidebar((prev) => !prev)}
-            className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-gray-200 dark:border-gray-700 transition-all ${
-              showPrintsSidebar ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30' : ''
+            className={`secondary-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-sm border border-line transition ${
+              showPrintsSidebar ? 'bg-accent-soft text-accent border-line-strong' : ''
             }`}
           >
-            <FaPalette className="text-xs shrink-0" />
+            <LuPalette className="text-xs shrink-0" />
             {t('cardDetails.changeArt')}
           </button>
 
@@ -153,9 +151,9 @@ export function CardDetailEditControls({
             <button
               type="button"
               onClick={handleConfirmArtChange}
-              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition-all"
+              className="success-button text-xs py-2 px-3.5 flex-1 flex items-center justify-center gap-1.5 shadow-md transition"
             >
-              <FaSync className="text-xs shrink-0 animate-spin-slow" />
+              <LuRefreshCw className="text-xs shrink-0 animate-spin-slow" />
               {t('cardDetails.updateArt')}
             </button>
           )}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { LuChevronDown, LuChevronUp, LuCircleCheck, LuTriangleAlert } from 'react-icons/lu';
 import { ValidationResult, ValidationError } from '../../utils/deckValidator';
 import { formatLabelKey } from '../../utils/formatLabel';
 
@@ -15,75 +15,74 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (variant === 'compact') {
+    // A shape plus a word for assistive tech: the check and the warning read apart without
+    // colour, and the row stays on one line in the narrow library lane.
+    const label = validation.isValid ? t('validation.valid') : t('validation.invalid');
+    const Icon = validation.isValid ? LuCircleCheck : LuTriangleAlert;
     return (
       <span
-        className={`status-badge flex items-center gap-1.5 text-[10px] ${validation.isValid ? 'status-badge-success' : 'status-badge-danger'}`}
+        className={`inline-flex items-center ${validation.isValid ? 'text-success' : 'text-danger'}`}
+        title={label}
+        role="img"
+        aria-label={label}
       >
-        <span
-          className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
-        />
-        {validation.isValid ? t('validation.valid') : t('validation.invalid')}
+        <Icon className="text-sm" aria-hidden="true" />
       </span>
     );
   }
 
   const hasErrors = validation.errors.length > 0;
+  const format = t(formatLabelKey(formatKey));
+  const [firstError] = validation.errors;
+  // The header names the first problem in a few words; the list below has the full sentences.
+  const summary = firstError
+    ? t(`validation.short.${firstError.key}`, {
+        ...firstError.params,
+        defaultValue: t(`validation.${firstError.key}`, firstError.params)
+      })
+    : null;
+  const StatusIcon = validation.isValid ? LuCircleCheck : LuTriangleAlert;
 
   return (
-    <div
-      className={`alert-banner ${validation.isValid ? 'alert-banner-success' : 'alert-banner-danger'} overflow-hidden transition-all duration-300`}
-    >
+    <div className={`alert-banner ${validation.isValid ? 'alert-banner-success' : 'alert-banner-danger'}`}>
       <button
         type="button"
         onClick={() => hasErrors && setIsExpanded(!isExpanded)}
-        className={`validation-badge-header select-none flex justify-between items-center w-full text-left ${hasErrors ? 'cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 p-1 rounded transition-colors' : 'p-1'}`}
-        aria-expanded={isExpanded}
+        className={`validation-badge-header select-none flex justify-between items-center gap-3 w-full text-left p-1 rounded ${hasErrors ? 'cursor-pointer hover:bg-surface-2 transition-colors duration-150' : ''}`}
+        aria-expanded={hasErrors ? isExpanded : undefined}
         disabled={!hasErrors}
       >
-        <span className="font-bold flex items-center gap-2">
-          {t('validation.deckValidation')} ({t(formatLabelKey(formatKey))})
-          {hasErrors ? (
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-normal">
-              ({isExpanded ? t('validation.hideDetails') : t('validation.viewDetails')})
+        <span className="flex min-w-0 items-center gap-2">
+          <StatusIcon
+            className={`shrink-0 ${validation.isValid ? 'text-success' : 'text-danger'}`}
+            aria-hidden="true"
+          />
+          <span className="font-medium text-fg shrink-0">
+            {validation.isValid ? t('validation.validFor', { format }) : t('validation.invalidFor', { format })}
+          </span>
+          {summary ? <span className="truncate text-fg-secondary">{summary}</span> : null}
+          {validation.errors.length > 1 ? (
+            <span className="shrink-0 text-fg-muted">
+              {t('validation.moreIssues', { count: validation.errors.length - 1 })}
             </span>
           ) : null}
         </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={`status-badge flex items-center gap-1.5 ${
-              validation.isValid ? 'status-badge-success' : 'status-badge-danger'
-            }`}
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full animate-pulse ${validation.isValid ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`}
-            />
-            {validation.isValid ? t('validation.valid') : t('validation.invalid')}
+        {hasErrors ? (
+          <span className="text-fg-muted shrink-0">
+            {isExpanded ? <LuChevronUp className="w-3.5 h-3.5" /> : <LuChevronDown className="w-3.5 h-3.5" />}
           </span>
-          {hasErrors ? (
-            <span className="text-gray-500 dark:text-gray-400">
-              {isExpanded ? <FaChevronUp className="w-3.5 h-3.5" /> : <FaChevronDown className="w-3.5 h-3.5" />}
-            </span>
-          ) : null}
-        </div>
+        ) : null}
       </button>
 
-      {hasErrors ? (
-        <div
-          className={`transition-all duration-300 ${isExpanded ? 'max-h-[500px] mt-3 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}
-        >
-          <ul className="space-y-1 text-xs border-t border-red-200 dark:border-red-950 pt-2.5 list-disc pl-4">
-            {validation.errors.map((err: ValidationError, i: number) => (
-              <li key={i} className="text-red-700 dark:text-red-400 font-medium">
-                {t(`validation.${err.key}`, err.params) as string}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p className="text-xs text-green-700 dark:text-green-400 mt-2 font-medium">
-          {t('validation.validationFormatSuccess')}
-        </p>
-      )}
+      {hasErrors && isExpanded ? (
+        <ul className="mt-2 space-y-1 text-sm border-t border-line pt-2 list-disc pl-5">
+          {validation.errors.map((err: ValidationError, i: number) => (
+            <li key={i} className="text-fg-secondary">
+              {t(`validation.${err.key}`, err.params) as string}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }

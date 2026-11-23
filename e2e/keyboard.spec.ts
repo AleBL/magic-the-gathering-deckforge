@@ -4,7 +4,7 @@ import type { Page } from '@playwright/test';
 /** Puts one card in the deck and opens the deck tab. */
 async function withOneCardDeck(page: Page) {
   await page.goto('/');
-  await page.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+  await page.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('button', { name: 'Add copy' }).click();
   await page.getByRole('button', { name: 'My Decks' }).click();

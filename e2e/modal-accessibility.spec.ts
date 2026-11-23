@@ -7,12 +7,12 @@ import { expect, test } from './fixtures';
 test.describe('modal accessibility', () => {
   test('the save dialog traps focus and restores it on Escape', async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Add copy' }).click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
-    const opener = appPage.getByRole('button', { name: /Save Deck \(1 Cards?\)/ });
+    const opener = appPage.getByRole('button', { name: /Save deck \(1 cards?\)/i });
     await opener.click();
 
     const dialog = appPage.getByRole('dialog');
@@ -60,7 +60,7 @@ test.describe('card detail scrolling', () => {
   test('the text column scrolls without moving the card art', async ({ appPage }) => {
     await appPage.setViewportSize({ width: 1440, height: 800 });
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Lightning Bolt' }).first().click();
 
@@ -81,7 +81,7 @@ test.describe('card detail scrolling', () => {
   test('below md the dialog keeps a single scrolling column', async ({ appPage }) => {
     await appPage.setViewportSize({ width: 600, height: 800 });
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Lightning Bolt' }).first().click();
 

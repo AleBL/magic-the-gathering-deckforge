@@ -81,20 +81,25 @@ describe('scryfallSearchErrorKey', () => {
     expect(scryfallSearchErrorKey(new Error('Request failed with 429'))).toBe('search.rateLimited');
   });
 
-  it('reports an outage from either status', () => {
-    expect(scryfallSearchErrorKey({ status: 503 })).toBe('search.scryfallOffline');
-    expect(scryfallSearchErrorKey({ status: 504 })).toBe('search.scryfallOffline');
+  it('tells an outage from a slow answer by status', () => {
+    expect(scryfallSearchErrorKey({ status: 503 })).toBe('search.scryfallUnavailable');
+    expect(scryfallSearchErrorKey({ status: 504 })).toBe('search.scryfallSlow');
   });
 
   it('reports an outage the SDK only put in the message', () => {
-    expect(scryfallSearchErrorKey(new Error('503 Service Unavailable'))).toBe('search.scryfallOffline');
-    expect(scryfallSearchErrorKey(new Error('504 Gateway Timeout'))).toBe('search.scryfallOffline');
+    expect(scryfallSearchErrorKey(new Error('503 Service Unavailable'))).toBe('search.scryfallUnavailable');
+    expect(scryfallSearchErrorKey(new Error('504 Gateway Timeout'))).toBe('search.scryfallSlow');
   });
 
-  it('reads the wording Scryfall uses for maintenance, offline and timeouts', () => {
-    expect(scryfallSearchErrorKey(new Error('Scryfall is OFFLINE'))).toBe('search.scryfallOffline');
-    expect(scryfallSearchErrorKey(new Error('Down for Maintenance'))).toBe('search.scryfallOffline');
-    expect(scryfallSearchErrorKey(new Error('Search request timed out'))).toBe('search.scryfallOffline');
+  it('reads the wording Scryfall uses for maintenance and being offline', () => {
+    expect(scryfallSearchErrorKey(new Error('Scryfall is OFFLINE'))).toBe('search.scryfallUnavailable');
+    expect(scryfallSearchErrorKey(new Error('Down for Maintenance'))).toBe('search.scryfallUnavailable');
+  });
+
+  // A local timeout used to read "Scryfall is offline for maintenance", blaming a service
+  // for what may have been this machine or the network.
+  it('calls a timeout slow rather than down', () => {
+    expect(scryfallSearchErrorKey(new Error('Search request timed out'))).toBe('search.scryfallSlow');
   });
 
   it('answers null for a failure the user cannot act on', () => {

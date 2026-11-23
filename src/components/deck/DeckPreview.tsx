@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
+import { APP_EVENTS, emitAppEvent } from '../../constants/appEvents';
 import { useTranslation } from 'react-i18next';
-import { FaLayerGroup } from 'react-icons/fa';
+import { LuLayers } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
 import { CardSize } from '../../types';
@@ -291,27 +292,34 @@ function DeckPreview({
         ) : (
           <DeckNotesEditor initialNotes={editingDeckNotes} isEditable={true} onSave={onUpdateNotes} />
         )
-      ) : selectedDeck && activeNoteTab === 'stats' ? (
-        /* Inline for a saved deck. The working deck sends the same tab to a modal instead
-           (see noteTabHeader), which is why this branch is guarded by `selectedDeck`. */
-        <Suspense
-          fallback={<div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>}
-        >
-          <DeckStats currentDeck={activeCards} renderFilteredCards={renderStatsFilteredCards} />
+      ) : (selectedDeck || !editingDeckId) && activeNoteTab === 'stats' ? (
+        /* Inline for a saved deck and for the draft. Only the two-pane editor sends the tab
+           to a modal instead (see onSelectStatsTab), where the list beside it has no room. */
+        <Suspense fallback={<div className="p-8 text-center text-fg-muted">{t('common.loading')}...</div>}>
+          <DeckStats
+            currentDeck={activeCards}
+            deckId={selectedDeck?.id}
+            renderFilteredCards={renderStatsFilteredCards}
+          />
         </Suspense>
       ) : !selectedDeck && currentDeck.length === 0 ? (
         <EmptyState
-          icon={<FaLayerGroup />}
+          icon={<LuLayers />}
           title={t('deck.emptyDeck')}
           description={t('deck.addCardsMessage')}
           action={{
             label: t('search.searchForCards'),
             onClick: () => {
-              // In the two-pane editor the search is already on screen — just
-              // focus it rather than switching to the standalone search tab.
-              dispatchPendingAction('focus-search');
+              // In the two-pane editor the search is already on screen, so focus it there.
+              // Outside it there is no search pane to focus: go to the search tab instead.
+              if (editingDeckId) dispatchPendingAction('focus-search');
+              else emitAppEvent(APP_EVENTS.navigateTab, 'search');
             }
           }}
+          secondaryActions={[
+            { label: t('deck.importDeck'), onClick: () => dispatchPendingAction('import-deck-text') },
+            { label: t('deck.trySampleDeck'), onClick: () => dispatchPendingAction('import-sample-deck') }
+          ]}
         />
       ) : (
         // Only the working deck's cards can be removed from here.

@@ -24,6 +24,8 @@ interface DeckManagerDeckListLayoutProps {
   readonly onNewFromDeck: (deck: Deck) => void;
   readonly onDeleteDeck: (deck: Deck) => void;
   readonly onChangeCover: (deck: Deck) => void;
+  readonly onCompareDeck: (deck: Deck) => void;
+  readonly onEditDeckTags: (deck: Deck) => void;
   readonly deckPreview: ReactNode;
 }
 
@@ -51,6 +53,8 @@ export function DeckManagerDeckListLayout({
   onNewFromDeck,
   onDeleteDeck,
   onChangeCover,
+  onCompareDeck,
+  onEditDeckTags,
   deckPreview
 }: DeckManagerDeckListLayoutProps) {
   return (
@@ -72,6 +76,8 @@ export function DeckManagerDeckListLayout({
           onNewFromDeck={onNewFromDeck}
           onDeleteDeck={onDeleteDeck}
           onChangeCover={onChangeCover}
+          onCompareDeck={onCompareDeck}
+          onEditDeckTags={onEditDeckTags}
         />
       ) : null}
       <div className="col-span-1 min-w-0 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">

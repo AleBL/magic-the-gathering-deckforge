@@ -1,17 +1,18 @@
 import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  FaSave,
-  FaPlus,
-  FaTrash,
-  FaFileImport,
-  FaTimes,
-  FaLightbulb,
-  FaBook,
-  FaColumns,
-  FaHistory,
-  FaMagic
-} from 'react-icons/fa';
+  LuBook,
+  LuChevronDown,
+  LuColumns2,
+  LuFileInput,
+  LuHistory,
+  LuLightbulb,
+  LuPlus,
+  LuSave,
+  LuTrash2,
+  LuWandSparkles,
+  LuX
+} from 'react-icons/lu';
 import { Deck } from '../../types/Deck';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { deckActionLabels } from '../../utils/deckActionLabels';
@@ -76,12 +77,12 @@ export function DeckManagerToolbar({
   return (
     <div className="workspace-header">
       <div className="manager-title-row">
-        <h2 className="text-gray-900 dark:text-white text-xl lg:text-2xl font-serif font-bold transition-colors duration-300 flex items-center gap-2">
-          <FaBook className="text-primary text-xl shrink-0" />
+        <h2 className="text-fg text-xl lg:text-2xl font-serif font-semibold transition-colors duration-300 flex items-center gap-2">
+          <LuBook className="text-accent text-xl shrink-0" />
           {t('deck.deckManager')}
           <div className="manager-info-tooltip-trigger group/tooltip">
             <button type="button" className="manager-info-tooltip-btn" aria-label={t('common.info')}>
-              <FaLightbulb className="text-yellow-500 text-base" />
+              <LuLightbulb className="text-warning text-base" />
             </button>
             <div className="manager-info-tooltip-panel">
               <p className="font-medium leading-relaxed">{t('validation.savedLocationNote')}</p>
@@ -101,7 +102,7 @@ export function DeckManagerToolbar({
                 className="deck-toolbar-btn"
                 title={t('deck.versionHistory')}
               >
-                <FaHistory className="text-xs shrink-0" />
+                <LuHistory className="text-xs shrink-0" />
                 <span className="hidden sm:inline">{t('deck.versionHistory')}</span>
               </button>
               <button
@@ -110,7 +111,7 @@ export function DeckManagerToolbar({
                 className="deck-toolbar-btn"
                 title={showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
               >
-                <FaColumns className="text-xs shrink-0" />
+                <LuColumns2 className="text-xs shrink-0" />
                 <span className="hidden sm:inline">
                   {showDeckList ? t('deck.hideDeckList') : t('deck.showDeckList')}
                 </span>
@@ -123,10 +124,10 @@ export function DeckManagerToolbar({
                 <button
                   type="button"
                   onClick={onOpenSuggestions}
-                  className="deck-toolbar-btn-accent"
+                  className="deck-toolbar-btn"
                   title={t('deck.suggestionsTitle')}
                 >
-                  <FaMagic className="text-xs shrink-0" />
+                  <LuWandSparkles className="text-xs shrink-0" />
                   <span className="hidden sm:inline">{t('common.suggestions')}</span>
                 </button>
               ) : null}
@@ -141,27 +142,27 @@ export function DeckManagerToolbar({
                     aria-label={saveLabel}
                     title={saveLabel}
                   >
-                    <FaSave className="text-xs shrink-0" />
+                    <LuSave className="text-xs shrink-0" />
                     <span className={labelClasses}>{saveLabel}</span>
                   </button>
                   <button
                     type="button"
                     onClick={onSaveAsNew}
-                    className={`success-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    className={`secondary-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                     aria-label={t('deck.saveAsNew')}
                     title={t('deck.saveAsNew')}
                   >
-                    <FaPlus className="text-xs shrink-0" />
+                    <LuPlus className="text-xs shrink-0" />
                     <span className={labelClasses}>{t('deck.saveAsNew')}</span>
                   </button>
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className={`danger-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
+                    className={`ghost-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                     aria-label={t('common.cancel')}
                     title={t('common.cancel')}
                   >
-                    <FaTimes className="text-xs shrink-0" />
+                    <LuX className="text-xs shrink-0" />
                     <span className={labelClasses}>{t('common.cancel')}</span>
                   </button>
                 </>
@@ -171,11 +172,11 @@ export function DeckManagerToolbar({
                   type="button"
                   onClick={onOpenSaveDialog}
                   disabled={currentDeckCount === 0}
-                  className={`success-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                  className={`primary-button text-xs py-1.5 px-3 ${responsiveActionClasses}`}
                   aria-label={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
                   title={`${saveLabel} (${currentDeckCount} ${t('common.cards')})`}
                 >
-                  <FaSave className="text-xs shrink-0" />
+                  <LuSave className="text-xs shrink-0" />
                   <span className={labelClasses}>
                     {saveLabel} ({currentDeckCount} {t('common.cards')})
                   </span>
@@ -187,11 +188,11 @@ export function DeckManagerToolbar({
                 type="button"
                 onClick={onClearDeck}
                 disabled={currentDeckCount === 0}
-                className={`danger-button text-xs py-1.5 px-3 disabled:opacity-50 disabled:cursor-not-allowed ${responsiveActionClasses}`}
+                className={`secondary-button text-xs py-1.5 px-3 text-danger hover:text-danger ${responsiveActionClasses}`}
                 aria-label={clearLabel}
                 title={clearLabel}
               >
-                <FaTrash className="text-xs shrink-0" />
+                <LuTrash2 className="text-xs shrink-0" />
                 <span className={labelClasses}>{clearLabel}</span>
               </button>
 
@@ -201,11 +202,11 @@ export function DeckManagerToolbar({
                   <button
                     type="button"
                     onClick={() => setShowImportExportDropdown(!showImportExportDropdown)}
-                    className="primary-button text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
+                    className="secondary-button text-xs py-1.5 px-3"
                   >
-                    <FaFileImport className="text-xs shrink-0" />
+                    <LuFileInput className="text-xs shrink-0" />
                     <span className={labelClasses}>{t('deck.importExport')}</span>
-                    <span className="text-[10px] opacity-75">▼</span>
+                    <LuChevronDown className="text-xs shrink-0" aria-hidden="true" />
                   </button>
                   {showImportExportDropdown ? (
                     <>
@@ -216,7 +217,7 @@ export function DeckManagerToolbar({
                         aria-hidden="true"
                       />
                       <div className="import-export-dropdown">
-                        <span className="import-export-dropdown-section">── {t('common.import')} ──</span>
+                        <span className="import-export-dropdown-section">{t('common.import')}</span>
                         <button
                           type="button"
                           onClick={() => {
@@ -225,11 +226,11 @@ export function DeckManagerToolbar({
                           }}
                           className="import-export-dropdown-item"
                         >
-                          <FaFileImport className="text-gray-400 shrink-0" />
+                          <LuFileInput className="text-gray-400 shrink-0" />
                           {t('deck.importTextList')}
                         </button>
                         <label className="import-export-dropdown-item">
-                          <FaFileImport className="text-gray-400 shrink-0" />
+                          <LuFileInput className="text-gray-400 shrink-0" />
                           {t('deck.importDeck')}{' '}
                           <span className="text-[10px] text-gray-400 font-mono ml-auto">.json / .dec</span>
                           <input
@@ -246,7 +247,7 @@ export function DeckManagerToolbar({
                         {hasSavedDecks ? (
                           <>
                             <div className="import-export-dropdown-divider" />
-                            <span className="import-export-dropdown-section">── {t('deck.export')} ──</span>
+                            <span className="import-export-dropdown-section">{t('deck.export')}</span>
                             <button
                               type="button"
                               onClick={() => {

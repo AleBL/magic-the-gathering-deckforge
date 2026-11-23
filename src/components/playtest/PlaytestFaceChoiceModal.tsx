@@ -37,12 +37,12 @@ export function PlaytestFaceChoiceModal() {
         aria-modal="true"
         aria-labelledby="face-choice-title"
         aria-describedby="face-choice-description"
-        className="w-full sm:max-w-2xl max-h-[92dvh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 sm:p-6 animate-fadeIn"
+        className="w-full sm:max-w-2xl max-h-[92dvh] overflow-y-auto bg-surface-1 border border-line rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 sm:p-6 animate-fadeIn"
       >
-        <h3 id="face-choice-title" className="text-lg font-bold text-slate-900 dark:text-white">
+        <h3 id="face-choice-title" className="text-lg font-semibold text-fg">
           {t('playtest.chooseFaceTitle')}
         </h3>
-        <p id="face-choice-description" className="text-sm text-slate-600 dark:text-slate-400 mt-1 mb-5">
+        <p id="face-choice-description" className="text-sm text-fg-secondary mt-1 mb-5">
           {t('playtest.chooseFaceDescription', {
             name: pendingFaceChoice.card.printed_name || pendingFaceChoice.card.name
           })}
@@ -56,9 +56,9 @@ export function PlaytestFaceChoiceModal() {
                 key={face.name}
                 type="button"
                 onClick={() => handleChooseFace(faceIndex)}
-                className="group flex flex-col items-stretch gap-2 p-2.5 sm:p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 focus-visible:border-indigo-500 bg-slate-50 dark:bg-slate-950/40 transition-all duration-200 active:scale-[0.98] cursor-pointer text-left"
+                className="group flex flex-col items-stretch gap-2 p-2.5 sm:p-3 rounded-2xl border-2 border-line hover:border-accent/50 focus-visible:border-accent/50 bg-surface-2 transition duration-200 active:scale-[0.98] cursor-pointer text-left"
               >
-                <div className="aspect-[5/7] rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 shadow-md">
+                <div className="aspect-[5/7] rounded-xl overflow-hidden bg-surface-3 shadow-md">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -68,16 +68,14 @@ export function PlaytestFaceChoiceModal() {
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center p-2 text-center text-xs font-bold text-slate-500">
+                    <div className="w-full h-full flex items-center justify-center p-2 text-center text-xs font-semibold text-slate-500">
                       {face.printed_name || face.name}
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-sm font-bold text-slate-900 dark:text-white truncate">
-                    {face.printed_name || face.name}
-                  </span>
-                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  <span className="block text-sm font-semibold text-fg truncate">{face.printed_name || face.name}</span>
+                  <span className="block text-[11px] text-fg-muted truncate">
                     {face.printed_type_line || face.type_line}
                   </span>
                 </div>
@@ -89,7 +87,7 @@ export function PlaytestFaceChoiceModal() {
         <button
           type="button"
           onClick={handleCancelFaceChoice}
-          className="mt-5 w-full min-h-11 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors duration-200 cursor-pointer"
+          className="mt-5 w-full min-h-11 py-2.5 rounded-xl bg-surface-2 hover:bg-surface-3 text-sm font-semibold text-fg-secondary transition-colors duration-200 cursor-pointer"
         >
           {t('common.cancel')}
         </button>

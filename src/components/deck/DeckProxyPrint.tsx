@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaPrint, FaTimes, FaInfoCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
+import { LuInfo, LuLoaderCircle, LuPrinter, LuTriangleAlert, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckRelatedToken } from '../../types/Deck';
 import { DeckZone } from '../../types/enums';
@@ -78,20 +78,17 @@ function DeckProxyPrint({
           className="proxy-modal-container"
         >
           <div className="modal-header-container">
-            <h3
-              id="proxy-print-title"
-              className="text-gray-900 dark:text-white text-lg font-bold flex items-center gap-2"
-            >
-              <FaPrint className="text-blue-500" />
+            <h3 id="proxy-print-title" className="text-fg text-lg font-semibold flex items-center gap-2">
+              <LuPrinter className="text-accent" />
               {t('print.printProxiesTitle')}
             </h3>
             <button
               type="button"
               onClick={onClose}
               aria-label={t('common.close')}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition cursor-pointer"
             >
-              <FaTimes />
+              <LuX />
             </button>
           </div>
 
@@ -117,24 +114,24 @@ function DeckProxyPrint({
           />
 
           {useRealSize ? (
-            <div className="mx-6 my-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
-              <FaInfoCircle className="text-blue-500 shrink-0 text-lg" />
-              <div className="flex-1 text-gray-700 dark:text-gray-300">
+            <div className="mx-6 my-2 p-3 bg-accent-soft border border-line-strong rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <LuInfo className="text-accent shrink-0 text-lg" />
+              <div className="flex-1 text-fg-secondary">
                 <strong>{t('print.realSizeGuaranteed')} (63x88mm):</strong> {t('print.printInstructionsText')}{' '}
-                <strong className="text-gray-900 dark:text-white underline">{t('print.scaleOption')}</strong>{' '}
+                <strong className="text-fg underline">{t('print.scaleOption')}</strong>{' '}
                 {t('print.printInstructionsTextSuffix')}
               </div>
-              <div className="text-blue-700 dark:text-blue-300 font-medium whitespace-nowrap bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded">
+              <div className="text-accent font-medium whitespace-nowrap bg-accent-soft px-2 py-1 rounded">
                 {cardsPerPage} {t('print.cardsPerPageTextSuffix')}
               </div>
             </div>
           ) : (
-            <div className="mx-6 my-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
-              <FaExclamationTriangle className="text-amber-500 shrink-0 text-lg" />
-              <div className="flex-1 text-gray-700 dark:text-gray-300">
+            <div className="mx-6 my-2 p-3 bg-warning-soft border border-warning/40 rounded-lg flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs animate-fadeIn">
+              <LuTriangleAlert className="text-warning shrink-0 text-lg" />
+              <div className="flex-1 text-fg-secondary">
                 <strong>{t('print.customSizeLabel')}</strong> {t('print.customSizeWarning')}
               </div>
-              <div className="text-amber-700 dark:text-amber-300 font-medium whitespace-nowrap bg-amber-100 dark:bg-amber-800/50 px-2 py-1 rounded">
+              <div className="text-warning font-medium whitespace-nowrap bg-warning-soft px-2 py-1 rounded">
                 {cardsPerPage} {t('print.cardsPerPageSimple')}
               </div>
             </div>
@@ -148,7 +145,7 @@ function DeckProxyPrint({
                 chunkedCards.map((pageCards, pageIndex) => (
                   <div
                     key={pageIndex}
-                    className="bg-white text-slate-950 shadow-2xl border border-gray-300 dark:border-slate-800 relative flex flex-col shrink-0 select-none rounded-lg p-6 transition-all duration-300 transform hover:scale-[1.01]"
+                    className="bg-white text-slate-950 shadow-2xl border border-line-strong relative flex flex-col shrink-0 select-none rounded-lg p-6 transition duration-300 transform hover:scale-[1.01]"
                     style={{
                       width: orientation === 'portrait' ? '170mm' : '240mm',
                       aspectRatio: orientation === 'portrait' ? '210/297' : '297/210',
@@ -156,7 +153,7 @@ function DeckProxyPrint({
                       boxSizing: 'border-box'
                     }}
                   >
-                    <span className="absolute -top-3 -left-3 bg-primary text-white font-extrabold text-[10px] px-2.5 py-1 rounded-lg shadow-md z-10 select-none">
+                    <span className="absolute -top-3 -left-3 bg-primary text-on-primary font-semibold text-[10px] px-2.5 py-1 rounded-lg shadow-md z-10 select-none">
                       PÁG. {pageIndex + 1} / {estimatedPages}
                     </span>
 
@@ -188,7 +185,7 @@ function DeckProxyPrint({
                               <img src={cardImageUrl} alt={card.name} className="proxy-card-image" />
                             ) : (
                               <div className="proxy-card-placeholder">
-                                <span className="text-[10px] text-gray-400 text-center px-1 font-bold">
+                                <span className="text-[10px] text-gray-400 text-center px-1 font-semibold">
                                   {card.name}
                                 </span>
                               </div>
@@ -205,9 +202,9 @@ function DeckProxyPrint({
 
           {/* Footer */}
           <div className="modal-footer-container">
-            <span className="text-xs text-gray-500 dark:text-gray-400 flex-1 text-left">
+            <span className="text-xs text-fg-muted flex-1 text-left">
               {facesToPrint.length} {t('common.cards')} &bull; {t('print.estimatedPages')}{' '}
-              <span className="font-bold text-gray-700 dark:text-gray-300">{estimatedPages}</span>
+              <span className="font-semibold text-fg-secondary">{estimatedPages}</span>
             </span>
             <button
               type="button"
@@ -224,9 +221,9 @@ function DeckProxyPrint({
               className="primary-button text-xs py-2 px-4 flex items-center gap-2"
             >
               {isPrinting ? (
-                <FaSpinner className="text-xs shrink-0 animate-spin" />
+                <LuLoaderCircle className="text-xs shrink-0 animate-spin" />
               ) : (
-                <FaPrint className="text-xs shrink-0" />
+                <LuPrinter className="text-xs shrink-0" />
               )}
               {isPrinting ? t('print.preparing') : t('print.printAll')}
             </button>

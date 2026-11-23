@@ -3,6 +3,7 @@ import { Card } from '../types/Card';
 import { DeckFormat, DeckRelatedToken } from '../types/Deck';
 import { DeckFormatType, DeckZone } from '../types/enums';
 import { deckEntryId, newDeckEntryId, withDeckEntryIds } from '../utils/deckEntry';
+import { flushDraft, readDraft, writeDraft } from './draftStorage';
 
 interface EditingDeckState {
   deckId: string | null;
@@ -82,6 +83,7 @@ export type PendingAction =
   | 'export-deck'
   | 'export-all-decks'
   | 'import-deck-text'
+  | 'import-sample-deck'
   | 'import-deck-file'
   | 'edit-selected-deck'
   | 'show-saved-decks'
@@ -95,9 +97,11 @@ const INITIAL_EDITING_STATE: EditingDeckState = {
   deckNotes: ''
 };
 
+const initialDraft = readDraft();
+
 export const useDeckStore = create<DeckStoreState>((set) => ({
-  currentDeck: [],
-  currentDeckRelatedTokens: [],
+  currentDeck: withDeckEntryIds(initialDraft.cards),
+  currentDeckRelatedTokens: initialDraft.relatedTokens,
   editingDeck: INITIAL_EDITING_STATE,
   pendingAction: null,
   selectedDeckSummary: null,
@@ -208,3 +212,33 @@ export const useDeckStore = create<DeckStoreState>((set) => ({
       currentDeckRelatedTokens: relatedTokens || []
     })
 }));
+
+/**
+ * Only the draft is persisted, and storage mirrors memory: opening a saved deck in the editor
+ * (which includes saving the draft as a new deck) replaces the working list, so the stored
+ * draft is cleared with it rather than coming back on the next reload.
+ */
+const draftOf = (state: DeckStoreState) => ({
+  cards: state.currentDeck,
+  relatedTokens: state.currentDeckRelatedTokens
+});
+
+useDeckStore.subscribe((state, previous) => {
+  if (state.editingDeck.deckId) {
+    if (!previous.editingDeck.deckId) writeDraft({ cards: [], relatedTokens: [] });
+    return;
+  }
+  const unchanged =
+    state.currentDeck === previous.currentDeck &&
+    state.currentDeckRelatedTokens === previous.currentDeckRelatedTokens &&
+    state.editingDeck === previous.editingDeck;
+  if (unchanged) return;
+  writeDraft(draftOf(state));
+});
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => {
+    const state = useDeckStore.getState();
+    if (!state.editingDeck.deckId) flushDraft(draftOf(state));
+  });
+}

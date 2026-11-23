@@ -1,4 +1,8 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ChangeEvent } from 'react';
+import { tagsInUse } from '../../utils/deckTags';
+import DeckTagsDialog from './DeckTagsDialog';
+import DeckCompareModal from './DeckCompareModal';
+import { SAMPLE_DECK_TEXT } from '../../constants/sampleDeck';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../types/Card';
 import { Deck, DeckFormat, DeckRelatedToken } from '../../types/Deck';
@@ -55,6 +59,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
   const { handleAddToDeck, handleAddTokenToDeck, handleRemoveFromDeckWithToast } = useDeckActions(showToast);
 
   const [isTextImportOpen, setIsTextImportOpen] = useState(false);
+  const [textImportInitial, setTextImportInitial] = useState('');
 
   const { dialogState, showAlert, showConfirm, closeDialog } = useDialog();
 
@@ -80,6 +85,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
     duplicateDeck,
     saveTokensToDeck,
     setDeckCover,
+    setDeckTags,
     restoreDeck,
     fileMissingCards,
     fileImportError,
@@ -92,6 +98,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const [deckToExport, setDeckToExport] = useState<Deck | null>(null);
   const [deckForCover, setDeckForCover] = useState<Deck | null>(null);
+  const [deckToCompare, setDeckToCompare] = useState<Deck | null>(null);
+  const [deckForTags, setDeckForTags] = useState<Deck | null>(null);
   // Deck whose name/format is being edited via the reused save dialog.
   const {
     deckInfoEdit,
@@ -277,6 +285,14 @@ function DeckManager({ showToast }: DeckManagerProps) {
 
   const openTextImport = useCallback(() => {
     setTextErrorMsg(null);
+    setTextImportInitial('');
+    setIsTextImportOpen(true);
+  }, [setTextErrorMsg]);
+
+  // First run: the same import, already filled with a small real list to explore the app with.
+  const openSampleImport = useCallback(() => {
+    setTextErrorMsg(null);
+    setTextImportInitial(SAMPLE_DECK_TEXT);
     setIsTextImportOpen(true);
   }, [setTextErrorMsg]);
 
@@ -408,6 +424,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
     },
     'export-all-decks': exportAllDecks,
     'import-deck-text': openTextImport,
+    'import-sample-deck': openSampleImport,
     'import-deck-file': () => menuImportFileInputRef.current?.click(),
     'edit-selected-deck': () => {
       if (!selectedDeck) return;
@@ -542,6 +559,8 @@ function DeckManager({ showToast }: DeckManagerProps) {
             onNewFromDeck={handleNewDeckFromThis}
             onDeleteDeck={confirmDeleteDeck}
             onChangeCover={setDeckForCover}
+            onCompareDeck={setDeckToCompare}
+            onEditDeckTags={setDeckForTags}
             deckPreview={deckPreviewElement}
           />
         )}
@@ -599,6 +618,7 @@ function DeckManager({ showToast }: DeckManagerProps) {
         }}
         onCancelExport={() => setDeckToExport(null)}
         isTextImportOpen={isTextImportOpen}
+        textImportInitial={textImportInitial}
         onCloseTextImport={() => setIsTextImportOpen(false)}
         onImportText={importTextDeck}
         isTextImporting={isTextImporting}
@@ -613,6 +633,16 @@ function DeckManager({ showToast }: DeckManagerProps) {
         fileMissingCards={fileMissingCards}
         fileImportError={fileImportError}
         onCloseFileImportModal={closeFileImportModal}
+      />
+      <DeckCompareModal baseDeck={deckToCompare} decks={savedDecks} onClose={() => setDeckToCompare(null)} />
+      <DeckTagsDialog
+        deck={deckForTags}
+        suggestions={tagsInUse(savedDecks)}
+        onSave={async (deck, tags) => {
+          await setDeckTags(deck.id, tags);
+          setDeckForTags(null);
+        }}
+        onClose={() => setDeckForTags(null)}
       />
     </div>
   );

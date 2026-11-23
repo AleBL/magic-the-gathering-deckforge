@@ -170,11 +170,7 @@ function App() {
           // the whole app: Dexie's useLiveQuery throws during render, and the only other
           // boundary is the root one in main.tsx.
           <ErrorBoundary variant="section">
-            <Suspense
-              fallback={
-                <div className="p-8 text-center text-slate-500 dark:text-slate-400">{t('common.loading')}...</div>
-              }
-            >
+            <Suspense fallback={<div className="p-8 text-center text-fg-muted">{t('common.loading')}...</div>}>
               {activeTab === 'collection' ? <CollectionManager /> : <DeckManager showToast={showToast} />}
             </Suspense>
           </ErrorBoundary>

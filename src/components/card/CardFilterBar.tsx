@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { SearchFilters as SearchFiltersType } from '../../types';
 import { useSearchFilters } from '../../hooks/useSearchFilters';
-import { MANA_COLOR_GRADIENTS, MANA_COLOR_IS_LIGHT, MANA_COLOR_ROW_ACTIVE } from '../../constants/manaColors';
+import { getSymbolUrl } from '../../utils/symbolHelper';
 
 interface CardFilterBarProps {
   filters: SearchFiltersType;
@@ -20,15 +20,11 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
   const { colors, types, toggleColor, toggleType } = useSearchFilters(filters, setFilters);
 
   // Mana color classes (desktop swatch)
-  const getManaColorClass = (code: string, isActive: boolean) => {
-    const base =
-      'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm cursor-pointer transition-all duration-300 transform';
-
-    if (!isActive)
-      return `${base} bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-400 border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:scale-110`;
-
-    return `${base} ${MANA_COLOR_GRADIENTS[code] ?? ''}`;
-  };
+  // Mana symbols are the only coloured iconography in the app: a selected colour shows its
+  // pip in full colour inside an ink ring, an unselected one is a grey pip. The ring and the
+  // grey both read without colour vision.
+  const pipClass = (isActive: boolean) =>
+    `w-5 h-5 shrink-0 select-none transition-[filter,opacity] duration-150 ${isActive ? '' : 'grayscale opacity-50'}`;
 
   if (mobileLayout) {
     return (
@@ -37,26 +33,19 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
           {colors.map((color: { code: string; name: string }) => {
             const isActive = filters.colors.includes(color.code);
-            const isLight = MANA_COLOR_IS_LIGHT[color.code];
             return (
               <button
                 key={color.code}
                 type="button"
                 onClick={() => toggleColor(color.code)}
                 aria-pressed={isActive}
-                className={`flex items-center gap-2 w-full min-h-11 px-2.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border border-transparent ${
+                className={`flex items-center gap-2 w-full min-h-11 px-2.5 py-2 rounded-xl text-xs font-medium transition-colors duration-150 cursor-pointer border ${
                   isActive
-                    ? MANA_COLOR_ROW_ACTIVE[color.code]
-                    : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    ? 'bg-surface-3 text-fg border-line-strong'
+                    : 'bg-surface-1 text-fg-secondary border-line hover:bg-surface-2'
                 }`}
               >
-                <span
-                  className={`w-5 h-5 shrink-0 rounded-full flex items-center justify-center text-[9px] font-black ${
-                    isActive ? (isLight ? 'bg-black/10' : 'bg-white/25') : (MANA_COLOR_GRADIENTS[color.code] ?? '')
-                  }`}
-                >
-                  {color.code}
-                </span>
+                <img src={getSymbolUrl(`{${color.code}}`)} alt="" className={pipClass(isActive)} />
                 <span className="truncate">{color.name}</span>
               </button>
             );
@@ -64,7 +53,7 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
         </div>
 
         {/* Divider */}
-        <div className="w-px self-stretch bg-gray-200 dark:bg-slate-700" />
+        <div className="w-px self-stretch bg-surface-3" />
 
         {/* Types — right column */}
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
@@ -76,10 +65,10 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
                 type="button"
                 onClick={() => toggleType(type.code)}
                 aria-pressed={isActive}
-                className={`flex items-center w-full min-h-11 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer truncate ${
+                className={`flex items-center w-full min-h-11 px-3 py-2 rounded-xl text-xs font-medium transition-colors duration-150 cursor-pointer truncate ${
                   isActive
-                    ? 'bg-primary text-white shadow-md shadow-blue-500/25'
-                    : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2'
                 }`}
               >
                 {type.name}
@@ -97,22 +86,30 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
     <div className="flex flex-col lg:flex-row lg:items-start gap-2.5 lg:gap-4 py-2 sm:py-3 w-full">
       {/* Colors */}
       <div className="flex flex-wrap items-center gap-2 lg:shrink-0">
-        {colors.map((color: { code: string; name: string }) => (
-          <button
-            key={color.code}
-            type="button"
-            onClick={() => toggleColor(color.code)}
-            className={getManaColorClass(color.code, filters.colors.includes(color.code))}
-            title={color.name}
-            aria-pressed={filters.colors.includes(color.code)}
-          >
-            {color.code}
-          </button>
-        ))}
+        {colors.map((color: { code: string; name: string }) => {
+          const isActive = filters.colors.includes(color.code);
+          return (
+            <button
+              key={color.code}
+              type="button"
+              onClick={() => toggleColor(color.code)}
+              className={`w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-150 ${
+                isActive
+                  ? 'bg-surface-1 ring-2 ring-fg ring-offset-2 ring-offset-surface-0'
+                  : 'bg-surface-2 border border-line hover:bg-surface-3'
+              }`}
+              title={color.name}
+              aria-label={color.name}
+              aria-pressed={isActive}
+            >
+              <img src={getSymbolUrl(`{${color.code}}`)} alt="" className={pipClass(isActive)} />
+            </button>
+          );
+        })}
       </div>
 
       {/* Divider between colors and types on large screens. */}
-      <div className="hidden lg:block w-px self-stretch bg-gray-200 dark:bg-slate-700" />
+      <div className="hidden lg:block w-px self-stretch bg-surface-3" />
 
       {/* Types — wrap onto multiple rows so every type stays visible instead of
           hiding behind an awkward horizontal scroll. */}
@@ -123,10 +120,10 @@ export default function CardFilterBar({ filters, setFilters, mobileLayout = fals
             <button
               key={type.code}
               onClick={() => toggleType(type.code)}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide whitespace-nowrap transition-all duration-200 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors duration-150 cursor-pointer ${
                 isActive
-                  ? 'bg-primary border-transparent text-white shadow-md shadow-blue-500/25 scale-[1.02]'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-primary border-transparent text-on-primary'
+                  : 'bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 hover:text-fg'
               }`}
             >
               {type.name}

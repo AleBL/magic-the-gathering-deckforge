@@ -22,7 +22,7 @@ test.describe('printings inside a deck', () => {
   test.beforeEach(async ({ appPage }) => {
     await mockScryfall(appPage, PRINTINGS);
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('island');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('island');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await expect(appPage.getByRole('button', { name: 'Island' }).first()).toBeVisible();
   });
@@ -34,7 +34,7 @@ test.describe('printings inside a deck', () => {
     await addCopy.click();
 
     await appPage.getByRole('button', { name: 'My Decks' }).click();
-    await expect(appPage.getByRole('button', { name: /Save Deck \(2 Cards?\)/ })).toBeVisible();
+    await expect(appPage.getByRole('button', { name: /Save deck \(2 cards?\)/i })).toBeVisible();
 
     // One pile of two, because both copies are the same edition.
     await expect(appPage.locator(DECK_ROW)).toHaveCount(1);
@@ -57,6 +57,6 @@ test.describe('printings inside a deck', () => {
 
     // Two piles now — one copy each — and the deck still holds two cards.
     await expect(appPage.locator(DECK_ROW)).toHaveCount(2);
-    await expect(appPage.getByRole('button', { name: /Save Deck \(2 Cards?\)/ })).toBeVisible();
+    await expect(appPage.getByRole('button', { name: /Save deck \(2 cards?\)/i })).toBeVisible();
   });
 });

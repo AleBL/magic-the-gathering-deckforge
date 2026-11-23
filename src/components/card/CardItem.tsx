@@ -1,6 +1,6 @@
 import { useState, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync } from 'react-icons/fa';
+import { LuRefreshCw } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
@@ -64,6 +64,8 @@ function CardItem({
   const { motionEnabled } = useVisualEffects();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  // A failed or empty image leaves a named card-shaped placeholder instead of a blank frame.
+  const [imageFailed, setImageFailed] = useState(false);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
 
@@ -71,12 +73,14 @@ function CardItem({
   const canFlip = faceImages !== null;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // The tilt is part of the effects package: off with the toggle or reduced motion.
+    if (!motionEnabled) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const rotateY = (x / rect.width - 0.5) * 18;
-    const rotateX = (y / rect.height - 0.5) * -18;
+    const rotateY = (x / rect.width - 0.5) * 10;
+    const rotateX = (y / rect.height - 0.5) * -10;
 
     const glareX = (x / rect.width) * 100;
     const glareY = (y / rect.height) * 100;
@@ -104,13 +108,13 @@ function CardItem({
   // draggable deck card (whose drag means "move between zones").
   const canAddDrag = isAddDraggable && !isDraggable;
 
-  const imageClassName = `card-image-content transition-all duration-300 ${
+  const imageClassName = `card-image-content transition duration-300 ${
     isToken && card.isActive === false
       ? 'opacity-40 grayscale-[40%] brightness-[75%] shadow-[0_0_10px_rgba(30,41,59,0.3)] rounded-[4.5%]'
       : isBanned
-        ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
+        ? 'opacity-50 grayscale-[40%] brightness-[75%] border-2 border-danger shadow-[0_0_10px_rgba(239,68,68,0.5)] rounded-[4.5%]'
         : isRestricted
-          ? 'border-2 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
+          ? 'border-2 border-warning shadow-[0_0_10px_rgba(245,158,11,0.4)] rounded-[4.5%]'
           : 'rounded-[4.5%]'
   }`;
 
@@ -123,7 +127,7 @@ function CardItem({
 
   return (
     <div
-      className={`card-item-wrapper group relative ${isBanned ? 'border-red-500/50' : ''} ${isToken && card.isActive === false ? 'opacity-75' : ''} ${isDraggable || canAddDrag ? 'cursor-grab active:cursor-grabbing' : ''}`}
+      className={`card-item-wrapper group relative ${isBanned ? 'border-danger' : ''} ${isToken && card.isActive === false ? 'opacity-75' : ''} ${isDraggable || canAddDrag ? 'cursor-grab active:cursor-grabbing' : ''}`}
       draggable={isDraggable || canAddDrag}
       onDragStart={
         isDraggable
@@ -163,7 +167,7 @@ function CardItem({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
-          transform: `perspective(800px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) ${glare.opacity > 0 ? 'scale3d(1.04, 1.04, 1.04)' : 'scale3d(1, 1, 1)'}`,
+          transform: `perspective(800px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
           transition: glare.opacity === 0 ? 'transform 0.4s ease-out' : 'transform 0.1s ease-out',
           transformStyle: 'preserve-3d'
         }}
@@ -179,8 +183,24 @@ function CardItem({
             imgClassName={imageClassName}
             imgStyle={imageStyle}
           />
+        ) : !imageUrl || imageFailed ? (
+          <div
+            className={`${imageClassName} flex aspect-[5/7] w-full flex-col justify-between rounded-lg border border-line-strong bg-surface-2 p-3 text-left`}
+            role="img"
+            aria-label={card.name}
+          >
+            <span className="text-sm font-semibold text-fg line-clamp-3">{card.name}</span>
+            <span className="text-xs text-fg-muted line-clamp-2">{card.type_line}</span>
+          </div>
         ) : (
-          <img src={imageUrl} alt={card.name} className={imageClassName} style={imageStyle} loading="lazy" />
+          <img
+            src={imageUrl}
+            alt={card.name}
+            className={imageClassName}
+            style={imageStyle}
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+          />
         )}
         {/* 3D Glare Overlay */}
         <div
@@ -205,7 +225,7 @@ function CardItem({
           aria-label={t('cardDetails.flipAction')}
           aria-pressed={isFlipped}
         >
-          <FaSync className="text-xs" />
+          <LuRefreshCw className="text-xs" />
         </button>
       )}
 
@@ -214,7 +234,7 @@ function CardItem({
       )}
 
       {showPrintingBadge && card.set ? (
-        <span className="absolute bottom-2 right-2 z-30 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+        <span className="absolute bottom-2 right-2 z-30 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
           {card.set}
           {card.lang && card.lang !== 'en' ? ` · ${card.lang}` : ''}
         </span>

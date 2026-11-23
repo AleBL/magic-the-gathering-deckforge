@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCrown, FaBan, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
+import { LuBan, LuCircleX, LuCrown, LuTriangleAlert } from 'react-icons/lu';
 
 interface CardItemStatusBadgesProps {
   readonly isCommander: boolean;
@@ -22,22 +22,22 @@ export function CardItemStatusBadges({
   return (
     <>
       {isCommander && (
-        <div className="absolute top-2 left-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 animate-pulse select-none">
-          <FaCrown className="text-amber-200 text-xs shrink-0 animate-pulse" />
+        <div className="absolute top-2 left-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-lg border border-warning flex items-center gap-1 select-none">
+          <LuCrown className="text-warning text-xs shrink-0" />
           {t('cardDetails.commanderBadge')}
         </div>
       )}
 
       {isBanned && (
-        <div className="absolute top-2 right-2 z-10 bg-rose-600/90 dark:bg-rose-700/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-rose-500 flex items-center gap-1 select-none">
-          <FaBan className="text-white text-[9px] shrink-0 animate-spin-slow" />
+        <div className="absolute top-2 right-2 z-10 bg-danger backdrop-blur-sm text-on-danger px-2.5 py-0.5 rounded-full text-[9px] font-semibold shadow-lg border border-danger flex items-center gap-1 select-none">
+          <LuBan className="text-white text-[9px] shrink-0 animate-spin-slow" />
           {t('cardDetails.banned')}
         </div>
       )}
 
       {isRestricted && (
-        <div className="absolute top-2 right-2 z-10 bg-amber-500/90 dark:bg-warning/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-amber-400 flex items-center gap-1 select-none">
-          <FaExclamationTriangle className="text-white text-[9px] shrink-0" />
+        <div className="absolute top-2 right-2 z-10 bg-warning dark:bg-warning/90 backdrop-blur-sm text-on-warning px-2.5 py-0.5 rounded-full text-[9px] font-semibold shadow-lg border border-warning flex items-center gap-1 select-none">
+          <LuTriangleAlert className="text-white text-[9px] shrink-0" />
           {t('cardDetails.restricted')}
         </div>
       )}
@@ -45,17 +45,17 @@ export function CardItemStatusBadges({
       {isInvalid && (
         <div
           title={t('cardDetails.invalidInFormatHint')}
-          className="absolute top-2 right-2 z-10 bg-violet-600/90 dark:bg-violet-700/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg border border-violet-500 flex items-center gap-1 select-none"
+          className="absolute top-2 right-2 z-10 bg-surface-3 backdrop-blur-sm text-fg px-2.5 py-0.5 rounded-full text-[9px] font-semibold shadow-lg border border-accent/50 flex items-center gap-1 select-none"
         >
-          <FaTimesCircle className="text-white text-[9px] shrink-0" />
+          <LuCircleX className="text-white text-[9px] shrink-0" />
           {t('cardDetails.invalidInFormat')}
         </div>
       )}
 
       {isInactiveToken && (
-        <div className="absolute top-2 left-2 z-10 bg-slate-800/95 dark:bg-slate-900/95 backdrop-blur-sm text-slate-350 dark:text-slate-400 px-2 py-0.5 rounded-md text-[9px] font-extrabold shadow-md border border-slate-700/60 flex items-center gap-1 select-none">
+        <div className="absolute top-2 left-2 z-10 bg-slate-800/95 dark:bg-slate-900/95 backdrop-blur-sm text-slate-350 dark:text-slate-400 px-2 py-0.5 rounded-md text-[9px] font-semibold shadow-md border border-slate-700/60 flex items-center gap-1 select-none">
           <span className="w-1 h-1 rounded-full bg-slate-400" />
-          {t('common.inactive').toUpperCase()}
+          {t('common.inactive')}
         </div>
       )}
     </>

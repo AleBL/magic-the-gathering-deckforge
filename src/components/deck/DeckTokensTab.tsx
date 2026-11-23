@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaSpinner, FaPalette, FaInfoCircle, FaTrash, FaPlus, FaSync } from 'react-icons/fa';
+import { LuInfo, LuLoaderCircle, LuPalette, LuPlus, LuRefreshCw, LuTrash2 } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckRelatedToken } from '../../types/Deck';
 import { RelatedToken } from '../../hooks/useCardRelatedTokens';
@@ -52,8 +52,8 @@ function DeckTokensTab({
 
   if (isLoading) {
     return (
-      <div className="h-64 flex flex-col items-center justify-center gap-3 text-gray-500 dark:text-gray-400">
-        <FaSpinner className="text-3xl text-indigo-500 animate-spin" />
+      <div className="h-64 flex flex-col items-center justify-center gap-3 text-fg-muted">
+        <LuLoaderCircle className="text-3xl text-accent animate-spin" />
         <p className="text-xs font-semibold">{t('tokens.loadingTokens')}</p>
       </div>
     );
@@ -63,16 +63,16 @@ function DeckTokensTab({
     <div className="space-y-4 text-left animate-fadeIn">
       {/* Tab Header with Add Token Button */}
       {isEditMode && (
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 relative">
+        <div className="flex items-center justify-between border-b border-line pb-2 relative">
           <div className="flex items-center gap-2">
             {/* Analyze deck manually */}
             <button
               type="button"
               onClick={handleAnalyzeDeck}
-              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-extrabold text-xs py-1.5 px-3 rounded-lg transition-all cursor-pointer"
+              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs py-1.5 px-3 rounded-lg transition cursor-pointer"
               title={t('deck.analyzeDeck')}
             >
-              <FaSync className="text-[10px]" />
+              <LuRefreshCw className="text-[10px]" />
               {t('deck.analyzeDeck')}
             </button>
 
@@ -80,9 +80,9 @@ function DeckTokensTab({
             <button
               type="button"
               onClick={openSearchModal}
-              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-all cursor-pointer"
+              className="flex items-center gap-1.5 bg-surface-3 hover:bg-surface-3 text-fg font-semibold text-xs py-1.5 px-3 rounded-lg shadow-sm transition cursor-pointer"
             >
-              <FaPlus className="text-[10px]" />
+              <LuPlus className="text-[10px]" />
               {t('tokens.addToken')}
             </button>
           </div>
@@ -91,7 +91,7 @@ function DeckTokensTab({
 
       {localTokens.length === 0 ? (
         <EmptyState
-          icon={<FaInfoCircle />}
+          icon={<LuInfo />}
           title={t('tokens.noTokensFound')}
           description={t('tokens.noTokensExplanation')}
           action={isEditMode ? { label: t('deck.analyzeDeck'), onClick: handleAnalyzeDeck } : undefined}
@@ -105,7 +105,7 @@ function DeckTokensTab({
               return (
                 <div
                   key={tokenCard.id}
-                  className="relative border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-gray-800/10 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all duration-300 group"
+                  className="relative border border-line bg-surface-1/40 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-xs hover:shadow-md transition duration-300 group"
                 >
                   {/* Trash/Delete icon button */}
                   {isEditMode && (
@@ -113,9 +113,9 @@ function DeckTokensTab({
                       type="button"
                       onClick={() => handleDeleteToken(tokenCard.id)}
                       title={t('tokens.deleteToken')}
-                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
+                      className="absolute top-1.5 right-1.5 z-20 w-6 h-6 rounded-full bg-danger-soft text-danger hover:bg-danger hover:text-on-danger border border-danger/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer shadow-sm"
                     >
-                      <FaTrash className="text-[10px]" />
+                      <LuTrash2 className="text-[10px]" />
                     </button>
                   )}
 
@@ -131,26 +131,26 @@ function DeckTokensTab({
                         onTokenClick?.(tokenCard);
                       }
                     }}
-                    className="relative w-full h-34 rounded-lg overflow-hidden border border-gray-150 dark:border-gray-800 bg-slate-950 flex items-center justify-center mb-2 cursor-pointer group/img shrink-0"
+                    className="relative w-full h-34 rounded-lg overflow-hidden border border-line bg-slate-950 flex items-center justify-center mb-2 cursor-pointer group/img shrink-0"
                   >
                     {imgUrl ? (
                       <img
                         src={imgUrl}
                         alt={tokenCard.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none"
+                        className="w-full h-full object-cover transition-transform duration-300 pointer-events-none"
                         loading="lazy"
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                        <FaPalette className="text-indigo-500/40 text-xs shrink-0" />
-                        <span className="text-[8px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
+                        <LuPalette className="text-accent text-xs shrink-0" />
+                        <span className="text-[8px] text-gray-400 font-semibold leading-tight break-words line-clamp-3 select-none">
                           {tokenCard.name}
                         </span>
                       </div>
                     )}
                     {/* Click hint overlay */}
-                    <div className="absolute inset-0 bg-indigo-900/0 group-hover/img:bg-indigo-900/25 transition-colors duration-300 flex items-center justify-center">
-                      <span className="text-[8px] text-white font-bold opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow">
+                    <div className="absolute inset-0 bg-accent-soft group-hover/img:bg-indigo-900/25 transition-colors duration-300 flex items-center justify-center">
+                      <span className="text-[8px] text-white font-semibold opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow">
                         {t('tokens.viewLabel')}
                       </span>
                     </div>
@@ -158,12 +158,11 @@ function DeckTokensTab({
 
                   {/* Text metadata */}
                   <div className="w-full text-center space-y-0.5 min-w-0">
-                    <h5 className="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate leading-tight">
+                    <h5 className="text-[11px] font-semibold text-fg truncate leading-tight">
                       {tokenCard.printed_name || tokenCard.name}
                     </h5>
-                    <p className="text-[8px] text-gray-400 dark:text-gray-500 truncate font-semibold uppercase tracking-wider">
-                      {t('common.generatedBy')}:{' '}
-                      <span className="font-extrabold text-indigo-500">{generatorCardName}</span>
+                    <p className="text-[11px] text-fg-muted truncate font-semibold">
+                      {t('common.generatedBy')}: <span className="font-semibold text-accent">{generatorCardName}</span>
                     </p>
                   </div>
                 </div>
