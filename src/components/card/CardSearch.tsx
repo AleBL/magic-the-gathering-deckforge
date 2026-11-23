@@ -10,7 +10,7 @@ import CardSkeleton from './CardSkeleton';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
-import { useCardSearch } from '../../hooks/useCardSearch';
+import { SEARCH_SORT_ORDERS, SearchSortOrder, useCardSearch } from '../../hooks/useCardSearch';
 import { dispatchPendingAction, usePendingAction } from '../../hooks/usePendingAction';
 import { useCollectionOwnership, OwnershipFilter } from '../../hooks/useCollectionOwnership';
 import ErrorState from '../ui/ErrorState';
@@ -47,6 +47,8 @@ function CardSearch({
     error,
     filters,
     setFilters,
+    sortOrder,
+    setSortOrder,
     hasMore,
     loadFirstPage,
     loadNextPage,
@@ -91,8 +93,8 @@ function CardSearch({
   }, [loadNextPage]);
 
   return (
-    <div className="flex flex-col h-full bg-surface-2/30">
-      <div className="bg-surface-1/95 backdrop-blur-xl border-b border-line sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4 shadow-sm transition-all duration-300">
+    <div className="flex flex-col h-full bg-surface-0">
+      <div className="bg-surface-0 border-b border-line sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4">
         <div className="w-full space-y-2 sm:space-y-4">
           {/* Main Search Input */}
           <div className="flex flex-row gap-2 sm:gap-3">
@@ -112,12 +114,12 @@ function CardSearch({
                   }
                 }}
                 placeholder={t('search.searchPlaceholder')}
-                className="w-full pl-11 pr-4 py-3.5 bg-surface-2 border border-transparent dark:border-slate-700 rounded-2xl text-base font-medium text-fg placeholder:text-fg-muted focus:bg-surface-1 focus:border-accent/50 focus:ring-4 focus:ring-focus transition-all duration-300 shadow-sm"
+                className="w-full pl-11 pr-4 py-3.5 bg-surface-1 border border-line-strong rounded-xl text-base text-fg placeholder:text-fg-muted focus:outline-none focus:border-fg-muted focus-visible:outline-2 focus-visible:outline-focus transition-colors duration-150"
               />
             </div>
             <button
               onClick={() => loadFirstPage(buildQuery(searchQuery))}
-              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 whitespace-nowrap"
+              className="px-5 sm:px-8 py-3.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl font-medium transition-colors duration-150 active:scale-[0.98] whitespace-nowrap"
             >
               {t('search.searchButton')}
             </button>
@@ -174,12 +176,35 @@ function CardSearch({
               />
               <div className="w-px h-6 bg-surface-3 hidden sm:block"></div>
               <CardSizeSelector selectedSize={cardSize} onSizeChange={setCardSize} />
+              <div className="flex items-center gap-3 ml-auto">
+                {!isLoadingInitial && !error && cards.length > 0 && (
+                  <span className="text-sm text-fg-muted" aria-live="polite">
+                    {hasMore
+                      ? t('search.resultCountMore', { count: visibleCards.length })
+                      : t('search.resultCount', { count: visibleCards.length })}
+                  </span>
+                )}
+                <label className="flex items-center gap-2 text-sm text-fg-secondary">
+                  <span>{t('search.sortBy')}</span>
+                  <select
+                    value={sortOrder}
+                    onChange={(event) => setSortOrder(event.target.value as SearchSortOrder)}
+                    className="h-9 px-2.5 rounded-lg bg-surface-1 border border-line-strong text-sm text-fg cursor-pointer"
+                  >
+                    {SEARCH_SORT_ORDERS.map((order) => (
+                      <option key={order} value={order}>
+                        {t(`search.sortOrders.${order}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-surface-2/50 p-4 sm:p-6 transition-colors duration-300">
+      <div className="flex-1 overflow-auto bg-surface-0 p-4 sm:p-6">
         <div className="w-full">
           {isLoadingInitial && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">

@@ -64,6 +64,8 @@ function CardItem({
   const { motionEnabled } = useVisualEffects();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  // A failed or empty image leaves a named card-shaped placeholder instead of a blank frame.
+  const [imageFailed, setImageFailed] = useState(false);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
 
@@ -179,8 +181,24 @@ function CardItem({
             imgClassName={imageClassName}
             imgStyle={imageStyle}
           />
+        ) : !imageUrl || imageFailed ? (
+          <div
+            className={`${imageClassName} flex aspect-[5/7] w-full flex-col justify-between rounded-lg border border-line-strong bg-surface-2 p-3 text-left`}
+            role="img"
+            aria-label={card.name}
+          >
+            <span className="text-sm font-semibold text-fg line-clamp-3">{card.name}</span>
+            <span className="text-xs text-fg-muted line-clamp-2">{card.type_line}</span>
+          </div>
         ) : (
-          <img src={imageUrl} alt={card.name} className={imageClassName} style={imageStyle} loading="lazy" />
+          <img
+            src={imageUrl}
+            alt={card.name}
+            className={imageClassName}
+            style={imageStyle}
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+          />
         )}
         {/* 3D Glare Overlay */}
         <div

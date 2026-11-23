@@ -108,8 +108,8 @@ test.describe('the filter sheet on a phone', () => {
   // affordance saying the sheet can be pulled shut — scrolled away with it.
   test('scrolls its own body and keeps the drag handle in place', async ({ appPage }) => {
     await appPage.goto('/');
-    // Below `sm` the filter row is hidden; the navbar button opens the sheet instead.
-    await appPage.getByRole('banner').getByRole('button', { name: 'Advanced Filters' }).click();
+    // Below `sm` the filter row is hidden; the button beside the search field opens the sheet.
+    await appPage.locator('button[aria-label="Advanced Filters"]:visible').first().click();
 
     const sheet = appPage.getByRole('dialog');
     await expect(sheet).toBeVisible();

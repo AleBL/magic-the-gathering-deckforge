@@ -8,9 +8,17 @@ const DEFAULT_QUERY = 'c>=1';
 const MIN_QUERY_LENGTH = 2;
 const DEBOUNCE_MS = 500;
 
+/**
+ * Result order, sent as Scryfall's own `order:` keyword so paging stays server side.
+ * `name` is Scryfall's default and adds no term.
+ */
+export const SEARCH_SORT_ORDERS = ['name', 'cmc', 'released', 'rarity', 'usd', 'edhrec'] as const;
+export type SearchSortOrder = (typeof SEARCH_SORT_ORDERS)[number];
+
 export function useCardSearch(language: string) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<SearchFilters>(EMPTY_SEARCH_FILTERS);
+  const [sortOrder, setSortOrder] = useState<SearchSortOrder>('name');
   const { cards, isLoadingInitial, isLoadingMore, error, hasMore, loadFirstPage, loadNextPage, cancelActiveSearches } =
     useCardSearchPaging(language);
 
@@ -18,6 +26,7 @@ export function useCardSearch(language: string) {
   const isInitialMount = useRef(true);
   const lastSearchedQueryRef = useRef(searchQuery);
   const lastSearchedFiltersRef = useRef(filters);
+  const lastSearchedSortRef = useRef(sortOrder);
 
   const buildQuery = useCallback(
     (raw: string) => {
@@ -28,9 +37,10 @@ export function useCardSearch(language: string) {
       // filters *are* the search.
       const head = trimmed || (terms.length > 0 ? '' : DEFAULT_QUERY);
 
-      return [head, ...terms].filter(Boolean).join(' ');
+      const order = sortOrder === 'name' ? '' : `order:${sortOrder}`;
+      return [head, ...terms, order].filter(Boolean).join(' ');
     },
-    [filters]
+    [filters, sortOrder]
   );
 
   /** Searches now, and records what was searched so the debounce below does not repeat it. */
@@ -42,10 +52,11 @@ export function useCardSearch(language: string) {
       }
       lastSearchedQueryRef.current = searchQuery;
       lastSearchedFiltersRef.current = filters;
+      lastSearchedSortRef.current = sortOrder;
 
       await loadFirstPage(query);
     },
-    [loadFirstPage, searchQuery, filters]
+    [loadFirstPage, searchQuery, filters, sortOrder]
   );
 
   useEffect(() => {
@@ -57,13 +68,14 @@ export function useCardSearch(language: string) {
     const raw = searchQuery.trim();
     const queryChanged = searchQuery !== lastSearchedQueryRef.current;
     const filtersChanged = JSON.stringify(filters) !== JSON.stringify(lastSearchedFiltersRef.current);
+    const sortChanged = sortOrder !== lastSearchedSortRef.current;
 
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return undefined;
     }
 
-    if (!queryChanged && !filtersChanged) {
+    if (!queryChanged && !filtersChanged && !sortChanged) {
       return undefined;
     }
 
@@ -84,7 +96,7 @@ export function useCardSearch(language: string) {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [searchQuery, filters, startSearch, buildQuery]);
+  }, [searchQuery, filters, sortOrder, startSearch, buildQuery]);
 
   useEffect(() => cancelActiveSearches, [cancelActiveSearches]);
 
@@ -97,6 +109,8 @@ export function useCardSearch(language: string) {
     error,
     filters,
     setFilters,
+    sortOrder,
+    setSortOrder,
     hasMore,
     loadFirstPage: startSearch,
     loadNextPage,

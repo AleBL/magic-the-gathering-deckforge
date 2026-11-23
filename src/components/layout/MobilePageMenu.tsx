@@ -5,7 +5,6 @@ import {
   LuDices,
   LuFileInput,
   LuFileOutput,
-  LuFilter,
   LuHistory,
   LuLayers,
   LuMenu,
@@ -143,56 +142,43 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
     dispatchPendingAction(action);
   };
 
-  // The search tab only ever offered two items here (focus search — redundant
-  // since the search bar is already on screen — and advanced filters), so the
-  // extra "open a menu to pick the one useful item" step just got in the way.
-  // Go straight to the filters sheet instead.
-  const handleButtonClick = () => {
-    if (activeTab === 'search') {
-      dispatchPendingAction('open-search-filters');
-      return;
-    }
-    setIsOpen(true);
-  };
-
-  // The collection screen keeps its own always-visible toolbar, so there is no
-  // navbar page menu for it.
-  if (activeTab === 'collection') return null;
+  // Only the deck tab has page actions. Search already shows its filters button next to
+  // the search field, and the collection keeps its own toolbar; a second filters button
+  // in the header only duplicated the first.
+  if (activeTab !== 'deck') return null;
 
   return (
     <>
       <button
         type="button"
-        onClick={handleButtonClick}
-        className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl text-fg-secondary hover:bg-surface-2 active:scale-95 transition-all duration-200 cursor-pointer"
-        aria-label={activeTab === 'search' ? t('search.advancedFilters') : t('common.pageMenu')}
+        onClick={() => setIsOpen(true)}
+        className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl text-fg-secondary hover:bg-surface-2 active:scale-[0.98] transition-colors duration-150 cursor-pointer"
+        aria-label={t('common.pageMenu')}
         aria-haspopup="dialog"
-        aria-expanded={activeTab === 'deck' ? isOpen : undefined}
+        aria-expanded={isOpen}
       >
-        {activeTab === 'search' ? <LuFilter className="text-base" /> : <LuMenu className="text-base" />}
+        <LuMenu className="text-base" />
       </button>
 
-      {activeTab === 'deck' && (
-        <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
-          <h3 id="page-menu-title" className="text-xs font-semibold text-fg-muted mb-3">
-            {t('common.pageMenu')} — {t('common.decksTab')}
-          </h3>
-          <div className="flex flex-col gap-1 pb-2">
-            {items.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                disabled={item.disabled}
-                onClick={() => handleItemClick(item.action)}
-                className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-fg hover:bg-surface-2 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                <span className="text-fg-muted shrink-0 w-5 flex justify-center">{item.icon}</span>
-                <span className="truncate">{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </BottomSheet>
-      )}
+      <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
+        <h3 id="page-menu-title" className="text-xs font-semibold text-fg-muted mb-3">
+          {t('common.pageMenu')} — {t('common.decksTab')}
+        </h3>
+        <div className="flex flex-col gap-1 pb-2">
+          {items.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              disabled={item.disabled}
+              onClick={() => handleItemClick(item.action)}
+              className="flex items-center gap-3 w-full min-h-11 px-3 py-2.5 rounded-xl text-left text-sm font-semibold text-fg hover:bg-surface-2 active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <span className="text-fg-muted shrink-0 w-5 flex justify-center">{item.icon}</span>
+              <span className="truncate">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
     </>
   );
 }
