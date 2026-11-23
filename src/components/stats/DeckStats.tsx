@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import MatchLogPanel from './MatchLogPanel';
 import SampleHandPanel from './SampleHandPanel';
 import { useTranslation } from 'react-i18next';
 import { LuX } from 'react-icons/lu';
@@ -18,11 +19,13 @@ import { PlayoutPanel } from '../stats/PlayoutPanel';
 
 interface DeckStatsProps {
   currentDeck: Card[];
+  /** A saved deck's id; the match log only exists for saved decks. */
+  deckId?: string;
   onApplySuggestedLands?: (landCounts: Record<string, number>) => void;
   renderFilteredCards?: (cards: Card[]) => React.ReactNode;
 }
 
-function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: DeckStatsProps) {
+function DeckStats({ currentDeck, deckId, onApplySuggestedLands, renderFilteredCards }: DeckStatsProps) {
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<StatFilter | null>(null);
   const colorLabels = useColorLabels();
@@ -37,6 +40,7 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <DeckDoctorPanel currentDeck={currentDeck} stats={stats} />
         <SampleHandPanel currentDeck={currentDeck} />
+        {deckId ? <MatchLogPanel deckId={deckId} /> : null}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

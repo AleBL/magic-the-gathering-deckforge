@@ -660,6 +660,33 @@ const pt = {
       filter: 'Filtrar por tag',
       all: 'Todos'
     },
+    matchLog: {
+      title: 'Diário de partidas',
+      result: 'Resultado',
+      opponent: 'Oponente',
+      opponentPlaceholder: 'Mono-vermelho, controle Azorius…',
+      onPlay: 'Comecei jogando',
+      notes: 'Notas',
+      logGame: 'Registrar partida',
+      empty: 'Nenhuma partida ainda. Registre cada uma para ver a taxa de vitória por confronto',
+      overall: 'Taxa de vitória',
+      onPlayRate: 'Começando',
+      onDrawRate: 'Comprando',
+      record: '{{wins}}-{{losses}}-{{draws}}',
+      byMatchup: 'Por confronto',
+      games: 'Partidas',
+      winRate: 'Vitórias',
+      recent: 'Partidas recentes',
+      play: 'Jogando',
+      draw: 'Comprando',
+      delete: 'Apagar partida',
+      unknownOpponent: 'Desconhecido',
+      results: {
+        win: 'Vitória',
+        loss: 'Derrota',
+        draw: 'Empate'
+      }
+    },
     deckDoctor: {
       pointsOf: '{{score}} de {{max}} pontos',
       title: 'Deck Doctor',
