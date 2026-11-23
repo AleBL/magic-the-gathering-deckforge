@@ -8,7 +8,9 @@ export const STORAGE_KEYS = {
   budgetTarget: 'deckforge_budget_target',
   collectionCurrency: 'deckforge_collection_currency',
   showDeckCollectionGap: 'deckforge_show_deck_collection_gap',
-  collectionToolsOpen: 'deckforge_collection_tools_open'
+  collectionToolsOpen: 'deckforge_collection_tools_open',
+  /** The deck being built before it is saved. See src/store/draftStorage.ts. */
+  draftDeck: 'deckforge_draft_deck'
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

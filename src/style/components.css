@@ -9,19 +9,17 @@
    ─────────────────────────────────────────────────────────── */
 
 .deck-content-tab-bar {
-  @apply flex flex-wrap border-b border-line mb-4 text-xs font-semibold gap-1 select-none;
+  @apply flex flex-wrap border-b border-line mb-4 text-sm gap-4 select-none;
 }
 
-/* Reads as a real tab: padded hit area, rounded top, and a hover background so
-   it is obviously interactive rather than plain muted text. */
+/* A text tab on a hairline: the active one takes the ink colour and a 2px rule
+   in the brass accent, the rest stay secondary. */
 .deck-content-tab {
-  @apply relative px-3 py-2 min-h-11 sm:min-h-0 rounded-t-lg whitespace-nowrap transition-all border-b-2 flex items-center gap-1.5 cursor-pointer;
-  border-color: transparent;
-  @apply text-fg-muted hover:text-fg hover:bg-surface-2/80;
+  @apply relative -mb-px py-2 min-h-11 sm:min-h-0 whitespace-nowrap border-b-2 border-transparent flex items-center gap-1.5 cursor-pointer text-fg-secondary hover:text-fg transition-colors duration-150;
 }
 
 .deck-content-tab-active {
-  @apply border-accent/50 text-accent font-semibold bg-accent-soft;
+  @apply border-accent text-fg font-medium;
 }
 
 /* ── Option Toggle Button (View Mode / Group By / Sort By) ──
@@ -64,7 +62,7 @@
 }
 
 .deck-toolbar-btn-accent {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-surface-3 hover:shadow-md;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 shadow-sm active:scale-95 cursor-pointer border border-transparent bg-primary text-on-primary hover:bg-primary-hover hover:shadow-md;
 }
 
 .display-settings-dropdown {
@@ -151,7 +149,7 @@ html.dark .import-export-dropdown {
    ─────────────────────────────────────────────────────────── */
 
 .unsaved-deck-chip {
-  @apply bg-danger-soft text-danger border border-danger/40 px-2.5 py-0.5 rounded-full text-[10px] font-semibold mt-1.5 inline-flex items-center gap-1 shadow-sm;
+  @apply bg-surface-2 text-fg-secondary border border-line px-2.5 py-0.5 rounded-full text-xs mt-1.5 inline-flex items-center gap-1;
 }
 
 /* ── Active Editing Mode Badge ──────────────────────────────
@@ -169,32 +167,12 @@ html.dark .import-export-dropdown {
 }
 
 .deck-list-item-editing-badge {
-  @apply shrink-0 inline-block w-2.5 h-2.5 bg-warning border border-line rounded-full animate-ping;
+  /* A still dot: "this deck is open in the editor" is a state, not an alert. */
+  @apply shrink-0 inline-block w-2 h-2 bg-warning rounded-full;
 }
 
 .deck-list-item-meta {
-  @apply flex flex-wrap items-center gap-1.5 mt-1.5;
-}
-
-.deck-list-item-format-badge {
-  @apply text-[11px] px-2 py-0.5 rounded-full font-semibold;
-}
-
-.deck-list-item-format-badge-selected {
-  @apply bg-primary text-on-primary shadow-sm ring-1 ring-focus;
-}
-
-.deck-list-item-format-badge-default {
-  @apply bg-surface-3 text-fg-secondary;
-}
-
-.deck-list-item-actions {
-  @apply flex gap-1.5 justify-end w-full shrink-0 border-t border-line pt-2 mt-auto;
-}
-
-.deck-list-action-btn {
-  /* min 44px tap height below sm (reverts on desktop); already flex-centered. */
-  @apply flex-1 sm:flex-none flex justify-center gap-1 items-center min-h-[44px] sm:min-h-0 py-1.5 px-2.5 rounded-lg font-semibold text-xs shadow-sm transition-all;
+  @apply flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden whitespace-nowrap;
 }
 
 /* ─── Export dialog option rows ────────────────────────────────── */
@@ -210,73 +188,32 @@ html.dark .import-export-dropdown {
 /* ─── Deck Box (Arena-style deck card) ─────────────────────────── */
 
 .deck-box {
-  /* No `overflow-hidden` here: it would clip the more-actions dropdown. The art
-     child clips its own image and rounds the top corners instead. */
-  @apply relative flex flex-col rounded-xl border transition-all duration-300;
+  /* No `overflow-hidden` here: it would clip the more-actions dropdown. */
+  @apply relative flex items-center gap-3 rounded-lg border p-2 transition-colors duration-150;
 }
 
 .deck-box-inactive {
-  @apply bg-surface-1/80 border-line shadow-sm hover:shadow-md hover:-translate-y-0.5;
+  @apply bg-surface-1 border-line hover:bg-surface-2;
 }
 
 .deck-box-active {
-  @apply bg-surface-2 border-accent shadow-xs;
+  @apply bg-surface-2 border-accent;
 }
 
-/* The 4:3 ratio sets the shape, the cap sets the limit: a wide lane would otherwise scale
-   the cover with the container and hand one deck most of the screen. 13rem matches what the
-   lg+ sidebar already produces, so nothing changes there. `object-cover` on the image keeps
-   the art from distorting once the cap bites. */
 .deck-box-art {
-  @apply relative aspect-[4/3] max-h-[13rem] w-full overflow-hidden rounded-t-xl bg-surface-3;
+  @apply relative h-11 w-14 shrink-0 overflow-hidden rounded-md bg-surface-3;
 }
 
 .deck-box-art-image {
-  @apply absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500;
-}
-
-.deck-box:hover .deck-box-art-image {
-  @apply scale-105;
+  @apply absolute inset-0 h-full w-full object-cover object-center;
 }
 
 .deck-box-art-placeholder {
-  @apply flex h-full w-full items-center justify-center text-3xl text-fg-muted;
-}
-
-.deck-box-art-scrim {
-  @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent;
-}
-
-/* Below lg the title is an ordinary header row; from lg up it overlays the cover art. Same
-   element either way — duplicating it would repeat the deck name in the accessible name. */
-.deck-box-title-row-compact {
-  @apply flex items-center gap-2 px-3 pt-2.5 pb-1;
+  @apply flex h-full w-full items-center justify-center text-base text-fg-muted;
 }
 
 .deck-box-title-compact {
-  @apply truncate text-sm font-semibold text-fg;
-}
-
-@media (min-width: 1024px) {
-  .deck-box-title-row-compact {
-    @apply absolute inset-x-0 bottom-0 px-3 pt-0 pb-2;
-  }
-
-  .deck-box-title-compact {
-    @apply text-white drop-shadow;
-  }
-}
-
-.deck-box-title-row {
-  @apply absolute inset-x-0 bottom-0 flex items-center gap-2 px-3 pb-2;
-}
-
-.deck-box-title {
-  @apply truncate text-sm font-semibold text-white drop-shadow;
-}
-
-.deck-box-footer {
-  @apply flex flex-col gap-2 px-3 pb-3 pt-2;
+  @apply truncate text-sm font-medium text-fg;
 }
 
 /* ─── Deck Edit Workspace (Arena two-pane editor) ──────────────── */

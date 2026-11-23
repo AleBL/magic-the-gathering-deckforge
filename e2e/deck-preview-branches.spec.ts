@@ -23,7 +23,7 @@ test.describe('DeckPreview — working deck branch', () => {
     await appPage.getByRole('button', { name: 'My Decks' }).click();
 
     // Identity of this branch: it is a deck-in-progress, not a named deck.
-    await expect(appPage.getByText(/Temporary|Unsaved/i).first()).toBeVisible();
+    await expect(appPage.getByText(/Not saved as a deck yet/i).first()).toBeVisible();
 
     // Shared furniture that must survive the merge.
     await expect(appPage.getByRole('button', { name: /View Mode|Display/i }).first()).toBeVisible();

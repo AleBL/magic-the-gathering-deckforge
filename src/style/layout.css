@@ -477,7 +477,7 @@ html.dark .profile-menu-panel {
 }
 
 .proxy-option-btn-active {
-  @apply bg-primary text-on-primary border-accent hover:bg-primary-hover dark:bg-primary dark:text-white dark:border-accent;
+  @apply bg-primary text-on-primary border-accent hover:bg-primary-hover;
 }
 
 .proxy-preview-scroll {

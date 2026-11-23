@@ -69,7 +69,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               type="button"
               onClick={increment}
               aria-label={t('collection.increment')}
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-surface-3 transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-primary-hover transition-colors"
             >
               <LuPlus className="text-[10px]" />
             </button>
@@ -123,7 +123,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
               }}
               title={t('collection.increment')}
               aria-label={t('collection.increment')}
-              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-surface-3 transition-colors"
+              className="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-primary text-on-primary hover:bg-primary-hover transition-colors"
             >
               <LuPlus className="text-[9px]" />
             </button>
@@ -139,7 +139,7 @@ export function CardCollectionControls({ card, variant = 'overlay', revealOnHove
             }}
             title={t('collection.markOwned')}
             aria-label={t('collection.markOwned')}
-            className="flex items-center gap-1.5 h-8 sm:h-7 pl-2.5 pr-3 rounded-full bg-black/65 text-white text-[11px] sm:text-[10px] font-semibold shadow-md backdrop-blur-md border border-white/20 hover:bg-primary transition-colors pointer-events-auto"
+            className="flex items-center gap-1.5 h-8 sm:h-7 pl-2.5 pr-3 rounded-full bg-black/65 text-white text-[11px] sm:text-[10px] font-semibold shadow-md backdrop-blur-md border border-white/20 hover:bg-primary hover:text-on-primary transition-colors pointer-events-auto"
           >
             <LuPlus className="text-[9px] shrink-0" />
             {t('collection.tab')}

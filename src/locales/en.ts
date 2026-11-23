@@ -219,7 +219,8 @@ const en = {
       addCardsMessage: 'Add cards to the current deck or select a saved deck',
       analyzeDeck: 'Analyze Deck',
       clearDeckNamed: 'Clear Deck "{{name}}"',
-      clearTemporaryDeck: 'Clear Temporary Deck',
+      clearDraft: 'Clear draft',
+      draft: 'Draft',
       clearDeckConfirmationMessage:
         'Are you sure you want to clear the current deck? All unsaved changes will be lost.',
       clearDeckConfirmationTitle: 'Clear Deck',
@@ -232,6 +233,14 @@ const en = {
       decksImported: '{{count}} decks imported successfully!',
       deckDuplicated: 'Deck duplicated!',
       duplicateDeck: 'Duplicate deck',
+      tabCards: 'Cards',
+      tabAnalysis: 'Analysis',
+      tabNotes: 'Notes',
+      searchDecks: 'Search decks',
+      sortDecks: 'Sort decks',
+      sortRecent: 'Recent',
+      sortFormat: 'Format',
+      noDecksMatch: 'No deck matches this search',
       newDeckFromThis: 'New deck from this',
       setCover: 'Set cover',
       coverUpdated: 'Deck cover updated',
@@ -302,7 +311,7 @@ const en = {
       sortCmc: 'CMC',
       sortName: 'Name',
       sortRarity: 'Rarity',
-      temporaryUnsavedDeck: 'Temporary Deck (Unsaved)'
+      draftNotSaved: 'Not saved as a deck yet'
     },
     collection: {
       title: 'My Collection',
@@ -395,6 +404,23 @@ const en = {
       shortcutsTitle: 'Keyboard shortcuts'
     },
     validation: {
+      validFor: 'Valid for {{format}}',
+      invalidFor: 'Not valid for {{format}}',
+      moreIssues_one: '+{{count}} more',
+      moreIssues_other: '+{{count}} more',
+      short: {
+        validationEmptyDeck: 'Empty deck',
+        validationMinCards: '{{count}} of 60 cards',
+        validationMaxCopies: 'Too many copies of {{name}}',
+        validationCommanderExactCards: '{{count}} of 100 cards',
+        validationCommanderSingleton: 'Duplicate cards',
+        validationCommanderNoCommander: 'No commander chosen',
+        validationCommanderMaxTwo: 'More than two commanders',
+        validationCommanderColorIdentity: 'Cards outside the color identity',
+        validationPauperCommonsOnly: 'Cards that are not common',
+        validationBanlist: 'Banned cards',
+        validationRestrictedList: 'Too many restricted cards'
+      },
       basicLandCheckList: 'basic',
       backgroundCheckList: 'background',
       backgroundCreatureCheckList: 'choose a background',
@@ -402,12 +428,10 @@ const en = {
       commander: 'Commander',
       deckRulesExplanation:
         'Standard, Modern, Vintage, Pauper require min 60 cards & max 4 copies. Commander requires exactly 100 cards & max 1 copy (singletons). Pauper allows only common rarity.',
-      deckValidation: 'Deck Validation',
       doctorCheckList: "doctor's companion",
       format: 'Format',
       freeform: 'Freeform',
       friendsCheckList: 'friends forever',
-      hideDetails: 'Hide details',
       invalid: 'Invalid',
       legendaryCheckList: 'legendary',
       modern: 'Modern',
@@ -437,7 +461,6 @@ const en = {
       validationPauperCommonsOnly: 'Pauper allows only common cards. The following cards are not common: {{list}}.',
       validationRestrictedList:
         'Restricted cards exceeded: the following cards are restricted to 1 copy in Vintage: {{list}}.',
-      viewDetails: 'Click to view details',
       vintage: 'Vintage'
     },
     cardDetails: {
@@ -560,6 +583,7 @@ const en = {
       suggestedDistribution: 'Suggested distribution'
     },
     deckDoctor: {
+      pointsOf: '{{score}} of {{max}} points',
       title: 'Deck Doctor',
       desc: "A full diagnosis of your deck's consistency, with actionable advice.",
       noData: 'Add more cards to run a full diagnosis.',

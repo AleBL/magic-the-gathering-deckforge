@@ -96,7 +96,7 @@ export default function DeckImportProgressModal({
               </div>
               <div className="w-full bg-surface-3 rounded-full h-3 overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-300 ${isComplete ? 'bg-success' : 'bg-surface-3'}`}
+                  className={`h-full rounded-full transition-[width,background-color] duration-300 ${isComplete ? 'bg-success' : 'bg-accent'}`}
                   style={{ width: `${percentage}%` }}
                 />
               </div>

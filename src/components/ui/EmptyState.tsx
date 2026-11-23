@@ -63,7 +63,7 @@ function EmptyState({ icon, title, compact, description, action, suggestions }: 
       {action && (
         <button
           onClick={action.onClick}
-          className="px-6 py-2.5 bg-primary hover:bg-surface-3 text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 mb-8"
+          className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-2xl font-semibold shadow-lg transition-all duration-300 active:scale-95 mb-8"
         >
           {action.label}
         </button>

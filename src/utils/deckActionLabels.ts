@@ -9,8 +9,6 @@ export function deckActionLabels(t: TranslateFn, editingDeckId: string | null, e
       : t('deck.saveChanges')
     : t('deck.saveDeck');
   const clearLabel =
-    editingDeckId && editingDeckName
-      ? t('deck.clearDeckNamed', { name: editingDeckName })
-      : t('deck.clearTemporaryDeck');
+    editingDeckId && editingDeckName ? t('deck.clearDeckNamed', { name: editingDeckName }) : t('deck.clearDraft');
   return { saveLabel, clearLabel };
 }

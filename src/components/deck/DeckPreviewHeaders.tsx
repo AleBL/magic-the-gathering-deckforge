@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { LuFileText, LuPencil, LuTriangleAlert, LuZap } from 'react-icons/lu';
+import { LuFileText, LuPencil, LuZap } from 'react-icons/lu';
 import { Deck } from '../../types/Deck';
 import { formatLabelKey } from '../../utils/formatLabel';
 
@@ -83,12 +83,11 @@ export function WorkingDeckHeader({ isEditing, cardCount }: WorkingDeckHeaderPro
   return (
     <>
       <h3 className="text-fg text-xl font-serif font-semibold transition-colors duration-300 text-left">
-        {t('deck.currentDeck')}
+        {t('deck.draft')}
       </h3>
       {cardCount > 0 ? (
         <span className="unsaved-deck-chip">
-          <LuTriangleAlert className="text-danger text-[9px] shrink-0" />
-          <span>{t('deck.temporaryUnsavedDeck')}</span>
+          <span>{t('deck.draftNotSaved')}</span>
         </span>
       ) : null}
     </>

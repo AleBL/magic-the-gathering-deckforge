@@ -221,7 +221,8 @@ const es = {
       addCardsMessage: 'Añade cartas al mazo actual o selecciona un mazo guardado',
       analyzeDeck: 'Analizar Mazo',
       clearDeckNamed: 'Limpiar Mazo "{{name}}"',
-      clearTemporaryDeck: 'Limpiar Mazo Temporal',
+      clearDraft: 'Vaciar borrador',
+      draft: 'Borrador',
       clearDeckConfirmationMessage:
         '¿Estás seguro de que quieres limpiar el mazo actual? Todos los cambios no guardados se perderán.',
       clearDeckConfirmationTitle: 'Limpiar Mazo',
@@ -234,6 +235,14 @@ const es = {
       decksImported: '¡{{count}} mazos importados con éxito!',
       deckDuplicated: '¡Mazo duplicado!',
       duplicateDeck: 'Duplicar mazo',
+      tabCards: 'Cartas',
+      tabAnalysis: 'Análisis',
+      tabNotes: 'Notas',
+      searchDecks: 'Buscar mazos',
+      sortDecks: 'Ordenar mazos',
+      sortRecent: 'Recientes',
+      sortFormat: 'Formato',
+      noDecksMatch: 'Ningún mazo coincide con la búsqueda',
       newDeckFromThis: 'Nuevo mazo a partir de este',
       setCover: 'Establecer portada',
       coverUpdated: 'Portada del mazo actualizada',
@@ -304,7 +313,7 @@ const es = {
       sortCmc: 'CMC',
       sortName: 'Nombre',
       sortRarity: 'Rareza',
-      temporaryUnsavedDeck: 'Mazo Temporal (No Guardado)'
+      draftNotSaved: 'Aún no guardado como mazo'
     },
     collection: {
       title: 'Mi Colección',
@@ -397,6 +406,23 @@ const es = {
       shortcutsTitle: 'Atajos de teclado'
     },
     validation: {
+      validFor: 'Válido para {{format}}',
+      invalidFor: 'No válido para {{format}}',
+      moreIssues_one: '+{{count}} más',
+      moreIssues_other: '+{{count}} más',
+      short: {
+        validationEmptyDeck: 'Mazo vacío',
+        validationMinCards: '{{count}} de 60 cartas',
+        validationMaxCopies: 'Demasiadas copias de {{name}}',
+        validationCommanderExactCards: '{{count}} de 100 cartas',
+        validationCommanderSingleton: 'Cartas repetidas',
+        validationCommanderNoCommander: 'Sin comandante elegido',
+        validationCommanderMaxTwo: 'Más de dos comandantes',
+        validationCommanderColorIdentity: 'Cartas fuera de la identidad de color',
+        validationPauperCommonsOnly: 'Cartas que no son comunes',
+        validationBanlist: 'Cartas prohibidas',
+        validationRestrictedList: 'Demasiadas cartas restringidas'
+      },
       basicLandCheckList: 'básica,básico',
       backgroundCheckList: 'trasfondo',
       backgroundCreatureCheckList: 'elegir un trasfondo',
@@ -404,12 +430,10 @@ const es = {
       commander: 'Commander',
       deckRulesExplanation:
         'Estándar, Moderno, Vintage y Pauper requieren al menos 60 cartas y un máximo de 4 copias. Commander requiere exactamente 100 cartas y un máximo de 1 copia (singleton). Pauper permite solo cartas de rareza común.',
-      deckValidation: 'Validación del Mazo',
       doctorCheckList: 'compañero del doctor',
       format: 'Formato',
       freeform: 'Formato Libre',
       friendsCheckList: 'amigos por siempre',
-      hideDetails: 'Ocultar detalles',
       invalid: 'Inválido',
       legendaryCheckList: 'leyenda,legendaria,legendario',
       modern: 'Moderno (Modern)',
@@ -443,7 +467,6 @@ const es = {
         'Pauper permite solo cartas comunes. Las siguientes cartas no son comunes: {{list}}.',
       validationRestrictedList:
         'Límite de cartas restringidas excedido: las siguientes cartas están restringidas a 1 copia en Vintage: {{list}}.',
-      viewDetails: 'Clic para ver detalles',
       vintage: 'Vintage'
     },
     cardDetails: {
@@ -567,6 +590,7 @@ const es = {
       suggestedDistribution: 'Distribución sugerida'
     },
     deckDoctor: {
+      pointsOf: '{{score}} de {{max}} puntos',
       title: 'Deck Doctor',
       desc: 'Un diagnóstico completo de la consistencia de tu mazo, con consejos prácticos.',
       noData: 'Añade más cartas para ejecutar un diagnóstico completo.',

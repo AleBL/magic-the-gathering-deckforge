@@ -169,7 +169,7 @@ test.describe('visual baseline', () => {
 
       await step(page, 'deck stats', async () => {
         await page
-          .getByRole('button', { name: /deck statistics/i })
+          .getByRole('button', { name: /^analysis$/i })
           .first()
           .click();
         await page.waitForTimeout(1200);
