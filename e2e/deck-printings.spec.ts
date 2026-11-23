@@ -22,7 +22,7 @@ test.describe('printings inside a deck', () => {
   test.beforeEach(async ({ appPage }) => {
     await mockScryfall(appPage, PRINTINGS);
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('island');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('island');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await expect(appPage.getByRole('button', { name: 'Island' }).first()).toBeVisible();
   });

@@ -18,7 +18,7 @@ async function confirmSaved(page: Page) {
 test.describe('deck building', () => {
   test.beforeEach(async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: search }).fill('bolt');
+    await appPage.getByRole('combobox', { name: search }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await expect(appPage.getByRole('button', { name: 'Lightning Bolt' })).toBeVisible();
   });

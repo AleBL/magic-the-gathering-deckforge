@@ -17,7 +17,7 @@ test.describe('card rulings', () => {
     });
 
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Lightning Bolt' }).first().click({ force: true });
 

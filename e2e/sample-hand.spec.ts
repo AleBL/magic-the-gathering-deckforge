@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 test.describe('sample hand', () => {
   test('deals seven, mulligans to six and draws the next card', async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     const addCopy = appPage.getByRole('button', { name: 'Add copy' }).first();
     for (let copy = 0; copy < 10; copy += 1) await addCopy.click();

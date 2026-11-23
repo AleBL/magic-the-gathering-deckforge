@@ -10,7 +10,7 @@ test.describe('playtest layout', () => {
 
   test('the hand is visible without scrolling at 1280x720', async ({ appPage }) => {
     await appPage.goto('/');
-    await appPage.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+    await appPage.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
     await appPage.getByRole('button', { name: 'Search', exact: true }).click();
     await appPage.getByRole('button', { name: 'Add copy' }).click();
     await appPage.getByRole('button', { name: 'My Decks' }).click();

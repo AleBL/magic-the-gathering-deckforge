@@ -10,7 +10,7 @@ import type { Page } from '@playwright/test';
  */
 
 async function searchAndAdd(page: Page) {
-  await page.getByRole('textbox', { name: 'Search cards...' }).fill('bolt');
+  await page.getByRole('combobox', { name: 'Search cards...' }).fill('bolt');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('button', { name: 'Add copy' }).first().click();
 }

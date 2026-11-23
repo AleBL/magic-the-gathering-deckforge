@@ -13,7 +13,7 @@ test.describe('first run', () => {
 
   test('search for cards puts the cursor in the search field', async ({ appPage }) => {
     await appPage.getByRole('button', { name: 'Search cards', exact: true }).last().click();
-    await expect(appPage.getByRole('textbox', { name: 'Search cards...' })).toBeFocused();
+    await expect(appPage.getByRole('combobox', { name: 'Search cards...' })).toBeFocused();
   });
 
   test('import a deck opens an empty list', async ({ appPage }) => {
