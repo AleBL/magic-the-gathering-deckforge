@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import { ValidationResult, ValidationError } from '../../utils/deckValidator';
 import { formatLabelKey } from '../../utils/formatLabel';
 
@@ -40,7 +40,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
         aria-expanded={isExpanded}
         disabled={!hasErrors}
       >
-        <span className="font-bold flex items-center gap-2">
+        <span className="font-semibold flex items-center gap-2">
           {t('validation.deckValidation')} ({t(formatLabelKey(formatKey))})
           {hasErrors ? (
             <span className="text-[10px] text-fg-muted font-normal">
@@ -61,7 +61,7 @@ function DeckValidationBadge({ validation, formatKey, variant = 'full' }: DeckVa
           </span>
           {hasErrors ? (
             <span className="text-fg-muted">
-              {isExpanded ? <FaChevronUp className="w-3.5 h-3.5" /> : <FaChevronDown className="w-3.5 h-3.5" />}
+              {isExpanded ? <LuChevronUp className="w-3.5 h-3.5" /> : <LuChevronDown className="w-3.5 h-3.5" />}
             </span>
           ) : null}
         </div>

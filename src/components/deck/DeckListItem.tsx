@@ -1,7 +1,16 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { useDropDirection } from '../../hooks/useDropDirection';
 import { useTranslation } from 'react-i18next';
-import { FaEdit, FaDownload, FaTrash, FaEllipsisV, FaClone, FaPlus, FaLayerGroup, FaImage } from 'react-icons/fa';
+import {
+  LuCopyPlus,
+  LuDownload,
+  LuEllipsisVertical,
+  LuImage,
+  LuLayers,
+  LuPlus,
+  LuSquarePen,
+  LuTrash2
+} from 'react-icons/lu';
 import { Deck, DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { validateDeck } from '../../utils/deckValidator';
@@ -117,7 +126,7 @@ export const DeckListItem = memo(function DeckListItem({
             <img src={coverArt} alt="" loading="lazy" className="deck-box-art-image" />
           ) : (
             <div className="deck-box-art-placeholder">
-              <FaLayerGroup />
+              <LuLayers />
             </div>
           )}
           <div className="deck-box-art-scrim" />
@@ -163,7 +172,7 @@ export const DeckListItem = memo(function DeckListItem({
             title={t('common.edit')}
             aria-label={`${t('common.edit')} ${deck.name}`}
           >
-            <FaEdit className="text-sm" />
+            <LuSquarePen className="text-sm" />
           </button>
           <button
             type="button"
@@ -175,7 +184,7 @@ export const DeckListItem = memo(function DeckListItem({
             title={t('deck.export')}
             aria-label={`${t('deck.export')} ${deck.name}`}
           >
-            <FaDownload className="text-sm" />
+            <LuDownload className="text-sm" />
           </button>
           <div className="relative" ref={exportMenuRef}>
             <button
@@ -191,7 +200,7 @@ export const DeckListItem = memo(function DeckListItem({
               title={t('common.moreActions')}
               aria-label={`${t('common.moreActions')} ${deck.name}`}
             >
-              <FaEllipsisV className="text-sm" />
+              <LuEllipsisVertical className="text-sm" />
             </button>
             {showExportMenu ? (
               <div
@@ -210,7 +219,7 @@ export const DeckListItem = memo(function DeckListItem({
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
-                  <FaClone className="text-xs shrink-0" />
+                  <LuCopyPlus className="text-xs shrink-0" />
                   {t('deck.duplicateDeck')}
                 </button>
                 <button
@@ -223,7 +232,7 @@ export const DeckListItem = memo(function DeckListItem({
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
-                  <FaPlus className="text-xs shrink-0" />
+                  <LuPlus className="text-xs shrink-0" />
                   {t('deck.newDeckFromThis')}
                 </button>
                 <button
@@ -236,7 +245,7 @@ export const DeckListItem = memo(function DeckListItem({
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-fg-secondary hover:bg-surface-2"
                 >
-                  <FaImage className="text-xs shrink-0" />
+                  <LuImage className="text-xs shrink-0" />
                   {t('deck.setCover')}
                 </button>
               </div>
@@ -252,7 +261,7 @@ export const DeckListItem = memo(function DeckListItem({
             title={t('deck.delete')}
             aria-label={`${t('deck.delete')} ${deck.name}`}
           >
-            <FaTrash className="text-sm" />
+            <LuTrash2 className="text-sm" />
           </button>
         </div>
       </div>

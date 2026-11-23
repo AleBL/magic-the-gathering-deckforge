@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
-import { FaInfoCircle, FaExclamationTriangle, FaTint } from 'react-icons/fa';
+import { LuDroplet, LuInfo, LuTriangleAlert } from 'react-icons/lu';
 import { DeckStatistics, MANA_COLOR_TO_BASIC_LAND } from '../../utils/deckStatistics';
 import { CHART_BAR_RADIUS_HORIZONTAL, CHART_TICK_STYLE, MANA_CHART_COLOR, ManaColorKey } from './chartTheme';
 import { ChartFrame, ChartTooltip } from './ChartPrimitives';
@@ -36,8 +36,8 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
-      <h4 className="font-bold text-sm text-accent uppercase tracking-wider flex items-center gap-2">
-        <FaInfoCircle className="text-accent" />
+      <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
+        <LuInfo className="text-accent" />
         {t('stats.manaBaseOptimizer')}
       </h4>
       <p className="text-xs text-fg-muted">
@@ -50,21 +50,21 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
           <div className="grid grid-cols-3 gap-3">
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.currentLands')}</span>
-              <span className="text-base font-extrabold text-fg-secondary tabular-nums">{stats.totalLands}</span>
+              <span className="text-base font-semibold text-fg-secondary tabular-nums">{stats.totalLands}</span>
             </div>
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.targetLands')}</span>
-              <span className="text-base font-extrabold text-fg-secondary tabular-nums">{stats.targetTotalLands}</span>
+              <span className="text-base font-semibold text-fg-secondary tabular-nums">{stats.targetTotalLands}</span>
             </div>
             <div className="stat-tile">
               <span className="stat-tile-label">{t('stats.landsToAdd')}</span>
-              <span className="text-base font-extrabold text-accent tabular-nums">+{stats.neededBasicLands}</span>
+              <span className="text-base font-semibold text-accent tabular-nums">+{stats.neededBasicLands}</span>
             </div>
           </div>
 
           {stats.removeCount > 0 ? (
             <div className="p-3 bg-warning-soft border border-warning/40 rounded-xl flex items-start gap-2.5 mt-2 animate-fadeIn">
-              <FaExclamationTriangle className="text-warning shrink-0 mt-0.5" />
+              <LuTriangleAlert className="text-warning shrink-0 mt-0.5" />
               <p className="text-[11px] text-warning font-medium leading-relaxed">
                 {t('stats.manaBaseWarning')
                   .replace('{{finalSize}}', String(stats.finalDeckSize))
@@ -131,7 +131,7 @@ export function ManaBaseOptimizerPanel({ stats, onApplySuggestedLands }: ManaBas
         </>
       ) : (
         <div className="flex items-center gap-2 mt-4 text-success dark:text-success bg-success-soft p-3 rounded-lg border border-success/40">
-          <FaTint className="shrink-0" />
+          <LuDroplet className="shrink-0" />
           <p className="text-xs font-semibold">{t('stats.landsAlreadySufficient')}</p>
         </div>
       )}

@@ -47,5 +47,5 @@ Direction for every UI change. Token names and values live in
 - `yarn style:check` counts the signals above against ceilings that only go down
   (`scripts/style-baseline.json`).
 - `yarn test:e2e:visual` captures the main screens in light and dark, desktop and phone,
-  into `test-results/visual/` for review by eye before and after each change.
+  into `visual-results/` for review by eye before and after each change.
 - `e2e/contrast.spec.ts` keeps text roles at WCAG AA in both themes.

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileImport, FaTimes, FaExclamationTriangle } from 'react-icons/fa';
+import { LuFileInput, LuTriangleAlert, LuX } from 'react-icons/lu';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
@@ -38,8 +38,8 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
       >
         {/* Modal Header */}
         <div className="modal-header-container">
-          <h3 id="deck-text-import-title" className="text-fg text-lg font-bold flex items-center gap-2">
-            <FaFileImport className="text-accent" />
+          <h3 id="deck-text-import-title" className="text-fg text-lg font-semibold flex items-center gap-2">
+            <LuFileInput className="text-accent" />
             {t('deck.importTextListTitle')}
           </h3>
           <button
@@ -48,7 +48,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
             aria-label={t('common.close')}
             className="text-gray-400 hover:text-fg-secondary p-1 rounded-lg hover:bg-surface-2 transition-all"
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
@@ -67,7 +67,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
 
           {errorMsg && (
             <div className="text-xs text-danger bg-danger-soft dark:text-danger p-3 rounded-lg border border-danger/40 flex items-center gap-1.5">
-              <FaExclamationTriangle className="text-danger shrink-0" />
+              <LuTriangleAlert className="text-danger shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -91,7 +91,7 @@ function DeckTextImportModal({ isOpen, onClose, onImport, isImporting, errorMsg 
               </>
             ) : (
               <>
-                <FaFileImport />
+                <LuFileInput />
                 {t('deck.importAction')}
               </>
             )}

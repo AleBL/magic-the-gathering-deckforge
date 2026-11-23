@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaPalette, FaTimes, FaSearch, FaSpinner, FaPlus } from 'react-icons/fa';
+import { LuLoaderCircle, LuPalette, LuPlus, LuSearch, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { TokenPreset } from '../playtest/PlaytestTokenModal';
@@ -69,11 +69,8 @@ export function TokenSearchModal({
         </div>
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-line bg-surface-2">
-          <h3
-            id="token-search-modal-title"
-            className="text-base font-bold text-fg uppercase tracking-wider flex items-center gap-2"
-          >
-            <FaPalette className="text-accent" />
+          <h3 id="token-search-modal-title" className="text-base font-semibold text-fg flex items-center gap-2">
+            <LuPalette className="text-accent" />
             {t('tokens.searchTokensTitle')}
           </h3>
           <button
@@ -81,7 +78,7 @@ export function TokenSearchModal({
             onClick={onClose}
             className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
@@ -97,21 +94,21 @@ export function TokenSearchModal({
                 placeholder={t('tokens.searchTokenPlaceholder')}
                 className="w-full text-sm py-2 px-3 pl-9 bg-surface-2 text-fg border border-line-strong rounded-xl focus:ring-2 focus:ring-focus focus:border-transparent outline-none transition-all"
               />
-              <FaSearch className="absolute left-3 top-3 text-xs text-gray-400" />
+              <LuSearch className="absolute left-3 top-3 text-xs text-gray-400" />
             </div>
             <button
               type="submit"
               disabled={isSearching || !searchTerm.trim()}
-              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-extrabold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-surface-3 hover:bg-surface-3 disabled:bg-surface-3 text-fg font-semibold text-xs py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              {isSearching ? <FaSpinner className="animate-spin text-xs" /> : <FaSearch className="text-xs" />}
+              {isSearching ? <LuLoaderCircle className="animate-spin text-xs" /> : <LuSearch className="text-xs" />}
               {t('search.searchButton')}
             </button>
           </form>
 
           {/* Quick Presets Section */}
           <div className="space-y-2.5">
-            <h4 className="text-xs font-bold text-fg-muted uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1 select-none">
+            <h4 className="text-xs font-semibold text-fg-muted flex items-center gap-1.5 border-b border-line pb-1 select-none">
               <span className="w-1.5 h-1.5 rounded-full bg-surface-3" />
               <span>{t('tokens.quickPresets')}</span>
             </h4>
@@ -130,7 +127,7 @@ export function TokenSearchModal({
                   )}
                   <span>{t(`tokens.${preset.localeKey}`)}</span>
                   {preset.power && preset.toughness && (
-                    <span className="text-[10px] text-fg-muted font-bold">
+                    <span className="text-[10px] text-fg-muted font-semibold">
                       {preset.power}/{preset.toughness}
                     </span>
                   )}
@@ -141,21 +138,23 @@ export function TokenSearchModal({
 
           {/* Search Results Area */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-bold text-fg-muted uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1 select-none">
+            <h4 className="text-xs font-semibold text-fg-muted flex items-center gap-1.5 border-b border-line pb-1 select-none">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
               <span>{t('tokens.searchResults')}</span>
             </h4>
 
             {isSearching ? (
               <div className="h-48 flex flex-col items-center justify-center gap-2.5 text-gray-400">
-                <FaSpinner className="text-2xl text-accent animate-spin" />
+                <LuLoaderCircle className="text-2xl text-accent animate-spin" />
                 <span className="text-xs font-semibold">{t('tokens.searching')}</span>
               </div>
             ) : searchError ? (
-              <div className="h-48 flex items-center justify-center text-xs font-bold text-danger">{searchError}</div>
+              <div className="h-48 flex items-center justify-center text-xs font-semibold text-danger">
+                {searchError}
+              </div>
             ) : searchResults.length === 0 ? (
               <div className="h-48 flex flex-col items-center justify-center text-fg-muted gap-1">
-                <span className="text-xs font-bold">{t('tokens.noTokensFoundSearch')}</span>
+                <span className="text-xs font-semibold">{t('tokens.noTokensFoundSearch')}</span>
                 <span className="text-[10px] text-fg-muted">{t('tokens.searchInstructions')}</span>
               </div>
             ) : (
@@ -189,21 +188,21 @@ export function TokenSearchModal({
                           />
                         ) : (
                           <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-slate-900 border border-slate-800 rounded-lg">
-                            <FaPalette className="text-accent text-xs shrink-0" />
-                            <span className="text-[8px] text-gray-400 font-bold leading-tight break-words line-clamp-3 select-none">
+                            <LuPalette className="text-accent text-xs shrink-0" />
+                            <span className="text-[8px] text-gray-400 font-semibold leading-tight break-words line-clamp-3 select-none">
                               {token.name}
                             </span>
                           </div>
                         )}
                         {token.power && token.toughness && (
-                          <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-bold text-slate-350 shadow">
+                          <div className="absolute bottom-1 right-1 bg-slate-900/90 border border-slate-700/50 rounded px-1 text-[8px] font-semibold text-slate-350 shadow">
                             {token.power}/{token.toughness}
                           </div>
                         )}
                       </div>
 
                       <div className="w-full min-w-0">
-                        <h5 className="text-xs font-bold text-fg-secondary truncate leading-tight group-hover:text-accent transition-colors">
+                        <h5 className="text-xs font-semibold text-fg-secondary truncate leading-tight group-hover:text-accent transition-colors">
                           {token.name}
                         </h5>
                         <p className="text-[9px] text-fg-muted truncate mt-0.5">{token.type_line}</p>
@@ -215,9 +214,9 @@ export function TokenSearchModal({
                           e.stopPropagation();
                           onConfirmAdd(token);
                         }}
-                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-bold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="mt-3 w-full justify-center bg-accent-soft text-accent border border-line-strong hover:bg-surface-3 hover:text-white rounded-lg py-1 text-[10px] font-semibold transition-all flex items-center gap-1 shadow-xs cursor-pointer"
                       >
-                        <FaPlus className="text-[8px]" />
+                        <LuPlus className="text-[8px]" />
                         {t('tokens.add')}
                       </button>
                     </div>
@@ -233,7 +232,7 @@ export function TokenSearchModal({
           <button
             type="button"
             onClick={onClose}
-            className="bg-surface-3 hover:bg-surface-3 text-fg-secondary font-extrabold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
+            className="bg-surface-3 hover:bg-surface-3 text-fg-secondary font-semibold text-xs py-2 px-4 rounded-xl transition-all cursor-pointer"
           >
             {t('common.close')}
           </button>

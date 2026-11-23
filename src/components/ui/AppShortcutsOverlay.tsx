@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaKeyboard, FaTimes } from 'react-icons/fa';
+import { LuKeyboard, LuX } from 'react-icons/lu';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
@@ -48,11 +48,8 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
         className="bg-surface-1 border border-line rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-dropdownEnter"
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-line">
-          <h3
-            id="app-shortcuts-title"
-            className="text-sm font-bold text-fg uppercase tracking-wider flex items-center gap-2"
-          >
-            <FaKeyboard className="text-accent" />
+          <h3 id="app-shortcuts-title" className="text-sm font-semibold text-fg flex items-center gap-2">
+            <LuKeyboard className="text-accent" />
             {t('commandPalette.shortcutsTitle')}
           </h3>
           <button
@@ -61,7 +58,7 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
             aria-label={t('common.close')}
             className="text-gray-400 hover:text-fg-secondary p-1.5 rounded-lg hover:bg-surface-2 transition-all cursor-pointer"
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
         <div className="p-4 space-y-1.5">
@@ -75,7 +72,7 @@ export default function AppShortcutsOverlay({ isOpen, onClose }: AppShortcutsOve
                 {row.keys.map((key) => (
                   <kbd
                     key={key}
-                    className="min-w-6 text-center bg-surface-2 border border-line text-fg-secondary text-[11px] font-mono font-bold px-1.5 py-0.5 rounded shadow-sm"
+                    className="min-w-6 text-center bg-surface-2 border border-line text-fg-secondary text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded shadow-sm"
                   >
                     {key}
                   </kbd>

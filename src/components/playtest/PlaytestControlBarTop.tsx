@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import {
-  FaMinus,
-  FaPlus,
-  FaInbox,
-  FaCheck,
-  FaSkull,
-  FaFileAlt,
-  FaTimes,
-  FaUndo,
-  FaRedo,
-  FaKeyboard
-} from 'react-icons/fa';
+  LuCheck,
+  LuFileText,
+  LuInbox,
+  LuKeyboard,
+  LuMinus,
+  LuPlus,
+  LuRedo2,
+  LuSkull,
+  LuUndo2,
+  LuX
+} from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 
 export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
@@ -44,14 +44,14 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={handleUntapAll}
-            className="bg-surface-3 hover:bg-surface-3 text-fg text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-surface-3 hover:bg-surface-3 text-fg text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.untapAll')}
           </button>
           <button
             type="button"
             onClick={handleNextTurn}
-            className="bg-primary hover:bg-primary-hover text-on-primary text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+            className="bg-primary hover:bg-primary-hover text-on-primary text-[11px] sm:text-xs font-semibold px-2 sm:px-4 py-1.5 sm:py-2 min-h-[44px] sm:min-h-0 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
           >
             {t('playtest.nextTurn')}
           </button>
@@ -64,7 +64,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               title={`${t('playtest.undo')} (Ctrl+Z)`}
               className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
-              <FaUndo />
+              <LuUndo2 />
             </button>
             <button
               type="button"
@@ -73,36 +73,34 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               title={`${t('playtest.redo')} (Ctrl+Y)`}
               className="w-11 h-11 sm:w-7 sm:h-7 rounded-lg bg-surface-2 border border-line text-fg-secondary flex items-center justify-center hover:bg-surface-3 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-xs"
             >
-              <FaRedo />
+              <LuRedo2 />
             </button>
           </div>
 
           <div className="flex items-center bg-surface-2 border border-line rounded-xl px-2 sm:px-3 py-1 shadow-inner gap-1.5 sm:gap-2">
-            <span className="text-[9px] sm:text-[10px] text-fg-muted font-extrabold uppercase tracking-wider">
-              {t('playtest.life')}:
-            </span>
+            <span className="text-[11px] sm:text-[11px] text-fg-muted font-semibold">{t('playtest.life')}:</span>
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev - 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-on-danger transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-danger-soft text-danger border border-danger/40 flex items-center justify-center hover:bg-danger hover:text-on-danger transition-all text-xs font-semibold cursor-pointer"
             >
-              <FaMinus className="text-[11px] sm:text-[8px]" />
+              <LuMinus className="text-[11px] sm:text-[8px]" />
             </button>
-            <span className="text-sm font-extrabold text-fg w-6 text-center select-none font-mono drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]">
+            <span className="text-sm font-semibold text-fg w-6 text-center select-none font-mono drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]">
               {lifeTotal}
             </span>
             <button
               type="button"
               onClick={() => setLifeTotal((prev: number) => prev + 1)}
-              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-on-success transition-all text-xs font-bold cursor-pointer"
+              className="w-11 h-11 sm:w-5 sm:h-5 rounded bg-success-soft text-success border border-success/40 flex items-center justify-center hover:bg-success hover:text-on-success transition-all text-xs font-semibold cursor-pointer"
             >
-              <FaPlus className="text-[11px] sm:text-[8px]" />
+              <LuPlus className="text-[11px] sm:text-[8px]" />
             </button>
           </div>
 
           {!isMulliganPhase && (
             <div className="flex items-center bg-surface-2 border border-line rounded-xl px-2 sm:px-3 py-1 shadow-inner gap-2 hidden sm:flex">
-              <span className="text-[9px] sm:text-[10px] text-accent font-extrabold uppercase tracking-wider">
+              <span className="text-[11px] sm:text-[11px] text-accent font-semibold">
                 {t('playtest.turnLabel', { turn })}
               </span>
             </div>
@@ -117,11 +115,11 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               className="flex items-center gap-1.5 hover:text-accent transition-colors cursor-pointer"
               title={t('playtest.viewLibrary')}
             >
-              <FaInbox className="text-fg-muted" />
+              <LuInbox className="text-fg-muted" />
               {t('playtest.library')}: <strong className="text-fg-secondary">{library.length}</strong>
             </button>
             <span className="flex items-center gap-1.5">
-              <FaCheck className="text-fg-muted" />
+              <LuCheck className="text-fg-muted" />
               {t('playtest.hand')}: <strong className="text-fg-secondary">{hand.length}</strong>
             </span>
             <button
@@ -130,7 +128,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
               className="flex items-center gap-1.5 hover:text-accent transition-colors cursor-pointer"
               title={t('playtest.viewGraveyard')}
             >
-              <FaSkull className="text-fg-muted" />
+              <LuSkull className="text-fg-muted" />
               {t('playtest.graveyard')}: <strong className="text-fg-secondary">{graveyard.length}</strong>
             </button>
             {mulligans > 0 && (
@@ -150,8 +148,8 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
                 : 'bg-surface-2 border-line text-fg-muted hover:text-fg-secondary '
             }`}
           >
-            <FaFileAlt className="text-xs shrink-0" />
-            <span className="hidden md:inline font-bold">{t('playtest.playtestLog')}</span>
+            <LuFileText className="text-xs shrink-0" />
+            <span className="hidden md:inline font-semibold">{t('playtest.playtestLog')}</span>
           </button>
 
           <button
@@ -160,7 +158,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
             title={`${t('playtest.shortcuts')} (?)`}
             className="p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg border bg-surface-2 border-line text-fg-muted hover:text-fg-secondary transition-all text-xs flex items-center justify-center cursor-pointer"
           >
-            <FaKeyboard className="text-xs shrink-0" />
+            <LuKeyboard className="text-xs shrink-0" />
           </button>
 
           <div className="flex gap-2">
@@ -189,7 +187,7 @@ export function PlaytestControlBarTop({ onClose }: { onClose: () => void }) {
         title={t('common.close')}
         className="absolute top-3 right-3 text-fg-muted hover:text-fg-secondary p-1.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg hover:bg-surface-2 transition-all cursor-pointer z-50 bg-surface-1/80 backdrop-blur shadow"
       >
-        <FaTimes />
+        <LuX />
       </button>
     </div>
   );

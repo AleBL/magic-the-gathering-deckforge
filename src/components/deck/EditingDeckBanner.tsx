@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaBolt, FaTimes } from 'react-icons/fa';
+import { LuX, LuZap } from 'react-icons/lu';
 import { useDeckStore } from '../../store/useDeckStore';
 import { DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
@@ -36,8 +36,8 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <span className="banner-status-dot shrink-0" />
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-warning flex items-center gap-1 leading-none mb-0.5">
-            <FaBolt className="text-[8px] shrink-0" />
+          <span className="text-[11px] font-semibold text-warning flex items-center gap-1 leading-none mb-0.5">
+            <LuZap className="text-[8px] shrink-0" />
             {t('deck.editingDeck')}
           </span>
           <div className="flex items-center gap-2 w-full min-w-0">
@@ -83,7 +83,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
                     setIsEditingFormat(false);
                   }
                 }}
-                className="bg-slate-800 text-warning text-xs font-bold border border-warning rounded px-1 py-0.5 uppercase focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40 cursor-pointer shadow-lg"
+                className="bg-slate-800 text-warning text-xs font-semibold border border-warning rounded px-1 py-0.5 focus:outline-none focus:border-warning focus:ring-1 focus:ring-warning/40 cursor-pointer shadow-lg"
               >
                 <option value="standard" className="bg-slate-800 text-warning">
                   {t('validation.standard')}
@@ -107,7 +107,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
             ) : (
               <button
                 type="button"
-                className="text-[10px] bg-warning-soft text-warning hover:bg-warning-soft px-1.5 py-0.5 rounded uppercase font-bold shrink-0 border border-warning/40 cursor-pointer transition-colors"
+                className="text-[11px] bg-warning-soft text-warning hover:bg-warning-soft px-1.5 py-0.5 rounded font-semibold shrink-0 border border-warning/40 cursor-pointer transition-colors"
                 onClick={() => setIsEditingFormat(true)}
                 title={t('deck.editDeckInfo')}
               >
@@ -127,7 +127,7 @@ function EditingDeckBanner({ deckName, deckFormat, onCancelEdit }: EditingDeckBa
             className="flex items-center justify-center w-8 h-8 rounded-full bg-danger-soft hover:bg-danger text-danger hover:text-on-danger transition-colors border border-danger/40 active:scale-95 shadow-sm"
             aria-label={t('deck.exitEditMode')}
           >
-            <FaTimes className="text-xs shrink-0" />
+            <LuX className="text-xs shrink-0" />
           </button>
           <div className="absolute right-0 top-full mt-2 w-32 p-2 bg-slate-900 dark:bg-slate-950 text-white text-xs text-center rounded-lg shadow-xl border border-slate-700 dark:border-slate-800 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-all duration-300 z-50 transform translate-y-1 group-hover/tooltip:translate-y-0">
             <p className="font-medium leading-none">{t('deck.exitEditMode')}</p>

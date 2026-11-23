@@ -1,6 +1,14 @@
 import { useMemo, useRef, useState, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaBoxOpen, FaHeart, FaFileImport, FaFileExport, FaTrashAlt, FaChevronUp, FaSpinner } from 'react-icons/fa';
+import {
+  LuChevronUp,
+  LuFileInput,
+  LuFileOutput,
+  LuHeart,
+  LuLoaderCircle,
+  LuPackageOpen,
+  LuTrash2
+} from 'react-icons/lu';
 import { SearchFilters } from '../../types';
 import { EMPTY_SEARCH_FILTERS } from '../../constants';
 import { useCardSizePreference } from '../../hooks/useCardSizePreference';
@@ -120,7 +128,7 @@ function CollectionManager() {
       onClick={() => setView(value)}
       aria-pressed={view === value}
       // `relative` is load-bearing: .count-badge is absolute and would escape to the page edge.
-      className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-bold transition-all ${
+      className={`relative flex items-center gap-2 px-4 py-2 pr-5 rounded-xl text-sm font-semibold transition-all ${
         view === value
           ? 'bg-primary text-on-primary shadow-md '
           : 'bg-surface-1 text-gray-600 dark:text-gray-400 border border-line hover:bg-surface-2 '
@@ -138,7 +146,7 @@ function CollectionManager() {
         <div className="flex flex-col gap-4 p-4">
           <div className="panel-header relative z-10 flex-col items-start gap-3 md:flex-row md:items-center">
             <h2 className="text-fg text-xl font-serif font-semibold flex items-center gap-2 shrink-0">
-              <FaBoxOpen className="text-accent shrink-0" />
+              <LuPackageOpen className="text-accent shrink-0" />
               {t('collection.title')}
             </h2>
 
@@ -146,8 +154,13 @@ function CollectionManager() {
                 sat on a row of their own below. Centred at md+ so they read as the header's
                 subject rather than as another toolbar; full width below, where they stack. */}
             <div className="flex w-full md:w-auto md:flex-1 md:justify-center items-center gap-2">
-              {viewTab('owned', <FaBoxOpen className="text-xs" />, t('collection.owned'), summary.uniquePrintings)}
-              {viewTab('wishlist', <FaHeart className="text-xs" />, t('collection.wishlist'), summary.wishlistCount)}
+              {viewTab('owned', <LuPackageOpen className="text-xs" />, t('collection.owned'), summary.uniquePrintings)}
+              {viewTab(
+                'wishlist',
+                <LuHeart fill="currentColor" className="text-xs" />,
+                t('collection.wishlist'),
+                summary.wishlistCount
+              )}
             </div>
 
             {/* Below md: three equal compact buttons filling the row. The view picker lives
@@ -160,7 +173,7 @@ function CollectionManager() {
                 disabled={isImporting}
                 className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors disabled:opacity-50"
               >
-                <FaFileImport className="text-xs shrink-0" />
+                <LuFileInput className="text-xs shrink-0" />
                 <span className="truncate">{isImporting ? t('collection.importing') : t('collection.importCsv')}</span>
               </button>
               <button
@@ -168,7 +181,7 @@ function CollectionManager() {
                 onClick={exportCsv}
                 className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors"
               >
-                <FaFileExport className="text-xs shrink-0" />
+                <LuFileOutput className="text-xs shrink-0" />
                 <span className="truncate">{t('collection.exportCsv')}</span>
               </button>
               <button
@@ -177,7 +190,7 @@ function CollectionManager() {
                 disabled={entries.length === 0}
                 className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-danger border border-line hover:bg-danger-soft transition-colors disabled:opacity-50"
               >
-                <FaTrashAlt className="text-xs shrink-0" />
+                <LuTrash2 className="text-xs shrink-0" />
                 <span className="truncate">{t('collection.clear')}</span>
               </button>
 
@@ -198,7 +211,7 @@ function CollectionManager() {
                 title={areToolsOpen ? t('collection.hideTools') : t('collection.showTools')}
                 className="flex items-center justify-center gap-2 px-2 md:px-3 py-2 rounded-xl text-xs md:text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors"
               >
-                <FaChevronUp
+                <LuChevronUp
                   className={`text-xs shrink-0 transition-transform duration-200 ${areToolsOpen ? '' : 'rotate-180'}`}
                 />
                 <span className="truncate hidden lg:inline">
@@ -224,8 +237,8 @@ function CollectionManager() {
           {isImporting && (
             <div className="modal-overlay" role="status" aria-live="polite">
               <div className="bg-surface-1 border border-line rounded-2xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center gap-3 text-center">
-                <FaSpinner className="text-3xl text-accent animate-spin" />
-                <h3 className="text-sm font-bold text-fg uppercase tracking-wider">{t('collection.importingTitle')}</h3>
+                <LuLoaderCircle className="text-3xl text-accent animate-spin" />
+                <h3 className="text-sm font-semibold text-fg">{t('collection.importingTitle')}</h3>
                 {importProgress && importProgress.total > 0 ? (
                   <>
                     <p className="text-xs font-semibold text-fg-secondary tabular-nums">
@@ -349,7 +362,7 @@ function CollectionManager() {
             </>
           ) : (
             <EmptyState
-              icon={view === 'wishlist' ? <FaHeart /> : <FaBoxOpen />}
+              icon={view === 'wishlist' ? <LuHeart fill="currentColor" /> : <LuPackageOpen />}
               title={view === 'wishlist' ? t('collection.emptyWishlist') : t('collection.empty')}
               description={t('collection.emptyHint')}
               action={{

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlaytestCard } from '../../types/Playtest';
-import { FaTimes, FaArrowLeft, FaArrowRight, FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { LuArrowDown, LuArrowLeft, LuArrowRight, LuArrowUp, LuX } from 'react-icons/lu';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
@@ -75,7 +75,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
         className="w-full max-w-5xl mx-4 bg-surface-1 rounded-2xl p-6 shadow-2xl border border-line flex flex-col max-h-[90vh] animate-fadeIn"
       >
         <div className="flex justify-between items-center mb-6">
-          <h2 id="scry-surveil-title" className="text-2xl font-bold text-fg">
+          <h2 id="scry-surveil-title" className="text-2xl font-semibold text-fg">
             {title}
           </h2>
           <button
@@ -83,7 +83,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
             aria-label={t('common.close')}
             className="p-2 text-slate-400 hover:text-fg-secondary hover:bg-surface-2 rounded-lg transition-colors cursor-pointer"
           >
-            <FaTimes className="w-5 h-5" />
+            <LuX className="w-5 h-5" />
           </button>
         </div>
 
@@ -104,7 +104,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                       onClick={() => moveLeft(card.playtestId, topCards, setTopCards)}
                       className="p-1 bg-surface-3 hover:bg-surface-3 disabled:opacity-50 rounded text-fg-secondary cursor-pointer"
                     >
-                      <FaArrowLeft className="w-3 h-3" />
+                      <LuArrowLeft className="w-3 h-3" />
                     </button>
                     <button
                       type="button"
@@ -112,7 +112,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                       onClick={() => moveRight(card.playtestId, topCards, setTopCards)}
                       className="p-1 bg-surface-3 hover:bg-surface-3 disabled:opacity-50 rounded text-fg-secondary cursor-pointer"
                     >
-                      <FaArrowRight className="w-3 h-3" />
+                      <LuArrowRight className="w-3 h-3" />
                     </button>
                   </div>
                   <img
@@ -125,7 +125,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                     onClick={() => moveToOther(card.playtestId)}
                     className="mt-1 px-2 py-1 bg-surface-3 hover:bg-surface-3 text-sm text-fg rounded w-full flex justify-center items-center gap-1 cursor-pointer"
                   >
-                    <FaArrowDown className="w-3 h-3" /> {otherZoneName}
+                    <LuArrowDown className="w-3 h-3" /> {otherZoneName}
                   </button>
                 </div>
               ))}
@@ -145,7 +145,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                     onClick={() => moveToTop(card.playtestId)}
                     className="mb-1 px-2 py-1 bg-surface-3 hover:bg-surface-3 text-sm text-fg rounded w-full flex justify-center items-center gap-1 cursor-pointer"
                   >
-                    <FaArrowUp className="w-3 h-3" /> {t('playtest.topOfLibrary')}
+                    <LuArrowUp className="w-3 h-3" /> {t('playtest.topOfLibrary')}
                   </button>
                   <img
                     src={card.card.image_uris?.normal || card.card.card_faces?.[0]?.image_uris?.normal || ''}
@@ -159,7 +159,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                       onClick={() => moveLeft(card.playtestId, otherCards, setOtherCards)}
                       className="p-1 bg-surface-3 hover:bg-surface-3 disabled:opacity-50 rounded text-fg cursor-pointer"
                     >
-                      <FaArrowLeft className="w-3 h-3" />
+                      <LuArrowLeft className="w-3 h-3" />
                     </button>
                     <button
                       type="button"
@@ -167,7 +167,7 @@ export default function ScrySurveilModal({ type, amount, initialCards, onComplet
                       onClick={() => moveRight(card.playtestId, otherCards, setOtherCards)}
                       className="p-1 bg-surface-3 hover:bg-surface-3 disabled:opacity-50 rounded text-fg cursor-pointer"
                     >
-                      <FaArrowRight className="w-3 h-3" />
+                      <LuArrowRight className="w-3 h-3" />
                     </button>
                   </div>
                 </div>

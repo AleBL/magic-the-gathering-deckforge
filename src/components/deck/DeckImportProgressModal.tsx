@@ -1,4 +1,4 @@
-import { FaSpinner, FaExclamationTriangle, FaCheckCircle, FaTimes } from 'react-icons/fa';
+import { LuCircleCheck, LuLoaderCircle, LuTriangleAlert, LuX } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { ImportProgressData } from '../../services/deckImportService';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -62,13 +62,13 @@ export default function DeckImportProgressModal({
           </div>
         )}
         <div className="flex justify-between items-center mb-6">
-          <h2 id="deck-import-progress-title" className="text-xl font-bold text-fg flex items-center gap-2">
+          <h2 id="deck-import-progress-title" className="text-xl font-semibold text-fg flex items-center gap-2">
             {progress.isImporting ? (
-              <FaSpinner className="animate-spin text-accent" />
+              <LuLoaderCircle className="animate-spin text-accent" />
             ) : errorMsg ? (
-              <FaExclamationTriangle className="text-danger" />
+              <LuTriangleAlert className="text-danger" />
             ) : (
-              <FaCheckCircle className="text-success" />
+              <LuCircleCheck className="text-success" />
             )}
             {progress.isImporting
               ? t('deck.importingDeck')
@@ -78,7 +78,7 @@ export default function DeckImportProgressModal({
           </h2>
           {!progress.isImporting && (
             <button onClick={onClose} className="text-slate-400 hover:text-fg-secondary transition-colors">
-              <FaTimes size={20} />
+              <LuX size={20} />
             </button>
           )}
         </div>
@@ -105,8 +105,8 @@ export default function DeckImportProgressModal({
             {isComplete && hasMissing && (
               <div className="mb-6 animate-fadeIn">
                 <div className="p-4 bg-warning-soft border border-warning/40 rounded-xl">
-                  <h3 className="font-bold text-warning flex items-center gap-2 mb-2">
-                    <FaExclamationTriangle />
+                  <h3 className="font-semibold text-warning flex items-center gap-2 mb-2">
+                    <LuTriangleAlert />
                     {t('deck.importMissingCards')}
                   </h3>
                   <div className="max-h-40 overflow-y-auto custom-scrollbar pr-2">
@@ -132,7 +132,7 @@ export default function DeckImportProgressModal({
                 onClose();
                 if (onFinish && !errorMsg) onFinish();
               }}
-              className={`px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
+              className={`px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm ${
                 errorMsg ? 'bg-surface-3 hover:bg-surface-3 text-fg ' : 'bg-success hover:bg-success text-on-success '
               }`}
             >

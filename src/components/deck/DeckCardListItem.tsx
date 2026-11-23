@@ -1,15 +1,6 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  FaCrown,
-  FaBan,
-  FaExclamationTriangle,
-  FaTimesCircle,
-  FaPalette,
-  FaPlus,
-  FaMinus,
-  FaTrash
-} from 'react-icons/fa';
+import { LuBan, LuCircleX, LuCrown, LuMinus, LuPalette, LuPlus, LuTrash2, LuTriangleAlert } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckFormat } from '../../types/Deck';
 import { getCardArtCropUrl } from '../../utils/deckGrouping';
@@ -126,37 +117,37 @@ export const DeckCardListItem = memo(function DeckCardListItem({
         <div className="relative z-20 flex items-center justify-between h-full px-2">
           <div className="flex items-center min-w-0 pr-2">
             <span
-              className={`font-black w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-danger ' : 'text-fg-secondary '}`}
+              className={`font-semibold w-6 text-center text-sm mr-1 shrink-0 ${isBanned ? 'text-danger ' : 'text-fg-secondary '}`}
             >
               {count}
             </span>
             <span
-              className={`font-semibold truncate text-sm hover:text-accent transition-colors drop-shadow-sm ${isBanned ? 'text-danger font-extrabold' : 'text-fg '}`}
+              className={`font-semibold truncate text-sm hover:text-accent transition-colors drop-shadow-sm ${isBanned ? 'text-danger font-semibold' : 'text-fg '}`}
             >
               {displayName}
             </span>
 
             {card.isCommander && (
               <span className="deck-card-status-chip-commander animate-pulse ml-2">
-                <FaCrown className="text-warning shrink-0 text-[10px]" />
+                <LuCrown className="text-warning shrink-0 text-[10px]" />
                 {t('cardDetails.commanderBadge')}
               </span>
             )}
             {isBanned && (
               <span className="deck-card-status-chip-banned ml-2">
-                <FaBan className="text-danger text-[9px] shrink-0" />
+                <LuBan className="text-danger text-[9px] shrink-0" />
                 {t('cardDetails.banned').toUpperCase()}
               </span>
             )}
             {isRestricted && (
               <span className="deck-card-status-chip-restricted ml-2">
-                <FaExclamationTriangle className="text-warning text-[9px] shrink-0" />
+                <LuTriangleAlert className="text-warning text-[9px] shrink-0" />
                 {t('cardDetails.restricted').toUpperCase()}
               </span>
             )}
             {isInvalid && (
               <span className="deck-card-status-chip-invalid ml-2" title={t('cardDetails.invalidInFormatHint')}>
-                <FaTimesCircle className="text-accent text-[9px] shrink-0" />
+                <LuCircleX className="text-accent text-[9px] shrink-0" />
                 {t('cardDetails.invalidInFormat').toUpperCase()}
               </span>
             )}
@@ -187,7 +178,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-commander"
                     title={card.isCommander ? t('cardDetails.removeAsCommander') : t('cardDetails.setAsCommander')}
                   >
-                    <FaCrown className="text-[10px]" />
+                    <LuCrown className="text-[10px]" />
                   </button>
                 )}
 
@@ -201,7 +192,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-art"
                     title={t('cardDetails.changeArt')}
                   >
-                    <FaPalette className="text-[9px]" />
+                    <LuPalette className="text-[9px]" />
                   </button>
                 )}
 
@@ -211,7 +202,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                   className="deck-quick-action-add"
                   title={t('cardDetails.addCopy')}
                 >
-                  <FaPlus className="text-[8px]" />
+                  <LuPlus className="text-[8px]" />
                 </button>
 
                 {!isTokenZone && (
@@ -221,7 +212,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                     className="deck-quick-action-remove"
                     title={t('cardDetails.removeCopy')}
                   >
-                    <FaMinus className="text-[8px]" />
+                    <LuMinus className="text-[8px]" />
                   </button>
                 )}
 
@@ -239,7 +230,7 @@ export const DeckCardListItem = memo(function DeckCardListItem({
                   className="deck-quick-action-delete"
                   title={isTokenZone ? t('tokens.deleteToken') : t('cardDetails.deleteCard')}
                 >
-                  <FaTrash className="text-[8px]" />
+                  <LuTrash2 className="text-[8px]" />
                 </button>
               </div>
             )}

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaImage, FaTimes, FaCheck } from 'react-icons/fa';
+import { LuCheck, LuImage, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { Deck } from '../../types/Deck';
 import { cardArtCrop, resolveDeckCoverCard } from '../../utils/deckCover';
@@ -51,11 +51,11 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
       >
         <div className="flex items-center justify-between mb-4">
           <h3 id="deck-cover-title" className="modal-title">
-            <FaImage className="text-accent" />
+            <LuImage className="text-accent" />
             {t('deck.setCover')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
@@ -83,7 +83,7 @@ export default function DeckCoverModal({ deck, onSelect, onClose }: DeckCoverMod
                   />
                   {isActive && (
                     <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-3 text-fg shadow">
-                      <FaCheck className="text-[10px]" />
+                      <LuCheck className="text-[10px]" />
                     </span>
                   )}
                   <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1.5 py-1 text-[10px] font-semibold text-white">

@@ -50,10 +50,12 @@
   /* Font families
      Tailwind v4's font namespace is --font-*, NOT --font-family-*. Using the
      v3-style --font-family-* keys silently left `font-serif` resolving to
-     Tailwind's built-in Georgia stack, so Playfair Display never propagated.
+     Tailwind's built-in Georgia stack, so the display face never propagated.
      These keys generate the `font-sans` / `font-serif` utilities. */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+  /* Crimson Pro: an old-style serif in the Plantin tradition of card rules text,
+     for page, panel and modal titles only. */
+  --font-serif: 'Crimson Pro', ui-serif, Georgia, serif;
 
   /* ── Typographic Scale ─────────────────────────────────
      Semantic display/heading/body/caption rungs. Tailwind v4 reads the

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFileAlt, FaTimes, FaCopy } from 'react-icons/fa';
+import { LuCopy, LuFileText, LuX } from 'react-icons/lu';
 import { usePlaytestContext } from './PlaytestContext';
 import { dispatchToast } from '../../utils/toastHelper';
 import { useMountTransition } from '../../hooks/useMountTransition';
@@ -44,8 +44,8 @@ export function PlaytestLog() {
         className={`fixed inset-y-0 right-0 z-[var(--z-playtest-dialog)] w-80 max-w-[85vw] bg-surface-1 shadow-2xl lg:static lg:inset-auto lg:z-auto lg:w-72 lg:max-w-none lg:shadow-none lg:bg-surface-2 border-l border-line flex flex-col h-full shrink-0 no-active-scale ${isClosing ? 'motion-drawer-closing' : 'animate-drawerEnter'}`}
       >
         <div className="p-3 border-b border-line flex justify-between items-center bg-surface-1">
-          <h4 className="font-extrabold text-[10px] uppercase tracking-wider text-fg-muted flex items-center gap-1.5 select-none">
-            <FaFileAlt className="text-accent text-xs" />
+          <h4 className="font-semibold text-[11px] text-fg-muted flex items-center gap-1.5 select-none">
+            <LuFileText className="text-accent text-xs" />
             {t('playtest.playtestLog')}
           </h4>
           <div className="flex items-center gap-3">
@@ -56,12 +56,12 @@ export function PlaytestLog() {
               aria-label={t('playtest.copyLog')}
               className="text-fg-muted hover:text-accent transition-colors cursor-pointer"
             >
-              <FaCopy className="text-[11px]" />
+              <LuCopy className="text-[11px]" />
             </button>
             <button
               type="button"
               onClick={() => setGameLog([])}
-              className="text-[9px] text-fg-muted hover:text-danger transition-colors uppercase font-bold cursor-pointer"
+              className="text-[11px] text-fg-muted hover:text-danger transition-colors font-semibold cursor-pointer"
             >
               {t('playtest.clearLog')}
             </button>
@@ -71,7 +71,7 @@ export function PlaytestLog() {
               aria-label={t('playtest.toggleLogPanel')}
               className="lg:hidden text-fg-muted hover:text-fg-secondary transition-colors cursor-pointer"
             >
-              <FaTimes className="text-xs" />
+              <LuX className="text-xs" />
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown, FaLayerGroup } from 'react-icons/fa';
+import { LuChevronDown, LuLayers } from 'react-icons/lu';
 import { CollectionEntry } from '../../types/Collection';
 import { Card } from '../../types/Card';
 
@@ -64,13 +64,13 @@ export function CollectionBySetView({ entries, onSelectCard }: CollectionBySetVi
               aria-expanded={isOpen}
               className="w-full flex items-center gap-2 px-3 py-2 bg-surface-2 hover:bg-surface-2 transition-colors"
             >
-              <FaLayerGroup className="text-accent text-xs shrink-0" />
-              <span className="font-bold text-sm text-fg truncate">{group.name}</span>
+              <LuLayers className="text-accent text-xs shrink-0" />
+              <span className="font-semibold text-sm text-fg truncate">{group.name}</span>
               <span className="text-[10px] uppercase text-fg-muted shrink-0">{group.code}</span>
               <span className="ml-auto text-xs font-semibold text-fg-muted tabular-nums shrink-0">
                 {t('collection.ownedCount', { count: group.owned })}
               </span>
-              <FaChevronDown
+              <LuChevronDown
                 className={`text-[10px] text-gray-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`}
               />
             </button>
@@ -90,7 +90,7 @@ export function CollectionBySetView({ entries, onSelectCard }: CollectionBySetVi
                       <span className="flex-1 min-w-0 truncate text-sm text-fg">
                         {entry.card.printed_name || entry.name}
                       </span>
-                      <span className="shrink-0 text-xs font-bold tabular-nums text-fg-secondary">
+                      <span className="shrink-0 text-xs font-semibold tabular-nums text-fg-secondary">
                         {entry.quantity}
                       </span>
                     </button>

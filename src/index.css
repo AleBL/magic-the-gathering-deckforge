@@ -38,6 +38,9 @@
 
   body {
     @apply bg-surface-0 text-fg;
+    /* One figure format everywhere: counts, prices, life and percentages line up
+       and do not jitter as they change. */
+    font-variant-numeric: tabular-nums;
   }
 
   html.dark {

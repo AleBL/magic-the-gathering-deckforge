@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { LuExternalLink } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { GATHERER_FAVICON_URL, SCRYFALL_FAVICON_URL } from '../../constants/urls';
 
@@ -30,7 +30,7 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
             onError={(e) => (e.currentTarget.style.display = 'none')}
           />
           {t('export.scryfall')}
-          <FaExternalLinkAlt className="text-[9px] opacity-60" />
+          <LuExternalLink className="text-[9px] opacity-60" />
         </a>
         {card.related_uris?.gatherer && (
           <a
@@ -46,7 +46,7 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
               className="w-3 h-3 opacity-70"
               onError={(e) => (e.currentTarget.style.display = 'none')}
             />
-            <FaExternalLinkAlt className="text-[10px] opacity-60" />
+            <LuExternalLink className="text-[10px] opacity-60" />
             {t('export.gatherer')}
           </a>
         )}
@@ -56,7 +56,7 @@ export function CardDetailActions({ card, isDeckCard, isToken, onAddCardToDeck }
         <button
           type="button"
           onClick={onAddCardToDeck}
-          className="primary-button text-sm py-2 px-5 ml-auto shadow-md flex items-center gap-2 font-bold"
+          className="primary-button text-sm py-2 px-5 ml-auto shadow-md flex items-center gap-2 font-semibold"
         >
           {t('cardDetails.addToDeck')}
         </button>

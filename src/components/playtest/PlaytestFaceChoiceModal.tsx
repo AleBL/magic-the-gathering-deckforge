@@ -39,7 +39,7 @@ export function PlaytestFaceChoiceModal() {
         aria-describedby="face-choice-description"
         className="w-full sm:max-w-2xl max-h-[92dvh] overflow-y-auto bg-surface-1 border border-line rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 sm:p-6 animate-fadeIn"
       >
-        <h3 id="face-choice-title" className="text-lg font-bold text-fg">
+        <h3 id="face-choice-title" className="text-lg font-semibold text-fg">
           {t('playtest.chooseFaceTitle')}
         </h3>
         <p id="face-choice-description" className="text-sm text-fg-secondary mt-1 mb-5">
@@ -68,13 +68,13 @@ export function PlaytestFaceChoiceModal() {
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center p-2 text-center text-xs font-bold text-slate-500">
+                    <div className="w-full h-full flex items-center justify-center p-2 text-center text-xs font-semibold text-slate-500">
                       {face.printed_name || face.name}
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-sm font-bold text-fg truncate">{face.printed_name || face.name}</span>
+                  <span className="block text-sm font-semibold text-fg truncate">{face.printed_name || face.name}</span>
                   <span className="block text-[11px] text-fg-muted truncate">
                     {face.printed_type_line || face.type_line}
                   </span>
@@ -87,7 +87,7 @@ export function PlaytestFaceChoiceModal() {
         <button
           type="button"
           onClick={handleCancelFaceChoice}
-          className="mt-5 w-full min-h-11 py-2.5 rounded-xl bg-surface-2 hover:bg-surface-3 text-sm font-bold text-fg-secondary transition-colors duration-200 cursor-pointer"
+          className="mt-5 w-full min-h-11 py-2.5 rounded-xl bg-surface-2 hover:bg-surface-3 text-sm font-semibold text-fg-secondary transition-colors duration-200 cursor-pointer"
         >
           {t('common.cancel')}
         </button>

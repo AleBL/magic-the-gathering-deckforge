@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTimes, FaPlus, FaPalette } from 'react-icons/fa';
+import { LuPalette, LuPlus, LuX } from 'react-icons/lu';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { Card } from '../../types/Card';
 import { RelatedToken } from '../../hooks/useCardRelatedTokens';
@@ -202,15 +202,12 @@ export function PlaytestTokenModal({
       >
         {/* Header */}
         <div className="modal-header">
-          <h3
-            id="playtest-token-modal-title"
-            className="text-base font-bold text-fg uppercase tracking-wider flex items-center gap-2"
-          >
-            <FaPlus className="text-accent" />
+          <h3 id="playtest-token-modal-title" className="text-base font-semibold text-fg flex items-center gap-2">
+            <LuPlus className="text-accent" />
             {t('tokens.tokenPool')}
           </h3>
           <button onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
@@ -219,7 +216,7 @@ export function PlaytestTokenModal({
           {/* Deck Specific Tokens */}
           {uniqueDeckTokens.length > 0 ? (
             <div className="space-y-3">
-              <h4 className="text-xs font-bold text-accent uppercase tracking-widest flex items-center gap-1.5 border-b border-line pb-1.5 select-none">
+              <h4 className="text-xs font-semibold text-accent flex items-center gap-1.5 border-b border-line pb-1.5 select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-surface-3 shadow-[0_0_8px_rgba(99,102,241,0.5)] animate-pulse" />
                 <span>{t('tokens.deckRelatedTokens')}</span>
               </h4>
@@ -254,26 +251,26 @@ export function PlaytestTokenModal({
                           />
                         ) : (
                           <div className="flex flex-col items-center justify-center gap-1.5 p-1 text-center w-full h-full bg-surface-1 border border-line rounded-lg">
-                            <FaPalette className="text-accent text-xs shrink-0" />
-                            <span className="text-[8px] text-fg-muted font-bold leading-tight break-words line-clamp-3 select-none">
+                            <LuPalette className="text-accent text-xs shrink-0" />
+                            <span className="text-[8px] text-fg-muted font-semibold leading-tight break-words line-clamp-3 select-none">
                               {tokenCard.name}
                             </span>
                           </div>
                         )}
                         {tokenCard.power && tokenCard.toughness && (
-                          <div className="absolute bottom-1 right-1 bg-surface-1 border border-line-strong rounded px-1 text-[8px] font-bold text-fg-secondary shadow">
+                          <div className="absolute bottom-1 right-1 bg-surface-1 border border-line-strong rounded px-1 text-[8px] font-semibold text-fg-secondary shadow">
                             {tokenCard.power}/{tokenCard.toughness}
                           </div>
                         )}
                       </div>
 
                       <div className="w-full min-w-0">
-                        <h4 className="text-xs font-bold text-fg truncate leading-tight group-hover:text-accent transition-colors">
+                        <h4 className="text-xs font-semibold text-fg truncate leading-tight group-hover:text-accent transition-colors">
                           {tokenCard.printed_name || tokenCard.name}
                         </h4>
                         <p className="text-[8px] text-fg-muted truncate mt-1">
                           {t('common.generatedBy')}:{' '}
-                          <span className="font-extrabold text-accent">{generatorCardName}</span>
+                          <span className="font-semibold text-accent">{generatorCardName}</span>
                         </p>
                       </div>
 
@@ -285,7 +282,7 @@ export function PlaytestTokenModal({
                         }}
                         className="token-card-add-btn"
                       >
-                        <FaPlus className="text-[8px]" />
+                        <LuPlus className="text-[8px]" />
                         {t('tokens.create')}
                       </button>
                     </div>
@@ -295,7 +292,7 @@ export function PlaytestTokenModal({
             </div>
           ) : (
             <div className="h-64 flex flex-col items-center justify-center text-fg-muted gap-2 text-center py-6">
-              <span className="text-sm font-bold">{t('tokens.noTokensFound')}</span>
+              <span className="text-sm font-semibold">{t('tokens.noTokensFound')}</span>
               <span className="text-xs text-fg-muted">{t('playtest.playtestNoTokensTip')}</span>
             </div>
           )}

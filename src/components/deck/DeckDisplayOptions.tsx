@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { useCollectionSettings } from '../../store/useCollectionSettings';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaSlidersH, FaList, FaTh, FaLayerGroup } from 'react-icons/fa';
+import { LuGrid3X3, LuLayers, LuList, LuSlidersHorizontal } from 'react-icons/lu';
 import { CardSize } from '../../types';
 import { GroupCriteria, SortCriteria } from '../../types/enums';
 import { ViewMode } from '../../hooks/useDeckPreviewState';
@@ -69,7 +69,7 @@ export function DeckDisplayOptions({
         className={`display-settings-btn ${isOpen ? 'display-settings-btn-active' : ''}`}
         title={t('common.displaySettings')}
       >
-        <FaSlidersH className="text-xs shrink-0 text-accent" />
+        <LuSlidersHorizontal className="text-xs shrink-0 text-accent" />
         <span>{t('common.viewMode')}</span>
         <span
           className="text-[9px] opacity-60 transition-transform duration-200"
@@ -96,9 +96,9 @@ export function DeckDisplayOptions({
                   <div className="grid grid-cols-3 gap-1.5">
                     {(
                       [
-                        { mode: 'list', label: t('common.listView'), icon: FaList },
-                        { mode: 'grid', label: t('common.gridView'), icon: FaTh },
-                        { mode: 'stack', label: t('strategy.stackView'), icon: FaLayerGroup }
+                        { mode: 'list', label: t('common.listView'), icon: LuList },
+                        { mode: 'grid', label: t('common.gridView'), icon: LuGrid3X3 },
+                        { mode: 'stack', label: t('strategy.stackView'), icon: LuLayers }
                       ] as const
                     ).map(({ mode, label, icon: Icon }) => (
                       <button

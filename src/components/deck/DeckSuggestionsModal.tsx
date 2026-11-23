@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaMagic, FaTimes, FaPlus } from 'react-icons/fa';
+import { LuPlus, LuWandSparkles, LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
@@ -71,11 +71,11 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
           <h3 id="deck-suggestions-title" className="modal-title">
-            <FaMagic className="text-accent" />
+            <LuWandSparkles className="text-accent" />
             {t('deck.suggestionsTitle')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
 
@@ -116,9 +116,9 @@ export default function DeckSuggestionsModal({ cards, format, onAddToDeck, onClo
                     type="button"
                     onClick={() => handleAdd(card)}
                     disabled={added.has(card.id)}
-                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-bold text-accent hover:bg-accent-soft disabled:opacity-50 disabled:cursor-default transition-all cursor-pointer"
+                    className="w-full min-h-11 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-accent hover:bg-accent-soft disabled:opacity-50 disabled:cursor-default transition-all cursor-pointer"
                   >
-                    <FaPlus className="text-[10px] shrink-0" />
+                    <LuPlus className="text-[10px] shrink-0" />
                     {added.has(card.id) ? t('deck.suggestionAdded') : t('deck.addSuggestion')}
                   </button>
                 </li>

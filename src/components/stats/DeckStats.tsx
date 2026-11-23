@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTimes } from 'react-icons/fa';
+import { LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import CardItem from '../card/CardItem';
 import { computeDeckStatistics, filterCardsByStat, StatFilter } from '../../utils/deckStatistics';
@@ -67,14 +67,14 @@ function DeckStats({ currentDeck, onApplySuggestedLands, renderFilteredCards }: 
       {activeFilter ? (
         <div className="mt-8 pt-6 border-t border-line animate-fadeIn">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="font-bold text-lg text-fg">
+            <h4 className="font-semibold text-lg text-fg">
               {t('search.filteredCards')} ({filteredCards.length})
             </h4>
             <button
               onClick={() => setActiveFilter(null)}
               className="text-xs flex items-center gap-1.5 text-gray-500 hover:text-danger font-semibold px-3 py-1.5 bg-surface-2 rounded-lg transition-colors"
             >
-              <FaTimes />
+              <LuX />
               {t('search.clearFilter')}
             </button>
           </div>

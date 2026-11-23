@@ -2,7 +2,7 @@
 
 /* Badges */
 .status-badge {
-  @apply px-2.5 py-0.5 rounded-full text-xs font-bold transition-all duration-150;
+  @apply px-2.5 py-0.5 rounded-full text-xs font-semibold transition-all duration-150;
 }
 
 .status-badge-success {
@@ -14,7 +14,7 @@
 }
 
 .count-badge {
-  @apply absolute -top-1.5 -right-1.5 bg-danger text-on-danger text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-line;
+  @apply absolute -top-1.5 -right-1.5 bg-danger text-on-danger text-[10px] font-semibold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-md animate-pulse border border-line;
 }
 
 /* Alerts and Banners */
@@ -36,7 +36,7 @@
 }
 
 .banner-status-dot {
-  @apply font-bold flex h-2 w-2 rounded-full bg-success animate-pulse;
+  @apply font-semibold flex h-2 w-2 rounded-full bg-success animate-pulse;
 }
 
 .text-muted {
@@ -65,21 +65,21 @@
 }
 
 .deck-card-status-chip-commander {
-  @apply text-[10px] font-bold bg-warning-soft text-warning border border-warning/40;
+  @apply text-[10px] font-semibold bg-warning-soft text-warning border border-warning/40;
 }
 
 .deck-card-status-chip-banned {
-  @apply text-[9px] font-extrabold bg-danger-soft text-danger border border-danger/40 animate-pulse;
+  @apply text-[9px] font-semibold bg-danger-soft text-danger border border-danger/40 animate-pulse;
 }
 
 /* Violet, not red or amber: "this card cannot be in this deck at all" is a different problem
    from a ban list or a copy limit, and reading them as the same thing hides which is which. */
 .deck-card-status-chip-invalid {
-  @apply text-[9px] font-extrabold bg-accent-soft text-accent border border-line-strong;
+  @apply text-[9px] font-semibold bg-accent-soft text-accent border border-line-strong;
 }
 
 .deck-card-status-chip-restricted {
-  @apply text-[9px] font-extrabold bg-warning-soft text-warning border border-warning/40;
+  @apply text-[9px] font-semibold bg-warning-soft text-warning border border-warning/40;
 }
 
 .deck-quick-action-commander,
@@ -87,7 +87,7 @@
 .deck-quick-action-add,
 .deck-quick-action-remove,
 .deck-quick-action-delete {
-  @apply w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-bold shadow-sm hover:scale-110;
+  @apply w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-semibold shadow-sm hover:scale-110;
 }
 
 .deck-quick-action-commander {

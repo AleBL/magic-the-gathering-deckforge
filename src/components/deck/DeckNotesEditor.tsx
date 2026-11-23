@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaPencilAlt } from 'react-icons/fa';
+import { LuPencil } from 'react-icons/lu';
 
 interface DeckNotesEditorProps {
   /** Notas iniciais (salvas ou em edição). */
@@ -51,7 +51,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
 
     if (line.startsWith('### ')) {
       nodes.push(
-        <h4 key={k} className="text-xs font-extrabold text-accent mt-4 mb-2 uppercase select-none">
+        <h4 key={k} className="text-xs font-semibold text-accent mt-4 mb-2 select-none">
           {line.slice(4)}
         </h4>
       );
@@ -59,7 +59,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
       nodes.push(
         <h3
           key={k}
-          className="text-sm font-extrabold text-accent mt-5 mb-2 border-b border-slate-800/80 pb-1 select-none"
+          className="text-sm font-semibold text-accent mt-5 mb-2 border-b border-slate-800/80 pb-1 select-none"
         >
           {line.slice(3)}
         </h3>
@@ -68,7 +68,7 @@ function parseMarkdownToJSX(md: string): ReactNode[] {
       nodes.push(
         <h2
           key={k}
-          className="text-base font-extrabold text-white mt-6 mb-3 border-b border-slate-700/60 pb-2 select-none"
+          className="text-base font-semibold text-white mt-6 mb-3 border-b border-slate-700/60 pb-2 select-none"
         >
           {line.slice(2)}
         </h2>
@@ -115,8 +115,8 @@ function DeckNotesEditor({ initialNotes, isEditable = true, onSave }: DeckNotesE
   return (
     <div className="space-y-4 p-4 rounded-xl border border-line bg-surface-1/50 text-left animate-fadeIn">
       <div className="flex justify-between items-center pb-2 border-b border-line">
-        <h4 className="text-sm font-bold text-fg-secondary uppercase tracking-widest flex items-center gap-1.5 select-none">
-          <FaPencilAlt className="text-accent shrink-0 text-xs" />
+        <h4 className="text-sm font-semibold text-fg-secondary flex items-center gap-1.5 select-none">
+          <LuPencil className="text-accent shrink-0 text-xs" />
           <span>{t('strategy.strategyGuide')}</span>
         </h4>
         {isEditable && (

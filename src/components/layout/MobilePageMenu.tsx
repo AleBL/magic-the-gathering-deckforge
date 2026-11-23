@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  FaBars,
-  FaSave,
-  FaPlus,
-  FaTrash,
-  FaDiceD20,
-  FaPrint,
-  FaFileExport,
-  FaFileImport,
-  FaFilter,
-  FaLayerGroup,
-  FaEdit,
-  FaHistory,
-  FaColumns
-} from 'react-icons/fa';
+  LuColumns2,
+  LuDices,
+  LuFileInput,
+  LuFileOutput,
+  LuFilter,
+  LuHistory,
+  LuLayers,
+  LuMenu,
+  LuPlus,
+  LuPrinter,
+  LuSave,
+  LuSquarePen,
+  LuTrash2
+} from 'react-icons/lu';
 import { PendingAction, useDeckStore } from '../../store/useDeckStore';
 import { dispatchPendingAction } from '../../hooks/usePendingAction';
 import { deckActionLabels } from '../../utils/deckActionLabels';
@@ -63,78 +63,78 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
   if (selectedDeckSummary) {
     const hasSelectedCards = selectedDeckSummary.cardCount > 0;
     items = [
-      { key: 'edit', label: t('common.edit'), icon: <FaEdit />, action: 'edit-selected-deck' },
+      { key: 'edit', label: t('common.edit'), icon: <LuSquarePen />, action: 'edit-selected-deck' },
       {
         key: 'playtest',
         label: t('playtest.playtest'),
-        icon: <FaDiceD20 />,
+        icon: <LuDices />,
         action: 'playtest-deck',
         disabled: !hasSelectedCards
       },
       {
         key: 'print',
         label: t('print.printProxies'),
-        icon: <FaPrint />,
+        icon: <LuPrinter />,
         action: 'print-proxies',
         disabled: !hasSelectedCards
       },
       {
         key: 'export',
         label: t('deck.export'),
-        icon: <FaFileExport />,
+        icon: <LuFileOutput />,
         action: 'export-deck',
         disabled: !hasSelectedCards
       },
-      { key: 'history', label: t('deck.versionHistory'), icon: <FaHistory />, action: 'open-history' },
-      { key: 'toggle-list', label: t('deck.hideDeckList'), icon: <FaColumns />, action: 'toggle-deck-list' },
-      { key: 'saved', label: t('deck.savedDecks'), icon: <FaLayerGroup />, action: 'show-saved-decks' }
+      { key: 'history', label: t('deck.versionHistory'), icon: <LuHistory />, action: 'open-history' },
+      { key: 'toggle-list', label: t('deck.hideDeckList'), icon: <LuColumns2 />, action: 'toggle-deck-list' },
+      { key: 'saved', label: t('deck.savedDecks'), icon: <LuLayers />, action: 'show-saved-decks' }
     ];
   } else {
     items = [
-      { key: 'save', label: saveLabel, icon: <FaSave />, action: 'save-deck', disabled: !hasDeckCards },
+      { key: 'save', label: saveLabel, icon: <LuSave />, action: 'save-deck', disabled: !hasDeckCards },
       ...(isEditing
         ? [
             {
               key: 'save-as-new',
               label: t('deck.saveAsNew'),
-              icon: <FaPlus />,
+              icon: <LuPlus />,
               action: 'save-deck-as-new' as PendingAction,
               disabled: !hasDeckCards
             }
           ]
         : []),
-      { key: 'clear', label: clearLabel, icon: <FaTrash />, action: 'clear-deck', disabled: !hasDeckCards },
+      { key: 'clear', label: clearLabel, icon: <LuTrash2 />, action: 'clear-deck', disabled: !hasDeckCards },
       {
         key: 'playtest',
         label: t('playtest.playtest'),
-        icon: <FaDiceD20 />,
+        icon: <LuDices />,
         action: 'playtest-deck',
         disabled: !hasDeckCards
       },
       {
         key: 'print',
         label: t('print.printProxies'),
-        icon: <FaPrint />,
+        icon: <LuPrinter />,
         action: 'print-proxies',
         disabled: !hasDeckCards
       },
       {
         key: 'export',
         label: t('deck.export'),
-        icon: <FaFileExport />,
+        icon: <LuFileOutput />,
         action: 'export-deck',
         disabled: !hasDeckCards
       },
-      { key: 'import-text', label: t('deck.importTextList'), icon: <FaFileImport />, action: 'import-deck-text' },
-      { key: 'import-file', label: t('deck.importDeck'), icon: <FaFileImport />, action: 'import-deck-file' },
+      { key: 'import-text', label: t('deck.importTextList'), icon: <LuFileInput />, action: 'import-deck-text' },
+      { key: 'import-file', label: t('deck.importDeck'), icon: <LuFileInput />, action: 'import-deck-file' },
       {
         key: 'export-all',
         label: t('deck.exportAllDecks'),
-        icon: <FaFileExport />,
+        icon: <LuFileOutput />,
         action: 'export-all-decks',
         disabled: savedDeckCount === 0
       },
-      { key: 'saved', label: t('deck.savedDecks'), icon: <FaLayerGroup />, action: 'show-saved-decks' }
+      { key: 'saved', label: t('deck.savedDecks'), icon: <LuLayers />, action: 'show-saved-decks' }
     ];
   }
 
@@ -169,12 +169,12 @@ function MobilePageMenu({ activeTab }: MobilePageMenuProps) {
         aria-haspopup="dialog"
         aria-expanded={activeTab === 'deck' ? isOpen : undefined}
       >
-        {activeTab === 'search' ? <FaFilter className="text-base" /> : <FaBars className="text-base" />}
+        {activeTab === 'search' ? <LuFilter className="text-base" /> : <LuMenu className="text-base" />}
       </button>
 
       {activeTab === 'deck' && (
         <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} labelledBy="page-menu-title">
-          <h3 id="page-menu-title" className="text-xs font-extrabold uppercase tracking-wider text-fg-muted mb-3">
+          <h3 id="page-menu-title" className="text-xs font-semibold text-fg-muted mb-3">
             {t('common.pageMenu')} — {t('common.decksTab')}
           </h3>
           <div className="flex flex-col gap-1 pb-2">

@@ -1,6 +1,6 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaDatabase, FaDownload, FaExclamationTriangle, FaLock, FaUpload } from 'react-icons/fa';
+import { LuDatabase, LuDownload, LuLock, LuTriangleAlert, LuUpload } from 'react-icons/lu';
 import { useProfileBackup } from '../../hooks/useProfileBackup';
 import { ProfileBackup } from '../../services/profileBackup';
 
@@ -50,13 +50,13 @@ export default function BackupPanel() {
 
       <div className="rounded-xl border border-line p-3 flex flex-col gap-2">
         <div className="flex items-center gap-2 text-sm text-fg-secondary">
-          <FaDatabase className="text-accent shrink-0 text-xs" />
+          <LuDatabase className="text-accent shrink-0 text-xs" />
           <span className="font-semibold">{t('backup.storageUsed')}</span>
           <span className="ml-auto tabular-nums">{usage ?? t('backup.unavailable')}</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-fg-secondary">
-          <FaLock className="text-accent shrink-0 text-xs" />
+          <LuLock className="text-accent shrink-0 text-xs" />
           <span className="font-semibold">{t('backup.persistence')}</span>
           <span className="ml-auto">
             {status.persisted === null
@@ -87,7 +87,7 @@ export default function BackupPanel() {
         disabled={isWorking}
         className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-primary text-on-primary hover:opacity-90 transition-opacity disabled:opacity-50"
       >
-        <FaDownload className="text-xs shrink-0" />
+        <LuDownload className="text-xs shrink-0" />
         {t('backup.export')}
       </button>
 
@@ -97,7 +97,7 @@ export default function BackupPanel() {
         disabled={isWorking}
         className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-surface-1 text-fg-secondary border border-line hover:bg-surface-2 transition-colors disabled:opacity-50"
       >
-        <FaUpload className="text-xs shrink-0" />
+        <LuUpload className="text-xs shrink-0" />
         {t('backup.chooseFile')}
       </button>
       <input
@@ -136,9 +136,9 @@ export default function BackupPanel() {
               type="button"
               onClick={() => run('replace')}
               disabled={isWorking}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-bold bg-danger text-on-danger hover:bg-danger transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-danger text-on-danger hover:bg-danger transition-colors disabled:opacity-50"
             >
-              <FaExclamationTriangle className="text-xs shrink-0" />
+              <LuTriangleAlert className="text-xs shrink-0" />
               {t('backup.replaceConfirm')}
             </button>
           ) : (

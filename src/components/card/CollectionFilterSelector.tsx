@@ -31,7 +31,7 @@ function CollectionFilterSelector({ value, onChange }: CollectionFilterSelectorP
             role="radio"
             aria-checked={isActive}
             onClick={() => onChange(option.value)}
-            className={`min-h-[36px] px-3 rounded-lg text-xs font-bold transition-all ${
+            className={`min-h-[36px] px-3 rounded-lg text-xs font-semibold transition-all ${
               isActive
                 ? 'bg-white dark:bg-slate-600 text-accent shadow-sm ring-1 ring-line '
                 : 'text-fg-secondary hover:text-fg '

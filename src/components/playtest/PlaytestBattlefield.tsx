@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync, FaInbox, FaSkull, FaInfoCircle, FaBan, FaEllipsisH } from 'react-icons/fa';
+import { LuBan, LuEllipsis, LuInbox, LuInfo, LuRefreshCw, LuSkull } from 'react-icons/lu';
 import cardBack from '../../assets/card-back.jpg';
 import { usePlaytestContext } from './PlaytestContext';
 import { Card } from '../../types/Card';
@@ -70,22 +70,22 @@ const PlaytestBattlefieldCard = memo(
               />
             ) : (
               <div className="w-full h-full p-2 flex flex-col justify-between text-left bg-slate-800">
-                <span className="text-[11px] font-black text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
+                <span className="text-[11px] font-semibold text-white bg-black/50 p-1 rounded leading-tight line-clamp-3 shadow-md">
                   {card.printed_name || card.name}
                 </span>
-                <span className="text-[9px] font-bold text-slate-400 capitalize">
+                <span className="text-[9px] font-semibold text-slate-400 capitalize">
                   {t(`search.${card.rarity}`, { defaultValue: card.rarity })}
                 </span>
               </div>
             )}
 
             {isTapped && (
-              <div className="absolute top-1.5 right-1.5 bg-warning text-slate-950 text-[6px] font-extrabold px-1 rounded shadow uppercase tracking-wider animate-pulse">
+              <div className="absolute top-1.5 right-1.5 bg-warning text-slate-950 text-[6px] font-semibold px-1 rounded shadow animate-pulse">
                 {t('playtest.tapped').toUpperCase()}
               </div>
             )}
             {counters !== undefined && counters > 0 && (
-              <div className="absolute bottom-1.5 right-1.5 bg-surface-3 text-fg text-[10px] font-extrabold w-5 h-5 flex items-center justify-center rounded-full shadow border border-line-strong backdrop-blur-sm">
+              <div className="absolute bottom-1.5 right-1.5 bg-surface-3 text-fg text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full shadow border border-line-strong backdrop-blur-sm">
                 {counters}
               </div>
             )}
@@ -102,7 +102,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('cardDetails.viewCardDetails')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaInfoCircle />
+            <LuInfo />
           </button>
           <button
             type="button"
@@ -113,7 +113,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('playtest.tapUntap')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-warning border border-slate-700 hover:bg-warning hover:text-slate-950 transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaSync />
+            <LuRefreshCw />
           </button>
           <button
             type="button"
@@ -124,7 +124,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('playtest.returnToHand')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-accent border border-slate-700 hover:bg-surface-3 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaInbox />
+            <LuInbox />
           </button>
           <button
             type="button"
@@ -135,7 +135,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('playtest.sendToGraveyard')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-danger border border-slate-700 hover:bg-danger hover:text-on-danger transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaSkull />
+            <LuSkull />
           </button>
           <button
             type="button"
@@ -146,7 +146,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('playtest.moveToExile')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-gray-300 border border-slate-700 hover:bg-gray-500 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaBan />
+            <LuBan />
           </button>
           <button
             type="button"
@@ -157,7 +157,7 @@ const PlaytestBattlefieldCard = memo(
             title={t('common.moreActions')}
             className="relative touch-hitarea w-8 h-8 sm:w-6 sm:h-6 rounded-full flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-600 hover:text-white transition-all text-[10px] sm:text-[9px] cursor-pointer"
           >
-            <FaEllipsisH />
+            <LuEllipsis />
           </button>
         </div>
       </div>
@@ -215,7 +215,7 @@ export function PlaytestBattlefield() {
         }
       }}
     >
-      <div className="text-xs uppercase font-extrabold tracking-widest text-slate-500 mb-3 flex items-center justify-between select-none">
+      <div className="text-xs font-semibold text-slate-500 mb-3 flex items-center justify-between select-none">
         <div>{t('playtest.battlefield')}</div>
       </div>
 

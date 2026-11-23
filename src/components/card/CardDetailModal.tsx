@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { FaTimes } from 'react-icons/fa';
+import { LuX } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { useCardPrints } from '../../hooks/useCardPrints';
 import { useCardRelatedTokensForCard } from '../../hooks/useCardRelatedTokens';
@@ -284,7 +284,7 @@ function CardDetailModal({
             className="absolute top-3 right-3 z-10 hidden sm:block text-gray-400 hover:text-fg-secondary transition-colors p-1.5 rounded-lg hover:bg-surface-2"
             aria-label={t('common.close')}
           >
-            <FaTimes className="text-base" />
+            <LuX className="text-base" />
           </button>
           {/* One scroller on phones, two lanes from md up: reading a long rules text used to
               scroll the card art and the edition list along with it. Each side gets its own

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
-import { FaGem } from 'react-icons/fa';
+import { LuGem } from 'react-icons/lu';
 import { DeckStatistics } from '../../utils/deckStatistics';
 import { CHART_SEGMENT_GAP, CHART_SEQUENTIAL } from './chartTheme';
 import { ChartFrame, ChartLegend, ChartSkeleton, ChartTooltip, useChartReady } from './ChartPrimitives';
@@ -38,8 +38,8 @@ export function RarityPanel({ stats }: RarityPanelProps) {
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-line bg-slate-500/5 dark:bg-slate-900/20 transition-colors duration-300">
-      <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-        <FaGem className="text-accent" />
+      <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+        <LuGem className="text-accent" />
         {t('stats.rarityBreakdown')}
       </h4>
 
@@ -47,7 +47,7 @@ export function RarityPanel({ stats }: RarityPanelProps) {
         <ChartSkeleton height="h-8" />
       ) : total === 0 ? (
         <ChartFrame height="h-16" className="flex items-center justify-center overflow-hidden">
-          <EmptyState compact icon={<FaGem />} title={t('stats.noRarityData')} />
+          <EmptyState compact icon={<LuGem />} title={t('stats.noRarityData')} />
         </ChartFrame>
       ) : (
         // No overflow-hidden on this frame: the hover tooltip renders inside it

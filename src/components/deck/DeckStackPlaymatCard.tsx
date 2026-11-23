@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaPlus, FaMinus, FaBan, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
+import { LuBan, LuCircleX, LuMinus, LuPlus, LuTriangleAlert } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { DeckZone } from '../../types/enums';
 import { DeckFormat } from '../../types/Deck';
@@ -115,11 +115,11 @@ export function DeckStackPlaymatCard({
             className={`p-2.5 text-left h-full flex flex-col justify-between ${isBanned ? 'bg-danger-soft ' : 'bg-surface-2 '}`}
           >
             <span
-              className={`text-[10px] font-extrabold block leading-tight truncate-2-lines ${isBanned ? 'text-danger ' : 'text-fg '}`}
+              className={`text-[10px] font-semibold block leading-tight truncate-2-lines ${isBanned ? 'text-danger ' : 'text-fg '}`}
             >
               {card.printed_name || card.name}
             </span>
-            <span className="text-[9px] text-warning font-mono font-bold">{card.mana_cost}</span>
+            <span className="text-[9px] text-warning font-mono font-semibold">{card.mana_cost}</span>
           </div>
         )}
 
@@ -127,14 +127,14 @@ export function DeckStackPlaymatCard({
 
         {isBanned ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-banned animate-pulse">
-            <FaBan className="text-white text-[8px] shrink-0" />
+            <LuBan className="text-white text-[8px] shrink-0" />
             <span>{t('cardDetails.banned').toUpperCase()}</span>
           </div>
         ) : null}
 
         {isRestricted ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
-            <FaExclamationTriangle className="text-white text-[8px] shrink-0" />
+            <LuTriangleAlert className="text-white text-[8px] shrink-0" />
             <span>{t('cardDetails.restricted').toUpperCase()}</span>
           </div>
         ) : null}
@@ -144,7 +144,7 @@ export function DeckStackPlaymatCard({
             className="deck-stack-status-badge bg-surface-3 border border-accent/50"
             title={t('cardDetails.invalidInFormatHint')}
           >
-            <FaTimesCircle className="text-white text-[8px] shrink-0" />
+            <LuCircleX className="text-white text-[8px] shrink-0" />
             <span>{t('cardDetails.invalidInFormat').toUpperCase()}</span>
           </div>
         ) : null}
@@ -158,10 +158,10 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onAddToDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-success hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-success hover:scale-110 transition-all pointer-events-auto"
                 title={t('cardDetails.addCopy')}
               >
-                <FaPlus className="text-[10px]" />
+                <LuPlus className="text-[10px]" />
               </button>
               <button
                 type="button"
@@ -169,10 +169,10 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onRemoveFromDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-extrabold hover:bg-danger hover:scale-110 transition-all pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-danger hover:scale-110 transition-all pointer-events-auto"
                 title={t('cardDetails.removeCopy')}
               >
-                <FaMinus className="text-[10px]" />
+                <LuMinus className="text-[10px]" />
               </button>
             </div>
 
@@ -184,7 +184,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAIN);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
                     card.zone === DeckZone.MAIN
                       ? 'bg-primary text-on-primary ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -199,7 +199,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.SIDEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
                     card.zone === DeckZone.SIDEBOARD
                       ? 'bg-surface-3 text-fg ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-surface-3 hover:text-white'
@@ -214,7 +214,7 @@ export function DeckStackPlaymatCard({
                     e.stopPropagation();
                     onUpdateCardZone(card.id, DeckZone.MAYBEBOARD);
                   }}
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition-all ${
                     card.zone === DeckZone.MAYBEBOARD
                       ? 'bg-warning text-white ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'

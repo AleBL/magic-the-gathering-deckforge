@@ -39,7 +39,7 @@ html.dark .header-container {
    users at all — every modal hand-rolled this exact utility string instead — so the class
    now carries what the app actually renders rather than a look nothing adopted. */
 .modal-title {
-  @apply text-lg font-bold text-fg flex items-center gap-2;
+  @apply text-lg font-semibold text-fg flex items-center gap-2;
 }
 
 /* Card Grid Layouts */
@@ -277,7 +277,7 @@ html.dark .panel-header-sticky {
 }
 
 .quantity-badge {
-  @apply font-mono bg-accent-soft text-accent dark:bg-accent-soft border border-accent/20 dark:border-line-strong px-2 py-0.5 rounded text-xs font-bold mr-2.5 inline-block shrink-0 shadow-sm;
+  @apply font-mono bg-accent-soft text-accent dark:bg-accent-soft border border-accent/20 dark:border-line-strong px-2 py-0.5 rounded text-xs font-semibold mr-2.5 inline-block shrink-0 shadow-sm;
 }
 
 .floating-card-preview {
@@ -465,7 +465,7 @@ html.dark .profile-menu-panel {
 }
 
 .proxy-setting-label {
-  @apply text-xs font-bold text-fg-muted uppercase tracking-wider whitespace-nowrap;
+  @apply text-xs font-semibold text-fg-muted whitespace-nowrap;
 }
 
 .proxy-select {

@@ -70,10 +70,10 @@ Hover is a colour step and press a small scale; no lift, glow or coloured shadow
 
 ## Typography
 
-| Token          | Utility      | Value                                        | Usage                                                                                            |
-| -------------- | ------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `--font-sans`  | `font-sans`  | `Inter, ui-sans-serif, system-ui, …`         | Body & UI (applied to `body`)                                                                    |
-| `--font-serif` | `font-serif` | `Playfair Display, ui-serif, Georgia, serif` | Display titles — brand wordmark (`.app-title`), modal titles (`.modal-title`), page/panel titles |
+| Token          | Utility      | Value                                   | Usage                                                                                                                                                               |
+| -------------- | ------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--font-sans`  | `font-sans`  | `Inter, ui-sans-serif, system-ui, …`    | Body & UI (applied to `body`)                                                                                                                                       |
+| `--font-serif` | `font-serif` | `Crimson Pro, ui-serif, Georgia, serif` | Display titles only: wordmark (`.app-brand-title`), modal titles (`.modal-title`), page and panel titles. A Plantin-tradition serif, chosen to echo card rules text |
 
 > The namespace is `--font-*` (Tailwind v4), **not** `--font-family-*` (v3). Using the
 > old key left `font-serif` silently falling back to Georgia.
@@ -91,8 +91,18 @@ line-height and letter-spacing. They **add to** (never replace) the built-in
 | `--text-body`    | `text-body`    | `0.9375rem` | `1.6`   | —         | Long-form body copy         |
 | `--text-caption` | `text-caption` | `0.75rem`   | `1.4`   | `0.02em`  | Meta, labels, captions      |
 
-> Pair updating numbers (counters, prices, stats) with the `tabular-nums` utility so
-> digits don't jitter as values change.
+Weights are 400, 500 and 600; hierarchy comes from size and colour, not from 700+.
+Labels, tabs and table heads are sentence case and untracked; capitals stay only where the
+game's own data uses them (set and language codes).
+
+> `body` sets `font-variant-numeric: tabular-nums`, so counters, prices, life totals and
+> percentages line up and do not jitter as they change.
+
+### Icons
+
+One family: Lucide, through `react-icons/lu`. Icons take the colour of their text role and
+size with the surrounding `text-*` class. Mana symbols (Scryfall SVGs via
+`getSymbolUrl` / `parseTextWithSymbols`) are the only coloured iconography.
 
 ## Radius
 

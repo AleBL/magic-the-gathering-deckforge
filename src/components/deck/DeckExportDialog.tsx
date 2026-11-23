@@ -1,7 +1,7 @@
 import { logger } from '../../utils/logger';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCopy, FaLink, FaFileCode, FaImage, FaFileDownload } from 'react-icons/fa';
+import { LuCopy, LuFileCode, LuFileDown, LuImage, LuLink } from 'react-icons/lu';
 import { Deck } from '../../types/Deck';
 import { ShowToastFn } from '../../types/Toast';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -34,7 +34,7 @@ function ExportOption({ icon, accent, title, description, onClick }: ExportOptio
     <button type="button" onClick={onClick} className="export-option">
       <span className={`export-option-icon ${accent}`}>{icon}</span>
       <span className="min-w-0">
-        <span className="block text-sm font-bold text-fg">{title}</span>
+        <span className="block text-sm font-semibold text-fg">{title}</span>
         {description ? <span className="block text-xs text-fg-muted">{description}</span> : null}
       </span>
     </button>
@@ -100,14 +100,14 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
         <div className="sm:hidden -mt-6 -mx-6 mb-4 flex justify-center pt-2.5 pb-1" aria-hidden="true">
           <div className="w-10 h-1.5 rounded-full bg-surface-3" />
         </div>
-        <h3 id="deck-export-dialog-title" className="text-xl font-bold text-fg mb-1">
+        <h3 id="deck-export-dialog-title" className="text-xl font-semibold text-fg mb-1">
           {t('deck.export')} {deck.name}
         </h3>
         <p className="text-sm text-fg-secondary mb-4">{t('export.exportFormatPrompt')}</p>
 
         {/* Share section: link to move the deck to another device, no backend. */}
         <div className="rounded-xl border border-line bg-surface-2/60 p-3 mb-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-fg-muted mb-2">{t('export.shareTitle')}</p>
+          <p className="text-[11px] font-semibold text-fg-muted mb-2">{t('export.shareTitle')}</p>
           <div className="flex items-center gap-2">
             <input
               type="text"
@@ -123,8 +123,8 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
               className="primary-button text-xs py-2 px-3 flex items-center gap-1.5 shrink-0"
               title={t('export.copyLink')}
             >
-              <FaLink className="text-xs" />
-              <span className="font-bold">{t('common.copy')}</span>
+              <LuLink className="text-xs" />
+              <span className="font-semibold">{t('common.copy')}</span>
             </button>
           </div>
         </div>
@@ -132,35 +132,35 @@ export function DeckExportDialog({ deck, onExportJson, onExportDec, onCancel, sh
         {/* Export / download options — one consistent visual language. */}
         <div className="grid grid-cols-1 gap-2">
           <ExportOption
-            icon={<FaCopy />}
+            icon={<LuCopy />}
             accent="bg-slate-500/10 text-fg-secondary"
             title={t('export.copyText')}
             description=""
             onClick={handleCopyText}
           />
           <ExportOption
-            icon={<FaFileDownload />}
+            icon={<LuFileDown />}
             accent="bg-accent-soft text-accent"
             title={t('export.downloadDeckFile')}
             description=".deck"
             onClick={handleDownloadDeckFile}
           />
           <ExportOption
-            icon={<FaFileCode />}
+            icon={<LuFileCode />}
             accent="bg-accent-soft text-accent"
             title="JSON"
             description={t('export.exportJsonDesc')}
             onClick={() => onExportJson(deck)}
           />
           <ExportOption
-            icon={<FaFileCode />}
+            icon={<LuFileCode />}
             accent="bg-success-soft text-success"
             title="DEC (MTGO)"
             description={t('export.exportDecDesc')}
             onClick={() => onExportDec(deck)}
           />
           <ExportOption
-            icon={<FaImage />}
+            icon={<LuImage />}
             accent="bg-accent-soft text-accent"
             title={t('export.exportImage')}
             description={t('export.exportImageDesc')}

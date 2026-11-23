@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaDice, FaRedo } from 'react-icons/fa';
+import { LuDices, LuRedo2 } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { simulatePlayout } from '../../utils/playoutSimulation';
 import EmptyState from '../ui/EmptyState';
@@ -42,8 +42,8 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
   if (!result) {
     return (
       <div className="space-y-4 min-w-0">
-        <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-          <FaDice className="text-accent" />
+        <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+          <LuDices className="text-accent" />
           {t('stats.playout')}
         </h4>
         <EmptyState title={t('stats.playoutTooSmall')} compact />
@@ -54,16 +54,16 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
   return (
     <div className="space-y-4 min-w-0">
       <div className="flex items-center justify-between gap-3">
-        <h4 className="font-bold text-sm text-fg-secondary uppercase tracking-wider flex items-center gap-2">
-          <FaDice className="text-accent" />
+        <h4 className="font-semibold text-sm text-fg-secondary flex items-center gap-2">
+          <LuDices className="text-accent" />
           {t('stats.playout')}
         </h4>
         <button
           type="button"
           onClick={reroll}
-          className="flex items-center gap-1.5 text-[11px] font-bold text-fg-muted hover:text-accent transition-colors"
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent transition-colors"
         >
-          <FaRedo className="text-[9px]" />
+          <LuRedo2 className="text-[9px]" />
           {t('stats.playoutRerun')}
         </button>
       </div>
@@ -72,17 +72,15 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
       <div className="grid grid-cols-3 gap-3">
         <div className="stat-tile" title={t('stats.playoutMulliganHelp')}>
           <span className="stat-tile-label">{t('stats.playoutMulligan')}</span>
-          <span className="text-base font-extrabold text-fg-secondary tabular-nums">
-            {percent(result.mulliganRate)}
-          </span>
+          <span className="text-base font-semibold text-fg-secondary tabular-nums">{percent(result.mulliganRate)}</span>
         </div>
         <div className="stat-tile" title={t('stats.playoutStalledHelp')}>
           <span className="stat-tile-label">{t('stats.playoutStalled')}</span>
-          <span className="text-base font-extrabold text-warning tabular-nums">{percent(result.stalledRate)}</span>
+          <span className="text-base font-semibold text-warning tabular-nums">{percent(result.stalledRate)}</span>
         </div>
         <div className="stat-tile" title={t('stats.playoutOnCurveHelp')}>
           <span className="stat-tile-label">{t('stats.playoutOnCurve')}</span>
-          <span className="text-base font-extrabold text-accent tabular-nums">{percent(result.onCurveShare)}</span>
+          <span className="text-base font-semibold text-accent tabular-nums">{percent(result.onCurveShare)}</span>
         </div>
       </div>
 
@@ -94,7 +92,7 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
           <div key={size} className="space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span className="text-fg-secondary">{t('stats.playoutHandOf', { size })}</span>
-              <span className="font-bold tabular-nums text-fg-secondary">{percent(share)}</span>
+              <span className="font-semibold tabular-nums text-fg-secondary">{percent(share)}</span>
             </div>
             <ShareBar share={share} />
           </div>
@@ -109,7 +107,7 @@ export function PlayoutPanel({ currentDeck }: PlayoutPanelProps) {
           <div key={lands} className="space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span className="text-fg-secondary">{t('stats.playoutLandsCount', { lands })}</span>
-              <span className="font-bold tabular-nums text-fg-secondary">
+              <span className="font-semibold tabular-nums text-fg-secondary">
                 {medianTurn === null
                   ? t('stats.playoutNeverReached')
                   : t('stats.playoutByTurn', { turn: medianTurn, share: Math.round(reachedShare * 100) })}

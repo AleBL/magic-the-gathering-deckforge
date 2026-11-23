@@ -1,6 +1,6 @@
 import { useState, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync } from 'react-icons/fa';
+import { LuRefreshCw } from 'react-icons/lu';
 import { Card } from '../../types/Card';
 import { CardSize } from '../../types';
 import { DeckFormat } from '../../types/Deck';
@@ -205,7 +205,7 @@ function CardItem({
           aria-label={t('cardDetails.flipAction')}
           aria-pressed={isFlipped}
         >
-          <FaSync className="text-xs" />
+          <LuRefreshCw className="text-xs" />
         </button>
       )}
 
@@ -214,7 +214,7 @@ function CardItem({
       )}
 
       {showPrintingBadge && card.set ? (
-        <span className="absolute bottom-2 right-2 z-30 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+        <span className="absolute bottom-2 right-2 z-30 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
           {card.set}
           {card.lang && card.lang !== 'en' ? ` · ${card.lang}` : ''}
         </span>

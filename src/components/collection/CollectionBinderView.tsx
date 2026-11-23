@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { CollectionEntry } from '../../types/Collection';
 import { Card } from '../../types/Card';
 
@@ -137,12 +137,12 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
                         className="w-full h-full object-cover pointer-events-none select-none"
                       />
                     ) : (
-                      <span className="absolute inset-0 flex items-center justify-center p-2 text-[10px] font-bold text-center text-fg-secondary">
+                      <span className="absolute inset-0 flex items-center justify-center p-2 text-[10px] font-semibold text-center text-fg-secondary">
                         {entry.card.printed_name || entry.name}
                       </span>
                     )}
                     {entry.quantity > 1 ? (
-                      <span className="absolute bottom-1 right-1 rounded-full bg-black/75 text-white text-[10px] font-extrabold px-1.5 py-0.5 tabular-nums">
+                      <span className="absolute bottom-1 right-1 rounded-full bg-black/75 text-white text-[10px] font-semibold px-1.5 py-0.5 tabular-nums">
                         {entry.quantity}x
                       </span>
                     ) : null}
@@ -173,7 +173,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
           aria-label={t('collection.binderPrevious', { count: pagesPerSpread })}
           className="w-9 h-9 flex items-center justify-center rounded-lg border border-line text-fg-secondary disabled:opacity-40 hover:bg-surface-2 transition-colors"
         >
-          <FaChevronLeft className="text-xs" />
+          <LuChevronLeft className="text-xs" />
         </button>
         <span className="text-xs font-semibold text-fg-secondary tabular-nums">
           {t('collection.binderPages', {
@@ -189,7 +189,7 @@ export function CollectionBinderView({ entries, onSelectCard, layout }: Collecti
           aria-label={t('collection.binderNext', { count: pagesPerSpread })}
           className="w-9 h-9 flex items-center justify-center rounded-lg border border-line text-fg-secondary disabled:opacity-40 hover:bg-surface-2 transition-colors"
         >
-          <FaChevronRight className="text-xs" />
+          <LuChevronRight className="text-xs" />
         </button>
       </div>
     </div>

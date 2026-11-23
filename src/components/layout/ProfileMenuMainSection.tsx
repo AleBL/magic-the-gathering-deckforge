@@ -1,17 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import {
-  FaUser,
-  FaInfoCircle,
-  FaKeyboard,
-  FaGithub,
-  FaMoon,
-  FaSun,
-  FaGlobeAmericas,
-  FaMagic,
-  FaDownload,
-  FaShieldAlt,
-  FaChevronDown
-} from 'react-icons/fa';
+  LuChevronDown,
+  LuDownload,
+  LuEarth,
+  LuGithub,
+  LuInfo,
+  LuKeyboard,
+  LuMoon,
+  LuShield,
+  LuSun,
+  LuUser,
+  LuWandSparkles
+} from 'react-icons/lu';
 import { APP_VERSION, APP_NAME } from '../../constants';
 import { ProfileMenuLanguageOption } from './profileMenuLanguages';
 
@@ -50,10 +50,10 @@ export function ProfileMenuMainSection({
       <div className="profile-menu-header">
         <div className="flex items-center gap-3">
           <div className="profile-avatar-lg">
-            <FaUser className="text-sm" />
+            <LuUser className="text-sm" />
           </div>
           <div>
-            <p className="text-sm font-bold text-fg">{APP_NAME}</p>
+            <p className="text-sm font-semibold text-fg">{APP_NAME}</p>
             <p className="text-xs text-fg-muted">
               {t('strategy.version')} {APP_VERSION}
             </p>
@@ -65,7 +65,7 @@ export function ProfileMenuMainSection({
 
       <div className="profile-menu-row">
         <div className="flex items-center gap-2 text-fg-secondary">
-          {isDarkMode ? <FaMoon className="text-accent text-sm" /> : <FaSun className="text-warning text-sm" />}
+          {isDarkMode ? <LuMoon className="text-accent text-sm" /> : <LuSun className="text-warning text-sm" />}
           <span className="text-sm font-medium">{isDarkMode ? t('common.darkMode') : t('common.lightMode')}</span>
         </div>
         <button
@@ -80,7 +80,7 @@ export function ProfileMenuMainSection({
 
       <div className="profile-menu-row">
         <div className="flex items-center gap-2 text-fg-secondary">
-          <FaMagic className={`text-sm ${effectsEnabled ? 'text-accent' : 'text-gray-400'}`} />
+          <LuWandSparkles className={`text-sm ${effectsEnabled ? 'text-accent' : 'text-gray-400'}`} />
           <span className="text-sm font-medium">{t('common.visualEffects')}</span>
         </div>
         <button
@@ -96,20 +96,20 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenLanguage} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaGlobeAmericas className="text-accent text-sm shrink-0" />
+          <LuEarth className="text-accent text-sm shrink-0" />
           <span>{t('common.language')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <img src={currentLang.iconPath} alt={currentLang.label} className="w-4 h-4 rounded-full object-cover" />
           <span className="text-xs text-fg-muted">{currentLang.label}</span>
-          <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
+          <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
         </div>
       </button>
 
       {canInstall ? (
         <button type="button" className="profile-menu-item" onClick={onInstall} role="menuitem">
           <div className="flex items-center gap-2">
-            <FaDownload className="text-accent text-sm shrink-0" />
+            <LuDownload className="text-accent text-sm shrink-0" />
             <span>{t('common.installApp')}</span>
           </div>
         </button>
@@ -119,28 +119,28 @@ export function ProfileMenuMainSection({
 
       <button type="button" className="profile-menu-item" onClick={onOpenBackup} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaShieldAlt className="text-accent text-sm shrink-0" />
+          <LuShield className="text-accent text-sm shrink-0" />
           <span>{t('backup.title')}</span>
         </div>
-        <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
+        <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
       </button>
 
       <button type="button" className="profile-menu-item" onClick={onOpenAbout} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaInfoCircle className="text-accent text-sm shrink-0" />
+          <LuInfo className="text-accent text-sm shrink-0" />
           <span>{t('strategy.aboutApp')}</span>
         </div>
-        <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
+        <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
       </button>
 
       {/* Keyboard-shortcuts reference — hidden below sm: no physical
           keyboard on phone-width screens, so the shortcuts are unusable there. */}
       <button type="button" className="profile-menu-item hidden sm:flex" onClick={onOpenHelp} role="menuitem">
         <div className="flex items-center gap-2">
-          <FaKeyboard className="text-success text-sm shrink-0" />
+          <LuKeyboard className="text-success text-sm shrink-0" />
           <span>{t('common.help')}</span>
         </div>
-        <FaChevronDown className="text-gray-400 text-xs -rotate-90" />
+        <LuChevronDown className="text-gray-400 text-xs -rotate-90" />
       </button>
 
       <a
@@ -151,7 +151,7 @@ export function ProfileMenuMainSection({
         role="menuitem"
       >
         <div className="flex items-center gap-2">
-          <FaGithub className="text-fg-secondary text-sm shrink-0" />
+          <LuGithub className="text-fg-secondary text-sm shrink-0" />
           <span>{t('strategy.gitHub')}</span>
         </div>
         <span className="text-xs text-gray-400">↗</span>

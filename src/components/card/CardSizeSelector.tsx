@@ -13,7 +13,7 @@ function CardSizeSelector({ selectedSize, onSizeChange }: CardSizeSelectorProps)
   return (
     <div className="flex flex-row items-center gap-2 sm:gap-4 w-auto" role="radiogroup">
       <span
-        className="hidden sm:inline text-fg-secondary text-sm transition-colors duration-300 font-bold whitespace-nowrap"
+        className="hidden sm:inline text-fg-secondary text-sm transition-colors duration-300 font-semibold whitespace-nowrap"
         aria-hidden="true"
       >
         {t('search.cardSize')}

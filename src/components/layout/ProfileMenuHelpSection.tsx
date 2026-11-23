@@ -22,7 +22,7 @@ export function ProfileMenuHelpSection({ shortcuts, onBack, onClose }: ProfileMe
               {sc.keys.map((k) => (
                 <kbd
                   key={k}
-                  className="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded border border-line-strong bg-surface-2 text-fg-secondary shadow-sm"
+                  className="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded border border-line-strong bg-surface-2 text-fg-secondary shadow-sm"
                 >
                   {k}
                 </kbd>

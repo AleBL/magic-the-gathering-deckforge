@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaHistory, FaTimes, FaTrash, FaUndo, FaChevronDown } from 'react-icons/fa';
+import { LuChevronDown, LuHistory, LuTrash2, LuUndo2, LuX } from 'react-icons/lu';
 import { Deck, DeckVersion } from '../../types/Deck';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
@@ -92,11 +92,11 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
       >
         <div className="flex items-center justify-between mb-1">
           <h3 id="deck-history-title" className="modal-title">
-            <FaHistory className="text-accent" />
+            <LuHistory className="text-accent" />
             {t('deck.versionHistory')}
           </h3>
           <button type="button" onClick={onClose} className="modal-close-btn" aria-label={t('common.close')}>
-            <FaTimes />
+            <LuX />
           </button>
         </div>
         <p className="text-xs text-fg-muted mb-4">{t('deck.versionAutoHint')}</p>
@@ -113,7 +113,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                 <li key={version.id} className="rounded-lg bg-surface-1 border border-line">
                   <div className="flex items-center justify-between gap-2 p-2.5">
                     <div className="min-w-0">
-                      <span className="block text-xs font-bold text-fg truncate">
+                      <span className="block text-xs font-semibold text-fg truncate">
                         {new Date(version.createdAt).toLocaleString()}
                       </span>
                       <span className="block text-[11px] text-fg-muted">
@@ -125,17 +125,17 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         type="button"
                         onClick={() => setExpanded(isOpen ? null : version.id)}
                         aria-expanded={isOpen}
-                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-fg-secondary hover:bg-surface-2 text-xs font-bold transition-all cursor-pointer"
+                        className="min-h-11 sm:min-h-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-fg-secondary hover:bg-surface-2 text-xs font-semibold transition-all cursor-pointer"
                       >
                         {t('deck.versionChanges')}
-                        <FaChevronDown className={`text-[10px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                        <LuChevronDown className={`text-[10px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                       </button>
                       <button
                         type="button"
                         onClick={() => onRestore(version)}
-                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft text-accent text-xs font-bold transition-all cursor-pointer"
+                        className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft text-accent text-xs font-semibold transition-all cursor-pointer"
                       >
-                        <FaUndo className="text-xs" />
+                        <LuUndo2 className="text-xs" />
                         {t('deck.restoreVersion')}
                       </button>
                       <button
@@ -144,7 +144,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                         aria-label={t('deck.deleteVersion')}
                         className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-danger hover:bg-danger-soft transition-all cursor-pointer"
                       >
-                        <FaTrash className="text-xs" />
+                        <LuTrash2 className="text-xs" />
                       </button>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export default function DeckVersionHistoryModal({ deck, onRestore, onClose }: De
                               className="flex items-center justify-between gap-2 text-[11px]"
                             >
                               <span className="truncate">
-                                <span className={`font-bold ${CHANGE_TONE[change.type]}`}>
+                                <span className={`font-semibold ${CHANGE_TONE[change.type]}`}>
                                   {t(CHANGE_LABEL_KEY[change.type])}
                                 </span>
                                 <span className="text-fg-secondary"> — {change.name}</span>

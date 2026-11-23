@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
-import { FaCoins, FaStar } from 'react-icons/fa';
+import { LuCoins, LuStar } from 'react-icons/lu';
 import { DeckStatistics } from '../../utils/deckStatistics';
 import { planBudgetCuts } from '../../utils/budgetPlanner';
 import { STORAGE_KEYS } from '../../constants/storage';
@@ -45,28 +45,28 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
 
   return (
     <div className="space-y-4 p-4 rounded-xl border border-line-strong bg-accent-soft transition-colors duration-300">
-      <h4 className="font-bold text-sm text-accent uppercase tracking-wider flex items-center gap-2">
-        <FaCoins className="text-accent" />
+      <h4 className="font-semibold text-sm text-accent flex items-center gap-2">
+        <LuCoins className="text-accent" />
         {t('stats.budgetEstimator')}
       </h4>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="stat-tile">
           <span className="stat-tile-label">{t('stats.totalUsd')}</span>
-          <span className="text-base font-extrabold text-accent tabular-nums">${stats.totalUsdPrice.toFixed(2)}</span>
+          <span className="text-base font-semibold text-accent tabular-nums">${stats.totalUsdPrice.toFixed(2)}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-tile-label">{t('stats.totalEur')}</span>
-          <span className="text-base font-extrabold text-accent tabular-nums">€{stats.totalEurPrice.toFixed(2)}</span>
+          <span className="text-base font-semibold text-accent tabular-nums">€{stats.totalEurPrice.toFixed(2)}</span>
         </div>
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="budget-target" className="text-[10px] font-bold text-fg-muted uppercase tracking-wider block">
+        <label htmlFor="budget-target" className="text-[11px] font-semibold text-fg-muted block">
           {t('stats.budgetTarget')}
         </label>
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-bold text-gray-500">$</span>
+          <span className="text-sm font-semibold text-gray-500">$</span>
           <input
             id="budget-target"
             type="number"
@@ -81,12 +81,10 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
         {targetNum > 0 &&
           (plan.overBy > 0 ? (
             <div className="space-y-1.5 p-2.5 rounded-lg bg-danger-soft border border-danger/40">
-              <span className="text-xs font-bold text-danger block">
+              <span className="text-xs font-semibold text-danger block">
                 {t('stats.overBudgetBy', { amount: plan.overBy.toFixed(2) })}
               </span>
-              <span className="text-[10px] font-bold text-fg-muted uppercase tracking-wider block">
-                {t('stats.cutSuggestions')}
-              </span>
+              <span className="text-[11px] font-semibold text-fg-muted block">{t('stats.cutSuggestions')}</span>
               <ul className="space-y-1">
                 {plan.cuts.map((card) => (
                   <li key={card.id} className="flex items-center justify-between gap-2 text-xs">
@@ -97,7 +95,7 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
               </ul>
             </div>
           ) : (
-            <span className="text-xs font-bold text-success">{t('stats.withinBudget')}</span>
+            <span className="text-xs font-semibold text-success">{t('stats.withinBudget')}</span>
           ))}
       </div>
 
@@ -105,8 +103,8 @@ export function BudgetEstimatorPanel({ stats }: BudgetEstimatorPanelProps) {
         <ChartSkeleton height="h-32" />
       ) : chartData.length > 0 ? (
         <div className="space-y-1.5">
-          <span className="text-[10px] font-bold text-fg-muted uppercase tracking-wider flex items-center gap-1">
-            <FaStar className="text-warning" />
+          <span className="text-[11px] font-semibold text-fg-muted flex items-center gap-1">
+            <LuStar className="text-warning" />
             {t('stats.topExpensiveCards')}
           </span>
           <ChartFrame style={{ height: rowHeight }}>

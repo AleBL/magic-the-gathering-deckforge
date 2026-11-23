@@ -1,6 +1,6 @@
 import { useState, Dispatch, SetStateAction, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown, FaFilter, FaTimes, FaUndo } from 'react-icons/fa';
+import { LuChevronDown, LuFilter, LuUndo2, LuX } from 'react-icons/lu';
 import { SearchFilters as SearchFiltersType } from '../../types';
 import { KEYWORD_OPTIONS, ORACLE_TAG_OPTIONS, toLabelKey } from '../../constants/searchOptions';
 import { hasActiveFilters as hasAnyFilter } from '../../utils/searchQuery';
@@ -54,7 +54,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
   const hasActiveFilters = hasAnyFilter(filters);
 
   const fieldLabel = (htmlFor: string, label: string) => (
-    <label htmlFor={htmlFor} className="block text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5">
+    <label htmlFor={htmlFor} className="block text-[11px] font-semibold text-fg-muted mb-1.5">
       {label}
     </label>
   );
@@ -157,10 +157,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
       {extraFilters ? <div className="pb-4 border-b border-line">{extraFilters}</div> : null}
       <div className={wide ? 'grid grid-cols-2 gap-x-5 gap-y-4 items-start' : 'space-y-4'}>
         <div>
-          <label
-            htmlFor="filter-rarity"
-            className="block text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5"
-          >
+          <label htmlFor="filter-rarity" className="block text-[11px] font-semibold text-fg-muted mb-1.5">
             {t('search.rarity')}
           </label>
           <select
@@ -178,10 +175,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
         </div>
 
         <div>
-          <label
-            htmlFor="filter-cmc"
-            className="block text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5"
-          >
+          <label htmlFor="filter-cmc" className="block text-[11px] font-semibold text-fg-muted mb-1.5">
             {t('search.cmc')}
           </label>
           <input
@@ -203,10 +197,10 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
           type="button"
           onClick={() => setShowTextFields((prev) => !prev)}
           aria-expanded={showTextFields}
-          className="w-full flex items-center justify-between gap-2 text-[10px] font-bold text-fg-muted uppercase tracking-wider py-1 cursor-pointer hover:text-fg-secondary transition-colors"
+          className="w-full flex items-center justify-between gap-2 text-[11px] font-semibold text-fg-muted py-1 cursor-pointer hover:text-fg-secondary transition-colors"
         >
           <span>{t('search.textAndStats')}</span>
-          <FaChevronDown className={`text-[9px] transition-transform ${showTextFields ? 'rotate-180' : ''}`} />
+          <LuChevronDown className={`text-[9px] transition-transform ${showTextFields ? 'rotate-180' : ''}`} />
         </button>
         {showTextFields ? <div className="pt-3">{renderTextFields(wide)}</div> : null}
       </div>
@@ -218,9 +212,9 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
             setIsExpanded(false);
           }}
           disabled={!hasActiveFilters}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-2 hover:bg-danger-soft text-fg-secondary hover:text-danger dark:hover:text-danger border border-transparent hover:border-danger/40 text-xs font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-2 hover:bg-danger-soft text-fg-secondary hover:text-danger dark:hover:text-danger border border-transparent hover:border-danger/40 text-xs font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <FaUndo className={hasActiveFilters ? 'animate-spin-slow once' : ''} />
+          <LuUndo2 className={hasActiveFilters ? 'animate-spin-slow once' : ''} />
           {t('search.clearFilters')}
         </button>
       </div>
@@ -232,14 +226,14 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 font-extrabold text-xs cursor-pointer border shadow-sm active:scale-95 ${
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 font-semibold text-xs cursor-pointer border shadow-sm active:scale-95 ${
           isExpanded || hasActiveFilters
             ? 'bg-accent-soft text-accent border-line-strong ring-2 ring-focus '
             : 'bg-surface-1 text-fg-secondary border-line hover:bg-surface-2 hover:border-line-strong backdrop-blur-sm'
         }`}
         title={t('search.advancedFilters')}
       >
-        <FaFilter
+        <LuFilter
           className={`text-xs shrink-0 transition-colors duration-300 ${hasActiveFilters ? 'text-accent' : 'text-fg-muted '}`}
         />
         <span>{t('search.advancedFilters')}</span>
@@ -257,15 +251,13 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
               panel starts ~20rem down the page and would run off the bottom. */}
           <div className="absolute left-0 mt-2 w-[34rem] max-h-[max(18rem,calc(100dvh-20rem))] overflow-y-auto overscroll-contain rounded-2xl shadow-2xl bg-surface-1/98 backdrop-blur-xl border border-line p-5 z-40 space-y-5 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-extrabold text-fg uppercase tracking-wider block">
-                {t('search.advancedFilters')}
-              </span>
+              <span className="text-[11px] font-semibold text-fg block">{t('search.advancedFilters')}</span>
               <button
                 onClick={() => setIsExpanded(false)}
                 className="text-gray-400 hover:text-fg-secondary transition-colors cursor-pointer"
                 aria-label={t('common.close')}
               >
-                <FaTimes />
+                <LuX />
               </button>
             </div>
             {renderFilterFields(true)}
@@ -282,10 +274,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
         className="search-filters-sheet space-y-5"
       >
         <div className="flex items-center justify-between">
-          <span
-            id="search-filters-sheet-title"
-            className="text-[11px] font-extrabold text-fg uppercase tracking-wider block"
-          >
+          <span id="search-filters-sheet-title" className="text-[11px] font-semibold text-fg block">
             {t('search.advancedFilters')}
           </span>
           <button
@@ -296,7 +285,7 @@ function SearchFilters({ filters, setFilters, mobileExtras, extraFilters, hideOr
             className="text-gray-400 hover:text-fg-secondary transition-colors cursor-pointer p-2 -my-2 -ml-2"
             aria-label={t('common.close')}
           >
-            <FaTimes />
+            <LuX />
           </button>
         </div>
         {mobileExtras}

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FaCheck, FaTimes, FaInfoCircle } from 'react-icons/fa';
+import { LuCheck, LuInfo, LuX } from 'react-icons/lu';
 import { DeckFormat } from '../../types/Deck';
 import { DeckFormatType } from '../../types/enums';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -48,7 +48,7 @@ function DeckSaveDialog({
         className="modal-container modal-container-medium w-full flex flex-col !p-0 overflow-hidden animate-fadeIn mx-auto"
       >
         <div className="p-6 md:p-8 flex-1 overflow-y-auto flex flex-col">
-          <h3 id="deck-save-title" className="text-xl font-bold text-fg mb-4">
+          <h3 id="deck-save-title" className="text-xl font-semibold text-fg mb-4">
             {title ?? t('deck.saveDeck')}
           </h3>
 
@@ -83,7 +83,7 @@ function DeckSaveDialog({
             </div>
 
             <div className="flex gap-2 p-3 bg-accent-soft text-accent rounded-lg text-sm">
-              <FaInfoCircle className="shrink-0 mt-0.5" />
+              <LuInfo className="shrink-0 mt-0.5" />
               <span>{t('validation.deckRulesExplanation')}</span>
             </div>
           </div>
@@ -94,7 +94,7 @@ function DeckSaveDialog({
               onClick={onCancel}
               className="flex-1 px-4 py-2 bg-surface-3 hover:bg-surface-3 text-fg rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <FaTimes />
+              <LuX />
               {t('common.cancel')}
             </button>
             <button
@@ -102,7 +102,7 @@ function DeckSaveDialog({
               onClick={onSave}
               className="flex-1 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <FaCheck />
+              <LuCheck />
               {t('deck.save')}
             </button>
           </div>

@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaSync, FaRedo } from 'react-icons/fa';
+import { LuRedo2, LuRefreshCw } from 'react-icons/lu';
 import { Card, CardFace } from '../../types/Card';
 import { getCardImageUrl } from '../../utils/deckGrouping';
 import { CardFaceImages } from '../../utils/cardFaces';
@@ -119,7 +119,7 @@ export function CardDetailImagePanel({
               flex items-center justify-center opacity-80 hover:opacity-100"
             title={t('cardDetails.flipAction')}
           >
-            <FaSync
+            <LuRefreshCw
               className={`text-xl transition-transform duration-500 ${showBackFace ? '-rotate-180' : 'rotate-0'}`}
             />
           </button>
@@ -136,7 +136,7 @@ export function CardDetailImagePanel({
             title={t('cardDetails.rotateAction')}
             aria-pressed={isRotated}
           >
-            <FaRedo className="text-xl" />
+            <LuRedo2 className="text-xl" />
           </button>
         )}
 
