@@ -126,6 +126,33 @@ for (const theme of ['light', 'dark'] as const) {
 }
 
 /**
+ * The offline banner only renders without a connection, so the scan above never sees it. It once
+ * shipped as warning text on a warning fill, blank in both themes, on the one screen an
+ * offline-first app most needs to be honest about.
+ */
+for (const theme of ['light', 'dark'] as const) {
+  test(`the offline banner meets WCAG AA contrast in the ${theme} theme`, async ({ appPage }) => {
+    await appPage.addInitScript((mode) => {
+      window.localStorage.setItem('deckforge_dark_mode', String(mode === 'dark'));
+    }, theme);
+    await appPage.emulateMedia({ reducedMotion: 'reduce' });
+    await appPage.goto('/');
+    await expect(appPage.getByRole('banner')).toBeVisible();
+    await appPage.waitForFunction(
+      (dark) => document.documentElement.classList.contains('dark') === dark,
+      theme === 'dark'
+    );
+
+    await appPage.context().setOffline(true);
+    await expect(appPage.getByRole('status').filter({ hasText: "You're offline" })).toBeVisible();
+    await appPage.waitForTimeout(300);
+
+    const failures = await findContrastFailures(appPage);
+    expect(failures, `${failures.length} low-contrast texts:\n${JSON.stringify(failures, null, 2)}`).toEqual([]);
+  });
+}
+
+/**
  * The semantic colour roles, checked as pairs straight from the theme variables. A role that
  * drifts below AA fails here even before any screen happens to render that pair.
  */

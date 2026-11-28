@@ -85,6 +85,18 @@ const SIGNALS = {
       'g'
     ),
     why: 'coloured glows'
+  },
+  /**
+   * A status fill whose text is the same role (`text-warning bg-warning`) or plain white. The
+   * status roles turn light in dark mode, so both read as blank or below AA there. Text on a
+   * status fill takes its `on-*` role. Only unprefixed classes count, so a `hover:bg-danger`
+   * paired with `hover:text-on-danger` is fine. Matched within one class string, so it misses
+   * an icon child that sets its own colour; e2e/contrast.spec.ts covers what renders as text.
+   */
+  inkOnOwnFill: {
+    pattern:
+      /(?<![:\w-])bg-(warning|danger|success|accent)(?:\/\d+)?(?![\w-])[^"'`]*?(?<![:\w-])text-\1(?![\w-])|(?<![:\w-])text-(warning|danger|success|accent)(?![\w-])[^"'`]*?(?<![:\w-])bg-\2(?![\w-])|(?<![:\w-])bg-(?:warning|danger|success)(?:\/\d+)?(?![\w-])[^"'`]*?(?<![:\w-])text-white\b/g,
+    why: 'status fill with text in its own colour or plain white'
   }
 };
 

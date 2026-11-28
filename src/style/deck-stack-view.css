@@ -126,15 +126,17 @@
 }
 
 .deck-stack-status-badge {
-  @apply absolute top-1.5 left-1.5 z-10 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[8px] font-semibold shadow-lg flex items-center gap-0.5 select-none pointer-events-none;
+  @apply absolute top-1.5 left-1.5 z-10 backdrop-blur-sm px-1.5 py-0.5 rounded-full text-[8px] font-semibold shadow-lg flex items-center gap-0.5 select-none pointer-events-none;
 }
 
+/* Ink comes from the fill's own on-* role: the status fills turn light in dark mode, where
+   white text on them drops below AA. */
 .deck-stack-status-badge-banned {
-  @apply bg-danger border border-danger;
+  @apply bg-danger text-on-danger border border-danger;
 }
 
 .deck-stack-status-badge-restricted {
-  @apply bg-warning dark:bg-warning/90 border border-warning;
+  @apply bg-warning dark:bg-warning/90 text-on-warning border border-warning;
 }
 
 .card-grid-stack-wrapper {

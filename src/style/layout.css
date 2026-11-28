@@ -256,7 +256,7 @@ html.dark .panel-header-sticky {
 
 /* Dialog Buttons */
 .warning-button {
-  @apply bg-warning hover:bg-warning-hover text-white font-semibold rounded-lg px-4 py-2 transition-colors;
+  @apply bg-warning hover:bg-warning-hover text-on-warning font-semibold rounded-lg px-4 py-2 transition-colors;
 }
 
 /* Mana Curve & Stats styles */
