@@ -32,7 +32,7 @@ export function CardItemHoverControls({
             e.stopPropagation();
             onRemoveFromDeck(card);
           }}
-          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-danger transition pointer-events-auto"
+          className="w-11 h-11 sm:w-8 sm:h-8 rounded-full bg-danger/90 text-on-danger flex items-center justify-center text-xs sm:text-[10px] font-semibold shadow-md hover:bg-danger transition pointer-events-auto"
           title={t('cardDetails.remove')}
         >
           <LuMinus />
@@ -78,7 +78,7 @@ export function CardItemHoverControls({
             }}
             className={`zone-menu-item w-10 h-10 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-semibold transition ${
               card.zone === DeckZone.MAYBEBOARD
-                ? 'bg-warning text-white ring-2 ring-white/50'
+                ? 'bg-warning text-on-warning ring-2 ring-white/50'
                 : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'
             }`}
             title={t('deck.printFilters.maybeboard')}

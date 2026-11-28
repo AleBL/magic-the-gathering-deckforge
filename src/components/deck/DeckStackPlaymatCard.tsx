@@ -127,24 +127,24 @@ export function DeckStackPlaymatCard({
 
         {isBanned ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-banned">
-            <LuBan className="text-white text-[8px] shrink-0" />
+            <LuBan className="text-[8px] shrink-0" />
             <span>{t('cardDetails.banned')}</span>
           </div>
         ) : null}
 
         {isRestricted ? (
           <div className="deck-stack-status-badge deck-stack-status-badge-restricted">
-            <LuTriangleAlert className="text-white text-[8px] shrink-0" />
+            <LuTriangleAlert className="text-[8px] shrink-0" />
             <span>{t('cardDetails.restricted')}</span>
           </div>
         ) : null}
 
         {isInvalid ? (
           <div
-            className="deck-stack-status-badge bg-surface-3 border border-accent/50"
+            className="deck-stack-status-badge bg-surface-3 text-fg border border-accent/50"
             title={t('cardDetails.invalidInFormatHint')}
           >
-            <LuCircleX className="text-white text-[8px] shrink-0" />
+            <LuCircleX className="text-[8px] shrink-0" />
             <span>{t('cardDetails.invalidInFormat')}</span>
           </div>
         ) : null}
@@ -158,7 +158,7 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onAddToDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-success/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-success transition pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-success/90 text-on-success flex items-center justify-center text-xs font-semibold hover:bg-success transition pointer-events-auto"
                 title={t('cardDetails.addCopy')}
               >
                 <LuPlus className="text-[10px]" />
@@ -169,7 +169,7 @@ export function DeckStackPlaymatCard({
                   e.stopPropagation();
                   onRemoveFromDeck(card);
                 }}
-                className="w-6 h-6 rounded-full bg-danger/90 text-white flex items-center justify-center text-xs font-semibold hover:bg-danger transition pointer-events-auto"
+                className="w-6 h-6 rounded-full bg-danger/90 text-on-danger flex items-center justify-center text-xs font-semibold hover:bg-danger transition pointer-events-auto"
                 title={t('cardDetails.removeCopy')}
               >
                 <LuMinus className="text-[10px]" />
@@ -216,7 +216,7 @@ export function DeckStackPlaymatCard({
                   }}
                   className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-semibold transition ${
                     card.zone === DeckZone.MAYBEBOARD
-                      ? 'bg-warning text-white ring-1 ring-white/50'
+                      ? 'bg-warning text-on-warning ring-1 ring-white/50'
                       : 'bg-slate-700/80 text-gray-300 hover:bg-warning hover:text-on-warning'
                   }`}
                   title={t('deck.printFilters.maybeboard')}
